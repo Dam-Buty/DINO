@@ -1,13 +1,14 @@
-<div id="container_queue" data-state="closed">
-    <div id="poignee_queue">
-        <div id="inner_poignee_queue"></div>
-    </div>
-    <div id="tiroir_queue">
-        <h1>Fila <input type="file" id="files_handler" name="files_handler" multiple="multiple"></h1>
-        <ul id="files_list"></ul>
+<div id="container-queue" data-state="closed">
+    <div id="poignee-queue"></div>
+    <div id="tiroir-queue">
+        <h1>Fila <input type="file" id="files-handler" name="files-handler" multiple="multiple"></h1>
+        <ul id="files-list"></ul>
     </div>
 </div>
 <script type="text/javascript">
-    $("#poignee_queue").click(anime_queue);
-    $("#files_handler").change(handle_files);
+    $("#poignee-queue").click(anime_queue);
+    $("#files-handler").change(handle_files);
+    
+    $("#poignee-queue").on("dragover", handle_drag);
+    $("#poignee-queue").on("drop", handle_drop);
 </script>

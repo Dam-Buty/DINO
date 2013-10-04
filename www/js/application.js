@@ -7,14 +7,26 @@ var archive = function() {
 };
 
 var anime_queue = function() {
-    if ($("#container_queue").attr("data-state") == "closed") {
-        $("#tiroir_queue").animate({ right: 0 });
-        $("#poignee_queue").animate({ right: "30%" });
-        $("#container_queue").attr({ "data-state": "open" });
+    if ($("#container-queue").attr("data-state") == "closed") {
+        $("#tiroir-queue").animate({ left: 0 });
+        $("#poignee-queue").animate({ left: "30%" });
+        $("#container-queue").attr({ "data-state": "open" });
     } else {
-        $("#tiroir_queue").animate({ right: "-30%" });
-        $("#poignee_queue").animate({ right: "0" });
-        $("#container_queue").attr({ "data-state": "closed" });
+        $("#tiroir-queue").animate({ left: "-30%" });
+        $("#poignee-queue").animate({ left: "0" });
+        $("#container-queue").attr({ "data-state": "closed" });
+    }
+}
+
+var anime_search = function() {
+    if ($("#container-search").attr("data-state") == "closed") {
+        $("#tiroir-search").animate({ top: 0 });
+        $("#poignee-search").animate({ top: "30%" });
+        $("#container-search").attr({ "data-state": "open" });
+    } else {
+        $("#tiroir-search").animate({ top: "-30%" });
+        $("#poignee-search").animate({ top: "0" });
+        $("#container-search").attr({ "data-state": "closed" });
     }
 }
 

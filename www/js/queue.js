@@ -8,6 +8,21 @@ var queue = [];
 
 var workers = [undefined, undefined, undefined];
 
+var handle_drag = function(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    console.log(evt);
+    evt.dataTransfer.dropEffect = 'copy';
+};
+
+var handle_drop = function(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    console.log(evt);
+    
+    var files = evt.dataTransfer.files;
+};
+
 ///////////////////////////:
 // Gestion des fichiers entrés dans l'input
 var handle_files = function() {
