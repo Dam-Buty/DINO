@@ -1,0 +1,390 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; 
+        charset=utf-8" />
+<title>CS Storage</title>
+<meta content="2013-02-28" name="date" />
+<meta content="Damien BUTY" name="author" />
+<meta content="Pagina de accesso a sus archivos digitales" name="description" />
+<link rel="stylesheet" href="css/inscription.css?v=1" media="screen" type="text/css"/>
+<link rel="stylesheet" href="../css/validationEngine.jquery.css?v=1" media="screen" type="text/css"/>
+<link href='http://fonts.googleapis.com/css?family=Kavoon' rel='stylesheet' type='text/css'/>
+<link href='http://fonts.googleapis.com/css?family=Bad+Script' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Happy+Monkey' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Podkova' rel='stylesheet' type='text/css'>
+
+</head>
+<body>
+<div class="container-inscription">
+    <div class="header-inscription">
+        Bienvenido en su simulacion de costo CS Storage!
+    </div>
+    <div class="wrapper-inscription">
+        <input type="hidden" id="pk"/>
+        <div class="inscription-page" id="inscription-page-1">
+            <form id="form-page-1">
+                <h1>Para empezar, gracias por entrar su direccion de correo electronico y su numero telefonico.</h1>
+                <p>Email</p>
+                <input type="text" id="value_mail" value="test@gmail.com" class="validate[required,custom[email]]"/><br/>
+                <img src="img/hr.png"/>
+                <p>Telefono</p>
+                <input type="text" id="value_tel" class="validate[required]"/><br/>
+            </form>
+            <br/>
+            <div class="bouton" id="submit-page-1">Continuar</div>
+        </div>
+        
+        <div class="inscription-page" id="inscription-page-2" style="display: none;">
+            <form id="form-page-2">
+                <h1>Gracias por decirnos un poco mas sobre usted</h1>
+                <p>Nombre</p>
+                <input type="text" id="value_nom" class="validate[required]"/><br/>
+                <img src="img/hr.png"/>
+                <p>Empresa</p>
+                <input type="text" id="value_entreprise" class="validate[required]"/><br/>
+                <img src="img/hr.png"/>
+                <p>Cargo</p>
+                <input type="text" id="value_poste" class="validate[required]"/><br/>            
+            </form>
+            <br/>
+            <div class="bouton" id="submit-page-2">Continuar</div>
+        </div>
+        
+        <div class="inscription-page" id="inscription-page-3" style="display: none;">
+            <form id="form-page-3">
+                <h1>Estos datos nos permiten calcular la mejora oferta por sus necesidades</h1>
+                <p>Con cuantos empleados cuenta su agencia?</p>
+                <input type="text" id="value_nb_emp" class="validate[required,custom[number]]"/><br/>
+                <img src="img/hr.png"/>
+                <p>Cuantas operaciones al año realiza su agencia?</p>
+                <input type="text" id="value_nb_op" class="validate[required,custom[number]]"/><br/>
+                <img src="img/hr.png"/>
+                <p>En cuantas aduanas opera su agencia?</p>
+                <input type="text" id="value_nb_douanes" class="validate[required,custom[number]]"/><br/>
+            </form>
+            <br/>
+            <div class="bouton" id="submit-page-3">Ver mi simulation</div>
+        </div>
+    </div>
+    
+    <div class="wrapper-simulation csstorage">
+        <div class="wrapper-postit">
+            <div class="header-simulation"></div>
+            <div class="body-simulation">
+                <h1>Con CS Storage</h1>
+                <ul class="list-simulation">
+                    <li id="paquete-1">
+                        <h2>Opcion estandar</h2>
+                        <table>
+                            <tr>
+                                <td>
+                                    <p>Si usted se inscribe por un pago mensual, le ofrecemos <span class="simulation-data" id="paquete-1-oferta"></span> creditos de bienvenida!</p>
+                                </td>
+                                <td>
+                                    <div class="costo">$<span class="simulation-data">10</span> MXN<br/>por<br/>operacion</div>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                    <li id="paquete-2">
+                        <h2>Opcion plata</h2>
+                        <table>
+                            <tr>
+                                <td>
+                                    <p>Si usted compra <span class="simulation-data" id="paquete-2-creditos"></span> creditos hoy, le regalamos <span class="simulation-data" id="paquete-2-oferta"></span> mas.</p>
+                                    <p>Son <span class="simulation-data">3</span> meses de tranquilidad por solamente $<span class="simulation-data" id="paquete-2-total"></span> MXN!</p>
+                                </td>
+                                <td>
+                                    <div class="costo">$<span class="simulation-data" id="paquete-2-porope"></span> MXN<br/>por<br/>operacion</div>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                    <li id="paquete-3">
+                        <h2>Opcion oro</h2>
+                        <table>
+                            <tr>
+                                <td>
+                                    <p>Si usted compra <span class="simulation-data" id="paquete-3-creditos"></span> creditos hoy, le regalamos <span class="simulation-data" id="paquete-3-oferta"></span> mas.</p>
+                                    <p>Son <span class="simulation-data">16</span> meses de tranquilidad por solamente $<span class="simulation-data" id="paquete-3-total"></span> MXN!</p>
+                                </td>
+                                <td>
+                                    <div class="costo">$<span class="simulation-data" id="paquete-3-porope"></span> MXN<br/>por<br/>operacion</div>
+                            </tr>
+                        </table>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="wrapper-postit bodega">
+            <div class="header-simulation"></div>   
+            <div class="body-simulation">
+                <h1>Con archivos de papel</h1>
+                <ul class="list-simulation">
+                    <li id="gastos-papel">
+                        <table>
+                            <tr>
+                                <td><p>Usted gastaria <span class="simulation-data" id="papel-hojas"></span> hojas de papel...</p></td>
+                                <td><div class="costo">$<span class="simulation-data" id="papel-pesos"></span> MXN<br/>annuales</div></td>
+                            </tr>
+                        </table>
+                    </li>
+                    <li id="gastos-consumibles">
+                        <table>
+                            <tr>
+                                <td><div class="costo">$<span class="simulation-data" id="consumibles-pesos"></span> MXN<br/>annuales</div></td>
+                                <td><p>... sin contar <span class="simulation-data" id="consumibles-toner"></span> toner(s) y <span class="simulation-data" id="consumibles-drum"></span> tambor(es) de impresora!</p></td>
+                            </tr>
+                        </table>
+                    </li>
+                    <li id="gastos-metrics">
+                        <p>
+                            En 5 anos (<i>tiempo de almacenamiento requirido por ley en Mexico</i>), representa en total <span class="simulation-data" id="metrics-cajas"></span> cajas de papel, pesando alrededor de <span class="simulation-data" id="metrics-kilos"></span> kilogramos!
+                        </p>
+                        <p>
+                            Son <span class="simulation-data" id="metrics-cuadrados"></span> metros cuadrados de espacio que no le traen ningun ingreso!
+                        </p>
+                    </li>
+                    <li id="gastos-porope">
+                        <table style="width: 100%;">
+                            <tr>
+                                <td><div class="costo">$<span class="simulation-data" id="porope-1"></span> MXN<br/>por<br/>operacion</div></td>
+                                <td><div class="costo">$<span class="simulation-data" id="porope-2"></span> MXN<br/>por<br/>operacion</div></td>
+                            </tr>
+                        </table>
+                    </li>
+                </ul>
+                <span class="simulation-tip">(La segunda estimacion incluye el costo del espacio de almacenamiento)</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../js/jquery-1.10.2.js?v=1"></script>
+<script src="../js/jquery.validationEngine.js?v=1"></script>
+<script src="../js/jquery.validationEngine-es.js?v=1"></script>
+
+<script type="text/javascript">
+
+var txt = $('.writer').text();
+var timeOut;
+var txtLen = txt.length;
+var char = 0;
+$('.writer').text('|');
+(function typeIt() {   
+    var humanize = Math.round(Math.random() * (200 - 30)) + 30;
+    timeOut = setTimeout(function() {
+        char++;
+        var type = txt.substring(0, char);
+        $('.writer').text(type + '|');
+        typeIt();
+
+        if (char == txtLen) {
+            $('.writer').text($('.writer').text().slice(0, -1)); // remove the '|'
+            clearTimeout(timeOut);
+        }
+
+    }, humanize);
+}());
+
+
+var calcul_simulation = function() {
+    var nb_op = $("#value_nb_op").val() * 1;
+    
+    ////////////////////////////////////////////////
+    /* CS Storage                                 */
+    ////////////////////////////////////////////////
+    
+    /* Constantes de calcul                       */
+    var credits_offerts = 50;
+    var k_trimestre = 0.1;
+    var k_annee = 0.3;
+    var seuils = [ [ 0, 9 ], 
+                   [ 3001, 8 ], 
+                   [ 5001, 7], 
+                   [ 10001, 6] ];
+    
+    var tarif = 9;
+    
+    $.each(seuils, function() {
+        if (nb_op >= this[0]) {
+            tarif = this[1];
+        }
+    });
+    
+    /* Calculs */
+    var op_trimestre = Math.ceil(nb_op / 4);
+    
+    var oferta_trimestre = Math.ceil(op_trimestre * k_trimestre);
+    var oferta_annee = Math.ceil(nb_op * k_annee);
+    
+    var prix_trimestre = op_trimestre * tarif;
+    var prix_annee = nb_op * tarif;
+    
+    var porope_trimestre = prix_trimestre / (op_trimestre + oferta_trimestre);
+    var porope_annee = prix_annee / (nb_op + oferta_annee);
+    
+    /* Affichage */
+    
+    $("#paquete-1-oferta").text(credits_offerts);
+    $("#paquete-2-creditos").text(op_trimestre);
+    $("#paquete-2-oferta").text(oferta_trimestre);
+    $("#paquete-2-total").text(prix_trimestre.toLocaleString());
+    $("#paquete-2-porope").text(porope_trimestre.toFixed(2));
+    $("#paquete-3-creditos").text(nb_op);
+    $("#paquete-3-oferta").text(oferta_annee);
+    $("#paquete-3-total").text(prix_annee.toLocaleString());
+    $("#paquete-3-porope").text(porope_annee.toFixed(2));
+        
+    ////////////////////////////////////////////////
+    /* Bodega                       */
+    ////////////////////////////////////////////////
+    
+    /* Constantes de calcul                       */
+    
+    var feuilles_op = 40;
+    var feuilles_rame = 5000;
+    var feuilles_toner = 5500;
+    var feuilles_drum = 25000;
+    
+    var poids_feuille = 5;
+    var poids_caisse = 150;
+    
+    var caisses_m2 = 36;
+    var op_caisse = 30;
+    
+    var prix_rame = 450;
+    var prix_toner = 1350;
+    var prix_drum = 900;
+    var prix_caisse = 17;
+    var prix_m2 = 340 * 12 * 5; // archivage sur 5 ans 
+    
+    /* Calculs                                    */
+    
+    var total_feuilles = feuilles_op * nb_op;
+    var total_toners = Math.ceil(total_feuilles / feuilles_toner);
+    var total_drums = Math.ceil(total_feuilles / feuilles_drum);
+    var total_rames = Math.ceil(total_feuilles / feuilles_rame);
+    var total_caisses = Math.ceil(nb_op / op_caisse);
+    var total_poids = ((total_feuilles * poids_feuille) + (total_caisses * poids_caisse)) / 1000;
+    var total_m2 = Math.ceil(total_caisses / caisses_m2);
+    
+    var cout_feuilles = total_rames * prix_rame;
+    var cout_consommables = (total_toners * prix_toner) + (total_drums * prix_drum);
+    var cout_caisses = total_caisses * prix_caisse;
+    var cout_m2 = total_m2 * prix_m2;
+    
+    var cout_op_1 = (cout_feuilles + cout_consommables + cout_caisses) / nb_op;
+    var cout_op_2 = (cout_feuilles + cout_consommables + cout_caisses + cout_m2) / nb_op;
+    
+    /* Affichage                                    */
+    
+    $("#papel-hojas").text(total_feuilles.toLocaleString());
+    $("#papel-pesos").text(cout_feuilles.toLocaleString());
+    $("#consumibles-toner").text(total_toners.toLocaleString());
+    $("#consumibles-drum").text(total_drums.toLocaleString());
+    $("#consumibles-pesos").text(cout_consommables.toLocaleString());
+    $("#metrics-cajas").text(total_caisses * 5);
+    $("#metrics-kilos").text(Math.floor(total_poids * 5));
+    $("#metrics-cuadrados").text(total_m2 * 5);
+    $("#porope-1").text(cout_op_1.toFixed(2));
+    $("#porope-2").text(cout_op_2.toFixed(2));
+}
+
+var affiche_simulation = function() {
+    $("#inscription-page-1").hide("fast").queue(function() {
+        $(".container-inscription").animate({ width: "100%" });
+        $(this).dequeue();
+    }).queue(function() {
+        $(".wrapper-simulation").show("fast");
+        $(this).dequeue();
+    }).queue(function() {
+        $("#value_nb_op").detach().appendTo($(".header-inscription").empty()).after("<br>Operaciones aduanales por ano");
+        $("#inscription-page-3").hide();
+    });
+    
+    $("#value_nb_op").keyup(calcul_simulation);
+    
+    calcul_simulation();
+}
+
+$(document).ready(function(){
+    $("#form-page-1").validationEngine('attach', {focusFirstField : false });
+    $("#form-page-2").validationEngine('attach', {focusFirstField : false });
+    $("#form-page-3").validationEngine('attach', {focusFirstField : false });
+    
+    $("#submit-page-1").click( function() {
+        if (!$("#value_mail").validationEngine('validate')) {
+            $.ajax({
+                url: "do/doCheckMail.php",
+                type: "POST",
+                data: {
+                    mail: $("#value_mail").val()
+                }
+            }).done( function(data) {
+                if (data.returning) {
+                    $("#value_nb_op").val(data.op);
+                    affiche_simulation()
+                } else {
+                    if ($("#form-page-1").validationEngine('validate')) {
+                        $.ajax({
+                            url: "do/doSave.php",
+                            type: "POST",
+                            data: {
+                                page: 1,
+                                mail: $("#value_mail").val(),
+                                tel: $("#value_tel").val()
+                            }
+                        }).done(function(insert_id) {
+                            $("#pk").val(insert_id.pk);
+                        });
+                        
+                        $("#inscription-page-1").hide("fast");
+                        $("#inscription-page-2").show("fast");
+                    }
+                }
+            });
+        }
+    });
+    
+    $("#submit-page-2").click( function() {
+        if ($("#form-page-2").validationEngine('validate')) {
+            $.ajax({
+                url: "do/doSave.php",
+                type: "POST",
+                data: {
+                    page: 2,
+                    pk: $("#pk").val(),
+                    nom: $("#value_nom").val(),
+                    entreprise: $("#value_entreprise").val(),
+                    poste: $("#value_poste").val()
+                }
+            });
+            
+            $("#inscription-page-2").hide("fast");
+            $("#inscription-page-3").show("fast");
+        }
+    });
+    
+    $("#submit-page-3").click( function() {
+        if ($("#form-page-3").validationEngine('validate')) {
+            $.ajax({
+                url: "do/doSave.php",
+                type: "POST",
+                data: {
+                    page: 3,
+                    pk: $("#pk").val(),
+                    nb_emp: $("#value_nb_emp").val(),
+                    nb_op: $("#value_nb_op").val(),
+                    nb_douanes: $("#value_nb_douanes").val()
+                }
+            });
+            
+            affiche_simulation()
+        }
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+#amenu-list {
+	margin:0px;
+	padding: 0px;
+	position: absolute !important;
+	z-index: 999;
+}
+#amenu-list li {
+	display: block;
+	margin:0px;
+	padding: 0px;
+	position: relative !important;
+	float: left;
+	vertical-align: bottom;
+}
+* html #amenu-list li {
+	width: 1px;
+}
+#amenu-list li a:link, 
+#amenu-list li a:visited, 
+#amenu-list li a:hover{
+	display: block;
+	margin:0px;
+	padding: 0px;
+	white-space: nowrap;
+}
+#amenu-list ul {
+	display: none;
+	margin:0px;
+	padding: 0px;
+	position: absolute !important;
+	height: auto;
+}
+#amenu-list ul li {
+	float: none;
+	margin:0px;
+	padding: 0px;
+}
+/******** aMenu look *******/
+
+#amenu-wrapper {
+	height: 41px;
+	background-color: #888888;
+	border: 1px solid #222222;
+	padding: 0px 10px;
+	border-radius: 7px;
+}
+#amenu-list li {
+	height: 41px;
+}
+#amenu-list li.parent > a {
+	background: url("../img/amenu_down_arrow.gif") no-repeat 92% 50%;
+}
+#amenu-list li a:link, #amenu-list li a:visited {
+	height: 41px;
+	line-height: 41px;
+	text-decoration: none;
+	color: #fff;
+	padding: 0px 25px 0px 20px;
+	/* border-left: 2px solid #444444; */
+}
+
+#amenu-list img {
+    top: -14px;
+    bottom: 0px;
+    margin: auto;
+}
+
+#amenu-list li a:hover, #amenu-list li a.active {
+	color: #fff;
+	background-color: #444444;
+	/* border-left: 2px solid #222222; */
+}
+
+#amenu-list ul {
+	/* border-left: 2px solid #222222; */
+}
+#amenu-list ul li {
+	height: 30px;
+	background-color: #888888;
+	border-top: 1px solid #444444;
+	border-bottom: 0.5px solid #444444;
+}
+#amenu-list ul li.parent > a {
+	background: url("../img/amenu_right_arrow.gif") no-repeat 95% 50%;
+}
+#amenu-list ul li a:link, #amenu-list ul li a:visited {
+	height: 30px;
+	line-height: 30px;
+	padding: 0px 41px 0px 20px;
+	border-left: none;
+}
+#amenu-list ul li a:hover, #amenu-list ul li a.active {
+	background-color: #444444;
+	color: #fff;
+}
