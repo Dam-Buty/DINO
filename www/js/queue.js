@@ -55,12 +55,15 @@ var refresh_liste = function() {
                 break;
         }
         
-        $("#files-list").append(
-            $("<li></li>")
-            .addClass(custom_class)
-            .append(this.document.name + " (" + custom_class + ") - <i>" + this.document.size + "</i>")
-        );
         
+        var document_li = $("<li></li>");
+        
+        document_li.addClass(custom_class)
+        .append(this.document.name + " - <i></i>");
+        
+        $("#files-list").append(document_li);
+        
+        queue[i].li = document_li;
     });
 };
 
@@ -82,8 +85,10 @@ var upload = function(file, uploader, queue_position) {
             myXhr = $.ajaxSettings.xhr();
             if(myXhr.upload){ // if upload property exists
                 myXhr.upload.addEventListener('progress', function(evt) {
-                    console.log(queue_position);
-                    console.log(evt);
+                    if(evt.lengthComputable){
+                        document_li = queue[queue_position].li;
+                        document_li.find("i").text(evt.loaded + " / " + evt.total);
+                    }
                 }, false);
             }
             return myXhr;
@@ -91,10 +96,14 @@ var upload = function(file, uploader, queue_position) {
         success: function() {
             uploading[uploader] = undefined;
             queue[queue_position].status = 1;
+            document_li = queue[queue_position].li;
+            document_li.find("i").text("OK");
             handle_uploads();
         },
         error: function() {
-        
+            document_li = queue[queue_position].li;
+            document_li.find("i").text("KO");
+            handle_uploads();
         }
     });
 
@@ -129,7 +138,7 @@ var handle_files = function() {
         
         // Si l'extension est légale, on pousse le fichier dans la queue
         if (extension in allowed_extensions) {
-            queue.push({ document: this, status: -1, size: this.size });
+            queue.push({ document: this, status: -1, size: this.size, li: undefined });
         }
     });
     
