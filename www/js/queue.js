@@ -1,12 +1,22 @@
 var allowed_extensions = {
     "pdf": 1,
     "jpg": 1,
-    "png": 1
+    "png": 1,
+    "gif": 1,
+    "xml": 1
 }
 
 var queue = [];
 
-var workers = [undefined, undefined, undefined];
+var uploading = [undefined, undefined, undefined];
+
+var compare = function(a,b) {
+  if (a.status > b.status)
+     return -1;
+  if (a.status < b.status)
+    return 1;
+  return 0;
+}
 
 var handle_drag = function(evt) {
     evt.stopPropagation();
@@ -23,10 +33,95 @@ var handle_drop = function(evt) {
     var files = evt.dataTransfer.files;
 };
 
+var refresh_liste = function() {
+    queue.sort(compare);
+    
+    $("#files-list").empty();
+    
+    $.each(queue, function() {
+        var custom_class;
+        
+        switch(this.status) {
+            case -1:
+                custom_class = "idle";
+                break;
+            
+            case 0:
+                custom_class = "uploading";
+                break;
+                
+            case 1:
+                custom_class = "ready";
+                break;
+        }
+        
+        $("#files-list").append(
+            $("<li></li>")
+            .addClass(custom_class)
+            .append(this.document.name + " (" + custom_class + ") - <i>" + this.document.size + "</i>")
+        );
+        
+    });
+};
+
+var progress_bar = function() {
+    
+}
+
+var upload = function(file, uploader, queue_position) {
+    var upload_data = new FormData;
+    
+    refresh_liste();
+    
+    upload_data.append("document", file);
+
+    $.ajax({
+        url: "do/doUpload.php",
+        data: upload_data,
+        cache: false,
+        contentType: false,
+        processData: false,
+        type: 'POST',
+        xhr: function() {  // custom xhr pour récuperer la progression
+            myXhr = $.ajaxSettings.xhr();
+            if(myXhr.upload){ // if upload property exists
+                myXhr.upload.addEventListener('progress', progress_bar, false);
+            }
+            return myXhr;
+        },
+        success: function() {
+            uploading[uploader] = undefined;
+            queue[queue_position].status = 1;
+            refresh_liste();
+        },
+        error: function() {
+        
+        }
+    });
+
+    return false;
+};
+
+///////////////////:
+// Cherche un uploader libre et lui attribue le premier fichier de la queue
+var handle_uploads = function() {
+    $.each(uploading, function(i, uploader) {
+        if (uploader === undefined) {
+            $.each(queue, function(j, document) {
+                if (document.status == -1) {
+                    queue[j].status = 0;
+                    uploading[i] = document.document;
+                    upload(document.document, i, j);
+                }
+            });
+        }
+    });
+}
+
 ///////////////////////////:
 // Gestion des fichiers entrés dans l'input
 var handle_files = function() {
-    files = $("#files_handler").prop("files");
+    files = $("#files-handler").prop("files");
     
     $.each(files, function() {
         var file_tab = this.name.split(".");
@@ -34,10 +129,11 @@ var handle_files = function() {
         
         // Si l'extension est légale, on pousse le fichier dans la queue
         if (extension in allowed_extensions) {
-            queue.push({ name: this.name, status: 0 });
-            $("#files_list").append("<li>" + this.name + " - <i>" + this.size + "</i>" + "</li>").append();
+            queue.push({ document: this, status: -1, size: this.size });
         }
     });
+    
+    handle_uploads();
 };
 
 var assign_worker = function() {
@@ -87,5 +183,5 @@ var assign_worker = function() {
 }
 
 // On vérifie toutes les secondes si il y a un worker qui glande
-window.setInterval(assign_worker, 5000);
+// window.setInterval(assign_worker, 5000);
 

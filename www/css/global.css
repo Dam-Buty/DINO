@@ -129,6 +129,10 @@ input {
     border-bottom-right-radius:10px;
 }
 
+#tiroir-queue ul {
+    padding-left: 0;
+}
+
 #tiroir-queue li {
     list-style-type: none;
     border: 1px solid black
