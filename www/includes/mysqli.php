@@ -3,9 +3,9 @@
 //These variable values come from your hosting account.
 
 $hostname_db = "localhost";
-$username_db = "root";
-$dbname_db = "csstorage2";
-$password_db = "C4dillac5";
+$username_db = "cssdev_db";
+$dbname_db = "cssdev";
+$password_db = "C4dillac5_W3B";
 
 $mysqli = new mysqli($hostname_db, $username_db, $password_db, $dbname_db);
 
