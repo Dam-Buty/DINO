@@ -14,3 +14,4 @@ if (mysqli_connect_errno()) {
     write_log("Erreur de connection à la base de données: %s\n", mysqli_connect_error());
 }
 ?>
+ 
