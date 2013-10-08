@@ -38,10 +38,10 @@ var refresh_liste = function() {
     
     $("#files-list").empty();
     
-    $.each(queue, function() {
+    $.each(queue, function(i, document) {
         var custom_class;
         
-        switch(this.status) {
+        switch(document.status) {
             case -1:
                 custom_class = "idle";
                 break;
@@ -64,10 +64,6 @@ var refresh_liste = function() {
     });
 };
 
-var progress_bar = function() {
-    
-}
-
 var upload = function(file, uploader, queue_position) {
     var upload_data = new FormData;
     
@@ -85,14 +81,17 @@ var upload = function(file, uploader, queue_position) {
         xhr: function() {  // custom xhr pour récuperer la progression
             myXhr = $.ajaxSettings.xhr();
             if(myXhr.upload){ // if upload property exists
-                myXhr.upload.addEventListener('progress', progress_bar, false);
+                myXhr.upload.addEventListener('progress', function(evt) {
+                    console.log(queue_position);
+                    console.log(evt);
+                }, false);
             }
             return myXhr;
         },
         success: function() {
             uploading[uploader] = undefined;
             queue[queue_position].status = 1;
-            refresh_liste();
+            handle_uploads();
         },
         error: function() {
         
@@ -112,6 +111,7 @@ var handle_uploads = function() {
                     queue[j].status = 0;
                     uploading[i] = document.document;
                     upload(document.document, i, j);
+                    return false;
                 }
             });
         }

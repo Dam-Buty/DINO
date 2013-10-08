@@ -2,7 +2,7 @@
     <div id="poignee-queue"></div>
     <div id="tiroir-queue">
         <h1>Fila <input type="file" id="files-handler" name="files-handler" multiple="multiple"></h1>
-        <ul id="files-list"></ul>
+        <div id="div-list"><ul id="files-list"></ul></div>
     </div>
 </div>
 <script type="text/javascript">

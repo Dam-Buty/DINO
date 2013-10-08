@@ -127,6 +127,8 @@ input {
     -moz-border-bottom-right-radius:10px;
     -webkit-bottom-right-radius:10px;
     border-bottom-right-radius:10px;
+    
+    overflow-y: auto;
 }
 
 #tiroir-queue ul {
@@ -136,6 +138,10 @@ input {
 #tiroir-queue li {
     list-style-type: none;
     border: 1px solid black
+}
+
+#div-list {
+
 }
 
 #container-search {
