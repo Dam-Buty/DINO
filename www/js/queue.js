@@ -44,14 +44,17 @@ var refresh_liste = function() {
         switch(document.status) {
             case -1:
                 custom_class = "idle";
+                custom_text = "En fila";
                 break;
             
             case 0:
                 custom_class = "uploading";
+                custom_text = "";
                 break;
                 
             case 1:
                 custom_class = "ready";
+                custom_text = "Cargado";
                 break;
         }
         
@@ -59,7 +62,7 @@ var refresh_liste = function() {
         var document_li = $("<li></li>");
         
         document_li.addClass(custom_class)
-        .append(this.document.name + " - <i></i>");
+        .append(this.document.name + " - <i>" + custom_text + "</i>");
         
         $("#files-list").append(document_li);
         
