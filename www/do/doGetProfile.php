@@ -1,9 +1,33 @@
 <?php
-include("../includes/status.php");
 session_start();
+include("../includes/status.php");
+
+function convertBytes( $value ) {
+    if ( is_numeric( $value ) ) {
+        return $value;
+    } else {
+        $value_length = strlen( $value );
+        $qty = substr( $value, 0, $value_length - 1 );
+        $unit = strtolower( substr( $value, $value_length - 1 ) );
+        switch ( $unit ) {
+            case 'k':
+                $qty *= 1024;
+                break;
+            case 'm':
+                $qty *= 1048576;
+                break;
+            case 'g':
+                $qty *= 1073741824;
+                break;
+        }
+        return $qty;
+    }
+}
 
 if (isset($_SESSION["niveau"])) {
     include("../includes/mysqli.php");
+    
+    $maxFileSize = convertBytes( ini_get( 'upload_max_filesize' ) );
     
     ////////////////////////
     // Récupération des informations générales de l'user et du client
@@ -13,7 +37,7 @@ if (isset($_SESSION["niveau"])) {
     if ($result = $mysqli->query($query)) {
         if ($row = $result->fetch_assoc()) {
             // Génération du JSON de base
-            $json = '{ "status": "OK", "credit": "' . $row["credit_client"] . '", "champs": "%%CHAMPS%%", "clients": "%%CLIENTS%%" }';
+            $json = '{ "status": "OK", "maxfilesize": "' . $maxFileSize . '", "credit": "' . $row["credit_client"] . '", "champs": "%%CHAMPS%%", "clients": "%%CLIENTS%%" }';
             
             //////////////////////////
             // Récupération des champs

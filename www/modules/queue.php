@@ -11,4 +11,15 @@
     
     $("#poignee-queue").on("dragover", handle_drag);
     $("#poignee-queue").on("drop", handle_drop);
+    
+    $.ajax({ url: "json/queue.php" })
+    .done(function (data) {
+        console.log(data.queue);
+        $.each(data.queue, function() {
+            var document_li = set_li_status(create_li(this.filename), 1);
+            this.li = document_li;
+            queue.push(this);
+            refresh_liste();
+        });
+    });
 </script>

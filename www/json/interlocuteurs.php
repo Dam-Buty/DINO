@@ -4,8 +4,6 @@ session_start();
 if (isset($_SESSION["niveau"])) {
     include("../includes/log.php");
     include("../includes/mysqli.php");
-
-    $first = 1;
     
     $json = '[';
     
@@ -13,10 +11,8 @@ if (isset($_SESSION["niveau"])) {
     
     if ($result = $mysqli->query($query)) {
         while ($row = $result->fetch_assoc()) {
-            if (!$first) {
-                $json .= ',';
-            } else {
-                $first = 0;            
+            if ($json != "[") {
+                $json .= ', ';
             }
             
             $json .= '{ "pk" : "' . $row["pk_interlocuteur"] . '", "nom" : "' . $row["nom_interlocuteur"] . '" }';

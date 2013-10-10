@@ -18,6 +18,13 @@ if ($result = $mysqli->query($query)) {
             $_SESSION["client"] = $row["fk_client"];
             $_SESSION["interlocuteur"] = $row["fk_interlocuteur"];
             $_SESSION["user"] = $login;
+            
+            // on refait les dossiers au cas où
+            if (!file_exists("../cache/" . $_SESSION["client"])) {
+                mkdir("../cache/" . $_SESSION["client"]);
+                mkdir("../cache/" . $_SESSION["client"] . "/temp");
+            }
+            
             $json = '{ "mail": "' . $row["mail_user"] . '" }';
             status(200);
         } else {

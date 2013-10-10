@@ -43,10 +43,10 @@ var refresh_liste = function() {
     });
 };
 
-var upload = function(file, uploader, queue_position) {
+var upload = function(list_element, uploader, queue_position) {
     var upload_data = new FormData;
     
-    upload_data.append("document", file);
+    upload_data.append("document", list_element.document);
 
     $.ajax({
         url: "do/doUpload.php",
@@ -62,7 +62,7 @@ var upload = function(file, uploader, queue_position) {
                     if(evt.lengthComputable){
                         var pourcentage = Math.floor((evt.loaded * 100) / evt.total);
                         
-                        document_li = queue[queue_position].li;
+                        document_li = list_element.li;
                         document_li.css("background-size", pourcentage + "%" + " 100%");
                         document_li.find("span").text(pourcentage + "%");
                     }
@@ -70,29 +70,27 @@ var upload = function(file, uploader, queue_position) {
             }
             return myXhr;
         },
-        success: function() {
-            uploading[uploader] = undefined;
-            queue[queue_position].status = 1;
-            
-            queue[queue_position].li
-            .removeClass()
-            .css("background-size", "0 0")
-            .addClass("done")
-            .find("span").text("OK");
-            
-            handle_uploads();
-        },
-        error: function() {
-            uploading[uploader] = undefined;
-            queue[queue_position].status = -2;
-            
-            queue[queue_position].li
-            .removeClass()
-            .css("background-size", "0 0")
-            .addClass("error")
-            .find("span").text("KO");
-            
-            handle_uploads();
+        statusCode: {
+            201: function(data) {
+                uploading[uploader] = undefined;
+                queue[queue_position].status = 1;
+                queue[queue_position].filename = data.filename;
+                
+                set_li_status(queue[queue_position].li, 1);
+                
+                handle_uploads();
+            },
+            403: function() {
+                window.location.replace("index.php");
+            },
+            500: function() {
+                uploading[uploader] = undefined;
+                queue[queue_position].status = -2;
+                
+                set_li_status(queue[queue_position].li, -2);
+                
+                handle_uploads();
+            }
         }
     });
 
@@ -108,16 +106,71 @@ var handle_uploads = function() {
         if (uploader === undefined) {
             $.each(queue, function(j, document) {
                 if (document.status == -1) {
-                    queue[j].status = 0;
-                    uploading[i] = document.document;
-                    queue[j].li.removeClass().addClass("uploading");
-                    upload(document.document, i, j);
-                    return false;
+                    if (document.size > profil.maxfilesize) {
+                        queue[j].status = -3;
+                        set_li_status(queue[j].li, -3);
+                        refresh_liste();
+                    } else {
+                        queue[j].status = 0;
+                        uploading[i] = document.document;
+                        set_li_status(queue[j].li, 0);
+                        upload(queue[j], i, j);
+                        return false;
+                    }
                 }
             });
         }
     });
 }
+
+var set_li_status = function(li, status) {
+    var custom_class, custom_text;
+    
+    switch(status) {
+        case -3: 
+            custom_class = "error";
+            custom_text = "FILESIZE";
+            break;
+        
+        case -2:
+            custom_class = "error";
+            custom_text = "KO";
+            break;
+            
+        case -1:
+            custom_class = "idle";
+            custom_text = "En fila";
+            break;
+            
+        case 0:
+            custom_class = "uploading";
+            custom_text = "";
+            break;
+            
+        case 1:
+            custom_class = "done";
+            custom_text = "OK";
+            break;
+    };
+    
+    li
+    .removeClass()
+    .css("background-size", "0 0")
+    .addClass(custom_class)
+    .find("span")
+    .text(custom_text);
+    
+    return li;
+}
+
+var create_li = function(name) {
+    var li = $("<li></li>");
+    
+    li.removeClass().addClass("idle")
+    .append(name + " - <span>En fila</span>");
+    
+    return li;
+};
 
 ////////////////////////////
 // Gestion des fichiers entrés dans l'input
@@ -130,12 +183,8 @@ var handle_files = function() {
         
         // Si l'extension est légale, on pousse le fichier dans la queue
         if (extension in allowed_extensions) {
-            var document_li = $("<li></li>");
-            
-            document_li.removeClass().addClass("idle")
-            .append(this.name + " - <span>En fila</span>");
-            
-            queue.push({ document: this, status: -1, size: this.size, li: document_li });
+            var document_li = set_li_status(create_li(this.name), -1);
+            queue.push({ document: this, status: -1, size: this.size, li: document_li, filename: "" });
         }
     });
     
