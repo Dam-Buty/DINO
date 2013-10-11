@@ -17,6 +17,5 @@ if (isset($_SESSION["superadmin"])) {
     } else {
         echo $mysqli->error;
     }
-    
 }
 ?>

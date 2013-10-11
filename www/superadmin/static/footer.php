@@ -1,7 +1,7 @@
-<script src="../../js/jquery-1.10.2.js?v=1"></script>
-<script src="../../js/aes.js?v=1"></script>
-<script src="../../js/sha3.js?v=1"></script>
-<script src="../../js/CS.Crypto.js?v=1"></script>
+<script src="../js/jquery-1.10.2.js?v=1"></script>
+<script src="../js/aes.js?v=1"></script>
+<script src="../js/sha512.js?v=1"></script>
+<script src="../js/CS.Crypto.js?v=1"></script>
 
 <script type="text/javascript">
     var wrapper_clef = function() {

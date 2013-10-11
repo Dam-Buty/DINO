@@ -8,7 +8,7 @@ $password = $_POST["password"];
 
 $err = 0;
 
-$query = "SELECT `login_user`, `mail_user`, `mdp_user`, `niveau_user`, `fk_interlocuteur`, `fk_client` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = '" . $login . "';";
+$query = "SELECT `login_user`, `mail_user`, `mdp_user`, `niveau_user`, `fk_interlocuteur`, `fk_client`, `clef_user` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = '" . $login . "';";
 
 if ($result = $mysqli->query($query)) {
     if ($row = $result->fetch_assoc()) {
@@ -18,6 +18,13 @@ if ($result = $mysqli->query($query)) {
             $_SESSION["client"] = $row["fk_client"];
             $_SESSION["interlocuteur"] = $row["fk_interlocuteur"];
             $_SESSION["user"] = $login;
+            
+            // On décrypte la clef
+            $clef_cryptee = $row["clef_user"];
+            $clef_user = base64_encode(hash("sha512", $login . $password . $row["mail_client"], TRUE));
+            
+            
+            
             
             // on refait les dossiers au cas où
             if (!file_exists("../cache/" . $_SESSION["client"])) {

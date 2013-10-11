@@ -63,7 +63,7 @@ var upload = function(list_element, uploader, queue_position) {
                         var pourcentage = Math.floor((evt.loaded * 100) / evt.total);
                         
                         document_li = list_element.li;
-                        document_li.css("background-size", pourcentage + "%" + " 100%");
+                        document_li.animate("background-size", pourcentage + "%" + " 100%");
                         document_li.find("span").text(pourcentage + "%");
                     }
                 }, false);
@@ -76,7 +76,22 @@ var upload = function(list_element, uploader, queue_position) {
                 queue[queue_position].status = 1;
                 queue[queue_position].filename = data.filename;
                 
-                set_li_status(queue[queue_position].li, 1);
+                document_li = list_element.li;
+                document_li.css( "background-size", "0% 100%" );
+                document_li.css( "background-image", "url(../img/jauge_vert.png)" );
+                document_li.animate( "background-size", "35% 100%" );
+                document_li.find("span").text("Codificando");
+                
+                $.ajax({
+                    url: "do/doPack.php",
+                    type: "POST",
+                    data: {
+                        document: queue[queue_position]
+                    },
+                }).done(function() {
+                    document_li.animate( "background-size", "100% 100%" );
+                    set_li_status(queue[queue_position].li, 1);
+                });
                 
                 handle_uploads();
             },

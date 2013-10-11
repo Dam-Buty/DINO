@@ -40,11 +40,6 @@ var bootstrap = function() {
     
 };
 
-// Renvoie une chaine de 88 octets
-var custom_hash = function(password) {
-    return CryptoJS.SHA3(password).toString(CryptoJS.enc.Base64);
-};
-
 var login = function() {
     if ($("#form_login").validationEngine("validate")) {
         

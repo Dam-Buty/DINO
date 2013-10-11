@@ -2,7 +2,7 @@
 session_start();
 include("../includes/status.php");
 
-if (isset($_SESSION["niveau"])) {
+if ($_SESSION["niveau"] > 10) {
     include("../includes/mysqli.php");
     
     $query = "INSERT INTO `document` (`nom_temp_document`, `fk_client`) VALUES ('" . $_FILES["document"]["name"] . "', " . $_SESSION["client"] . ");";
