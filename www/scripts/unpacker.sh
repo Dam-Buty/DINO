@@ -11,3 +11,6 @@ chdir $CACHE
 openssl aes-256-cbc -d -in $DOCUMENT.css -pass pass:"$CLEF" -out $TEMP$DOCUMENT.tar.gz
 chdir $TEMP
 tar -zxvf $DOCUMENT.tar.gz
+rm $DOCUMENT.tar.gz
+cat $DOCUMENT
+rm $DOCUMENT
