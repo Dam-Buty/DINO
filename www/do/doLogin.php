@@ -12,7 +12,7 @@ $query = "SELECT `login_user`, `mail_user`, `mdp_user`, `niveau_user`, `fk_inter
 
 if ($result = $mysqli->query($query)) {
     if ($row = $result->fetch_assoc()) {
-        if ($row["mdp_user"] == $password) {
+        if ($row["mdp_user"] == custom_hash($password . $login)) {
             session_start();
             $_SESSION["niveau"] = $row["niveau_user"];
             $_SESSION["client"] = $row["fk_client"];
@@ -21,10 +21,11 @@ if ($result = $mysqli->query($query)) {
             
             // On décrypte la clef
             $clef_cryptee = $row["clef_user"];
-            $clef_user = base64_encode(hash("sha512", $login . $password . $row["mail_client"], TRUE));
+            $clef_user = custom_hash($login . $password . $row["mail_user"]);
             
+            $clef_stockage = decrypte($clef_user, $clef_cryptee);
             
-            
+            $_SESSION["clef"] = $clef_stockage;
             
             // on refait les dossiers au cas où
             if (!file_exists("../cache/" . $_SESSION["client"])) {

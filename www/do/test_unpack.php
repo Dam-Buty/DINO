@@ -1,11 +1,10 @@
 <?php
 session_start();
+header("Content-Type: text/plain");
 
 if ($_SESSION["niveau"] > 10) {
-    include("../includes/status.php");
-    
     $client = $_SESSION["client"];
-    $document = $_POST["document"];
+    $document = "bidule.pdf";
     $clef = $_SESSION["clef"];
     
     $descriptorspec = array(
@@ -17,6 +16,9 @@ if ($_SESSION["niveau"] > 10) {
     $cwd = NULL;
     $env = array();
     
+    echo "CMD : \n";
+    echo "../scripts/packer.sh " . $client . " " . $document . ' "' . $clef . '"';
+    
     $process = proc_open("../scripts/packer.sh " . $client . " " . $document . ' "' . $clef . '"', $descriptorspec, $pipes, $cwd, $env);
 
     if (is_resource($process)) {
@@ -27,28 +29,21 @@ if ($_SESSION["niveau"] > 10) {
         
         fclose($pipes[0]);
         
-        $out = stream_get_contents($pipes[1]);
+        echo "\nSTDOUT : \n";
+        echo stream_get_contents($pipes[1]);
         fclose($pipes[1]);
         
-        $err = stream_get_contents($pipes[2]);
+        echo "\nSTDERR : \n";
+        echo stream_get_contents($pipes[2]);
         fclose($pipes[2]);
 
         // It is important that you close any pipes before calling
         // proc_close in order to avoid a deadlock
         $return_value = proc_close($process);
 
-        if ($return_value == 0) {
-            status(200);
-            $json = '{ "return": "' . $out . '", "message": "' . $err . '" }';
-        } else {
-            status(500);
-            $json = '{ "error": "' . $return_value . '", "message": "' . $err . '" }';
-        }
-    } else {
-        status(500);
-        $json = '{ "error": "unknown" }';
+        echo "command returned $return_value\n";
     }
-    header('Content-Type: application/json');
-    echo $json;
+    
+    echo "\n\n" . $retour;
 }
 ?>

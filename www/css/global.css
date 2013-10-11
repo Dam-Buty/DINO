@@ -151,7 +151,7 @@ input {
 
 #tiroir-queue li.done {
     background-size: 0 0;
-    background-color: green;
+    background-color: #19bf19;
 }
 
 .error {

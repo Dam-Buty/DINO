@@ -14,9 +14,8 @@
     
     $.ajax({ url: "json/queue.php" })
     .done(function (data) {
-        console.log(data.queue);
         $.each(data.queue, function() {
-            var document_li = set_li_status(create_li(this.filename), 1);
+            var document_li = set_li_status(create_li(this.displayname), 1);
             this.li = document_li;
             queue.push(this);
             refresh_liste();

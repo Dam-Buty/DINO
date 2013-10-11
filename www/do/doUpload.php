@@ -4,15 +4,17 @@ include("../includes/status.php");
 
 if ($_SESSION["niveau"] > 10) {
     include("../includes/mysqli.php");
+    include("../includes/crypt.php");
     
-    $query = "INSERT INTO `document` (`nom_temp_document`, `fk_client`) VALUES ('" . $_FILES["document"]["name"] . "', " . $_SESSION["client"] . ");";
+    $filename = genere_clef(12, TRUE);
+    
+    $query = "INSERT INTO `document` (`nom_temp_document`, `filename_document`, `fk_client`) VALUES ('" . $filename . ".pdf', '" . $_FILES['document']['name'] . "', " . $_SESSION["client"] . ");";
     
     if ($mysqli->query($query)) {
-        $timestamp = date("Ymd");
         
-        if (move_uploaded_file($_FILES['document']['tmp_name'], "../cache/" . $_SESSION["client"] . "/temp/" . $timestamp . "_" . $_FILES["document"]["name"])) {
+        if (move_uploaded_file($_FILES['document']['tmp_name'], "../cache/" . $_SESSION["client"] . "/temp/" . $filename . ".pdf")) {
             status(201);
-            $json = '{ "status": "OK", filename: "' . $timestamp . '_' . $_FILES["document"]["name"] . '" }';
+            $json = '{ "status": "OK", "filename": "' . $filename . '.pdf" }';
         } else {
             status(500);
             $json = '{ "error": "move_uploaded_file" }';

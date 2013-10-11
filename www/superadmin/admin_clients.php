@@ -45,15 +45,7 @@ include("../includes/mysqli.php");
                 <input type="text" name="login" id="login"/>
                 <br/>
             <label for="credit">MDP gestionnaire : </label>
-                <input type="text" name="pass_display" id="pass_display"/>
-                <br/>
-            <div style="dipslay: none;">
-                <label for="credit">MDP gestionnaire : </label>
-                    <input type="text" name="password" id="password"/>
-                    <br/>
-            </div>
-            <label for="clef_user">Clef utilisateur</label>
-                <input type="text" name="clef_user" id="clef_user">
+                <input type="text" name="password" id="password"/>
                 <br/>
             <input type="submit" value="Valider"/>
     </form>

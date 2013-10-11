@@ -48,7 +48,7 @@ var login = function() {
             type: "POST",
             data: {
                 login: $("#login").val(),
-                password: custom_hash($("#pass").val())
+                password: $("#pass").val()
             },
             statusCode: {
                 200: bootstrap,

@@ -7,7 +7,18 @@ TEMP=../cache/$CLIENT/temp/
 
 chdir $TEMP
 
-tar -zcvf $DOCUMENT.tar.gz $DOCUMENT
-openssl aes-256-cbc -salt -in $DOCUMENT.tar.gz -pass pass:"$CLEF" -out ../$DOCUMENT.css
-rm $DOCUMENT
-rm $DOCUMENT.tar.gz
+tar -zcvf $DOCUMENT.tar.gz $DOCUMENT 1>&2
+if [ "$?" = "0" ]; then
+    openssl aes-256-cbc -salt -in $DOCUMENT.tar.gz -pass pass:"$CLEF" -out ../$DOCUMENT.css 1>&2
+    if [ "$?" = "0" ]; then
+        rm $DOCUMENT
+        rm $DOCUMENT.tar.gz
+        exit 0
+    else
+        exit 2
+    fi
+else
+    exit 2
+fi
+
+

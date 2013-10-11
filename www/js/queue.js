@@ -63,7 +63,7 @@ var upload = function(list_element, uploader, queue_position) {
                         var pourcentage = Math.floor((evt.loaded * 100) / evt.total);
                         
                         document_li = list_element.li;
-                        document_li.animate("background-size", pourcentage + "%" + " 100%");
+                        document_li.css("background-size", pourcentage + "%" + " 100%");
                         document_li.find("span").text(pourcentage + "%");
                     }
                 }, false);
@@ -78,19 +78,33 @@ var upload = function(list_element, uploader, queue_position) {
                 
                 document_li = list_element.li;
                 document_li.css( "background-size", "0% 100%" );
-                document_li.css( "background-image", "url(../img/jauge_vert.png)" );
-                document_li.animate( "background-size", "35% 100%" );
+                document_li.css( "background-image", "url(img/jauge_vert.png)" );
+                document_li.css( "background-size", "35% 100%" );
                 document_li.find("span").text("Codificando");
+                
+                console.log(data);
                 
                 $.ajax({
                     url: "do/doPack.php",
                     type: "POST",
                     data: {
-                        document: queue[queue_position]
+                        document: queue[queue_position].filename
                     },
-                }).done(function() {
-                    document_li.animate( "background-size", "100% 100%" );
-                    set_li_status(queue[queue_position].li, 1);
+                    statusCode: {
+                        200: function() {
+                            console.log("Boud");
+                            document_li.css( "background-size", "100% 100%" );
+                            set_li_status(queue[queue_position].li, 1);
+                        },
+                        500: function() {
+                            uploading[uploader] = undefined;
+                            queue[queue_position].status = -2;
+                            
+                            set_li_status(queue[queue_position].li, -2);
+                            
+                            handle_uploads();
+                        }
+                    }
                 });
                 
                 handle_uploads();
@@ -199,7 +213,7 @@ var handle_files = function() {
         // Si l'extension est légale, on pousse le fichier dans la queue
         if (extension in allowed_extensions) {
             var document_li = set_li_status(create_li(this.name), -1);
-            queue.push({ document: this, status: -1, size: this.size, li: document_li, filename: "" });
+            queue.push({ document: this, status: -1, size: this.size, li: document_li, filename: "", displayname: this.name });
         }
     });
     

@@ -5,7 +5,7 @@ if (isset($_SESSION["niveau"])) {
     include("../includes/mysqli.php");
     include("../includes/status.php");
     
-    $query = "SELECT `nom_temp_document` FROM `document` WHERE `fk_client` = " . $_SESSION["client"] . " AND `type_document` = 0;";
+    $query = "SELECT `filename_document`, `nom_temp_document` FROM `document` WHERE `fk_client` = " . $_SESSION["client"] . " AND `type_document` = 0;";
     
     if ($result = $mysqli->query($query)) {
         status(200);
@@ -18,7 +18,7 @@ if (isset($_SESSION["niveau"])) {
                 $json_queue .= ', ';
             }
             
-            $json_queue .= '{ "document": "", "status": 1, "size": "", "li": "", "filename": "' . $row["nom_temp_document"] . '" }';
+            $json_queue .= '{ "document": "", "status": 1, "size": "", "li": "", "filename": "' . $row["nom_temp_document"] . '", "displayname": "' . $row["filename_document"] . '" }';
         }
         
         $json_queue .= " ]";
