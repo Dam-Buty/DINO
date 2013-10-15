@@ -10,18 +10,18 @@ if (isset($_SESSION["superadmin"])) {
     $clef_stockage = genere_clef(32);
     $clef_cryptee = crypte($clef_user, $clef_stockage);
     
-    $password = custom_hash($_POST["password"] . $_POST["login"]);
+    $password = custom_hash($_POST["password"] . $_POST["login"], TRUE);
 
     echo "User : " . $clef_user . "<br/>";
     echo "Clef : <pre>" . $clef_stockage . "</pre>";
     
-    $query_client = "INSERT INTO `client` (`entreprise_client`, `mail_client`, `nom_contact_client`, `poste_contact_client`, `phone_contact_client`, `bucket_client`, `credit_client`, `fk_profil`) VALUES ('" . $_POST["entreprise"] . "', '" . $_POST["mail"] . "', '" . $_POST["nom_contact"] . "', '" . $_POST["poste_contact"] . "', '" . $_POST["phone_contact"] . "', '" . $_POST["bucket"] . "', " . $_POST["credit"] . ", " . $_POST["profil"] . ");";
+    $query_client = "INSERT INTO `client` (`entreprise_client`, `mail_client`, `nom_contact_client`, `poste_contact_client`, `phone_contact_client`, `bucket_client`, `credit_client`) VALUES ('" . $_POST["entreprise"] . "', '" . $_POST["mail"] . "', '" . $_POST["nom_contact"] . "', '" . $_POST["poste_contact"] . "', '" . $_POST["phone_contact"] . "', '" . $_POST["bucket"] . "', " . $_POST["credit"] . ");";
     
     if ($mysqli->query($query_client)) {
         $query_user = "INSERT INTO `user` (`login_user`, `mdp_user`, `mail_user`, `niveau_user`, `fk_client`, `clef_user`) VALUES ('" . $_POST["login"] . "', '" . $password . "', '" . $_POST["mail"] . "', 30, " . $mysqli->insert_id . ", '" . $clef_cryptee . "');";
         
         if ($mysqli->query($query_user)) {
-            //header("Location: ../index.php");
+            header("Location: ../index.php");
         } else {
             echo $query_user . "<br/>";
             echo $mysqli->error;

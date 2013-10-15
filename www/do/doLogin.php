@@ -12,7 +12,7 @@ $query = "SELECT `mail_user`, `mdp_user`, `clef_user` FROM `user` WHERE `login_u
 
 if ($result = $mysqli->query($query)) {
     if ($row = $result->fetch_assoc()) {
-        if ($row["mdp_user"] == custom_hash($password . $login)) {
+        if ($row["mdp_user"] == custom_hash($password . $login, TRUE)) {
             session_start();
             $_SESSION["user"] = $login;
             

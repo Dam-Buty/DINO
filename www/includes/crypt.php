@@ -1,15 +1,12 @@
 <?php
 
 // Hash SHA256
-function custom_hash($clef) {
-    return hash("sha256", $clef, TRUE);
+function custom_hash($clef, $b64 = FALSE) {
+    return hash("sha256", $clef, !$b64);
 }
 
-function genere_filename($n) {
-
-}
-
-// Génération de la clef de stockage
+// Génération d'une chaine de n caractères au hasard
+// Si alpha = TRUE on n'utilise que des lettres et des chiffres
 function genere_clef($n, $alpha = FALSE) {
     if ($alpha) {
         $alphabet = "abcdefghijklmnopqrstuwxyzABCDEFGHIJKLMNOPQRSTUWXYZ0123456789";

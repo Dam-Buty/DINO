@@ -5,19 +5,6 @@ include("../includes/mysqli.php");
 ?>
 <div>
     <form name="leForm" action="do/doInscription.php" method="post">
-        <label for="profil">Profil :</label>
-            <select name="profil">
-            <?php
-            $query = "SELECT * FROM `profil`";
-            
-            $res = $mysqli->query($query);
-            
-            while($row = $res->fetch_assoc()) {
-                echo "<option value='" . $row["pk_profil"] . "'>" . $row["nom_profil"] . "</option>";
-            }
-            ?>
-            </select>
-                <br/>
             <label for="entreprise">Entreprise : </label>
                 <input type="text" name="entreprise"/>
                 <br/>

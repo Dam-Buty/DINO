@@ -70,7 +70,7 @@ if (isset($_SESSION["user"])) {
                                 $json_champs .= ", ";
                             }
                             
-                            $json_champs .= '{ "label": "' . $row_champs["label"] . '", "pluriel": "' . $row_champs["pluriel"] . '", "liste": "%%LISTE%%" }'
+                            $json_champs .= '{ "label": "' . $row_champs["label"] . '", "pluriel": "' . $row_champs["pluriel"] . '", "liste": "%%LISTE%%" }';
                             
                             //////////////////////////
                             // Récupération des valeurs de champ sur lesquelles
@@ -100,12 +100,22 @@ if (isset($_SESSION["user"])) {
                                         $json_liste .= '{ "pk": "' . $row_liste["pk_valeur_champ"] . '", "label": "' . $row_liste["label_valeur_champ"] . '" }';
                                     }
                                 } // FIN WHILE LISTE
+                                
+                                $json_liste .= " ]";
+                                
+                                $json_champs = str_replace('"%%LISTE%%', $json_liste, $json_champs);
+                                
                             } else {
                                 status(500);
                                 $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
                                 break;
                             }
                         } // FIN WHILE CHAMPS
+                        
+                        $json_champs .= " ]";
+                        
+                        $json_mondes = str_replace('"%%CHAMPS%%', $json_champs, $json_mondes);
+                        
                     } else {
                         status(500);
                         $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
@@ -116,8 +126,66 @@ if (isset($_SESSION["user"])) {
                     // Récupération des catégories sur lesquelles l'user a des droits
                     //////////////////////////
                     
-                    $query_categories = "";
+                    $query_categories = "SELECT `pk_categorie`, `label_categorie` FROM `categorie` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `niveau_categorie` <= " . $_SESSION["niveau"] . ";";
+                    
+                    if ($result_categories = $mysqli->query($query_categories)) {
+                        $json_categories = "[ ";
+                        
+                        while($row_categories = $result_categories->fetch_assoc()) {
+                            if ($json_categories != "[ ") {
+                                $json_categories .= ", ";
+                            }
+                            
+                            $json_categories .= '{ "pk": "' . $row_categories["pk_categorie"] . '", "label": "' . $row_categories["label_categorie"] . '", "types": "%%TYPES%%" }';
+                            
+                            //////////////////////////
+                            // Récupération des types de documents
+                            //////////////////////////
+                            $query_types = "SELECT `pk_type_doc`, `label_type_doc`, `detail_type_doc` FROM `type_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `niveau_type_doc` >= " . $_SESSION["niveau"] . ";";
+                            
+                            if ($result_types = $mysqli->query($query_types)) {
+                            
+                                $json_types = "[ ";
+                                
+                                while($row_types = $result_types->fetch_assoc()) {
+                                    if ($json_types != "[ ") {
+                                        $json_types .= ", ";
+                                    }
+                                    
+                                    $json_types .= '{ "pk": "' . $row_types["pk_type_doc"] . '", "label": "' . $row_types["label_type_doc"] . '", "detail": "' . $row_types["detail_type_doc"] . '" }';
+                                } // FIN WHILE TYPES
+                                
+                                $json_types .= " ]";
+                                
+                                $json_categories = str_replace('"%%TYPES%%"', $json_types, $json_categories);
+                                
+                            } else {
+                                status(500);
+                                $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
+                                break;
+                            }
+                        } // FIN WHILE CATEGORIES
+                        
+                        $json_categories .= " ]";
+                        
+                        $json_mondes = str_replace('"%%CATEGORIES%%"', $json_categories, $json_mondes);
+                        
+                    } else {
+                        status(500);
+                        $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
+                        break;
+                    }
                 } // FIN WHILE MONDES
+                
+                //////////////////////////
+                // Finalisation du JSON
+                // Envoi du statut OK (200)
+                //////////////////////////                
+                $json_mondes .= " ]";
+                
+                $json = str_replace('"%%MONDES%%"', $json_mondes, $json);
+                
+                status(200);
             } else {
                 status(500);
                 $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
