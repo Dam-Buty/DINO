@@ -14,6 +14,7 @@ session_start();
 <link rel="stylesheet" href="css/global.css?v=3" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/validationEngine.jquery.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/jquery-ui-1.10.3.custom.css?v=1" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/zebra_dialog.css?v=1" media="screen" type="text/css"/>
 
 </head>
 <body>
@@ -37,6 +38,7 @@ session_start();
 <script src="js/jquery-ui-1.10.3.custom.js?v=1"></script>
 <script src="js/jquery.validationEngine.js?v=1"></script>
 <script src="js/jquery.validationEngine-es.js?v=1"></script>
+<script src="js/zebra_dialog.js?v=1"></script>
 <script src="js/CS.Crypto.js?v=1"></script>
 <script src="js/bootstrap.js?v=1"></script>
 <script src="js/application.js?v=1"></script>

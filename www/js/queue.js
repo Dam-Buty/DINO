@@ -64,7 +64,7 @@ var upload = function(list_element, uploader, queue_position) {
                         
                         document_li = list_element.li;
                         document_li.css("background-size", pourcentage + "%" + " 100%");
-                        document_li.find("span").text(pourcentage + "%");
+                        document_li.find("span").first().text(pourcentage + "%");
                     }
                 }, false);
             }
@@ -80,9 +80,8 @@ var upload = function(list_element, uploader, queue_position) {
                 document_li.css( "background-size", "0% 100%" );
                 document_li.css( "background-image", "url(img/jauge_vert.png)" );
                 document_li.css( "background-size", "35% 100%" );
-                document_li.find("span").text("Codificando");
+                document_li.find("span").first().text("Codificando");
                 
-                console.log(data);
                 
                 $.ajax({
                     url: "do/doPack.php",
@@ -92,7 +91,6 @@ var upload = function(list_element, uploader, queue_position) {
                     },
                     statusCode: {
                         200: function() {
-                            console.log("Boud");
                             document_li.css( "background-size", "100% 100%" );
                             set_li_status(queue[queue_position].li, 1);
                         },
@@ -152,6 +150,39 @@ var handle_uploads = function() {
     });
 }
 
+var remove_document = function() {
+    var position = $(this).closest("li").index();
+    var list_element = queue[position];
+
+    $.ajax({
+        url: "do/doRemoveFromQueue.php",
+        type: "POST",
+        data: {
+            filename: list_element.filename
+        },
+        statusCode: {
+            204: function() {
+                queue.splice(position, 1);
+                refresh_liste();
+            },
+            403: function() {
+                window.location.replace("index.php");
+            },
+            500: function() {
+                new $.Zebra_Dialog(
+                    'Error de supresion del documento. Gracias por intentar otra vez', {
+                    'type': 'error',
+                    'buttons':  false,
+                    'modal': false,
+                    'width': Math.floor($(window).width() * 0.3),
+                    'position': ['right - 20', 'top + 20'],
+                    'auto_close': 3000
+                });
+            },
+        }
+    });
+}
+
 var set_li_status = function(li, status) {
     var custom_class, custom_text;
     
@@ -179,6 +210,7 @@ var set_li_status = function(li, status) {
         case 1:
             custom_class = "done";
             custom_text = "OK";
+            li.find("img").click(remove_document);
             break;
     };
     
@@ -186,8 +218,9 @@ var set_li_status = function(li, status) {
     .removeClass()
     .css("background-size", "0 0")
     .addClass(custom_class)
-    .find("span")
-    .text(custom_text);
+    .find("span").first()
+    .text(custom_text)
+    ;
     
     return li;
 }
@@ -196,7 +229,13 @@ var create_li = function(name) {
     var li = $("<li></li>");
     
     li.removeClass().addClass("idle")
-    .append(name + " - <span>En fila</span>");
+    .append(name + " - <span>En fila</span>")
+    .append($("<span></span>")
+            .addClass("boutons_queue")
+            .append($("<img/>")
+                    .attr("src", "img/del.png")
+            )
+    );
     
     return li;
 };

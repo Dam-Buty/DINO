@@ -24,117 +24,108 @@ function convertBytes( $value ) {
     }
 }
 
-if (isset($_SESSION["niveau"])) {
+if (isset($_SESSION["user"])) {
     include("../includes/mysqli.php");
     
     $maxFileSize = convertBytes( ini_get( 'upload_max_filesize' ) );
     
     ////////////////////////
-    // Récupération des informations générales de l'user et du client
+    // Récupération des informations générales de l'user
     ////////////////////////
-    $query = "SELECT `pk_client`, `fk_interlocuteur`, `credit_client`, `fk_profil` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = '" . $_SESSION["user"] . "';";
+    $query = "SELECT `niveau_user`, `fk_client` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = '" . $_SESSION["user"] . "';";
     
     if ($result = $mysqli->query($query)) {
         if ($row = $result->fetch_assoc()) {
+            $_SESSION["niveau"] = $row["niveau_user"];
+            $_SESSION["client"] = $row["fk_client"];
+            
             // Génération du JSON de base
-            $json = '{ "status": "OK", "maxfilesize": "' . $maxFileSize . '", "credit": "' . $row["credit_client"] . '", "champs": "%%CHAMPS%%", "clients": "%%CLIENTS%%" }';
+            $json = '{ "status": "OK", "maxfilesize": "' . $maxFileSize . '", "mondes": "%%MONDES%%" }';
             
             //////////////////////////
-            // Récupération des champs
+            // Récupération des mondes sur lesquels l'user a des droits
             //////////////////////////
-            $query_champs = "SELECT `label_champ` , `pluriel_champ` , `source_champ`, ( SELECT `valeur_champ` FROM `user_champ` WHERE `login_user` = '" . $login . "' AND `fk_champ` = `pk_champ` ) AS `valeur_user` FROM `champ` WHERE `fk_profil` = " . $row["fk_profil"] . ";";
+            $query_mondes = "SELECT `pk_monde`, `label_monde`, `cyclique_monde` FROM `monde` WHERE `fk_client` = " . $row["fk_client"] . " AND `niveau_monde` <= " . $row["niveau_user"] . ";";
             
-            if ($result_champs = $mysqli->query($query_champs)) {
-                $json_champs = "";
-        
-                while($row_champs = $result_champs->fetch_assoc()) {
-                    if ($json_champs == "") {
-                        $json_champs = "[ ";
-                    } else {
-                        $json_champs .= ", ";
+            if ($result_mondes = $mysqli->query($query_mondes)) {
+                $json_mondes = "[ ";
+                
+                while($row_mondes = $result_mondes->fetch_assoc()) {
+                    if ($json_mondes != "[ ") {
+                        $json_mondes .= ", ";
                     }
                     
-                    // Construction du JSON de base du champ
-                    $json_champs .= '{ "label": "' . $row_champs["label_champ"] . '", "pluriel": "' . $row_champs["pluriel_champ"] . '", "valeur": "' . $row_champs["valeur_user"] . '", "liste": "%%LISTE%%" }';
+                    $json_mondes .= '{ "pk": "' . $row_mondes["pk_monde"] . '", "label": "' . $row_mondes["label_monde"] . '", "cyclique": "' . $row_mondes["cyclique_monde"] . '", "champs": "%%CHAMPS%%", "categories": "%%CATEGORIES%%" }';
                     
-                    ///////////////////////////////
-                    // Appel de la procédure stockée pour lister le champ
-                    ///////////////////////////////
-                    $query_champ = "CALL `" . $row_champs["source_champ"] . "`(" . $row["pk_client"] . ");";
+                    //////////////////////////
+                    // Récupération des champs
+                    //////////////////////////
+                    $query_champs = "SELECT `pk_champ`, `label_champ`, `pluriel_champ`, ( SELECT COUNT(*) FROM `monde_champ` WHERE `fk_client` = " . $row["fk_client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " ) as `presence_champ` FROM `champ` WHERE `presence_champ` > 0";
                     
-                    if ($mysqli->multi_query($query_champ)) {
-                        if ($result_champ = $mysqli->store_result()) {
-                            $json_liste = "[ ";
-                            while ($row_champ = $result_champ->fetch_assoc()) {
-                                if ($json_liste != "[ ") {
-                                    $json_liste .= ", ";
-                                }
+                    if ($result_champs = $mysqli->query($query_champs)) {
+                        $json_champs = "[ ";
+                        
+                        while($row_champs = $result_champs->fetch_assoc()) {
+                            if ($json_champs != "[ ") {
+                                $json_champs .= ", ";
+                            }
+                            
+                            $json_champs .= '{ "label": "' . $row_champs["label"] . '", "pluriel": "' . $row_champs["pluriel"] . '", "liste": "%%LISTE%%" }'
+                            
+                            //////////////////////////
+                            // Récupération des valeurs de champ sur lesquelles
+                            // l'user a des droits
+                            //////////////////////////
+                            $query_liste = "SELECT `pk_valeur_champ`, `label_valeur_champ`, ( SELECT COUNT(*) FROM `user_valeur_champ` WHERE `fk_user` = '" . $_SESSION["user"] . "' AND `fk_champ` = " . $row_champs["pk_champ"] . " AND `fk_client` = " . $_SESSION["client"] . " ) as `droits_valeur_champ` FROM `valeur_champ` WHERE `fk_champ` = " . $row_champs["pk_champ"] . " ORDER BY `droits_valeur_champ` DESC;";
+                            
+                            if ($result_liste = $mysqli->query($query_liste)) {
+                                $full_rights = -1;
+                                $json_liste = "[ ";
                                 
-                                // Alimentation de la liste
-                                $json_liste .= '{ "id": "' . $row_champ["id"] . '", "label": "' . $row_champ["label"] . '", "detail": "' . $row_champ["detail"] . '" }';
+                                while($row_liste = $result_liste->fetch_assoc()) {
+                                    if ($full_rights == -1) {
+                                        // Si la première valeur du champ n'a pas de droits, alors aucune n'en a, alor l'user a tous les droits
+                                        if (!$row_liste["droits_valeur_champ"]) {
+                                            $full_rights = 1;
+                                        } else {
+                                            $full_rights = 0;
+                                        }
+                                    }
+                                    
+                                    if ($full_rights or $row_liste["droits_valeur_champ"]) {
+                                        if ($json_liste != "[ ") {
+                                            $json_liste .= ", ";
+                                        }
+                                        
+                                        $json_liste .= '{ "pk": "' . $row_liste["pk_valeur_champ"] . '", "label": "' . $row_liste["label_valeur_champ"] . '" }';
+                                    }
+                                } // FIN WHILE LISTE
+                            } else {
+                                status(500);
+                                $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
+                                break;
                             }
-                            
-                            $result_champ->free();
-                            
-                            // Nettoyage des résultats mysqli
-                            while($mysqli->more_results() && $mysqli->next_result()) {
-                                $extraResult = $mysqli->use_result();
-                                if($extraResult instanceof mysqli_result){
-                                    $extraResult->free();
-                                }
-                            }
-                            
-                            $json_liste .= " ]";
-                            
-                            $json_champs = str_replace('"%%LISTE%%"', $json_liste, $json_champs);
-                            
-                        } else {
-                            status(500);
-                            $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
-                            break;
-                        }
+                        } // FIN WHILE CHAMPS
                     } else {
                         status(500);
                         $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
                         break;
                     }
-                }
-                
-                $json_champs .= " ]";
-                $json = str_replace('"%%CHAMPS%%"', $json_champs, $json);
-                
-                ////////////////////////
-                // Gestion des clients
-                // Les utilisateurs niveau 0 (clients) n'ont pas accès à la liste de clients
-                ////////////////////////
-                if ($row["niveau_user"] >= 10) {
-                    $query_clients = "SELECT `num_interlocuteur`, `nom_interlocuteur` FROM `interlocuteur` WHERE `fk_client` = " . $row["pk_client"] . ";";
                     
-                    $json_client = "";
+                    //////////////////////////
+                    // Récupération des catégories sur lesquelles l'user a des droits
+                    //////////////////////////
                     
-                    if ($result_clients = $mysqli->query($query_clients)) {
-                        $json_client .= "[ ";
-                        
-                        while ($row_clients = $result_clients->fetch_assoc()) {
-                            if ($json_client != "[ ") {
-                                $json_client .= ", ";
-                            }
-                            
-                            $json_client .= '{ "num": ' . $row_clients["num_interlocuteur"] . ', "nom": "' . $row_clients["nom_interlocuteur"] . '" }';
-                        }
-                        
-                        $json_client .= " ]";
-                        
-                        $json = str_replace('"%%CLIENTS%%"', $json_client, $json);
-                    } else {
-                        status(500);
-                        $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_clients . '" }';
-                    }
-                }
+                    $query_categories = "";
+                } // FIN WHILE MONDES
             } else {
                 status(500);
-                $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champs . '" }';
+                $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
+                break;
             }
+        } else {
+            status(500);
+            $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query . '" }';
         }
     } else {
         status(500);

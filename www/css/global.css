@@ -213,3 +213,7 @@ input {
     -webkit-bottom-right-radius:10px;
     border-bottom-right-radius:10px;
 }
+
+.boutons_queue {
+    float: right;
+}

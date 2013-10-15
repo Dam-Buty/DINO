@@ -8,15 +8,12 @@ $password = $_POST["password"];
 
 $err = 0;
 
-$query = "SELECT `login_user`, `mail_user`, `mdp_user`, `niveau_user`, `fk_interlocuteur`, `fk_client`, `clef_user` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = '" . $login . "';";
+$query = "SELECT `mail_user`, `mdp_user`, `clef_user` FROM `user` WHERE `login_user` = '" . $login . "';";
 
 if ($result = $mysqli->query($query)) {
     if ($row = $result->fetch_assoc()) {
         if ($row["mdp_user"] == custom_hash($password . $login)) {
             session_start();
-            $_SESSION["niveau"] = $row["niveau_user"];
-            $_SESSION["client"] = $row["fk_client"];
-            $_SESSION["interlocuteur"] = $row["fk_interlocuteur"];
             $_SESSION["user"] = $login;
             
             // On décrypte la clef
@@ -26,14 +23,8 @@ if ($result = $mysqli->query($query)) {
             $clef_stockage = decrypte($clef_user, $clef_cryptee);
             
             $_SESSION["clef"] = $clef_stockage;
-            
-            // on refait les dossiers au cas où
-            if (!file_exists("../cache/" . $_SESSION["client"])) {
-                mkdir("../cache/" . $_SESSION["client"]);
-                mkdir("../cache/" . $_SESSION["client"] . "/temp");
-            }
-            
-            $json = '{ "mail": "' . $row["mail_user"] . '" }';
+                        
+            $json = '{ "status": "OK" }';
             status(200);
         } else {
             status(403);

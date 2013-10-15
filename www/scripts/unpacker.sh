@@ -9,8 +9,20 @@ TEMP=temp/
 chdir $CACHE
 
 openssl aes-256-cbc -d -in $DOCUMENT.css -pass pass:"$CLEF" -out $TEMP$DOCUMENT.tar.gz
-chdir $TEMP
-tar -zxvf $DOCUMENT.tar.gz
-rm $DOCUMENT.tar.gz
-cat $DOCUMENT
-rm $DOCUMENT
+if [ "$?" = "0" ]; then
+    chdir $TEMP
+    tar -O -zxvf $DOCUMENT.tar.gz
+    if [ "$?" = "0" ]; then
+        rm $DOCUMENT.tar.gz
+        if [ "$?" = "0" ]; then
+            exit 0
+        else
+            exit 3
+        fi
+    else
+        exit 2
+    fi
+else
+    exit 1
+fi
+

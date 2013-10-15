@@ -12,13 +12,21 @@ if [ "$?" = "0" ]; then
     openssl aes-256-cbc -salt -in $DOCUMENT.tar.gz -pass pass:"$CLEF" -out ../$DOCUMENT.css 1>&2
     if [ "$?" = "0" ]; then
         rm $DOCUMENT
-        rm $DOCUMENT.tar.gz
-        exit 0
+        if [ "$?" = "0" ]; then
+            rm $DOCUMENT.tar.gz
+            if [ "$?" = "0" ]; then
+                exit 0
+            else
+                exit 3
+            fi
+        else
+            exit 3
+        fi
     else
         exit 2
     fi
 else
-    exit 2
+    exit 1
 fi
 
 
