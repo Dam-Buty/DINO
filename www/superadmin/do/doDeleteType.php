@@ -5,7 +5,7 @@ if ($_SESSION["superadmin"]) {
     include("../../includes/mysqli.php");
     include("../../includes/status.php");
     
-    $query = "DELETE FROM `type_doc` WHERE `pk_type_doc` = " . $_POST["pk"] . " AND `fk_client` = " . $_POST["client"] . " AND `fk_monde` = " . $_POST["monde"] . " AND `fk_categorie_doc` = " . $_POST["categorie"] . ";";
+    $query = "DELETE FROM `type_doc` WHERE `pk_type_doc` = " . $_POST["pk"] . " AND `fk_client` = " . $_POST["client"] . ";";
     
     if ($mysqli->query($query)) {
         status(200);

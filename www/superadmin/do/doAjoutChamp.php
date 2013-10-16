@@ -5,7 +5,12 @@ if ($_SESSION["superadmin"]) {
     include("../../includes/mysqli.php");
     include("../../includes/status.php");
     
-    $query = "DELETE FROM `type_doc` WHERE `pk_type_doc` = " . $_POST["pk"] . " AND `fk_client` = " . $_POST["client"] . " AND `fk_monde` = " . $_POST["monde"] . " AND `fk_categorie_doc` = " . $_POST["categorie"] . ";";
+    if ($_POST["presence"] == 1) {
+        $query = "DELETE FROM `monde_champ` WHERE `fk_monde` = " . $_POST["monde"] . " AND `fk_client` = " . $_POST["client"] . " AND `fk_champ` = " . $_POST["pk"] . ";";
+    } else {
+        $query = "INSERT INTO `monde_champ` (`fk_monde`, `fk_client`, `fk_champ`) VALUES (" . $_POST["monde"] . ", " . $_POST["client"] . ", " . $_POST["pk"] . ");";
+    }
+    
     
     if ($mysqli->query($query)) {
         status(200);

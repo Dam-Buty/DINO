@@ -62,7 +62,7 @@ include("../includes/mysqli.php");
 <br/>
 
 <textarea id="liste_champ"></textarea>
-<br><a class="save_liste">Save</a>
+<br><span class="save_liste">Save</span>
 <br/><br/>
 
 <table id="categories" data-selected="none">
@@ -80,7 +80,7 @@ include("../includes/mysqli.php");
             <td></td>
             <td><input type="text" class="label_categorie"/></td>
             <td><input type="text" class="niveau_categorie"/></td>
-            <td><span class="save_categorie" href="#">Save</span> - <span class="delete_categorie" href="#">Delete</span></td>
+            <td><span class="save_categorie">Save</span> - <span class="delete_categorie">Delete</span></td>
         </tr>
     </tbody>
 </table>
@@ -90,7 +90,6 @@ include("../includes/mysqli.php");
     <thead>
         <tr><th colspan="5">Types</th></tr>
         <tr>    
-            <th>Sel.</th>
             <th>Label</th>
             <th>Détail</th>
             <th>Niveau</th>
@@ -99,11 +98,10 @@ include("../includes/mysqli.php");
     </thead>
     <tbody>
         <tr class="new_type" data-type="new">
-            <td></td>
             <td><input type="text" class="label_type"/></td>
             <td><input type="checkbox" class="detail_type"/></td>
             <td><input type="text" class="niveau_type"/></td>
-            <td><span class="save_type" href="#">Save</span> - <span class="delete_type" href="#">Delete</span></td>
+            <td><span class="save_type">Save</span> - <span class="delete_type">Delete</span></td>
         </tr>
     </tbody>
 </table>
@@ -112,4 +110,5 @@ include("../includes/mysqli.php");
 <script type="text/javascript" src="js/superadmin.js"></script>
 <script type="text/javascript">
 charge_mondes();
+$(".save_liste").click(save_liste);
 </script>

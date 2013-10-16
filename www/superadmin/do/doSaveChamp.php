@@ -8,7 +8,7 @@ if ($_SESSION["superadmin"]) {
     if ($_POST["pk"] == "new") {
         $query = "INSERT INTO `champ` (`label_champ`, `pluriel_champ`, `public_champ`) VALUES ('" . $_POST["label"] . "', '" . $_POST["pluriel"]. "', '" . $_POST["ispublic"] . "');";
     } else {
-        $query = "UPDATE `monde` SET `label_monde` = '" . $_POST["label"] . "', `cyclique_monde` = '" . $_POST["cyclique"] . "', `niveau_monde` = '" . $_POST["niveau"] . "' WHERE `pk_monde` = " . $_POST["pk"] . " AND `fk_client` = " . $_POST["client"] . ";";
+        $query = "UPDATE `champ` SET `label_champ` = '" . $_POST["label"] . "', `pluriel_champ` = '" . $_POST["pluriel"] . "', `public_champ` = '" . $_POST["ispublic"] . "' WHERE `pk_champ` = " . $_POST["pk"] . ";";
     }
     
     if ($mysqli->query($query)) {
