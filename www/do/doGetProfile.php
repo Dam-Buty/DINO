@@ -60,7 +60,7 @@ if (isset($_SESSION["user"])) {
                     //////////////////////////
                     // Récupération des champs
                     //////////////////////////
-                    $query_champs = "SELECT `pk_champ`, `label_champ`, `pluriel_champ`, ( SELECT COUNT(*) FROM `monde_champ` WHERE `fk_client` = " . $row["fk_client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " ) as `presence_champ` FROM `champ` WHERE `presence_champ` > 0";
+                    $query_champs = "SELECT `pk_champ`, `label_champ`, `pluriel_champ` FROM `champ` AS `c` WHERE ( SELECT COUNT(*) FROM `monde_champ` WHERE `fk_client` = " . $row["fk_client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `fk_champ` = `c`.`pk_champ` ) > 0";
                     
                     if ($result_champs = $mysqli->query($query_champs)) {
                         $json_champs = "[ ";
@@ -70,7 +70,7 @@ if (isset($_SESSION["user"])) {
                                 $json_champs .= ", ";
                             }
                             
-                            $json_champs .= '{ "label": "' . $row_champs["label"] . '", "pluriel": "' . $row_champs["pluriel"] . '", "liste": "%%LISTE%%" }';
+                            $json_champs .= '{ "label": "' . $row_champs["label_champ"] . '", "pluriel": "' . $row_champs["pluriel_champ"] . '", "liste": "%%LISTE%%" }';
                             
                             //////////////////////////
                             // Récupération des valeurs de champ sur lesquelles
@@ -103,7 +103,7 @@ if (isset($_SESSION["user"])) {
                                 
                                 $json_liste .= " ]";
                                 
-                                $json_champs = str_replace('"%%LISTE%%', $json_liste, $json_champs);
+                                $json_champs = str_replace('"%%LISTE%%"', $json_liste, $json_champs);
                                 
                             } else {
                                 status(500);
@@ -114,7 +114,7 @@ if (isset($_SESSION["user"])) {
                         
                         $json_champs .= " ]";
                         
-                        $json_mondes = str_replace('"%%CHAMPS%%', $json_champs, $json_mondes);
+                        $json_mondes = str_replace('"%%CHAMPS%%"', $json_champs, $json_mondes);
                         
                     } else {
                         status(500);
@@ -126,7 +126,7 @@ if (isset($_SESSION["user"])) {
                     // Récupération des catégories sur lesquelles l'user a des droits
                     //////////////////////////
                     
-                    $query_categories = "SELECT `pk_categorie`, `label_categorie` FROM `categorie` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `niveau_categorie` <= " . $_SESSION["niveau"] . ";";
+                    $query_categories = "SELECT `pk_categorie_doc`, `label_categorie_doc` FROM `categorie_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `niveau_categorie_doc` <= " . $_SESSION["niveau"] . ";";
                     
                     if ($result_categories = $mysqli->query($query_categories)) {
                         $json_categories = "[ ";
@@ -136,12 +136,12 @@ if (isset($_SESSION["user"])) {
                                 $json_categories .= ", ";
                             }
                             
-                            $json_categories .= '{ "pk": "' . $row_categories["pk_categorie"] . '", "label": "' . $row_categories["label_categorie"] . '", "types": "%%TYPES%%" }';
+                            $json_categories .= '{ "pk": "' . $row_categories["pk_categorie_doc"] . '", "label": "' . $row_categories["label_categorie_doc"] . '", "types": "%%TYPES%%" }';
                             
                             //////////////////////////
                             // Récupération des types de documents
                             //////////////////////////
-                            $query_types = "SELECT `pk_type_doc`, `label_type_doc`, `detail_type_doc` FROM `type_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `niveau_type_doc` >= " . $_SESSION["niveau"] . ";";
+                            $query_types = "SELECT `pk_type_doc`, `label_type_doc`, `detail_type_doc` FROM `type_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `niveau_type_doc` <= " . $_SESSION["niveau"] . ";";
                             
                             if ($result_types = $mysqli->query($query_types)) {
                             
