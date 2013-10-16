@@ -8,7 +8,7 @@ if ($_SESSION["niveau"] > 10) {
     
     $filename = genere_clef(12, TRUE);
     
-    $query = "INSERT INTO `document` (`nom_temp_document`, `filename_document`, `fk_client`) VALUES ('" . $filename . ".pdf', '" . $_FILES['document']['name'] . "', " . $_SESSION["client"] . ");";
+    $query = "INSERT INTO `document` (`filename_document`, `display_document`, `fk_client`) VALUES ('" . $filename . ".pdf', '" . $_FILES['document']['name'] . "', " . $_SESSION["client"] . ");";
     
     if ($mysqli->query($query)) {
         

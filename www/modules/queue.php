@@ -5,6 +5,20 @@
         <div id="div-list"><ul id="files-list"></ul></div>
     </div>
 </div>
+
+<div id="bucket_queue" class="bucket">
+    <ul>
+        <li id="modele_li_queue" class="idle">
+            <span class="filename"></span> - 
+            <span>En fila</span>
+            <span class="boutons_queue">
+                <img id="bouton_edit_queue" src="img/edit.png"/>
+                <img id="bouton_del_queue" src="img/del.png"/>
+            </span>
+        </li>
+    </ul>
+</div>
+
 <script type="text/javascript">
     $("#poignee-queue").click(anime_queue);
     $("#files-handler").change(handle_files);

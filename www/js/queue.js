@@ -64,7 +64,7 @@ var upload = function(list_element, uploader, queue_position) {
                         
                         document_li = list_element.li;
                         document_li.css("background-size", pourcentage + "%" + " 100%");
-                        document_li.find("span").first().text(pourcentage + "%");
+                        document_li.find("span").eq(1).text(pourcentage + "%");
                     }
                 }, false);
             }
@@ -80,7 +80,7 @@ var upload = function(list_element, uploader, queue_position) {
                 document_li.css( "background-size", "0% 100%" );
                 document_li.css( "background-image", "url(img/jauge_vert.png)" );
                 document_li.css( "background-size", "35% 100%" );
-                document_li.find("span").first().text("Codificando");
+                document_li.find("span").eq(1).text("Codificando");
                 
                 
                 $.ajax({
@@ -150,6 +150,10 @@ var handle_uploads = function() {
     });
 }
 
+var store_document = function() {
+
+};
+
 var remove_document = function() {
     var position = $(this).closest("li").index();
     var list_element = queue[position];
@@ -210,7 +214,9 @@ var set_li_status = function(li, status) {
         case 1:
             custom_class = "done";
             custom_text = "OK";
-            li.find("img").click(remove_document);
+            li.find("img")
+                .eq(0).click(store_document).end()
+                .eq(1).click(remove_document).end()
             break;
     };
     
@@ -218,7 +224,7 @@ var set_li_status = function(li, status) {
     .removeClass()
     .css("background-size", "0 0")
     .addClass(custom_class)
-    .find("span").first()
+    .find("span").eq(1)
     .text(custom_text)
     ;
     
@@ -226,16 +232,9 @@ var set_li_status = function(li, status) {
 }
 
 var create_li = function(name) {
-    var li = $("<li></li>");
+    var li = $("#modele_li_queue").clone();
     
-    li.removeClass().addClass("idle")
-    .append(name + " - <span>En fila</span>")
-    .append($("<span></span>")
-            .addClass("boutons_queue")
-            .append($("<img/>")
-                    .attr("src", "img/del.png")
-            )
-    );
+    li.find("span").first().text(name);
     
     return li;
 };
