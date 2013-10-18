@@ -70,7 +70,7 @@ if (isset($_SESSION["user"])) {
                                 $json_champs .= ", ";
                             }
                             
-                            $json_champs .= '{ "label": "' . $row_champs["label_champ"] . '", "pluriel": "' . $row_champs["pluriel_champ"] . '", "liste": "%%LISTE%%" }';
+                            $json_champs .= '{ "pk": "' . $row_champs["pk_champ"] . '", "label": "' . $row_champs["label_champ"] . '", "pluriel": "' . $row_champs["pluriel_champ"] . '", "liste": "%%LISTE%%" }';
                             
                             //////////////////////////
                             // Récupération des valeurs de champ sur lesquelles

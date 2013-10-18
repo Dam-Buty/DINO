@@ -5,7 +5,7 @@ if (isset($_SESSION["niveau"])) {
     include("../includes/mysqli.php");
     include("../includes/status.php");
     
-    $query = "SELECT `filename_document`, `display_document` FROM `document` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = 0;";
+    $query = "SELECT `filename_document`, `display_document`, `fk_monde`, `fk_operation` FROM `document` WHERE `fk_client` = " . $_SESSION["client"] . ";";
     
     if ($result = $mysqli->query($query)) {
         status(200);
@@ -18,7 +18,7 @@ if (isset($_SESSION["niveau"])) {
                 $json_queue .= ', ';
             }
             
-            $json_queue .= '{ "document": "", "status": 1, "size": "", "li": "", "filename": "' . $row["filename_document"] . '", "displayname": "' . $row["display_document"] . '", "store": { "monde": "", "operation": "", "champs": [], "categorie": "", "type_doc": { "pk": "", "detail": "" } } }';
+            $json_queue .= '{ "document": "", "status": 1, "size": "", "li": "", "filename": "' . $row["filename_document"] . '", "displayname": "' . $row["display_document"] . '", "store": { "monde": "' . $row["fk_monde"] . '", "operation": "' . $row["fk_operation"] . '", "champs": "%%CHAMPS%%", "categorie": "%%CATEGORIE%%", "type_doc": { "pk": "%%TYPE%%", "detail": "%%DETAIL%%" } } }';
         }
         
         $json_queue .= " ]";

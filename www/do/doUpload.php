@@ -7,7 +7,7 @@ if ($_SESSION["niveau"] > 10) {
     include("../includes/crypt.php");
     
     $filename = genere_clef(12, TRUE);
-    1000-01-01 00:00:00
+    
     $query = "INSERT INTO `document` (`filename_document`, `display_document`, `fk_client`, `fk_user`, `date_upload_document`) VALUES ('" . $filename . ".pdf', '" . $_FILES['document']['name'] . "', " . $_SESSION["client"] . ", " . $_SESSION["user"] . ", '" . date("Y-m-d H:i:s") . "');";
     
     if ($mysqli->query($query)) {
