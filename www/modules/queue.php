@@ -6,20 +6,27 @@
     </div>
 </div>
 
-<div id="bucket_queue" class="bucket">
+<div id="bucket-queue" class="bucket">
     <ul>
-        <li id="modele_li_queue" class="idle">
+        <li id="modele-li-queue" class="idle">
             <span class="filename"></span> - 
             <span>En fila</span>
-            <span class="boutons_queue">
-                <img id="bouton_edit_queue" src="img/edit.png"/>
-                <img id="bouton_del_queue" src="img/del.png"/>
+            <span class="boutons-li">
+                <img class="bouton-edit-li" src="img/edit.png"/>
+                <img class="bouton-del-li" src="img/del.png"/>
             </span>
+            <div class="store" data-page="">
+                <p></p>
+                <span class="boutons-store">
+                    <img class="bouton-prev-store" src="img/prev.png"/>
+                    <img class="bouton-next-store" src="img/next.png"/>
+                </span>
+            </div>
         </li>
     </ul>
 </div>
 
-<script type="text/javascript">
+<script type="text/javascript">    
     $("#poignee-queue").click(anime_queue);
     $("#files-handler").change(handle_files);
     
@@ -32,7 +39,7 @@
             var document_li = set_li_status(create_li(this.displayname), 1);
             this.li = document_li;
             queue.push(this);
-            refresh_liste();
         });
+        refresh_liste();
     });
 </script>

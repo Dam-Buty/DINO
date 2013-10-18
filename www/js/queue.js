@@ -41,6 +41,12 @@ var refresh_liste = function() {
     $.each(queue, function(i, document) {
         $("#files-list").append(queue[i].li);
     });
+    
+    $(".bouton-edit-li").unbind();
+    $(".bouton-del-li").unbind();
+    
+    $(".bouton-edit-li").click(store_document);
+    $(".bouton-del-li").click(remove_document);
 };
 
 var upload = function(list_element, uploader, queue_position) {
@@ -93,6 +99,7 @@ var upload = function(list_element, uploader, queue_position) {
                         200: function() {
                             document_li.css( "background-size", "100% 100%" );
                             set_li_status(queue[queue_position].li, 1);
+                            handle_uploads();
                         },
                         500: function() {
                             uploading[uploader] = undefined;
@@ -150,12 +157,8 @@ var handle_uploads = function() {
     });
 }
 
-var store_document = function() {
-
-};
-
 var remove_document = function() {
-    var position = $(this).closest("li").index();
+    var position = $(this).closest("li").attr("data-position");
     var list_element = queue[position];
 
     $.ajax({
@@ -214,9 +217,6 @@ var set_li_status = function(li, status) {
         case 1:
             custom_class = "done";
             custom_text = "OK";
-            li.find("img")
-                .eq(0).click(store_document).end()
-                .eq(1).click(remove_document).end()
             break;
     };
     
@@ -232,9 +232,11 @@ var set_li_status = function(li, status) {
 }
 
 var create_li = function(name) {
-    var li = $("#modele_li_queue").clone();
+    var li = $("#modele-li-queue").clone();
     
     li.find("span").first().text(name);
+    li.attr("data-position", queue.length);
+    li.attr("id", "");
     
     return li;
 };
@@ -251,7 +253,7 @@ var handle_files = function() {
         // Si l'extension est légale, on pousse le fichier dans la queue
         if (extension in allowed_extensions) {
             var document_li = set_li_status(create_li(this.name), -1);
-            queue.push({ document: this, status: -1, size: this.size, li: document_li, filename: "", displayname: this.name });
+            queue.push({ document: this, status: -1, size: this.size, li: document_li, filename: "", displayname: this.name, store: { monde: "", operation: "", champs: { monde: "", liste: [] } , categorie: "", type_doc: { pk: "", detail: "" } } });
         }
     });
     

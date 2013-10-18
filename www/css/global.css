@@ -214,8 +214,12 @@ input {
     border-bottom-right-radius:10px;
 }
 
-.boutons_queue {
+.boutons-li {
     float: right;
+}
+
+.store {
+    display: none;
 }
 
 .bucket {
@@ -225,4 +229,9 @@ input {
 .filename {
     width: 60%;
     overflow-x: hidden;
+}
+
+.boutons-store {
+    width: 100%;
+    text-align: center;
 }

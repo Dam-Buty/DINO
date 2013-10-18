@@ -18,7 +18,7 @@ if (isset($_SESSION["niveau"])) {
                 $json_queue .= ', ';
             }
             
-            $json_queue .= '{ "document": "", "status": 1, "size": "", "li": "", "filename": "' . $row["filename_document"] . '", "displayname": "' . $row["display_document"] . '" }';
+            $json_queue .= '{ "document": "", "status": 1, "size": "", "li": "", "filename": "' . $row["filename_document"] . '", "displayname": "' . $row["display_document"] . '", "store": { "monde": "", "operation": "", "champs": [], "categorie": "", "type_doc": { "pk": "", "detail": "" } } }';
         }
         
         $json_queue .= " ]";

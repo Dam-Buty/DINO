@@ -55,7 +55,7 @@ if (isset($_SESSION["user"])) {
                         $json_mondes .= ", ";
                     }
                     
-                    $json_mondes .= '{ "pk": "' . $row_mondes["pk_monde"] . '", "label": "' . $row_mondes["label_monde"] . '", "cyclique": "' . $row_mondes["cyclique_monde"] . '", "champs": "%%CHAMPS%%", "categories": "%%CATEGORIES%%" }';
+                    $json_mondes .= '{ "pk": "' . $row_mondes["pk_monde"] . '", "label": "' . $row_mondes["label_monde"] . '", "cyclique": "' . $row_mondes["cyclique_monde"] . '", "champs": "%%CHAMPS%%", "categories": "%%CATEGORIES%%", "references": "%%REFERENCES%%" }';
                     
                     //////////////////////////
                     // Récupération des champs
@@ -76,23 +76,14 @@ if (isset($_SESSION["user"])) {
                             // Récupération des valeurs de champ sur lesquelles
                             // l'user a des droits
                             //////////////////////////
-                            $query_liste = "SELECT `pk_valeur_champ`, `label_valeur_champ`, ( SELECT COUNT(*) FROM `user_valeur_champ` WHERE `fk_user` = '" . $_SESSION["user"] . "' AND `fk_champ` = " . $row_champs["pk_champ"] . " AND `fk_client` = " . $_SESSION["client"] . " ) as `droits_valeur_champ` FROM `valeur_champ` WHERE `fk_champ` = " . $row_champs["pk_champ"] . " ORDER BY `droits_valeur_champ` DESC;";
+                            $query_liste = "SELECT `pk_valeur_champ`, `label_valeur_champ`, ( SELECT COUNT(*) FROM `user_valeur_champ` WHERE `fk_user` = '" . $_SESSION["user"] . "' AND `fk_champ` = " . $row_champs["pk_champ"] . " AND `fk_client` = " . $_SESSION["client"] . " AND  `vc`.`pk_valeur_champ` =  `fk_valeur_champ`) as `droits_valeur_champ` FROM `valeur_champ` AS `vc` WHERE `fk_champ` = " . $row_champs["pk_champ"] . " ORDER BY `droits_valeur_champ` DESC;";
                             
                             if ($result_liste = $mysqli->query($query_liste)) {
-                                $full_rights = -1;
                                 $json_liste = "[ ";
                                 
                                 while($row_liste = $result_liste->fetch_assoc()) {
-                                    if ($full_rights == -1) {
-                                        // Si la première valeur du champ n'a pas de droits, alors aucune n'en a, alor l'user a tous les droits
-                                        if (!$row_liste["droits_valeur_champ"]) {
-                                            $full_rights = 1;
-                                        } else {
-                                            $full_rights = 0;
-                                        }
-                                    }
                                     
-                                    if ($full_rights or $row_liste["droits_valeur_champ"]) {
+                                    if ($_SESSION["niveau"] >= 20 or $row_liste["droits_valeur_champ"]) {
                                         if ($json_liste != "[ ") {
                                             $json_liste .= ", ";
                                         }
@@ -174,6 +165,35 @@ if (isset($_SESSION["user"])) {
                         status(500);
                         $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
                         break;
+                    }
+                    
+                    //////////////////////////
+                    // Récupération des références d'opé
+                    // Si l'utilisateur est > 20 il a droit à toutes les opération
+                    // Sinon seulement celles qui ont des champs égaux aux siens
+                    //////////////////////////
+                    if ($row_mondes["cyclique_monde"]) {
+                        if ($_SESSION["niveau"] >= 20) {
+                            $query_references = "SELECT `pk_operation` AS `reference` FROM `operation` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . ";";
+                        } else {
+                            $query_references = "SELECT DISTINCT(`fk_operation`) AS `reference` FROM  `operation_valeur_champ` AS `ovc` , `valeur_champ` AS `vc` , `user_valeur_champ` AS `uvc` WHERE `ovc`.`fk_champ` = `vc`.`fk_champ` AND `ovc`.`fk_valeur_champ` = `vc`.`pk_valeur_champ` AND `vc`.`fk_champ` = `uvc`.`fk_champ` AND `vc`.`pk_valeur_champ` = `uvc`.`fk_valeur_champ` AND `fk_user` = '" . $_SESSION["user"] . "';";
+                        }
+                        
+                        if ($result_references = $mysqli->query($query_references)) {
+                            $json_references = "[ ";
+                            
+                            while($row_references = $result_references->fetch_assoc()) {
+                                if ($json_references != "[ ") {
+                                    $json_references .= ", ";
+                                }
+                                
+                                $json_references .= '"' . $row_references["reference"] . '"';
+                            }// FIN WHILE REFERENCES
+                            
+                            $json_references .= " ]";
+                            
+                            $json_mondes = str_replace('"%%REFERENCES%%"', $json_references, $json_mondes);
+                        }
                     }
                 } // FIN WHILE MONDES
                 
