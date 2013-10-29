@@ -25,6 +25,7 @@ if (isset($_SESSION["superadmin"])) {
             mkdir("../../cache/" + $idclient);
             mkdir("../../cache/" + $idclient + "/temp");
             header("Location: ../index.php");
+            
         } else {
             echo $query_user . "<br/>";
             echo $mysqli->error;
