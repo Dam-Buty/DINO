@@ -11,7 +11,7 @@ if ($_SESSION["superadmin"]) {
                 WHERE `fk_champ` = `c`.`pk_champ` 
                     AND `fk_monde` = " . $_POST["monde"] . " 
                     AND `fk_client` = " . $_POST["client"] . "
-                ) AS `presence_champ`                
+                ) AS `presence_champ`,                 
             FROM `champ` AS `c` 
             WHERE `public_champ` = 1 
                 OR (SELECT COUNT(*) FROM `monde_champ` 

@@ -116,9 +116,21 @@ var charge_mondes = function() {
 var save_champ = function() {
     var tr = $(this).closest("tr");
     
-    var ispublic;
+    var ismaster, ismulti, ispublic;
     
     if (tr.find("input").eq(2).prop("checked") == true) {
+        ismaster = 1;
+    } else {
+        ismaster = 0;
+    }
+    
+    if (tr.find("input").eq(3).prop("checked") == true) {
+        ismulti = 1;
+    } else {
+        ismulti = 0;
+    }
+    
+    if (tr.find("input").eq(4).prop("checked") == true) {
         ispublic = 1;
     } else {
         ispublic = 0;
@@ -133,6 +145,8 @@ var save_champ = function() {
             client: $("#client").val(),
             label: tr.find("input").eq(0).val(),
             pluriel: tr.find("input").eq(1).val(),
+            ismaster: ismaster,
+            ismulti: ismulti,
             ispublic: ispublic
         },
         statusCode: {
