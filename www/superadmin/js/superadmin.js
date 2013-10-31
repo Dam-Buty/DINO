@@ -105,9 +105,9 @@ var charge_mondes = function() {
                         .end()
                     .appendTo($("#mondes tbody"))
                 });
-                $(".save_monde").click(save_monde);
-                $(".delete_monde").click(delete_monde);
-                $(".select_monde").click(select_monde);
+                $(".save_monde").unbind().click(save_monde);
+                $(".delete_monde").unbind().click(delete_monde);
+                $(".select_monde").unbind().click(select_monde);
             }
         }
     });
@@ -183,12 +183,13 @@ var delete_champ = function() {
 var select_champ = function() {
     var tr = $(this).closest("tr");
     var pk = tr.attr("data-champ");
+    var ismaster;
     
     tr.closest("table").find("tr").css("color", "black");
     tr.css("color", "red");
     
     $("#champs").attr("data-selected", pk);
-    
+        
     $.ajax({
         url: "do/doGetListe.php",
         type: "POST",
@@ -204,8 +205,15 @@ var select_champ = function() {
 };
 
 var ajout_champ = function() {
-    var pk = $(this).closest("tr").attr("data-champ");
+    var tr = $(this).closest("tr");
+    var pk = tr.attr("data-champ");
 
+    if (tr.find("input").eq(2).prop("checked") == true) {
+        ismaster = 1;
+    } else {
+        ismaster = 0;
+    }
+    
     $.ajax({
         url: "do/doAjoutChamp.php",
         type: "POST",
@@ -213,7 +221,8 @@ var ajout_champ = function() {
             client: $("#client").val(),
             monde: $("#mondes").attr("data-selected"),
             pk: pk,
-            presence: $(this).closest("tr").attr("data-present")
+            presence: $(this).closest("tr").attr("data-present"),
+            ismaster: ismaster
         },
         statusCode: {
             200: function() {
@@ -236,16 +245,35 @@ var charge_champs = function() {
                 $(".new_champ").detach().appendTo($("#champs tbody").empty());
                 
                 $.each(champs, function() {
-                    var check_public, couleur_aj, texte_aj, presence;
+                    var couleur_aj, texte_aj;
+                    var check_master, check_multi, check_public;
                     
-                    if (this.ispublic == 1) {
-                        check_public = true;
-                        texte_aj = "Aj.";
-                        if (this.presence == 1) {
-                            couleur_aj = "green";
-                        } else {
-                            couleur_aj = "red";
+                    if (this.ismaster == 1) {
+                        check_master = true;
+                    } else {
+                        check_master = false;
+                    }
+                    
+                    if (this.ismulti == 1 || this.ispublic == 1) {
+                    
+                        if (this.ismulti == 1) {
+                            check_multi = true;
+                            texte_aj = "Aj.";
+                            if (this.presence == 1) {
+                                couleur_aj = "blue";
+                            } else {
+                                couleur_aj = "red";
+                            }
                         }
+                        if (this.ispublic == 1) {
+                            check_public = true;
+                            texte_aj = "Aj.";
+                            if (this.presence == 1) {
+                                couleur_aj = "green";
+                            } else {
+                                couleur_aj = "red";
+                            }
+                        }                        
                     } else {
                         check_public = false;
                         texte_aj = "";
@@ -264,6 +292,12 @@ var charge_champs = function() {
                             .val(this.pluriel)
                             .end()
                         .eq(2)
+                            .prop("checked", check_master)
+                            .end()
+                        .eq(3)
+                            .prop("checked", check_multi)
+                            .end()
+                        .eq(4)
                             .prop("checked", check_public)
                             .end()
                         .end()
@@ -286,10 +320,10 @@ var charge_champs = function() {
                         .end()
                     .appendTo($("#champs tbody"))
                 });
-                $(".save_champ").click(save_champ);
-                $(".delete_champ").click(delete_champ);
-                $(".select_champ").click(select_champ);
-                $(".ajout_champ").click(ajout_champ);
+                $(".save_champ").unbind().click(save_champ);
+                $(".delete_champ").unbind().click(delete_champ);
+                $(".select_champ").unbind().click(select_champ);
+                $(".ajout_champ").unbind().click(ajout_champ);
                 
             }
         }
@@ -395,9 +429,9 @@ var charge_categories = function() {
                         .end()
                     .appendTo($("#categories tbody"))
                 });
-                $(".save_categorie").click(save_categorie);
-                $(".delete_categorie").click(delete_categorie);
-                $(".select_categorie").click(select_categorie);
+                $(".save_categorie").unbind().click(save_categorie);
+                $(".delete_categorie").unbind().click(delete_categorie);
+                $(".select_categorie").unbind().click(select_categorie);
             }
         }
     });
@@ -494,8 +528,8 @@ var charge_types = function() {
                         .end()
                     .appendTo($("#types tbody"))
                 });
-                $(".save_type").click(save_type);
-                $(".delete_type").click(delete_type);
+                $(".save_type").unbind().click(save_type);
+                $(".delete_type").unbind().click(delete_type);
             }
         }
     });

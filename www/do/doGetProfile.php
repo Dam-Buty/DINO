@@ -60,7 +60,7 @@ if (isset($_SESSION["user"])) {
                     //////////////////////////
                     // Récupération des champs
                     //////////////////////////
-                    $query_champs = "SELECT `pk_champ`, `label_champ`, `pluriel_champ` FROM `champ` AS `c` WHERE ( SELECT COUNT(*) FROM `monde_champ` WHERE `fk_client` = " . $row["fk_client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `fk_champ` = `c`.`pk_champ` ) > 0";
+                    $query_champs = "SELECT `pk_champ`, `label_champ`, `pluriel_champ`, (SELECT `master_monde_champ` FROM `monde_champ` WHERE `fk_client` = " . $row["fk_client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `fk_champ` = `c`.`pk_champ`) AS `ismaster` FROM `champ` AS `c` WHERE ( SELECT COUNT(*) FROM `monde_champ` WHERE `fk_client` = " . $row["fk_client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `fk_champ` = `c`.`pk_champ` ) > 0";
                     
                     if ($result_champs = $mysqli->query($query_champs)) {
                         $json_champs = "[ ";
@@ -70,7 +70,7 @@ if (isset($_SESSION["user"])) {
                                 $json_champs .= ", ";
                             }
                             
-                            $json_champs .= '{ "pk": "' . $row_champs["pk_champ"] . '", "label": "' . $row_champs["label_champ"] . '", "pluriel": "' . $row_champs["pluriel_champ"] . '", "liste": "%%LISTE%%" }';
+                            $json_champs .= '{ "pk": "' . $row_champs["pk_champ"] . '", "master": "' . $row_champs["ismaster"] . '", "label": "' . $row_champs["label_champ"] . '", "pluriel": "' . $row_champs["pluriel_champ"] . '", "liste": "%%LISTE%%" }';
                             
                             //////////////////////////
                             // Récupération des valeurs de champ sur lesquelles

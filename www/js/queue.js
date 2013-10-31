@@ -45,8 +45,8 @@ var refresh_liste = function() {
     $(".bouton-edit-li").unbind();
     $(".bouton-del-li").unbind();
     
-    $(".bouton-edit-li").click(store_document);
-    $(".bouton-del-li").click(remove_document);
+    $(".bouton-edit-li").unbind().click(store_document);
+    $(".bouton-del-li").unbind().click(remove_document);
 };
 
 var upload = function(list_element, uploader, queue_position) {
@@ -160,7 +160,9 @@ var handle_uploads = function() {
 var remove_document = function() {
     var position = $(this).closest("li").attr("data-position");
     var list_element = queue[position];
-
+    
+    // TODO : c'est plus simple si le fichier est en erreur (pas d'AJAX)
+    
     $.ajax({
         url: "do/doRemoveFromQueue.php",
         type: "POST",
