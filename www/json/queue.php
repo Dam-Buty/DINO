@@ -5,7 +5,7 @@ if (isset($_SESSION["niveau"])) {
     include("../includes/mysqli.php");
     include("../includes/status.php");
     
-    $query = "SELECT `filename_document`, `display_document`, `fk_monde`, `fk_operation` FROM `document` WHERE `fk_client` = " . $_SESSION["client"] . ";";
+    $query = "SELECT `filename_document`, `display_document`, `fk_monde`, `fk_operation` FROM `document` WHERE `fk_client` = " . $_SESSION["client"] . " AND `niveau_document` = NULL;";
     
     if ($result = $mysqli->query($query)) {
         status(200);

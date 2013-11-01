@@ -365,6 +365,8 @@ var archive_document = function() {
     var select = li.find("select").val();
     
     var champs = [];
+    var isnew = 1;
+    var cyclique = profil.mondes[store.monde].cyclique;
     
     // On alimente le type doc qui a pas de next_page
     store.type_doc.pk = select;
@@ -383,6 +385,14 @@ var archive_document = function() {
         champs[this.position].valeur = this.valeur;
     });
     
+    // Vérifie si l'opération est nouvelle
+    $.each(profil.mondes[store.monde].references, function() {
+        if (this == store.operation) {
+            isnew = 0;
+            return false;
+        }
+    });
+    
     $.ajax({
         url: "do/doStore.php",
         type: "POST",
@@ -393,7 +403,9 @@ var archive_document = function() {
             categorie: store.categorie,
             type: store.type_doc.pk,
             detail: store.type_doc.detail,
-            champs: champs
+            champs: champs,
+            cyclique: cyclique,
+            isnew: isnew
         },
         statusCode: {
             200: function() {
