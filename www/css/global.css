@@ -235,3 +235,7 @@ input {
     width: 100%;
     text-align: center;
 }
+
+.boutons-li {
+    cursor: pointer;
+}

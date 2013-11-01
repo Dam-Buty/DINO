@@ -132,7 +132,7 @@ if (isset($_SESSION["user"])) {
                             //////////////////////////
                             // Récupération des types de documents
                             //////////////////////////
-                            $query_types = "SELECT `pk_type_doc`, `label_type_doc`, `detail_type_doc` FROM `type_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `niveau_type_doc` <= " . $_SESSION["niveau"] . ";";
+                            $query_types = "SELECT `pk_type_doc`, `label_type_doc`, `detail_type_doc` FROM `type_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `fk_categorie_doc` = " . $row_categories["pk_categorie_doc"] . " AND `niveau_type_doc` <= " . $_SESSION["niveau"] . ";";
                             
                             if ($result_types = $mysqli->query($query_types)) {
                             
@@ -172,7 +172,7 @@ if (isset($_SESSION["user"])) {
                     // Si l'utilisateur est > 20 il a droit à toutes les opération
                     // Sinon seulement celles qui ont des champs égaux aux siens
                     //////////////////////////
-                    if ($row_mondes["cyclique_monde"]) {
+                    if ($row_mondes["cyclique_monde"] == 1) {
                         if ($_SESSION["niveau"] >= 20) {
                             $query_references = "SELECT `pk_operation` AS `reference` FROM `operation` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . ";";
                         } else {
