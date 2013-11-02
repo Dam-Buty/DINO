@@ -44,6 +44,7 @@ session_start();
 <script src="js/application.js?v=1"></script>
 <script src="js/queue.js?v=1"></script>
 <script src="js/store.js?v=1"></script>
+<script src="js/dialogues.js?v=1"></script>
 
 <script type="text/javascript">
     var profil = undefined;

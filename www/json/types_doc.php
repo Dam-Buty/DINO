@@ -5,6 +5,13 @@ if (isset($_SESSION["niveau"])) {
     include("../includes/mysqli.php");
     include("../includes/status.php");
     
+    if ($_POST["cyclique"] == 1) {
+        $query = "SELECT ``";
+    } else {
+    
+    }
+    
+    
     $query = "SELECT `filename_document`, `display_document`, `fk_monde`, `fk_operation` FROM `document` WHERE `fk_client` = " . $_SESSION["client"] . " AND `niveau_document` IS NULL;";
     
     if ($result = $mysqli->query($query)) {

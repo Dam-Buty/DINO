@@ -39,7 +39,7 @@ var refresh_liste = function() {
     $("#files-list li").detach();
     
     $.each(queue, function(i, document) {
-        $("#files-list").append(queue[i].li);
+        $("#files-list").append(queue[i].li.attr("data-position", i));
     });
     
     $(".bouton-edit-li").unbind();
@@ -178,16 +178,8 @@ var remove_document = function() {
                 window.location.replace("index.php");
             },
             500: function() {
-                new $.Zebra_Dialog(
-                    'Error de supresion del documento. Gracias por intentar otra vez', {
-                    'type': 'error',
-                    'buttons':  false,
-                    'modal': false,
-                    'width': Math.floor($(window).width() * 0.3),
-                    'position': ['right - 20', 'top + 20'],
-                    'auto_close': 3000
-                });
-            },
+                popup('Error de supresion del documento. Gracias por intentar otra vez', 'error'); // LOCALISATION
+            }
         }
     });
 }

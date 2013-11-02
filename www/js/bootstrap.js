@@ -22,11 +22,6 @@ var bootstrap = function() {
         
         $(".div_login").hide();
         
-        $.ajax({ url: "modules/search.php" })
-        .done(function(data) {
-            $("#content").append(data);
-        });
-        
         $.ajax({ url: "modules/queue.php" })
         .done(function(data) {
             $("#content").append(data);

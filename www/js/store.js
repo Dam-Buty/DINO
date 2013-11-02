@@ -73,14 +73,75 @@ var next_field = function(position) {
         // renseignée
         if (prochain_master == 9999) {
             if (profil.mondes[store.monde].cyclique == 1 && store.operation === "") {
-                // On demande le numéro d'opération
-                input = $("<input></input>").autocomplete({
-                    source: profil.mondes[store.monde].references
+                var liste_master = [];
+                
+                // On récupère les pk et les valeurs des champs master
+                $.each(store.champs.master, function() {
+                    liste_master.push({ pk: profil.mondes[store.monde].champs[this.position].pk, valeur: this.valeur });
                 });
                 
-                element.li.find("div").attr("data-page", "reference");
-                element.li.find("p").empty().text("Referencia de operacion : ").append(input);
                 prochain_champ = 99999;
+                
+                // On demande le numéro d'opération
+                $.ajax({
+                    url: "json/references.php",
+                    type: "POST",
+                    data: {
+                        monde: profil.mondes[store.monde].pk,
+                        master: liste_master
+                    },
+                    statusCode: {
+                        200: function(references) {
+                            var liste_simple = [];
+                            var liste_complete = [];
+                            
+                            // On récupère une liste de références avec leurs
+                            // valeurs de champs, mais avec des pk qu'il faut
+                            // changer en indices de profil
+                            $.each(references, function(i, reference) {
+                                liste_simple.push(reference.pk);
+                                
+                                var ligne = { 
+                                    pk: reference.pk,
+                                    champs: []
+                                }
+                                
+                                $.each(reference.champs, function(j, champ_reference) {
+                                    // pour chaque champ on prend le pk
+                                    // et on le cherche dans le profil
+                                    // pour trouver son indice
+                                    
+                                    $.each(profil.mondes[store.monde].champs, function(k, champ_profil) {
+                                        if (champ_profil.pk == champ_reference.pk) {
+                                            ligne.champs.push({
+                                                position: k,
+                                                valeur: champ_reference.valeur
+                                            });
+                                            return false;
+                                        }
+                                    });
+                                      
+                                });
+                                
+                                liste_complete.push(ligne);
+                            });   
+                            
+                            profil.mondes[store.monde].references = { simple: liste_simple, complete: liste_complete };
+                        
+                            input = $("<input></input>").autocomplete({
+                                source: profil.mondes[store.monde].references.simple
+                            });
+                            element.li.find("div").attr("data-page", "reference");
+                            element.li.find("p").empty().text("Referencia de operacion : ").append(input);
+                        },
+                        403: function() {
+                            window.location.replace("index.php");
+                        },
+                        500: function() {
+                            popup('Error de recuperacion de referencias. Gracias por intentar otra vez', 'error'); // LOCALISATION
+                        }
+                    }
+                });
                 
             } else {
                 $.each(store.champs.normal, function() {
@@ -111,51 +172,81 @@ var next_field = function(position) {
                 element.li.find("div").attr("data-page", "champ-" + prochain_champ);
                 element.li.find("p").empty().text(profil.mondes[store.monde].champs[prochain_champ].label + " : ").append(select);
             } else {
-                if (store.categorie === "") {
-                    // On demande la catégorie
-                    select = $("<select></select>");
-                    
-                    $.each(profil.mondes[store.monde].categories, function() {
-                        select.append(
+                // On demande la catégorie et le type
+                select = $("<select></select>");
+                input = $("<input></input>").attr("disabled", "disabled");
+                var optgroup;
+                
+                $.each(profil.mondes[store.monde].categories, function(i, categorie) {
+                    optgroup = $("<optgroup></optgroup>")
+                                .attr("label", categorie.label)
+                                .attr("data-categorie", i)
+                                .text(categorie.label);
+                                
+                    $.each(categorie.types, function(j, type) {
+                        var asterisk = "";
+                        
+                        if (type.detail == 1) {
+                            asterisk = " *";
+                        }
+                        
+                        optgroup.append(
                             $("<option></option>")
-                            .attr("value", this.pk)
-                            .text(this.label)
+                            .attr("value", type.pk)
+                            .text(type.label + asterisk)
                         );
                     });
                     
-                    element.li.find("div").attr("data-page", "categorie");
-                    element.li.find("p").empty().text("Categoria de documento : ").append(select);
-                } else {
-                    if (store.type_doc.pk === "") {                    
-                        // On demande le type de doc
-                        select = $("<select></select>");
-                        
-                        $.each(profil.mondes[store.monde].categories[store.categorie].types, function(i, type) {
-                            select.append(
-                                $("<option></option>")
-                                .attr("value", type.pk)
-                                .text(type.label)
-                            );
-                        });
-                        
-                        // *TODO* Intégrer le champ détail dynamique
-                        select.change(function() { console.log(this) });
-                        
-                        element.li.find("div").attr("data-page", "type");
-                        element.li.find("p")
-                        .empty()
-                        .text("Typo de documento : ")
-                        .append(select)
-                        .append(
-                            $("<img></img>")
-                            .attr("src", "img/archiver.png")
-                            .unbind()
-                            .click(archive_document)
-                        );
+                    select.append(optgroup);
+                });
+                
+                element.li.find("div").attr("data-page", "type");
+                element.li.find("p")
+                .empty()
+                .text("Typo de documento : ")
+                .append(select)
+                .append("<br/>Detalle : ")
+                .append(input)
+                .append(
+                    $("<img></img>")
+                    .attr("src", "img/archiver.png")
+                    .unbind()
+                    .click(archive_document)
+                );
+                
+                select.change(function() { 
+                    var option = $(this.options[this.selectedIndex]);
+                    var pk = $(this).val();
+                    
+                    var categorie = option.closest('optgroup').attr('data-categorie');
+                    var position = option.closest('li').attr('data-position');
+                    var input = option.closest('li').find('input');
+                    var hasdetail = 0;
+                    
+                    // On retrouve le type en question dans le profil
+                    // pour lui demander si il est détaillable
+                    $.each(profil.mondes[queue[position].store.monde].categories[categorie].types, function(i, type) {
+                        if (type.pk == pk) {
+                            if (type.detail == 1) {
+                                // On active l'input et on
+                                // l'alimente avec la liste des details
+                                // existants
+                                input.removeAttr("disabled").autocomplete({
+                                    source: type.details
+                                });
+                                hasdetail = 1;
+                            }
+                            return false;
+                        }
+                    });
+                    
+                    if (!hasdetail) {
+                        input.attr("disabled", "disabled").val("");
                     }
-                }
-            } // Fin IF
-        }
+                });
+                
+            }
+        } // Fin IF
     }
     
     var page = element.li.find("div").attr("data-page");
@@ -183,7 +274,6 @@ var next_field = function(position) {
             .unbind()
             .click(previous_page);
     }
-    
     if (page == "type") {
         button_next
             .attr("src", "img/next_no.png")
@@ -199,6 +289,7 @@ var next_field = function(position) {
 var next_page = function() {
     var li = $(this).closest("li");
     var element = queue[li.attr("data-position")];
+    var store = element.store;
     var page = li.find("div").attr("data-page");
     var select = li.find("select").val();
     var input = li.find("input").val();
@@ -207,53 +298,47 @@ var next_page = function() {
         case "monde":
             $.each(profil.mondes, function(i, monde) {
                 if (monde.pk == select) {
-                    element.store.monde = i;
+                    store.monde = i;
                 }
             });
             break;
             
         case "reference":
-            element.store.operation = input;
+            store.operation = input;
+            
+            // Si l'opération existe déjà, on récupère ses champs
+            // normaux via le profil
+            $.each(profil.mondes[store.monde].references.complete, function() {
+                if (this.pk == store.operation) {
+                    store.champs.normal = this.champs;
+                    return false;
+                }
+            });
+            
             break;
             
         case "champ":
             var num_champ = page.split("-")[1];
             var stored = 0;
             
-            $.each(element.store.champs.master, function(i, master) {
+            $.each(store.champs.master, function(i, master) {
                 if (master.position == num_champ) {
-                    element.store.champs.master[i].valeur = select;
+                    store.champs.master[i].valeur = select;
                     stored = 1;
                     return false;
                 }
             });
             
             if (!stored) {
-                $.each(element.store.champs.normal, function(i, normal) {
+                $.each(store.champs.normal, function(i, normal) {
                     if (normal.position == num_champ) {
-                        element.store.champs.normal[i].valeur = select;
+                        store.champs.normal[i].valeur = select;
                         stored = 1;
                         return false;
                     }
                 });
             }
             
-            break;
-            
-        case "categorie":
-            $.each(profil.mondes[element.store.monde].categories, function(i, categorie) {
-                if (categorie.pk == select) {
-                    element.store.categorie = i;
-                }
-            });
-            break;
-            
-        case "type":
-            $.each(profil.mondes[element.store.monde].categories[element.store.categorie].types, function(i, type) {
-                if (type.pk == select) {
-                    element.store.type.pk = i;
-                }
-            });
             break;
     }
     
@@ -263,6 +348,7 @@ var next_page = function() {
 var previous_page = function() {
     var li = $(this).closest("li");
     var element = queue[li.attr("data-position")];
+    var store = element.store;
     var page = li.find("div").attr("data-page");
     
     switch(page.split("-")[0]) {
@@ -270,10 +356,10 @@ var previous_page = function() {
             // Si c'est cyclique
             // - on revient au dernier master
             // - sinon on revient au monde
-            if (profil.mondes[element.store.monde].cyclique == 1) {
-                element.store.champs.master[element.store.champs.master.length - 1].valeur = "";
+            if (profil.mondes[store.monde].cyclique == 1) {
+                store.champs.master[store.champs.master.length - 1].valeur = "";
             } else {
-                element.store.monde = "";
+                store.monde = "";
             }
             break;
             
@@ -290,13 +376,13 @@ var previous_page = function() {
             //   - sinon on efface le dernier master
             // - Sinon on efface le champ avant
             
-            $.each(element.store.champs.master, function(i, master) {
+            $.each(store.champs.master, function(i, master) {
                 if (master.position == num_champ) {
                     if (i == 0) {
-                        element.store.monde = "";
+                        store.monde = "";
                         deleted = 1;
                     } else {
-                        element.store.champs.master[i - 1].valeur = "";
+                        store.champs.master[i - 1].valeur = "";
                         deleted = 1;
                     }
                 }
@@ -305,18 +391,18 @@ var previous_page = function() {
             
             
             if (!deleted) {
-                $.each(element.store.champs.normal, function(i, normal) {
+                $.each(store.champs.normal, function(i, normal) {
                     if (normal.position == num_champ) {
                         if (i == 0) {
-                            if (profil.mondes[element.store.monde].cyclique == 1) {
-                                element.store.operation = "";
+                            if (profil.mondes[store.monde].cyclique == 1) {
+                                store.operation = "";
                                 deleted = 1;
                             } else {
-                                element.store.champs.master[element.store.champs.master.length - 1].valeur = "";
+                                store.champs.master[store.champs.master.length - 1].valeur = "";
                                 deleted = 1;
                             }
                         } else {
-                            element.store.champs.normal[i - 1].valeur = "";
+                            store.champs.normal[i - 1].valeur = "";
                             deleted = 1;
                         }
                     }
@@ -325,16 +411,12 @@ var previous_page = function() {
             }           
             break;
             
-        case "categorie":
-            if (element.store.champs.normal.length > 0) {
-                element.store.champs.normal[element.store.champs.normal.length - 1].valeur = "";
-            } else {
-                element.store.champs.master[element.store.champs.master.length - 1].valeur = "";
-            }
-            break;
-            
         case "type":
-            element.store.categorie = "";
+            if (store.champs.normal.length > 0) {
+                store.champs.normal[store.champs.normal.length - 1].valeur = "";
+            } else {
+                store.champs.master[store.champs.master.length - 1].valeur = "";
+            }
             break;
     }
     
@@ -363,6 +445,7 @@ var archive_document = function() {
     var element = queue[li.attr("data-position")];
     var store = element.store;
     var select = li.find("select").val();
+    var input = li.find("input").val();
     
     var champs = [];
     var isnew = 1;
@@ -370,6 +453,12 @@ var archive_document = function() {
     
     // On alimente le type doc qui a pas de next_page
     store.type_doc.pk = select;
+    store.type_doc.detail = input;
+    
+    store.categorie = li.find("select")
+                    .find(":selected")
+                    .closest("optgroup")
+                    .attr("data-categorie");
     
     // Construit la liste des champs
     $.each(profil.mondes[store.monde].champs, function(i, champ) {
@@ -385,22 +474,24 @@ var archive_document = function() {
         champs[this.position].valeur = this.valeur;
     });
     
-    // Vérifie si l'opération est nouvelle
-    $.each(profil.mondes[store.monde].references, function() {
-        if (this == store.operation) {
-            isnew = 0;
-            return false;
-        }
-    });
+    if (profil.mondes[store.monde].cyclique == 1) {
+        // Vérifie si l'opération est nouvelle
+        $.each(profil.mondes[store.monde].references, function() {
+            if (this == store.operation) {
+                isnew = 0;
+                return false;
+            }
+        });
+    }
     
     $.ajax({
         url: "do/doStore.php",
         type: "POST",
         data: {
             filename: element.filename,
-            monde: store.monde,
+            monde: profil.mondes[store.monde].pk,
             operation: store.operation,
-            categorie: store.categorie,
+            categorie: profil.mondes[store.monde].categories[store.categorie].pk,
             type: store.type_doc.pk,
             detail: store.type_doc.detail,
             champs: champs,
@@ -409,13 +500,15 @@ var archive_document = function() {
         },
         statusCode: {
             200: function() {
-            
+                popup("El documento ha sido archivado con exito", "confirmation"); // LOCALISATION
+                queue.splice(li.attr("data-position"), 1);
+                refresh_liste();
             },            
             403: function() {
-            
+                window.location.replace("index.php");
             },
             500: function() {
-            
+                popup('Error de guarda del documento. Gracias por intentar otra vez', 'error'); // LOCALISATION
             }
         }
     });

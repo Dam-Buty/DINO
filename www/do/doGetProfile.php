@@ -55,7 +55,7 @@ if (isset($_SESSION["user"])) {
                         $json_mondes .= ", ";
                     }
                     
-                    $json_mondes .= '{ "pk": "' . $row_mondes["pk_monde"] . '", "label": "' . $row_mondes["label_monde"] . '", "cyclique": "' . $row_mondes["cyclique_monde"] . '", "champs": "%%CHAMPS%%", "categories": "%%CATEGORIES%%", "references": "%%REFERENCES%%" }';
+                    $json_mondes .= '{ "pk": "' . $row_mondes["pk_monde"] . '", "label": "' . $row_mondes["label_monde"] . '", "cyclique": "' . $row_mondes["cyclique_monde"] . '", "champs": "%%CHAMPS%%", "categories": "%%CATEGORIES%%" }';
                     
                     //////////////////////////
                     // Récupération des champs
@@ -143,7 +143,35 @@ if (isset($_SESSION["user"])) {
                                         $json_types .= ", ";
                                     }
                                     
-                                    $json_types .= '{ "pk": "' . $row_types["pk_type_doc"] . '", "label": "' . $row_types["label_type_doc"] . '", "detail": "' . $row_types["detail_type_doc"] . '" }';
+                                    $json_types .= '{ "pk": "' . $row_types["pk_type_doc"] . '", "label": "' . $row_types["label_type_doc"] . '", "detail": "' . $row_types["detail_type_doc"] . '", "details": "%%DETAILS%%" }';
+                                    
+                                    $json_details = "[ ";
+                                    
+                                    // Récupération des détails existants
+                                    // pour les types de doc à détails
+                                    if ($row_types["detail_type_doc"] == 1) {
+                                        
+                                        $query_details = "SELECT DISTINCT(`detail_type_doc_document`) FROM `type_doc_document` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `fk_categorie_doc` = " . $row_categories["pk_categorie_doc"] . " AND `fk_type_doc` = " . $row_types["pk_type_doc"] . " ORDER BY `detail_type_doc_document`;";
+                                        
+                                        if ($result_details = $mysqli->query($query_details)) {
+                                            
+                                            while($row_details = $result_details->fetch_assoc()) {
+                                                if ($json_details != "[ ") {
+                                                    $json_details .= ", ";
+                                                }
+                                                
+                                                $json_details .= '"' . $row_details["detail_type_doc_document"] . '"';
+                                            } // FIN WHILE DETAILS
+                                            
+                                        } else {
+                                            status(500);
+                                            $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
+                                            break;
+                                        }
+                                    }
+                                    $json_details .= " ]";
+                                    
+                                    $json_types = str_replace('"%%DETAILS%%"', $json_details, $json_types);
                                 } // FIN WHILE TYPES
                                 
                                 $json_types .= " ]";
@@ -172,29 +200,29 @@ if (isset($_SESSION["user"])) {
                     // Si l'utilisateur est > 20 il a droit à toutes les opération
                     // Sinon seulement celles qui ont des champs égaux aux siens
                     //////////////////////////
-                    if ($row_mondes["cyclique_monde"] == 1) {
-                        if ($_SESSION["niveau"] >= 20) {
-                            $query_references = "SELECT `pk_operation` AS `reference` FROM `operation` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . ";";
-                        } else {
-                            $query_references = "SELECT DISTINCT(`fk_operation`) AS `reference` FROM  `operation_valeur_champ` AS `ovc` , `valeur_champ` AS `vc` , `user_valeur_champ` AS `uvc` WHERE `ovc`.`fk_champ` = `vc`.`fk_champ` AND `ovc`.`fk_valeur_champ` = `vc`.`pk_valeur_champ` AND `vc`.`fk_champ` = `uvc`.`fk_champ` AND `vc`.`pk_valeur_champ` = `uvc`.`fk_valeur_champ` AND `fk_user` = '" . $_SESSION["user"] . "';";
-                        }
-                        
-                        if ($result_references = $mysqli->query($query_references)) {
-                            $json_references = "[ ";
-                            
-                            while($row_references = $result_references->fetch_assoc()) {
-                                if ($json_references != "[ ") {
-                                    $json_references .= ", ";
-                                }
-                                
-                                $json_references .= '"' . $row_references["reference"] . '"';
-                            }// FIN WHILE REFERENCES
-                            
-                            $json_references .= " ]";
-                            
-                            $json_mondes = str_replace('"%%REFERENCES%%"', $json_references, $json_mondes);
-                        }
-                    }
+#                    if ($row_mondes["cyclique_monde"] == 1) {
+#                        if ($_SESSION["niveau"] >= 20) {
+#                            $query_references = "SELECT `pk_operation` AS `reference` FROM `operation` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . ";";
+#                        } else {
+#                            $query_references = "SELECT DISTINCT(`fk_operation`) AS `reference` FROM  `operation_valeur_champ` AS `ovc` , `valeur_champ` AS `vc` , `user_valeur_champ` AS `uvc` WHERE `ovc`.`fk_champ` = `vc`.`fk_champ` AND `ovc`.`fk_valeur_champ` = `vc`.`pk_valeur_champ` AND `vc`.`fk_champ` = `uvc`.`fk_champ` AND `vc`.`pk_valeur_champ` = `uvc`.`fk_valeur_champ` AND `fk_user` = '" . $_SESSION["user"] . "';";
+#                        }
+#                        
+#                        if ($result_references = $mysqli->query($query_references)) {
+#                            $json_references = "[ ";
+#                            
+#                            while($row_references = $result_references->fetch_assoc()) {
+#                                if ($json_references != "[ ") {
+#                                    $json_references .= ", ";
+#                                }
+#                                
+#                                $json_references .= '"' . $row_references["reference"] . '"';
+#                            }// FIN WHILE REFERENCES
+#                            
+#                            $json_references .= " ]";
+#                            
+#                            $json_mondes = str_replace('"%%REFERENCES%%"', $json_references, $json_mondes);
+#                        }
+#                    }
                 } // FIN WHILE MONDES
                 
                 //////////////////////////

@@ -145,6 +145,10 @@ input {
     background-repeat: no-repeat;
 }
 
+#tiroir-queue li input:disabled {
+    background-color: #BEBEBE;
+}
+
 #tiroir-queue li span {
     font-style: italic;
 }
