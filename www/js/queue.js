@@ -18,6 +18,18 @@ var compare = function(a,b) {
   return 0;
 }
 
+var anime_queue = function() {
+    if ($("#container-queue").attr("data-state") == "closed") {
+        $("#tiroir-queue").animate({ left: 0 });
+        $("#poignee-queue").animate({ left: "30%" });
+        $("#container-queue").attr({ "data-state": "open" });
+    } else {
+        $("#tiroir-queue").animate({ left: "-30%" });
+        $("#poignee-queue").animate({ left: "0" });
+        $("#container-queue").attr({ "data-state": "closed" });
+    }
+}
+
 var handle_drag = function(evt) {
     evt.stopPropagation();
     evt.preventDefault();

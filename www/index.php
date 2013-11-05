@@ -32,18 +32,20 @@ session_start();
 
 <div id="content"></div>
 
-<script src="js/sha512.js?v=1"></script>
-<script src="js/enc-base64.js?v=1"></script>
 <script src="js/jquery-1.10.2.js?v=1"></script>
 <script src="js/jquery-ui-1.10.3.custom.js?v=1"></script>
+
 <script src="js/jquery.validationEngine.js?v=1"></script>
 <script src="js/jquery.validationEngine-es.js?v=1"></script>
+
 <script src="js/zebra_dialog.js?v=1"></script>
-<script src="js/CS.Crypto.js?v=1"></script>
+<script src="js/jquery.sortable.js?v=1"></script>
+
 <script src="js/bootstrap.js?v=1"></script>
 <script src="js/application.js?v=1"></script>
 <script src="js/queue.js?v=1"></script>
 <script src="js/store.js?v=1"></script>
+<script src="js/core.js?v=1"></script>
 <script src="js/dialogues.js?v=1"></script>
 
 <script type="text/javascript">

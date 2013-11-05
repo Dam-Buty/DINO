@@ -27,7 +27,7 @@ var bootstrap = function() {
             $("#content").append(data);
         });
         
-        $.ajax({ url: "modules/archives.php" })
+        $.ajax({ url: "modules/core.php" })
         .done(function(data) {
             $("#content").append(data);
         });
