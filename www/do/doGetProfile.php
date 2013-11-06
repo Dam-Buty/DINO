@@ -48,14 +48,14 @@ if (isset($_SESSION["user"])) {
             $query_mondes = "SELECT `pk_monde`, `label_monde`, `cyclique_monde` FROM `monde` WHERE `fk_client` = " . $row["fk_client"] . " AND `niveau_monde` <= " . $row["niveau_user"] . ";";
             
             if ($result_mondes = $mysqli->query($query_mondes)) {
-                $json_mondes = "[ ";
+                $json_mondes = "{ ";
                 
                 while($row_mondes = $result_mondes->fetch_assoc()) {
-                    if ($json_mondes != "[ ") {
+                    if ($json_mondes != "{ ") {
                         $json_mondes .= ", ";
                     }
                     
-                    $json_mondes .= '{ "pk": "' . $row_mondes["pk_monde"] . '", "label": "' . $row_mondes["label_monde"] . '", "cyclique": "' . $row_mondes["cyclique_monde"] . '", "champs": "%%CHAMPS%%", "categories": "%%CATEGORIES%%" }';
+                    $json_mondes .= '"' . $row_mondes["pk_monde"] . '": { "label": "' . $row_mondes["label_monde"] . '", "cyclique": "' . $row_mondes["cyclique_monde"] . '", "champs": "%%CHAMPS%%", "categories": "%%CATEGORIES%%" }';
                     
                     //////////////////////////
                     // Récupération des champs
@@ -63,14 +63,14 @@ if (isset($_SESSION["user"])) {
                     $query_champs = "SELECT `pk_champ`, `label_champ`, `pluriel_champ`, (SELECT `master_monde_champ` FROM `monde_champ` WHERE `fk_client` = " . $row["fk_client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `fk_champ` = `c`.`pk_champ`) AS `ismaster` FROM `champ` AS `c` WHERE ( SELECT COUNT(*) FROM `monde_champ` WHERE `fk_client` = " . $row["fk_client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `fk_champ` = `c`.`pk_champ` ) > 0";
                     
                     if ($result_champs = $mysqli->query($query_champs)) {
-                        $json_champs = "[ ";
+                        $json_champs = "{ ";
                         
                         while($row_champs = $result_champs->fetch_assoc()) {
-                            if ($json_champs != "[ ") {
+                            if ($json_champs != "{ ") {
                                 $json_champs .= ", ";
                             }
                             
-                            $json_champs .= '{ "pk": "' . $row_champs["pk_champ"] . '", "master": "' . $row_champs["ismaster"] . '", "label": "' . $row_champs["label_champ"] . '", "pluriel": "' . $row_champs["pluriel_champ"] . '", "liste": "%%LISTE%%" }';
+                            $json_champs .= '"' . $row_champs["pk_champ"] . '": { "master": "' . $row_champs["ismaster"] . '", "label": "' . $row_champs["label_champ"] . '", "pluriel": "' . $row_champs["pluriel_champ"] . '", "liste": "%%LISTE%%" }';
                             
                             //////////////////////////
                             // Récupération des valeurs de champ sur lesquelles
@@ -79,20 +79,20 @@ if (isset($_SESSION["user"])) {
                             $query_liste = "SELECT `pk_valeur_champ`, `label_valeur_champ`, ( SELECT COUNT(*) FROM `user_valeur_champ` WHERE `fk_user` = '" . $_SESSION["user"] . "' AND `fk_champ` = " . $row_champs["pk_champ"] . " AND `fk_client` = " . $_SESSION["client"] . " AND  `vc`.`pk_valeur_champ` =  `fk_valeur_champ`) as `droits_valeur_champ` FROM `valeur_champ` AS `vc` WHERE `fk_champ` = " . $row_champs["pk_champ"] . " ORDER BY `droits_valeur_champ` DESC;";
                             
                             if ($result_liste = $mysqli->query($query_liste)) {
-                                $json_liste = "[ ";
+                                $json_liste = "{ ";
                                 
                                 while($row_liste = $result_liste->fetch_assoc()) {
                                     
                                     if ($_SESSION["niveau"] >= 20 or $row_liste["droits_valeur_champ"]) {
-                                        if ($json_liste != "[ ") {
+                                        if ($json_liste != "{ ") {
                                             $json_liste .= ", ";
                                         }
                                         
-                                        $json_liste .= '{ "pk": "' . $row_liste["pk_valeur_champ"] . '", "label": "' . $row_liste["label_valeur_champ"] . '" }';
+                                        $json_liste .= '"' . $row_liste["pk_valeur_champ"] . '": "' . $row_liste["label_valeur_champ"] . '"';
                                     }
                                 } // FIN WHILE LISTE
                                 
-                                $json_liste .= " ]";
+                                $json_liste .= " }";
                                 
                                 $json_champs = str_replace('"%%LISTE%%"', $json_liste, $json_champs);
                                 
@@ -103,7 +103,7 @@ if (isset($_SESSION["user"])) {
                             }
                         } // FIN WHILE CHAMPS
                         
-                        $json_champs .= " ]";
+                        $json_champs .= " }";
                         
                         $json_mondes = str_replace('"%%CHAMPS%%"', $json_champs, $json_mondes);
                         
@@ -120,14 +120,14 @@ if (isset($_SESSION["user"])) {
                     $query_categories = "SELECT `pk_categorie_doc`, `label_categorie_doc` FROM `categorie_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `niveau_categorie_doc` <= " . $_SESSION["niveau"] . ";";
                     
                     if ($result_categories = $mysqli->query($query_categories)) {
-                        $json_categories = "[ ";
+                        $json_categories = "{ ";
                         
                         while($row_categories = $result_categories->fetch_assoc()) {
-                            if ($json_categories != "[ ") {
+                            if ($json_categories != "{ ") {
                                 $json_categories .= ", ";
                             }
                             
-                            $json_categories .= '{ "pk": "' . $row_categories["pk_categorie_doc"] . '", "label": "' . $row_categories["label_categorie_doc"] . '", "types": "%%TYPES%%" }';
+                            $json_categories .= '"' . $row_categories["pk_categorie_doc"] . '": { "label": "' . $row_categories["label_categorie_doc"] . '", "types": "%%TYPES%%" }';
                             
                             //////////////////////////
                             // Récupération des types de documents
@@ -136,14 +136,14 @@ if (isset($_SESSION["user"])) {
                             
                             if ($result_types = $mysqli->query($query_types)) {
                             
-                                $json_types = "[ ";
+                                $json_types = "{ ";
                                 
                                 while($row_types = $result_types->fetch_assoc()) {
-                                    if ($json_types != "[ ") {
+                                    if ($json_types != "{ ") {
                                         $json_types .= ", ";
                                     }
                                     
-                                    $json_types .= '{ "pk": "' . $row_types["pk_type_doc"] . '", "label": "' . $row_types["label_type_doc"] . '", "detail": "' . $row_types["detail_type_doc"] . '", "details": "%%DETAILS%%" }';
+                                    $json_types .= '"' . $row_types["pk_type_doc"] . '": { "label": "' . $row_types["label_type_doc"] . '", "detail": "' . $row_types["detail_type_doc"] . '", "details": "%%DETAILS%%" }';
                                     
                                     $json_details = "[ ";
                                     
@@ -174,7 +174,7 @@ if (isset($_SESSION["user"])) {
                                     $json_types = str_replace('"%%DETAILS%%"', $json_details, $json_types);
                                 } // FIN WHILE TYPES
                                 
-                                $json_types .= " ]";
+                                $json_types .= " }";
                                 
                                 $json_categories = str_replace('"%%TYPES%%"', $json_types, $json_categories);
                                 
@@ -185,7 +185,7 @@ if (isset($_SESSION["user"])) {
                             }
                         } // FIN WHILE CATEGORIES
                         
-                        $json_categories .= " ]";
+                        $json_categories .= " }";
                         
                         $json_mondes = str_replace('"%%CATEGORIES%%"', $json_categories, $json_mondes);
                         
@@ -229,7 +229,7 @@ if (isset($_SESSION["user"])) {
                 // Finalisation du JSON
                 // Envoi du statut OK (200)
                 //////////////////////////                
-                $json_mondes .= " ]";
+                $json_mondes .= " }";
                 
                 $json = str_replace('"%%MONDES%%"', $json_mondes, $json);
                 

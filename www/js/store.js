@@ -1,7 +1,4 @@
 
-
-var types_detail = [];
-
 // On va déterminer le premier champ non rempli
 // Et afficher dans le li correspondant
 // Le formulaire correspondant (i know, rite?)
@@ -19,11 +16,11 @@ var next_field = function(position) {
         // On fait choisir un monde
         select = $("<select></select>");
         
-        $.each(profil.mondes, function() {
+        $.each(profil.mondes, function(i, monde) {
             select.append(
                 $("<option></option>")
-                .attr("value", this.pk)
-                .text(this.label)
+                .attr("value", i)
+                .text(monde.label)
             );
         });
         element.li.find("div").attr("data-page", "monde");
@@ -45,25 +42,29 @@ var next_field = function(position) {
             // On vient de changer de monde donc on refait
             // les tableaux de champs et on met prochain_master
             // à 0
-            store.champs.master.length = 0;
-            store.champs.normal.length = 0;
+            store.champs.master = {};
+            store.champs.normal = {};
+            var first_master = "";
             
             $.each(profil.mondes[store.monde].champs, function(i, champ) {
                 if (champ.master == "1") {
-                    store.champs.master.push({ position: i, valeur: "" });
+                    store.champs.master[i] = "";
+                    if (first_master === "") {
+                        first_master = i;
+                    }
                 } else {
-                    store.champs.normal.push({ position: i, valeur: "" });
+                    store.champs.normal[i] = "";
                 }
             });
             
             // on note qu'il n'y a plus à créer le tableau de champs
             store.champs.monde = store.monde;
-            prochain_master = 0;
+            prochain_master = first_master;
         } else {
             // On cherche le prochain master à renseigner
-            $.each(store.champs.master, function() {
-                if (this.valeur === "") {
-                    prochain_master = this.position;
+            $.each(store.champs.master, function(i, master) {
+                if (master === "") {
+                    prochain_master = i;
                     return false;
                 }
             });
@@ -75,11 +76,6 @@ var next_field = function(position) {
             if (profil.mondes[store.monde].cyclique == 1 && store.operation.ref === "") {
                 var liste_master = [];
                 
-                // On récupère les pk et les valeurs des champs master
-                $.each(store.champs.master, function() {
-                    liste_master.push({ pk: profil.mondes[store.monde].champs[this.position].pk, valeur: this.valeur });
-                });
-                
                 prochain_champ = 99999;
                 
                 // On demande le numéro d'opération
@@ -87,50 +83,22 @@ var next_field = function(position) {
                     url: "json/references.php",
                     type: "POST",
                     data: {
-                        monde: profil.mondes[store.monde].pk,
-                        master: liste_master
+                        monde: store.monde,
+                        master: store.champs.master
                     },
                     statusCode: {
                         200: function(references) {
-                            var liste_simple = [];
-                            var liste_complete = [];
+                            // On alimente le profil avec les références
+                            profil.mondes[store.monde].references = references;
                             
-                            // On récupère une liste de références avec leurs
-                            // valeurs de champs, mais avec des pk qu'il faut
-                            // changer en indices de profil
+                            var liste_references = [];
+                            
                             $.each(references, function(i, reference) {
-                                liste_simple.push(reference.ref);
-                                
-                                var ligne = { 
-                                    pk: reference.pk,
-                                    ref: reference.ref,
-                                    champs: []
-                                }
-                                
-                                $.each(reference.champs, function(j, champ_reference) {
-                                    // pour chaque champ on prend le pk
-                                    // et on le cherche dans le profil
-                                    // pour trouver son indice
-                                    
-                                    $.each(profil.mondes[store.monde].champs, function(k, champ_profil) {
-                                        if (champ_profil.pk == champ_reference.pk) {
-                                            ligne.champs.push({
-                                                position: k,
-                                                valeur: champ_reference.valeur
-                                            });
-                                            return false;
-                                        }
-                                    });
-                                      
-                                });
-                                
-                                liste_complete.push(ligne);
-                            });   
+                                liste_references.push(reference.ref);
+                            });
                             
-                            profil.mondes[store.monde].references = { simple: liste_simple, complete: liste_complete };
-                        
                             input = $("<input></input>").autocomplete({
-                                source: profil.mondes[store.monde].references.simple
+                                source: liste_references
                             });
                             element.li.find("div").attr("data-page", "reference");
                             element.li.find("p").empty().text("Referencia de operacion : ").append(input);
@@ -145,9 +113,9 @@ var next_field = function(position) {
                 });
                 
             } else {
-                $.each(store.champs.normal, function() {
+                $.each(store.champs.normal, function(i, normal) {
                     if (this.valeur === "") {
-                        prochain_champ = this.position;
+                        prochain_champ = i;
                         return false;
                     }
                 });
@@ -162,11 +130,13 @@ var next_field = function(position) {
             if (prochain_champ != 9999) {
                 select = $("<select></select>");
                 
-                $.each(profil.mondes[store.monde].champs[prochain_champ].liste, function() {
+                console.log(profil.mondes[store.monde].champs[prochain_champ]);
+                
+                $.each(profil.mondes[store.monde].champs[prochain_champ].liste, function(i, valeur) {
                     select.append(
                         $("<option></option>")
-                        .attr("value", this.pk)
-                        .text(this.label)
+                        .attr("value", i)
+                        .text(valeur)
                     );
                 });
                 
@@ -193,7 +163,7 @@ var next_field = function(position) {
                         
                         optgroup.append(
                             $("<option></option>")
-                            .attr("value", type.pk)
+                            .attr("value", j)
                             .text(type.label + asterisk)
                         );
                     });
@@ -217,29 +187,23 @@ var next_field = function(position) {
                 
                 select.change(function() { 
                     var option = $(this.options[this.selectedIndex]);
-                    var pk = $(this).val();
+                    var type = $(this).val();
                     
                     var categorie = option.closest('optgroup').attr('data-categorie');
+                    
                     var position = option.closest('li').attr('data-position');
                     var input = option.closest('li').find('input');
                     var hasdetail = 0;
                     
-                    // On retrouve le type en question dans le profil
-                    // pour lui demander si il est détaillable
-                    $.each(profil.mondes[queue[position].store.monde].categories[categorie].types, function(i, type) {
-                        if (type.pk == pk) {
-                            if (type.detail == 1) {
-                                // On active l'input et on
-                                // l'alimente avec la liste des details
-                                // existants
-                                input.removeAttr("disabled").autocomplete({
-                                    source: type.details
-                                });
-                                hasdetail = 1;
-                            }
-                            return false;
-                        }
-                    });
+                    if (profil.mondes[queue[position].store.monde].categories[categorie].types[type].detail == 1) {
+                        // On active l'input et on
+                        // l'alimente avec la liste des details
+                        // existants
+                        input.removeAttr("disabled").autocomplete({
+                            source: profil.mondes[queue[position].store.monde].categories[categorie].types[type].details
+                        });
+                        hasdetail = 1;
+                    }
                     
                     if (!hasdetail) {
                         input.attr("disabled", "disabled").val("");
@@ -297,11 +261,7 @@ var next_page = function() {
     
     switch(page.split("-")[0]) {
         case "monde":
-            $.each(profil.mondes, function(i, monde) {
-                if (monde.pk == select) {
-                    store.monde = i;
-                }
-            });
+            store.monde = select;
             break;
             
         case "reference":
@@ -309,11 +269,11 @@ var next_page = function() {
             store.operation.ref = input;
             
             // Si l'opération existe déjà, on récupère ses champs
-            // normaux via le profil
-            $.each(profil.mondes[store.monde].references.complete, function() {
-                if (this.ref == input) {
-                    store.operation.pk = this.pk;
-                    store.champs.normal = this.champs;
+            // normaux via le profil            
+            $.each(profil.mondes[store.monde].references, function(i, reference) {
+                if (reference.ref == input) {
+                    store.operation.pk = i;
+                    store.champs.normal = reference.champs;
                     return false;
                 }
             });
@@ -322,24 +282,12 @@ var next_page = function() {
             
         case "champ":
             var num_champ = page.split("-")[1];
-            var stored = 0;
             
-            $.each(store.champs.master, function(i, master) {
-                if (master.position == num_champ) {
-                    store.champs.master[i].valeur = select;
-                    stored = 1;
-                    return false;
-                }
-            });
-            
-            if (!stored) {
-                $.each(store.champs.normal, function(i, normal) {
-                    if (normal.position == num_champ) {
-                        store.champs.normal[i].valeur = select;
-                        stored = 1;
-                        return false;
-                    }
-                });
+            // On stocke dans le master ou dans normal
+            if (profil.mondes[store.monde].champs[num_champ].master == 1) {
+                store.champs.master[num_champ] = select;
+            } else {
+                store.champs.normal[num_champ] = select;
             }
             
             break;
@@ -360,7 +308,7 @@ var previous_page = function() {
             // - on revient au dernier master
             // - sinon on revient au monde
             if (profil.mondes[store.monde].cyclique == 1) {
-                store.champs.master[store.champs.master.length - 1].valeur = "";
+                store.champs.master[store.champs.master.length - 1] = "";
             } else {
                 store.monde = "";
             }
@@ -451,7 +399,7 @@ var archive_document = function() {
     var select = li.find("select").val();
     var input = li.find("input").val();
     
-    var champs = [];
+    var champs = $.extend({}, store.champs.master, store.champs.normal);
     var isnew = 1;
     var cyclique = profil.mondes[store.monde].cyclique;
     
@@ -463,29 +411,12 @@ var archive_document = function() {
                     .find(":selected")
                     .closest("optgroup")
                     .attr("data-categorie");
-    
-    // Construit la liste des champs
-    $.each(profil.mondes[store.monde].champs, function(i, champ) {
-        champs.push({ pk: champ.pk, valeur: "" });
-    });
-    
-    // Alimente la liste des champs avec les valeurs
-    $.each(store.champs.master, function() {
-        champs[this.position].valeur = this.valeur;
-    });
-    
-    $.each(store.champs.normal, function() {
-        champs[this.position].valeur = this.valeur;
-    });
-    
+                    
     if (profil.mondes[store.monde].cyclique == 1) {
         // Vérifie si l'opération est nouvelle
-        $.each(profil.mondes[store.monde].references.complete, function() {
-            if (this.pk == store.operation.pk) {
-                isnew = 0;
-                return false;
-            }
-        });
+        if (store.operation.pk != "") {
+            isnew = 0;
+        }
     }
     
     $.ajax({
@@ -493,10 +424,10 @@ var archive_document = function() {
         type: "POST",
         data: {
             filename: element.filename,
-            monde: profil.mondes[store.monde].pk,
+            monde: store.monde,
             pkope: store.operation.pk,
             refope: store.operation.ref,
-            categorie: profil.mondes[store.monde].categories[store.categorie].pk,
+            categorie: store.categorie,
             type: store.type_doc.pk,
             detail: store.type_doc.detail,
             champs: champs,

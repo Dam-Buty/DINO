@@ -9,9 +9,8 @@ var Core = {
 };
 
 var bootstrap_list = function() {
-    // D'abord on va peupler la liste des mondes
-    // Et la liste des champs pour le busquedor
-    
+
+    // Peuple la liste des mondes    
     $.each(profil.mondes, function(i, monde) {
         $("#list-mondes").append(
             $("<li></li>")
