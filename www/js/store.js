@@ -72,7 +72,7 @@ var next_field = function(position) {
         // Tous les masters sont OK, on envoie la référence si elle est pas
         // renseignée
         if (prochain_master == 9999) {
-            if (profil.mondes[store.monde].cyclique == 1 && store.operation === "") {
+            if (profil.mondes[store.monde].cyclique == 1 && store.operation.ref === "") {
                 var liste_master = [];
                 
                 // On récupère les pk et les valeurs des champs master
@@ -99,10 +99,11 @@ var next_field = function(position) {
                             // valeurs de champs, mais avec des pk qu'il faut
                             // changer en indices de profil
                             $.each(references, function(i, reference) {
-                                liste_simple.push(reference.pk);
+                                liste_simple.push(reference.ref);
                                 
                                 var ligne = { 
                                     pk: reference.pk,
+                                    ref: reference.ref,
                                     champs: []
                                 }
                                 
@@ -304,12 +305,14 @@ var next_page = function() {
             break;
             
         case "reference":
-            store.operation = input;
+            store.operation.pk = "";
+            store.operation.ref = input;
             
             // Si l'opération existe déjà, on récupère ses champs
             // normaux via le profil
             $.each(profil.mondes[store.monde].references.complete, function() {
-                if (this.pk == store.operation) {
+                if (this.ref == input) {
+                    store.operation.pk = this.pk;
                     store.champs.normal = this.champs;
                     return false;
                 }
@@ -395,7 +398,8 @@ var previous_page = function() {
                     if (normal.position == num_champ) {
                         if (i == 0) {
                             if (profil.mondes[store.monde].cyclique == 1) {
-                                store.operation = "";
+                                store.operation.pk = "";
+                                store.operation.ref = "";
                                 deleted = 1;
                             } else {
                                 store.champs.master[store.champs.master.length - 1].valeur = "";
@@ -476,8 +480,8 @@ var archive_document = function() {
     
     if (profil.mondes[store.monde].cyclique == 1) {
         // Vérifie si l'opération est nouvelle
-        $.each(profil.mondes[store.monde].references, function() {
-            if (this == store.operation) {
+        $.each(profil.mondes[store.monde].references.complete, function() {
+            if (this.pk == store.operation.pk) {
                 isnew = 0;
                 return false;
             }
@@ -490,7 +494,8 @@ var archive_document = function() {
         data: {
             filename: element.filename,
             monde: profil.mondes[store.monde].pk,
-            operation: store.operation,
+            pkope: store.operation.pk,
+            refope: store.operation.ref,
             categorie: profil.mondes[store.monde].categories[store.categorie].pk,
             type: store.type_doc.pk,
             detail: store.type_doc.detail,

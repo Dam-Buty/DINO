@@ -126,10 +126,10 @@ var charge_documents = function() {
     var termes = $("#search").val();
     
     $.ajax({
-        url: "do/doSearch.php",
+        url: "json/search.php",
         type: "POST",
         data: {
-            monde: Core.monde,
+            monde: profil.mondes[Core.monde].pk,
             cyclique: profil.mondes[Core.monde].cyclique,
             termes: termes,
             recherche: Core.recherche,
@@ -137,7 +137,7 @@ var charge_documents = function() {
         },
         statusCode: {
             200: function(liste) {
-                console.log(liste);
+                
             },
             403: function() {
                 window.location.replace("index.php");
