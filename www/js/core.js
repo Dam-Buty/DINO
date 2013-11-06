@@ -1,6 +1,7 @@
 
 var Core = {
     monde: 0,
+    cyclique: 0,
     tri: [],
     recherche: [],
     limit: 100,
@@ -63,6 +64,7 @@ var change_monde = function() {
     li.attr("data-selected", "1");
     
     Core.monde = li.attr("data-monde");
+    Core.cyclique = profil.mondes[Core.monde].cyclique;
     
     $("#search").css({"width": "100px" });
     
@@ -130,14 +132,76 @@ var charge_documents = function() {
         type: "POST",
         data: {
             monde: profil.mondes[Core.monde].pk,
-            cyclique: profil.mondes[Core.monde].cyclique,
+            cyclique: Core.cyclique,
             termes: termes,
             recherche: Core.recherche,
             limit: Core.limit
         },
         statusCode: {
             200: function(liste) {
-                
+                if (Core.cyclique == "1") {
+                    $.each(liste, function(i, operation) {
+                        // On commence par résoudre les valeurs et les pk
+                        // de champs
+                        var lOperation = $.extend(true, {}, operation);
+                        
+                        lOperation.champs.length = 0;
+                        lOperation.documents.length = 0;
+                        
+                        $.each(operation.champs, function(j, champ_reference) {
+                            var leChamp = { id: "", label: "" };
+                            
+                            $.each(profil.mondes[Core.monde].champs, function(k, champ_profil) {
+                                if (champ_profil.pk == champ_reference.champ) {                                    
+                                    $.each(champ_profil.liste, function(l, valeur) {
+                                        if (valeur.pk == champ_reference.valeur) {
+                                            leChamp.id = l;
+                                            leChamp.label = valeur.label;
+                                        }
+                                    });
+                                }
+                            });
+                            
+                            lOperation.champs.push(leChamp);
+                        });
+                        
+                        var oldDoc = {};
+                        
+                        $.each(operation.documents, function(j, document) {
+                            var leDocument = $.extend(true, {}, document, { revisions: [] });
+                            // TODO : dans le oldDoc on a des ID de catégories
+                            //        dans leDocument on a des PK
+                            // Si c'est une révision antérieure du document
+                            // en cours on stocke juste les infos de révision
+                            if (leDocument.categorie == oldDoc.categorie && leDocument.type == oldDoc.type) {
+                                oldDoc.revisions.push({ num: leDocument.revision, filename: leDocument.filename, user: leDocument.user, date: leDocument.date });
+                            } else {
+                                // On n'est plus sur des révisions du bidule
+                                // on le pousse dans l'opération 
+                                // (si c'est pas le 1er oldDoc vide {}
+                                if ("filename" in oldDoc) {
+                                    lOperation.documents.push(oldDoc);
+                                }
+                                
+                                
+                                // sinon on stocke le doc normalement
+                                $.each(profil.mondes[Core.monde].categories, function(k, categorie) {
+                                    if (categorie.pk == document.categorie) {
+                                        leDocument.categorie = k;
+                                        
+                                        $.each(categorie.types, function(l, type) {
+                                            if (type.pk == document.type) {
+                                                leDocument.type = l;
+                                            }
+                                        });
+                                    }
+                                });
+                                oldDoc = $.extend(true, {}, leDocument);
+                            }
+                        });
+                        Core.liste.push(lOperation);
+                    });
+                }
             },
             403: function() {
                 window.location.replace("index.php");

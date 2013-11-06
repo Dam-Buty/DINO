@@ -75,7 +75,7 @@ if (isset($_SESSION["niveau"])) {
                         `fk_categorie_doc` ASC, 
                         `fk_type_doc` ASC, 
                         `detail_type_doc_document` ASC, 
-                        `revision_type_doc_document` ASC
+                        `revision_type_doc_document` DESC
                 ";
                 
                 if ($result_docs = $mysqli->query($query_docs)) {
