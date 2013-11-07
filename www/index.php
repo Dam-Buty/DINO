@@ -32,7 +32,7 @@ session_start();
 
 <div id="content"></div>
 
-<script src="js/jquery-1.10.2.js?v=1"></script>
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="js/jquery-ui-1.10.3.custom.js?v=1"></script>
 
 <script src="js/jquery.validationEngine.js?v=1"></script>
