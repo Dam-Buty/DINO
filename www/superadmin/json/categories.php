@@ -5,7 +5,7 @@ if ($_SESSION["superadmin"]) {
     include("../../includes/mysqli.php");
     include("../../includes/status.php");
     
-    $query = "SELECT `pk_categorie_doc`, `label_categorie_doc`, `niveau_categorie_doc` FROM `categorie_doc` WHERE `fk_client` = " . $_POST["client"] . " AND `fk_monde` = " . $_POST["monde"] . ";";
+    $query = "SELECT `pk_categorie_doc`, `label_categorie_doc`, `niveau_categorie_doc` FROM `categorie_doc` WHERE `fk_client` = " . $_POST["client"] . " AND `fk_monde` = " . $_POST["monde"] . " AND `fk_champ` = " . $_POST["champ"] . ";";
     
     if ($result = $mysqli->query($query)) {
         status(200);

@@ -5,12 +5,12 @@ if ($_SESSION["superadmin"]) {
     include("../../includes/mysqli.php");
     include("../../includes/status.php");
     
-    $query = "DELETE FROM `valeur_champ` WHERE `fk_champ` = " . $_POST["champ"] . ";";
+    $query = "DELETE FROM `valeur_champ` WHERE `fk_champ` = " . $_POST["champ"] . " AND `fk_monde` = " . $_POST["monde"] . " AND `fk_client` = " . $_POST["client"] . ";";
     
     foreach(explode(PHP_EOL, $_POST["liste"]) as $ligne) {
         if ($ligne != "") {
             $champs = explode(",", $ligne);
-            $query .= "INSERT INTO `valeur_champ` (`pk_valeur_champ`, `label_valeur_champ`, `fk_champ`) VALUES (" . $champs[0] . ", '" . $champs[1] . "', " . $_POST["champ"] . ");";
+            $query .= "INSERT INTO `valeur_champ` (`pk_valeur_champ`, `label_valeur_champ`, `fk_champ`, `fk_monde`, `fk_client`) VALUES (" . $champs[0] . ", '" . $champs[1] . "', " . $_POST["champ"] . ", " . $_POST["monde"] . ", " . $_POST["client"] . ");";
         }
     }
     

@@ -5,7 +5,13 @@ if ($_SESSION["superadmin"]) {
     include("../../includes/mysqli.php");
     include("../../includes/status.php");
     
-    $query = "SELECT CONCAT_WS(',', `pk_valeur_champ`, `label_valeur_champ`) AS `ligne` FROM `valeur_champ` WHERE `fk_champ` = " . $_POST["champ"] . ";";
+    $query = "SELECT 
+                CONCAT_WS(',', `pk_valeur_champ`, `label_valeur_champ`) 
+                    AS `ligne` 
+                FROM `valeur_champ` 
+                WHERE `fk_champ` = " . $_POST["champ"] . "
+                    AND  `fk_client` = " . $_POST["client"] . " 
+                    AND `fk_monde` = " . $_POST["monde"] . ";";
     
     if ($result = $mysqli->query($query)) {
         $text = "";

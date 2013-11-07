@@ -2,14 +2,6 @@
 var save_monde = function() {
     var tr = $(this).closest("tr");
     
-    var cyclique;
-    
-    if (tr.find("input").eq(1).prop("checked") == true) {
-        cyclique = 1;
-    } else {
-        cyclique = 0;
-    }
-    
     $.ajax({
         url: "do/doSaveMonde.php",
         type: "POST",
@@ -17,13 +9,11 @@ var save_monde = function() {
             pk: tr.attr("data-monde"),
             client: $("#client").val(),
             label: tr.find("input").eq(0).val(),
-            cyclique: cyclique,
             niveau: tr.find("input").eq(2).val()
         },
         statusCode: {
             200: function() {
                 tr.find("input").val("");
-                tr.find("input").eq(1).prop("checked", false);
                 charge_mondes();
             }
         }
@@ -57,7 +47,6 @@ var select_monde = function() {
     $("#mondes").attr("data-selected", tr.attr("data-monde"));
     
     charge_champs();
-    charge_categories();
 }
 
 var charge_mondes = function() {
@@ -71,13 +60,6 @@ var charge_mondes = function() {
             200: function(mondes) {
                 $(".new_monde").detach().appendTo($("#mondes tbody").empty());
                 $.each(mondes, function() {
-                    var check_cyclique;
-                    
-                    if (this.cyclique == 1) {
-                        check_cyclique = true;
-                    } else {
-                        check_cyclique = false;
-                    }
                     
                     $(".new_monde")
                     .clone()
@@ -88,9 +70,6 @@ var charge_mondes = function() {
                             .val(this.label)
                             .end()
                         .eq(1)
-                            .prop("checked", check_cyclique)
-                            .end()
-                        .eq(2)
                             .val(this.niveau)
                             .end()
                         .end()
@@ -116,26 +95,6 @@ var charge_mondes = function() {
 var save_champ = function() {
     var tr = $(this).closest("tr");
     
-    var ismaster, ismulti, ispublic;
-    
-    if (tr.find("input").eq(2).prop("checked") == true) {
-        ismaster = 1;
-    } else {
-        ismaster = 0;
-    }
-    
-    if (tr.find("input").eq(3).prop("checked") == true) {
-        ismulti = 1;
-    } else {
-        ismulti = 0;
-    }
-    
-    if (tr.find("input").eq(4).prop("checked") == true) {
-        ispublic = 1;
-    } else {
-        ispublic = 0;
-    }
-    
     $.ajax({
         url: "do/doSaveChamp.php",
         type: "POST",
@@ -144,17 +103,11 @@ var save_champ = function() {
             monde: $("#mondes").attr("data-selected"),
             client: $("#client").val(),
             label: tr.find("input").eq(0).val(),
-            pluriel: tr.find("input").eq(1).val(),
-            ismaster: ismaster,
-            ismulti: ismulti,
-            ispublic: ispublic
+            pluriel: tr.find("input").eq(1).val()
         },
         statusCode: {
             200: function() {
                 tr.find("input").val("");
-                tr.find("input").eq(2).prop("checked", false);
-                tr.find("input").eq(3).prop("checked", false);
-                tr.find("input").eq(4).prop("checked", false);
                 charge_champs();
             }
         }
@@ -194,39 +147,13 @@ var select_champ = function() {
         url: "do/doGetListe.php",
         type: "POST",
         data: {
+            monde: $("#mondes").attr("data-selected"),
+            client: $("#client").val(),
             champ: pk
         },
         statusCode: {
             200: function(liste) {
                 $("#liste_champ").val(liste);
-            }
-        }
-    });
-};
-
-var ajout_champ = function() {
-    var tr = $(this).closest("tr");
-    var pk = tr.attr("data-champ");
-
-    if (tr.find("input").eq(2).prop("checked") == true) {
-        ismaster = 1;
-    } else {
-        ismaster = 0;
-    }
-    
-    $.ajax({
-        url: "do/doAjoutChamp.php",
-        type: "POST",
-        data: {
-            client: $("#client").val(),
-            monde: $("#mondes").attr("data-selected"),
-            pk: pk,
-            presence: $(this).closest("tr").attr("data-present"),
-            ismaster: ismaster
-        },
-        statusCode: {
-            200: function() {
-                charge_champs();
             }
         }
     });
@@ -245,60 +172,16 @@ var charge_champs = function() {
                 $(".new_champ").detach().appendTo($("#champs tbody").empty());
                 
                 $.each(champs, function() {
-                    var couleur_aj, texte_aj;
-                    var check_master, check_multi, check_public;
-                    
-                    if (this.ismaster == 1) {
-                        check_master = true;
-                    } else {
-                        check_master = false;
-                    }
-                    
-                    if (this.ismulti == 1 || this.ispublic == 1) {
-                    
-                        if (this.ismulti == 1) {
-                            check_multi = true;
-                            texte_aj = "Aj.";
-                            if (this.presence == 1) {
-                                couleur_aj = "blue";
-                            } else {
-                                couleur_aj = "red";
-                            }
-                        }
-                        if (this.ispublic == 1) {
-                            check_public = true;
-                            texte_aj = "Aj.";
-                            if (this.presence == 1) {
-                                couleur_aj = "green";
-                            } else {
-                                couleur_aj = "red";
-                            }
-                        }                        
-                    } else {
-                        check_public = false;
-                        texte_aj = "";
-                        couleur_aj = "black";
-                    }
-                    
                     $(".new_champ")
                     .clone()
                     .removeClass()
-                    .attr({ "data-champ": this.pk, "data-present": this.presence })
+                    .attr("data-champ": this.pk)
                     .find("input")
                         .eq(0)
                             .val(this.label)
                             .end()
                         .eq(1)
                             .val(this.pluriel)
-                            .end()
-                        .eq(2)
-                            .prop("checked", check_master)
-                            .end()
-                        .eq(3)
-                            .prop("checked", check_multi)
-                            .end()
-                        .eq(4)
-                            .prop("checked", check_public)
                             .end()
                         .end()
                     .find("td")
@@ -309,22 +192,12 @@ var charge_champs = function() {
                                 .addClass("select_champ")
                             )
                             .end()
-                        .eq(1)
-                            .append(
-                                $("<span></span>")
-                                .text(texte_aj)
-                                .addClass("ajout_champ")
-                                .css("color", couleur_aj)
-                            )
-                            .end()
                         .end()
                     .appendTo($("#champs tbody"))
                 });
                 $(".save_champ").unbind().click(save_champ);
                 $(".delete_champ").unbind().click(delete_champ);
                 $(".select_champ").unbind().click(select_champ);
-                $(".ajout_champ").unbind().click(ajout_champ);
-                
             }
         }
     });
@@ -335,6 +208,8 @@ var save_liste = function() {
         url: "do/doSaveListe.php",
         type: "POST",
         data: {
+            monde: $("#mondes").attr("data-selected"),
+            client: $("#client").val(),
             champ: $("#champs").attr("data-selected"),
             liste: $("#liste_champ").val()
         }
@@ -351,6 +226,7 @@ var save_categorie = function() {
             pk: tr.attr("data-categorie"),
             monde: $("#mondes").attr("data-selected"),
             client: $("#client").val(),
+            champ: $("#champs").attr("data-selected"),
             label: tr.find("input").eq(0).val(),
             niveau: tr.find("input").eq(1).val()
         },
@@ -372,6 +248,7 @@ var delete_categorie = function() {
         data: {
             client: $("#client").val(),
             monde: $("#mondes").attr("data-selected"),
+            champ: $("#champs").attr("data-selected"),
             pk: pk
         },
         statusCode: {
@@ -399,7 +276,8 @@ var charge_categories = function() {
         type: "POST",
         data: {
             monde: $("#mondes").attr("data-selected"),
-            client: $("#client").val()
+            client: $("#client").val(),
+            champ: $("#champs").attr("data-selected")
         },
         statusCode: {
             200: function(categories) {
@@ -455,6 +333,7 @@ var save_type = function() {
             pk: tr.attr("data-type"),
             client: $("#client").val(),
             monde: $("#mondes").attr("data-selected"),
+            champ: $("#champs").attr("data-selected"),
             categorie: $("#categories").attr("data-selected"),
             label: tr.find("input").eq(0).val(),
             detail: detail,
@@ -479,6 +358,7 @@ var delete_type = function() {
         data: {
             client: $("#client").val(),
             monde: $("#mondes").attr("data-selected"),
+            champ: $("#champs").attr("data-selected"),
             categorie: $("#categories").attr("data-selected"),
             pk: pk
         },
@@ -497,6 +377,7 @@ var charge_types = function() {
         data: {
             client: $("#client").val(),
             monde: $("#mondes").attr("data-selected"),
+            champ: $("#champs").attr("data-selected"),
             categorie: $("#categories").attr("data-selected")
         },
         statusCode: {

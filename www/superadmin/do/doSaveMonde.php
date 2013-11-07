@@ -6,9 +6,9 @@ if ($_SESSION["superadmin"]) {
     include("../../includes/status.php");
     
     if ($_POST["pk"] == "new") {
-        $query = "INSERT INTO `monde` (`label_monde`, `cyclique_monde`, `niveau_monde`, `fk_client`) VALUES ('" . $_POST["label"] . "', '" . $_POST["cyclique"]. "', '" . $_POST["niveau"] . "', '" . $_POST["client"] . "');";
+        $query = "INSERT INTO `monde` (`label_monde`, `niveau_monde`, `fk_client`) VALUES ('" . $_POST["label"] . "', '" . $_POST["niveau"] . "', '" . $_POST["client"] . "');";
     } else {
-        $query = "UPDATE `monde` SET `label_monde` = '" . $_POST["label"] . "', `cyclique_monde` = '" . $_POST["cyclique"] . "', `niveau_monde` = '" . $_POST["niveau"] . "' WHERE `pk_monde` = " . $_POST["pk"] . " AND `fk_client` = " . $_POST["client"] . ";";
+        $query = "UPDATE `monde` SET `label_monde` = '" . $_POST["label"] . "', `niveau_monde` = '" . $_POST["niveau"] . "' WHERE `pk_monde` = " . $_POST["pk"] . " AND `fk_client` = " . $_POST["client"] . ";";
     }
     
     if ($mysqli->query($query)) {

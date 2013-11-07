@@ -6,9 +6,9 @@ if ($_SESSION["superadmin"]) {
     include("../../includes/status.php");
     
     if ($_POST["pk"] == "new") {
-        $query = "INSERT INTO `type_doc` (`label_type_doc`, `detail_type_doc`, `niveau_type_doc`, `fk_client`, `fk_monde`, `fk_categorie_doc`) VALUES ('" . $_POST["label"] . "', '" . $_POST["detail"]. "', '" . $_POST["niveau"] . "', '" . $_POST["client"] . "', '" . $_POST["monde"] . "', '" . $_POST["categorie"] . "');";
+        $query = "INSERT INTO `type_doc` (`label_type_doc`, `detail_type_doc`, `niveau_type_doc`, `fk_client`, `fk_monde`, `fk_champ`, `fk_categorie_doc`) VALUES ('" . $_POST["label"] . "', '" . $_POST["detail"]. "', '" . $_POST["niveau"] . "', '" . $_POST["client"] . "', '" . $_POST["monde"] . "', " . $_POST["champ"] . ", '" . $_POST["categorie"] . "');";
     } else {
-        $query = "UPDATE `type_doc` SET `label_type_doc` = '" . $_POST["label"] . "', `detail_type_doc` = '" . $_POST["detail"] . "', `niveau_type_doc` = '" . $_POST["niveau"] . "' WHERE `pk_type_doc` = " . $_POST["pk"] . " AND `fk_client` = " . $_POST["client"] . " AND `fk_monde` = " . $_POST["monde"] . " AND `fk_categorie_doc` = " . $_POST["categorie"] . ";";
+        $query = "UPDATE `type_doc` SET `label_type_doc` = '" . $_POST["label"] . "', `detail_type_doc` = '" . $_POST["detail"] . "', `niveau_type_doc` = '" . $_POST["niveau"] . "' WHERE `pk_type_doc` = " . $_POST["pk"] . " AND `fk_client` = " . $_POST["client"] . " AND `fk_monde` = " . $_POST["monde"] . " AND `fk_champ` = " . $_POST["champ"] . " AND `fk_categorie_doc` = " . $_POST["categorie"] . ";";
     }
     
     if ($mysqli->query($query)) {

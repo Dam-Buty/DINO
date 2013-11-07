@@ -5,37 +5,11 @@ if ($_SESSION["superadmin"]) {
     include("../../includes/mysqli.php");
     include("../../includes/status.php");
     
-    $query = "SELECT `pk_champ`, `label_champ`, `pluriel_champ`, `public_champ`, `multi_champ`, 
-                (SELECT COUNT(*) 
-                FROM `monde_champ` 
-                WHERE 
-                    `fk_champ` = `c`.`pk_champ` 
-                    AND `fk_monde` = " . $_POST["monde"] . " 
-                    AND `fk_client` = " . $_POST["client"] . "
-                ) AS `presence_champ`,
-                (SELECT `master_monde_champ`
-                FROM `monde_champ`
-                WHERE `fk_champ` = `c`.`pk_champ` 
-                    AND `fk_monde` = " . $_POST["monde"] . " 
-                    AND `fk_client` = " . $_POST["client"] . "
-                ) AS `ismaster`                
+    $query = "SELECT `pk_champ`, `label_champ`, `pluriel_champ`               
             FROM `champ` AS `c` 
-            WHERE `public_champ` = 1 
-                OR (`multi_champ` = 1
-                   AND (SELECT COUNT(*) 
-                        FROM `monde_champ` 
-                    WHERE 
-                        `fk_champ` = `c`.`pk_champ` 
-                        AND `fk_client` = " . $_POST["client"] . "
-                        AND `c`.`multi_champ` = 1
-                    )
-                )
-                OR (SELECT COUNT(*) FROM `monde_champ` 
-                    WHERE `fk_champ` = `c`.`pk_champ` 
-                        AND `fk_monde` = " . $_POST["monde"] . " 
-                        AND `fk_client` = " . $_POST["client"] . "
-                    ) > 0 
-            ORDER BY `presence_champ` DESC, `public_champ` ASC";
+            WHERE `fk_monde` = " . $_POST["monde"] . "
+                AND `fk_client` = " . $_POST["client"] . "
+            ORDER BY `pk_champ` ASC";
     
     if ($result = $mysqli->query($query)) {
         status(200);
@@ -45,7 +19,7 @@ if ($_SESSION["superadmin"]) {
                 $json .= ", ";
             }
             
-            $json .= '{ "pk": "' . $row["pk_champ"] . '", "label": "' . $row["label_champ"] . '", "pluriel": "' . $row["pluriel_champ"] . '", "ismaster": "' . $row["ismaster"] . '", "ismulti": "' . $row["multi_champ"] . '", "ispublic": "' . $row["public_champ"] . '", "presence": "' . $row["presence_champ"] . '" }';
+            $json .= '{ "pk": "' . $row["pk_champ"] . '", "label": "' . $row["label_champ"] . '", "pluriel": "' . $row["pluriel_champ"] . '" }';
         }
         
         $json .= " ]";

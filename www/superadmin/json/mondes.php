@@ -5,7 +5,7 @@ if ($_SESSION["superadmin"]) {
     include("../../includes/mysqli.php");
     include("../../includes/status.php");
     
-    $query = "SELECT `pk_monde`, `label_monde`, `cyclique_monde`, `niveau_monde` FROM `monde` WHERE `fk_client` = " . $_POST["client"] . ";";
+    $query = "SELECT `pk_monde`, `label_monde`, `niveau_monde` FROM `monde` WHERE `fk_client` = " . $_POST["client"] . ";";
     
     if ($result = $mysqli->query($query)) {
         status(200);
@@ -15,7 +15,7 @@ if ($_SESSION["superadmin"]) {
                 $json .= ", ";
             }
             
-            $json .= '{ "pk": "' . $row["pk_monde"] . '", "label": "' . $row["label_monde"] . '", "cyclique": "' . $row["cyclique_monde"] . '", "niveau": "' . $row["niveau_monde"] . '" }';
+            $json .= '{ "pk": "' . $row["pk_monde"] . '", "label": "' . $row["label_monde"] . '", "niveau": "' . $row["niveau_monde"] . '" }';
         }
         
         $json .= " ]";

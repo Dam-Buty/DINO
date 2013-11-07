@@ -5,7 +5,7 @@ if ($_SESSION["superadmin"]) {
     include("../../includes/mysqli.php");
     include("../../includes/status.php");
     
-    $query = "DELETE FROM `categorie_doc` WHERE `pk_categorie_doc` = " . $_POST["pk"] . " AND `fk_client` = " . $_POST["client"] . " AND `fk_monde` = " . $_POST["monde"] . "; DELETE FROM `type_doc` WHERE `fk_categorie` = " . $_POST["categorie"] . " AND `fk_client` = " . $_POST["client"] . " AND `fk_monde` = " . $_POST["monde"] . ";";
+    $query = "DELETE FROM `categorie_doc` WHERE `pk_categorie_doc` = " . $_POST["pk"] . " AND `fk_client` = " . $_POST["client"] . " AND `fk_monde` = " . $_POST["monde"] . " AND `fk_champ` = " . $_POST["champ"] . "; DELETE FROM `type_doc` WHERE `fk_categorie` = " . $_POST["categorie"] . " AND `fk_client` = " . $_POST["client"] . " AND `fk_monde` = " . $_POST["monde"] . " AND `fk_champ` = " . $_POST["champ"] . ";";
     
     if ($mysqli->multi_query($query)) {
         $i = 0; 

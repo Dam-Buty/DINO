@@ -19,7 +19,6 @@ include("../includes/mysqli.php");
         <tr>
             <th>Sel.</th>
             <th>Label</th>
-            <th>Cycl.</th>
             <th>Niveau</th>
             <th>X</th>
         </tr>
@@ -28,7 +27,6 @@ include("../includes/mysqli.php");
         <tr class="new_monde" data-monde="new">
             <td></td>
             <td><input type="text" class="label_monde"/></td>
-            <td><input type="checkbox" value="1" class="cyclique_monde"/></td>
             <td><input type="text" class="niveau_monde"/></td>
             <td><span class="save_monde">Save</span> - <span class="delete_monde">Delete</span></td>
         </tr>
@@ -41,24 +39,16 @@ include("../includes/mysqli.php");
         <tr><th colspan="5">Champs</th></tr>
         <tr>
             <th>Sel.</th>
-            <th>Aj.</th>
             <th>Label</th>
             <th>Pluriel</th>
-            <th>Master</th>
-            <th>Multi-Monde</th>
-            <th>Public</th>
             <th>X</th>
         </tr>
     </thead>
     <tbody>
         <tr class="new_champ" data-champ="new">
             <td></td>
-            <td></td>
             <td><input type="text" class="label_champ"/></td>
             <td><input type="text" class="pluriel_champ"/></td>
-            <td><input type="checkbox" class="master_champ"/></td>
-            <td><input type="checkbox" class="multi_champ"/></td>
-            <td><input type="checkbox" class="public_champ"/></td>
             <td><span class="save_champ">Save</span> - <span class="delete_champ">Delete</span></td>
         </tr>
     </tbody>
