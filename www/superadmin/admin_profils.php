@@ -13,7 +13,7 @@ include("../includes/mysqli.php");
 ?>
 </select><br/><br/>
 
-<table id="mondes" data-selected="none">
+<table id="mondes" data-selected="0">
     <thead>
         <tr><th colspan="5">Mondes</th></tr>
         <tr>
@@ -34,7 +34,7 @@ include("../includes/mysqli.php");
 </table>
 <br/>
 
-<table id="champs" data-selected="none">
+<table id="champs" data-selected="0">
     <thead>
         <tr><th colspan="5">Champs</th></tr>
         <tr>
@@ -59,7 +59,7 @@ include("../includes/mysqli.php");
 <br><span class="save_liste">Save</span>
 <br/><br/>
 
-<table id="categories" data-selected="none">
+<table id="categories" data-selected="0">
     <thead>
         <tr><th colspan="4">Catégories</th></tr>
         <tr>    
@@ -80,7 +80,7 @@ include("../includes/mysqli.php");
 </table>
 <br/>
 
-<table id="types" data-selected="none">
+<table id="types" data-selected="0">
     <thead>
         <tr><th colspan="5">Types</th></tr>
         <tr>    

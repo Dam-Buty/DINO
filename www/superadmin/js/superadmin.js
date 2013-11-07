@@ -9,7 +9,7 @@ var save_monde = function() {
             pk: tr.attr("data-monde"),
             client: $("#client").val(),
             label: tr.find("input").eq(0).val(),
-            niveau: tr.find("input").eq(2).val()
+            niveau: tr.find("input").eq(1).val()
         },
         statusCode: {
             200: function() {
@@ -157,6 +157,11 @@ var select_champ = function() {
             }
         }
     });
+    
+    $("#categories").attr("data-selected", "0")
+    
+    charge_categories();
+    charge_types();
 };
 
 var charge_champs = function() {
@@ -171,17 +176,17 @@ var charge_champs = function() {
             200: function(champs) {
                 $(".new_champ").detach().appendTo($("#champs tbody").empty());
                 
-                $.each(champs, function() {
+                $.each(champs, function(i, champ) {
                     $(".new_champ")
                     .clone()
                     .removeClass()
-                    .attr("data-champ": this.pk)
+                    .attr("data-champ", champ.pk)
                     .find("input")
                         .eq(0)
-                            .val(this.label)
+                            .val(champ.label)
                             .end()
                         .eq(1)
-                            .val(this.pluriel)
+                            .val(champ.pluriel)
                             .end()
                         .end()
                     .find("td")
