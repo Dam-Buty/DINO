@@ -1,9 +1,9 @@
 <?php
 session_start();
+include("../includes/status.php");
 
 if (isset($_SESSION["niveau"])) {
     include("../includes/mysqli.php");
-    include("../includes/status.php");
     
     if ($_POST["cyclique"] == 1) {
         $query = "SELECT `pk_operation`, `ref_operation`, `date_operation`, `fk_user` 
@@ -33,21 +33,21 @@ if (isset($_SESSION["niveau"])) {
                 ;";
                 
                 if ($result_champs = $mysqli->query($query_champs)) {
-                    $json_champs = "[ ";
+                    $json_champs = "{ ";
                     
                     while ($row_champs = $result_champs->fetch_assoc()) {
-                        if ($json_champs != "[ ") {
+                        if ($json_champs != "{ ") {
                             $json_champs .= ', ';
                         }
                         
-                        $json_champs .= '{ "champ": "' . $row_champs["fk_champ"] . '", "valeur": "' . $row_champs["fk_valeur_champ"] . '" }';
+                        $json_champs .= '"' . $row_champs["fk_champ"] . '": "' . $row_champs["fk_valeur_champ"] . '"';
                     }                
                 } else {
                     status(500);
                     $json = '{ "error": "mysqli", "query": "' . $query_champs . '", "message": "' . $mysqli->error . '" }';
                 }
                 
-                $json_champs .= " ]";   
+                $json_champs .= " }";   
                 
                 $json = str_replace('"%%CHAMPS%%"', $json_champs, $json);
                 
@@ -80,15 +80,60 @@ if (isset($_SESSION["niveau"])) {
                 
                 if ($result_docs = $mysqli->query($query_docs)) {
                     $json_docs = "[ ";
+                    $json_revisions = "{ ";
+                    $json_doc = "";
+                    $oldCategorie = "";
+                    $oldType = "";
+                    $oldDetail = "";
                     
                     while ($row_docs = $result_docs->fetch_assoc()) {
-                        if ($json_docs != "[ ") {
-                            $json_docs .= ', ';
+                        // On n'est plus dans une révision d'un doc précédent
+                        if ($row_docs["fk_categorie_doc"] != $oldCategorie || $row_docs["fk_type_doc"] != $oldType || $row_docs["detail_type_doc_document"] != $oldDetail) {
+                            // Si on n'est pas dans le premier document
+                            // on merge les révisions et on ajoute le document
+                            // à json_docs
+                            if ($json_doc != "") {
+                                $json_revisions .= " }";
+                                $json_doc = str_replace('"%%REVISIONS%%"', $json_revisions, $json_doc);
+                                
+                                if ($json_docs != "[ ") {
+                                    $json_docs .= ", ";
+                                }
+                                
+                                $json_docs .= $json_doc;
+                            }
+                            
+                            // on construit le nouveau json_doc et les
+                            // variables old 
+                            $json_doc = '{ "filename": "' . $row_docs["filename_document"] . '", "date": "' . $row_docs["date_document"] . '", "user": "' . $row_docs["fk_user"] . '", "categorie": "' . $row_docs["fk_categorie_doc"] . '", "type": "' . $row_docs["fk_type_doc"] . '", "detail": "' . $row_docs["detail_type_doc_document"] . '", "revision": "' . $row_docs["revision_type_doc_document"] . '", "revisions": "%%REVISIONS%%" }';
+                            
+                            $oldCategorie = $row_docs["fk_categorie_doc"];
+                            $oldType = $row_docs["fk_type_doc"];
+                            $oldDetail = $row_docs["detail_type_doc_document"];
+                        } else {
+                            // on est dans une révision du doc précédent
+                            // on alimente le nouveau doc dans
+                            // json_revisions
+                            if ($json_revisions != "{ ") {
+                                $json_revisions .= ", ";
+                            }
+                            
+                            $json_revisions .= '"' . $row_docs["revision_type_doc_document"] . '": { "filename": "' . $row_docs["filename_document"] . '", "date": "' . $row_docs["date_document"] . '", "user": "' . $row_docs["fk_user"] . '" }';
                         }
-                        
-                        $json_docs .= '{ "filename": "' . $row_docs["filename_document"] . '", "date": "' . $row_docs["date_document"] . '", "user": "' . $row_docs["fk_user"] . '", "categorie": "' . $row_docs["fk_categorie_doc"] . '", "type": "' . $row_docs["fk_type_doc"] . '", "detail": "' . $row_docs["detail_type_doc_document"] . '", "revision": "' . $row_docs["revision_type_doc_document"] . '" }';
                     }   
                     
+                    // On enregistre le dernier doc + révision
+                    // qui n'a pas eu droit à son tour
+                    $json_revisions .= " }";
+                    $json_doc = str_replace('"%%REVISIONS%%"', $json_revisions, $json_doc);
+                    
+                    if ($json_docs != "[ ") {
+                        $json_docs .= ", ";
+                    }
+                    
+                    $json_docs .= $json_doc;
+                    
+                    // On ferme le json_docs et on se casse
                     $json_docs .= " ]";        
                     
                     $json = str_replace('"%%DOCUMENTS%%"', $json_docs, $json);
@@ -98,7 +143,7 @@ if (isset($_SESSION["niveau"])) {
                 }
             }
             $json .= ' ]';
-            //$json .= ' , { "query": "' . $query . '", "query_champs": "' . $query_champs . '", "query_docs": "' . $query_docs . '" }]';
+            //$json .= ' , { "query": "' . $query . '", "query_champs": "' . $query_champs . '", "query_docs": "' . $query_docs . '" }}';
         }
     } else {
         echo "Pas pret";

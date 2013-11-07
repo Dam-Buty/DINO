@@ -340,7 +340,7 @@ var previous_page = function() {
                 return !deleted;
             });
             
-            
+            // TODO: tous les champs avec index - 1 vont pêter avec les sparse arrays!
             if (!deleted) {
                 $.each(store.champs.normal, function(i, normal) {
                     if (normal.position == num_champ) {
