@@ -9,7 +9,7 @@
 <div id="popup-store" data-document="">
     <div id="top-store">
         <div id="prev-store"><img src="img/prev_big.png"/></div>
-        <ul id="mondes-store"></ul>
+        <ul id="mondes-store" class="list-mondes"></ul>
         <div id="next-store"><img src="img/next_big.png"/></div>
     </div>
     <iframe id="viewer-store"></iframe>

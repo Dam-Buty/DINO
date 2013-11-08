@@ -29,6 +29,21 @@ html, body {
     width: 90%;
 }
 
+#opak { /*Shakur!*/
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.5); 
+    
+    display: none;
+    
+    z-index: 100;
+}
+
 .details {
     overflow-x: hidden;
 }
@@ -160,31 +175,61 @@ tr:nth-child(even):hover {
     background-color: #19bf19;
 }
 
-#tiroir-store {
+#popup-store {
     position: absolute;
     
-    height: 70%;
-    width: 65%;
+    height: 80%;
+    width: 80%;
     
-    top: 15%;
-    left: -65%;
+    top: 10%;
+    left: 10%;
     
-    background-color: #888888;
+    padding: 1%;
+    
+    background-color: #666666;
     
     border: 1px solid black;
     
     border-left: 0px;
     
-    z-index: 5;
+    z-index: 105;
+    
+    display: none;
+}
+
+#prev-store {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#next-store {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#top-store {
+    text-align: center;
+    height: 70px;
 }
 
 #viewer-store {
     float: left;
-    height: 100%;
+    width: 45%;
+    margin-top: 1%;
+}
+
+#container-store {
+    background-color: #888888;
+    width: 50%;
+    margin-left: 50%;
+    margin-top: 1%;
 }
 
 #container-champs {
     text-align: center;
+    border-bottom: 2px solid black;
 }
 
 #container-champs hr {
@@ -264,7 +309,6 @@ tr:nth-child(even):hover {
 .list-mondes {
     padding-left: 0;
     margin: 0;
-    float: left;
 }
 
 .list-mondes li {
@@ -284,6 +328,10 @@ tr:nth-child(even):hover {
 .list-mondes li h1 {
     font-size: 1em;
     cursor: pointer;
+}
+
+#mondes-top {
+    float: left;
 }
 
 #list-sort {

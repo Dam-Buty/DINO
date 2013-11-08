@@ -152,7 +152,8 @@ if (isset($_SESSION["user"])) {
                     
                     if ($result_champs = $mysqli->query($query_champs)) {
                         $json_champs = "{ ";
-                        $json_cascade = "[ ";
+                        $json_cascade = '{ "champs": [ ';
+                        $cascade = array();
                         
                         while($row_champs = $result_champs->fetch_assoc()) {
                             if ($json_champs != "{ ") {
@@ -162,6 +163,7 @@ if (isset($_SESSION["user"])) {
                             
                             $json_champs .= '"' . $row_champs["pk_champ"] . '": { "label": "' . $row_champs["label_champ"] . '", "pluriel": "' . $row_champs["pluriel_champ"] . '", "categories": "%%CATEGORIES%%", "types": "%%TYPES%%", "liste": "%%LISTE%%" }';
                             $json_cascade .= '"' . $row_champs["pk_champ"] . '"';
+                            push_array($cascade, $row_champs["pk_champ"]);
                             
                             //////////////////////////
                             // Récupération des valeurs de champ sur lesquelles
@@ -220,9 +222,64 @@ if (isset($_SESSION["user"])) {
                         } // FIN WHILE CHAMPS
                         
                         $json_champs .= " }";
-                        $json_cascade .= " ]";
-                        
                         $json_mondes = str_replace('"%%CHAMPS%%"', $json_champs, $json_mondes);
+                        
+                        //////////////////////////:
+                        // Récupération des valeurs de champs en cascade
+                        $json_cascade .= ' ], "valeurs": "%%VALEURS%%" }';
+                        
+                        $parent = 0;
+                        
+                        $query_valeurs = "
+                                SELECT `vc`.`pk_valeur_champ`, ( 
+                                    SELECT COUNT(*) 
+                                    FROM `user_valeur_champ` AS `uvc` 
+                                    WHERE `uvc`.`fk_client` = " . $_SESSION["client"] . " 
+                                    AND `uvc`.`fk_monde` = " . $row_mondes["pk_monde"] . " 
+                                    AND `uvc`.`fk_champ` = `vc`.`fk_champ` 
+                                    AND `uvc`.`fk_user` = '" . $_SESSION["user"] . "' 
+                                    AND `uvc`.`fk_valeur_champ` = `vc`.`pk_valeur_champ`
+                                ) 
+                                AS `droits_valeur_champ` 
+                                FROM `valeur_champ` AS `vc` 
+                                WHERE `vc`.`fk_client` = " . $_SESSION["client"] . " 
+                                    AND `vc`.`fk_monde` = " . $row_mondes["pk_monde"] . " 
+                                ORDER BY
+                                    `droits_valeur_champ` DESC,
+                                    `vc`.`fk_champ` ASC,
+                                    `vc`.`fk_parent` ASC,
+                                    `vc`.`pk_valeur_champ` ASC
+                        ;";
+                        
+                        if ($result_valeurs = $mysqli->query($query_valeurs)) {
+                            $json_valeurs = '{ %%0%% }';
+                            $json_niveau = "{ ";
+                            $champ_en_cours = "";
+                            $niveau = 0;
+                            
+                            while($row_valeurs = $result_valeurs->fetch_assoc()) {
+                                
+                                if ($_SESSION["niveau"] >= 20 or $row_valeurs["droits_valeur_champ"]) {
+                                    if ($champ_en_cours == "") {
+                                        $champ_en_cours = $row_valeurs["fk_champ"];
+                                    }
+                                    
+                                    if ($champ_en_cours != $row_valeurs["fk_champ"]) {
+                                        // Stocker le niveau entier dans son parent 
+                                        
+                                    }
+                                    
+                                    if ($json_niveau != "{ ") {
+                                        $json_niveau .= ", ";
+                                    }
+                                    
+                                    // TODO : récupérer les valeurs de champs
+                                    // hiérarchiquement
+                                }
+                            }
+                        }
+                        
+                        
                         $json_mondes = str_replace('"%%CASCADE%%"', $json_cascade, $json_mondes);
                         
                     } else {

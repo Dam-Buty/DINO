@@ -13,7 +13,6 @@ session_start();
 <link href="http://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" href="css/global.css?v=3" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/validationEngine.jquery.css?v=1" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/jquery-ui-1.10.3.custom.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/zebra_dialog.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/start/jquery-ui.css" media="screen" type="text/css"/>
 
@@ -35,6 +34,8 @@ session_start();
 
 <div id="content"></div>
 
+<div id="opak"></div>
+
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
@@ -46,9 +47,9 @@ session_start();
 
 <script src="js/bootstrap.js?v=1"></script>
 <script src="js/application.js?v=1"></script>
+<script src="js/core.js?v=1"></script>
 <script src="js/queue.js?v=1"></script>
 <script src="js/store.js?v=1"></script>
-<script src="js/core.js?v=1"></script>
 <script src="js/dialogues.js?v=1"></script>
 
 <script type="text/javascript">
