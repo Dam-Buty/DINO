@@ -12,7 +12,7 @@ var bootstrap_list = function() {
 
     // Peuple la liste des mondes    
     $.each(profil.mondes, function(i, monde) {
-        $("#list-mondes").append(
+        $("#mondes-top").append(
             $("<li></li>")
             .attr({
                 "data-monde": i,
@@ -26,11 +26,11 @@ var bootstrap_list = function() {
         );
     });
     
-    $("#list-mondes").find("h1").eq(0).click();
+    $("#mondes-top").find("h1").eq(0).click();
 };
 
 var resize_input = function() {
-    $("#search").animate({"width": ($("#core-top").innerWidth() - $("#list-mondes").outerWidth() - $("#list-sort").outerWidth() - 20) + "px"});
+    $("#search").animate({"width": ($("#core-top").innerWidth() - $("#mondes-top").outerWidth() - $("#list-sort").outerWidth() - 20) + "px"});
 };
 
 var change_monde = function() {
@@ -89,8 +89,6 @@ var charge_documents = function() {
                 if (Core.cyclique == 1) {
                     Core.liste = liste;
                     construit_table();
-                } else {
-                    alert("Pas pret!");
                 }
             },
             403: function() {

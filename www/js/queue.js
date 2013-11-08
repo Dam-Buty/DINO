@@ -25,8 +25,10 @@ var anime_queue = function() {
         $("#container-queue").attr({ "data-state": "open" });
     } else {
         $("#tiroir-queue").animate({ left: "-30%" });
+        $("#tiroir-store").animate({ left: "-65%" });
         $("#poignee-queue").animate({ left: "0" });
         $("#container-queue").attr({ "data-state": "closed" });
+        $("#tiroir-store").attr({ "data-state": "closed" });
     }
 }
 
@@ -53,9 +55,6 @@ var refresh_liste = function() {
     $.each(queue, function(i, document) {
         $("#files-list").append(queue[i].li.attr("data-position", i));
     });
-    
-    $(".bouton-edit-li").unbind();
-    $(".bouton-del-li").unbind();
     
     $(".bouton-edit-li").unbind().click(store_document);
     $(".bouton-del-li").unbind().click(remove_document);
@@ -259,7 +258,7 @@ var handle_files = function() {
         // Si l'extension est légale, on pousse le fichier dans la queue
         if (extension in allowed_extensions) {
             var document_li = set_li_status(create_li(this.name), -1);
-            queue.push({ document: this, status: -1, size: this.size, li: document_li, filename: "", displayname: this.name, store: { monde: "", operation: { pk: "", ref: "" }, champs: { monde: "", master: [], normal: [] } , categorie: "", type_doc: { pk: "", detail: "" } } });
+            queue.push({ document: this, status: -1, size: this.size, li: document_li, filename: "", displayname: this.name, store: { monde: "", champs: { } , categorie: "", type_doc: { } } });
         }
     });
     

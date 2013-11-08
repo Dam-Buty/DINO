@@ -1,6 +1,6 @@
 <div id="core">
     <div id="core-top">
-        <ul id="list-mondes"></ul>
+        <ul class="list-mondes" id="mondes-top"></ul>
         <input type="text" id="search" placeholder="Buscar..."/>
         <ul id="list-sort"></ul>
     </div>

@@ -99,6 +99,7 @@ tr:nth-child(even):hover {
     -moz-border-bottom-right-radius:20px;
     -webkit-bottom-right-radius:20px;
     border-bottom-right-radius:20px;
+    
 }
 
 #tiroir-queue {
@@ -125,6 +126,7 @@ tr:nth-child(even):hover {
     border-bottom-right-radius:10px;
     
     overflow-y: auto;
+    z-index: 10;
 }
 
 #tiroir-queue ul {
@@ -141,6 +143,10 @@ tr:nth-child(even):hover {
     background-repeat: no-repeat;
 }
 
+#tiroir-queue li[data-editing="1"] {
+    background-color: blue;
+}
+
 #tiroir-queue li input:disabled {
     background-color: #BEBEBE;
 }
@@ -152,6 +158,48 @@ tr:nth-child(even):hover {
 #tiroir-queue li.done {
     background-size: 0 0;
     background-color: #19bf19;
+}
+
+#tiroir-store {
+    position: absolute;
+    
+    height: 70%;
+    width: 65%;
+    
+    top: 15%;
+    left: -65%;
+    
+    background-color: #888888;
+    
+    border: 1px solid black;
+    
+    border-left: 0px;
+    
+    z-index: 5;
+}
+
+#viewer-store {
+    float: left;
+    height: 100%;
+}
+
+#container-champs {
+    text-align: center;
+}
+
+#container-champs hr {
+    border: 0;
+    height: 1px;
+    background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+    background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+    background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+    background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); 
+}
+
+#container-champs select {
+    font-size: 1.4em;
+    padding: 1px 10px 1px 10px;
+    font-weight: bold;
 }
 
 .error {
@@ -166,10 +214,6 @@ tr:nth-child(even):hover {
     float: right;
 }
 
-.store {
-    display: none;
-}
-
 .bucket {
     display: none;
 }
@@ -177,11 +221,6 @@ tr:nth-child(even):hover {
 .filename {
     width: 60%;
     overflow-x: hidden;
-}
-
-.boutons-store {
-    width: 100%;
-    text-align: center;
 }
 
 .boutons-li {
@@ -222,13 +261,13 @@ tr:nth-child(even):hover {
     border-bottom-left-radius:10px;
 }
 
-#list-mondes {
+.list-mondes {
     padding-left: 0;
     margin: 0;
     float: left;
 }
 
-#list-mondes li {
+.list-mondes li {
     list-style-type: none;
     border: 1px solid black;
     display: inline-block;
@@ -236,13 +275,13 @@ tr:nth-child(even):hover {
     padding: 5px;
 }
 
-#list-mondes li[data-selected="1"] {
+.list-mondes li[data-selected="1"] {
     border: 2px solid white;
     background-color: #0380A7;
     color: white;
 }
 
-#list-mondes li h1 {
+.list-mondes li h1 {
     font-size: 1em;
     cursor: pointer;
 }

@@ -24,6 +24,94 @@ function convertBytes( $value ) {
     }
 }
 
+function recupere_types($monde, $champ, $categorie, $mysqli) {
+    //////////////////////////
+    // Récupération des types de documents
+    //////////////////////////
+    $query_types = "SELECT `pk_type_doc`, `label_type_doc`, `detail_type_doc` FROM `type_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $monde . " AND `fk_champ` = " . $champ . " AND `fk_categorie_doc` = " . $categorie . " AND `niveau_type_doc` <= " . $_SESSION["niveau"] . ";";
+    
+    if ($result_types = $mysqli->query($query_types)) {
+    
+        $json_types = "{ ";
+        
+        while($row_types = $result_types->fetch_assoc()) {
+            if ($json_types != "{ ") {
+                $json_types .= ", ";
+            }
+            
+            $json_types .= '"' . $row_types["pk_type_doc"] . '": { "label": "' . $row_types["label_type_doc"] . '", "detail": "' . $row_types["detail_type_doc"] . '", "details": "%%DETAILS%%" }';
+            
+            $json_details = "[ ";
+            
+            // Récupération des détails existants
+            // pour les types de doc à détails
+            if ($row_types["detail_type_doc"] == 1) {
+                
+                $query_details = "SELECT DISTINCT(`detail_type_doc`) FROM `type_doc_document` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $monde . " AND `fk_champ` = " . $champ . " AND `fk_categorie_doc` = " . $categorie . " AND `fk_type_doc` = " . $row_types["pk_type_doc"] . " ORDER BY `detail_type_doc`;";
+                
+                if ($result_details = $mysqli->query($query_details)) {
+                    
+                    while($row_details = $result_details->fetch_assoc()) {
+                        if ($json_details != "[ ") {
+                            $json_details .= ", ";
+                        }
+                        
+                        $json_details .= '"' . $row_details["detail_type_doc_document"] . '"';
+                    } // FIN WHILE DETAILS
+                    
+                } else {
+                    status(500);
+                    return '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_details . '" }';
+                }
+            }
+            $json_details .= " ]";
+            
+            $json_types = str_replace('"%%DETAILS%%"', $json_details, $json_types);
+        } // FIN WHILE TYPES
+        
+        $json_types .= " }";
+        
+        return $json_types;        
+    } else {
+        status(500);
+        return '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_types . '" }';
+    }
+}
+
+function recupere_categories($monde, $champ, $mysqli) {
+    //////////////////////////
+    // Récupération des catégories sur lesquelles l'user a des droits
+    //////////////////////////
+
+    $query_categories = "SELECT `pk_categorie_doc`, `label_categorie_doc` FROM `categorie_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $monde . " AND `fk_champ` = " . $champ . " AND `niveau_categorie_doc` <= " . $_SESSION["niveau"] . ";";
+
+    if ($result_categories = $mysqli->query($query_categories)) {
+        $json_categories = "{ ";
+        
+        while($row_categories = $result_categories->fetch_assoc()) {
+            if ($json_categories != "{ ") {
+                $json_categories .= ", ";
+            }
+            
+            $json_categories .= '"' . $row_categories["pk_categorie_doc"] . '": { "label": "' . $row_categories["label_categorie_doc"] . '", "types": "%%TYPES%%" }';
+            
+            $json_types = recupere_types($monde, $champ, $row_categories["pk_categorie_doc"], $mysqli);
+            
+            $json_categories = str_replace('"%%TYPES%%"', $json_types, $json_categories);
+        } // FIN WHILE CATEGORIES
+        
+        $json_categories .= " }";
+        
+        return $json_categories;
+        
+    } else {
+        status(500);
+        return '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_categories . '" }';
+    }
+}
+
+    
+
 if (isset($_SESSION["user"])) {
     include("../includes/mysqli.php");
     
@@ -45,7 +133,7 @@ if (isset($_SESSION["user"])) {
             //////////////////////////
             // Récupération des mondes sur lesquels l'user a des droits
             //////////////////////////
-            $query_mondes = "SELECT `pk_monde`, `label_monde`, `cyclique_monde` FROM `monde` WHERE `fk_client` = " . $row["fk_client"] . " AND `niveau_monde` <= " . $row["niveau_user"] . ";";
+            $query_mondes = "SELECT `pk_monde`, `label_monde` FROM `monde` WHERE `fk_client` = " . $row["fk_client"] . " AND `niveau_monde` <= " . $row["niveau_user"] . ";";
             
             if ($result_mondes = $mysqli->query($query_mondes)) {
                 $json_mondes = "{ ";
@@ -55,28 +143,47 @@ if (isset($_SESSION["user"])) {
                         $json_mondes .= ", ";
                     }
                     
-                    $json_mondes .= '"' . $row_mondes["pk_monde"] . '": { "label": "' . $row_mondes["label_monde"] . '", "cyclique": "' . $row_mondes["cyclique_monde"] . '", "champs": "%%CHAMPS%%", "categories": "%%CATEGORIES%%" }';
+                    $json_mondes .= '"' . $row_mondes["pk_monde"] . '": { "label": "' . $row_mondes["label_monde"] . '", "champs": "%%CHAMPS%%", "cascade": "%%CASCADE%%" }';
                     
                     //////////////////////////
                     // Récupération des champs
                     //////////////////////////
-                    $query_champs = "SELECT `pk_champ`, `label_champ`, `pluriel_champ`, (SELECT `master_monde_champ` FROM `monde_champ` WHERE `fk_client` = " . $row["fk_client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `fk_champ` = `c`.`pk_champ`) AS `ismaster` FROM `champ` AS `c` WHERE ( SELECT COUNT(*) FROM `monde_champ` WHERE `fk_client` = " . $row["fk_client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `fk_champ` = `c`.`pk_champ` ) > 0";
+                    $query_champs = "SELECT `pk_champ`, `label_champ`, `pluriel_champ` FROM `champ` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " ORDER BY `pk_champ` ASC;";
                     
                     if ($result_champs = $mysqli->query($query_champs)) {
                         $json_champs = "{ ";
+                        $json_cascade = "[ ";
                         
                         while($row_champs = $result_champs->fetch_assoc()) {
                             if ($json_champs != "{ ") {
                                 $json_champs .= ", ";
+                                $json_cascade .= ", ";
                             }
                             
-                            $json_champs .= '"' . $row_champs["pk_champ"] . '": { "master": "' . $row_champs["ismaster"] . '", "label": "' . $row_champs["label_champ"] . '", "pluriel": "' . $row_champs["pluriel_champ"] . '", "liste": "%%LISTE%%" }';
+                            $json_champs .= '"' . $row_champs["pk_champ"] . '": { "label": "' . $row_champs["label_champ"] . '", "pluriel": "' . $row_champs["pluriel_champ"] . '", "categories": "%%CATEGORIES%%", "types": "%%TYPES%%", "liste": "%%LISTE%%" }';
+                            $json_cascade .= '"' . $row_champs["pk_champ"] . '"';
                             
                             //////////////////////////
                             // Récupération des valeurs de champ sur lesquelles
                             // l'user a des droits
                             //////////////////////////
-                            $query_liste = "SELECT `pk_valeur_champ`, `label_valeur_champ`, ( SELECT COUNT(*) FROM `user_valeur_champ` WHERE `fk_user` = '" . $_SESSION["user"] . "' AND `fk_champ` = " . $row_champs["pk_champ"] . " AND `fk_client` = " . $_SESSION["client"] . " AND  `vc`.`pk_valeur_champ` =  `fk_valeur_champ`) as `droits_valeur_champ` FROM `valeur_champ` AS `vc` WHERE `fk_champ` = " . $row_champs["pk_champ"] . " ORDER BY `droits_valeur_champ` DESC;";
+                            $query_liste = "
+                                SELECT `pk_valeur_champ`, 
+                                `label_valeur_champ`, ( 
+                                    SELECT COUNT(*) 
+                                    FROM `user_valeur_champ` AS `uvc` 
+                                    WHERE `uvc`.`fk_client` = " . $_SESSION["client"] . " 
+                                    AND `uvc`.`fk_monde` = " . $row_mondes["pk_monde"] . " 
+                                    AND `uvc`.`fk_champ` = " . $row_champs["pk_champ"] . " 
+                                    AND `uvc`.`fk_user` = '" . $_SESSION["user"] . "' 
+                                    AND `uvc`.`fk_valeur_champ` = `vc`.`pk_valeur_champ`
+                                ) 
+                                AS `droits_valeur_champ` 
+                                FROM `valeur_champ` AS `vc` 
+                                WHERE `fk_client` = " . $_SESSION["client"] . " 
+                                AND `fk_monde` = " . $row_mondes["pk_monde"] . " 
+                                AND `fk_champ` = " . $row_champs["pk_champ"] . " 
+                                ORDER BY `droits_valeur_champ` DESC;";
                             
                             if ($result_liste = $mysqli->query($query_liste)) {
                                 $json_liste = "{ ";
@@ -101,11 +208,22 @@ if (isset($_SESSION["user"])) {
                                 $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
                                 break;
                             }
+                            
+                            // Récupération des types de document en racine
+                            $json_types = recupere_types($row_mondes["pk_monde"], $row_champs["pk_champ"], 0, $mysqli);
+                            $json_champs = str_replace('"%%TYPES%%"', $json_types, $json_champs);
+                            
+                            // Récupération des catégories/typedoc en racine
+                            $json_categories = recupere_categories($row_mondes["pk_monde"], $row_champs["pk_champ"], $mysqli);
+                            $json_champs = str_replace('"%%CATEGORIES%%"', $json_categories, $json_champs);
+                            
                         } // FIN WHILE CHAMPS
                         
                         $json_champs .= " }";
+                        $json_cascade .= " ]";
                         
                         $json_mondes = str_replace('"%%CHAMPS%%"', $json_champs, $json_mondes);
+                        $json_mondes = str_replace('"%%CASCADE%%"', $json_cascade, $json_mondes);
                         
                     } else {
                         status(500);
@@ -113,116 +231,6 @@ if (isset($_SESSION["user"])) {
                         break;
                     }
                     
-                    //////////////////////////
-                    // Récupération des catégories sur lesquelles l'user a des droits
-                    //////////////////////////
-                    
-                    $query_categories = "SELECT `pk_categorie_doc`, `label_categorie_doc` FROM `categorie_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `niveau_categorie_doc` <= " . $_SESSION["niveau"] . ";";
-                    
-                    if ($result_categories = $mysqli->query($query_categories)) {
-                        $json_categories = "{ ";
-                        
-                        while($row_categories = $result_categories->fetch_assoc()) {
-                            if ($json_categories != "{ ") {
-                                $json_categories .= ", ";
-                            }
-                            
-                            $json_categories .= '"' . $row_categories["pk_categorie_doc"] . '": { "label": "' . $row_categories["label_categorie_doc"] . '", "types": "%%TYPES%%" }';
-                            
-                            //////////////////////////
-                            // Récupération des types de documents
-                            //////////////////////////
-                            $query_types = "SELECT `pk_type_doc`, `label_type_doc`, `detail_type_doc` FROM `type_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `fk_categorie_doc` = " . $row_categories["pk_categorie_doc"] . " AND `niveau_type_doc` <= " . $_SESSION["niveau"] . ";";
-                            
-                            if ($result_types = $mysqli->query($query_types)) {
-                            
-                                $json_types = "{ ";
-                                
-                                while($row_types = $result_types->fetch_assoc()) {
-                                    if ($json_types != "{ ") {
-                                        $json_types .= ", ";
-                                    }
-                                    
-                                    $json_types .= '"' . $row_types["pk_type_doc"] . '": { "label": "' . $row_types["label_type_doc"] . '", "detail": "' . $row_types["detail_type_doc"] . '", "details": "%%DETAILS%%" }';
-                                    
-                                    $json_details = "[ ";
-                                    
-                                    // Récupération des détails existants
-                                    // pour les types de doc à détails
-                                    if ($row_types["detail_type_doc"] == 1) {
-                                        
-                                        $query_details = "SELECT DISTINCT(`detail_type_doc_document`) FROM `type_doc_document` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " AND `fk_categorie_doc` = " . $row_categories["pk_categorie_doc"] . " AND `fk_type_doc` = " . $row_types["pk_type_doc"] . " ORDER BY `detail_type_doc_document`;";
-                                        
-                                        if ($result_details = $mysqli->query($query_details)) {
-                                            
-                                            while($row_details = $result_details->fetch_assoc()) {
-                                                if ($json_details != "[ ") {
-                                                    $json_details .= ", ";
-                                                }
-                                                
-                                                $json_details .= '"' . $row_details["detail_type_doc_document"] . '"';
-                                            } // FIN WHILE DETAILS
-                                            
-                                        } else {
-                                            status(500);
-                                            $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
-                                            break;
-                                        }
-                                    }
-                                    $json_details .= " ]";
-                                    
-                                    $json_types = str_replace('"%%DETAILS%%"', $json_details, $json_types);
-                                } // FIN WHILE TYPES
-                                
-                                $json_types .= " }";
-                                
-                                $json_categories = str_replace('"%%TYPES%%"', $json_types, $json_categories);
-                                
-                            } else {
-                                status(500);
-                                $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
-                                break;
-                            }
-                        } // FIN WHILE CATEGORIES
-                        
-                        $json_categories .= " }";
-                        
-                        $json_mondes = str_replace('"%%CATEGORIES%%"', $json_categories, $json_mondes);
-                        
-                    } else {
-                        status(500);
-                        $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
-                        break;
-                    }
-                    
-                    //////////////////////////
-                    // Récupération des références d'opé
-                    // Si l'utilisateur est > 20 il a droit à toutes les opération
-                    // Sinon seulement celles qui ont des champs égaux aux siens
-                    //////////////////////////
-#                    if ($row_mondes["cyclique_monde"] == 1) {
-#                        if ($_SESSION["niveau"] >= 20) {
-#                            $query_references = "SELECT `pk_operation` AS `reference` FROM `operation` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . ";";
-#                        } else {
-#                            $query_references = "SELECT DISTINCT(`fk_operation`) AS `reference` FROM  `operation_valeur_champ` AS `ovc` , `valeur_champ` AS `vc` , `user_valeur_champ` AS `uvc` WHERE `ovc`.`fk_champ` = `vc`.`fk_champ` AND `ovc`.`fk_valeur_champ` = `vc`.`pk_valeur_champ` AND `vc`.`fk_champ` = `uvc`.`fk_champ` AND `vc`.`pk_valeur_champ` = `uvc`.`fk_valeur_champ` AND `fk_user` = '" . $_SESSION["user"] . "';";
-#                        }
-#                        
-#                        if ($result_references = $mysqli->query($query_references)) {
-#                            $json_references = "[ ";
-#                            
-#                            while($row_references = $result_references->fetch_assoc()) {
-#                                if ($json_references != "[ ") {
-#                                    $json_references .= ", ";
-#                                }
-#                                
-#                                $json_references .= '"' . $row_references["reference"] . '"';
-#                            }// FIN WHILE REFERENCES
-#                            
-#                            $json_references .= " ]";
-#                            
-#                            $json_mondes = str_replace('"%%REFERENCES%%"', $json_references, $json_mondes);
-#                        }
-#                    }
                 } // FIN WHILE MONDES
                 
                 //////////////////////////

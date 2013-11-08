@@ -6,6 +6,14 @@
     </div>
 </div>
 
+<div id="tiroir-store" data-state="closed">
+    <iframe id="viewer-store"></iframe>
+    <div id="container-store">
+        <div id="container-champs"></div>
+        <div id="container-classification"></div>
+    </div>
+</div>
+
 <div id="bucket-queue" class="bucket">
     <ul>
         <li id="modele-li-queue" class="idle">
@@ -15,18 +23,11 @@
                 <img class="bouton-edit-li" src="img/edit.png"/>
                 <img class="bouton-del-li" src="img/del.png"/>
             </span>
-            <div class="store" data-page="">
-                <p></p>
-                <span class="boutons-store">
-                    <img class="bouton-prev-store" src="img/prev.png"/>
-                    <img class="bouton-next-store" src="img/next.png"/>
-                </span>
-            </div>
         </li>
     </ul>
 </div>
 
-<script type="text/javascript">    
+<script type="text/javascript">
     $("#poignee-queue").click(anime_queue);
     $("#files-handler").change(handle_files);
     
