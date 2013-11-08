@@ -6,7 +6,12 @@
     </div>
 </div>
 
-<div id="tiroir-store" data-state="closed">
+<div id="popup-store" data-document="">
+    <div id="top-store">
+        <div id="prev-store"><img src="img/prev_big.png"/></div>
+        <ul id="mondes-store"></ul>
+        <div id="next-store"><img src="img/next_big.png"/></div>
+    </div>
     <iframe id="viewer-store"></iframe>
     <div id="container-store">
         <div id="container-champs"></div>

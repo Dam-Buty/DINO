@@ -15,6 +15,9 @@ session_start();
 <link rel="stylesheet" href="css/validationEngine.jquery.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/jquery-ui-1.10.3.custom.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/zebra_dialog.css?v=1" media="screen" type="text/css"/>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/start/jquery-ui.css" media="screen" type="text/css"/>
+
+
 
 </head>
 <body>
@@ -33,7 +36,7 @@ session_start();
 <div id="content"></div>
 
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-<script src="js/jquery-ui-1.10.3.custom.js?v=1"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
 <script src="js/jquery.validationEngine.js?v=1"></script>
 <script src="js/jquery.validationEngine-es.js?v=1"></script>
