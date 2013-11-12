@@ -6,8 +6,7 @@ if ($_SESSION["superadmin"]) {
     include("../../includes/status.php");
     
     $query = "SELECT 
-                CONCAT_WS(',', `pk_valeur_champ`, `label_valeur_champ`) 
-                    AS `ligne` 
+                `label_valeur_champ`
                 FROM `valeur_champ` 
                 WHERE `fk_champ` = " . $_POST["champ"] . "
                     AND  `fk_client` = " . $_POST["client"] . " 
@@ -16,7 +15,7 @@ if ($_SESSION["superadmin"]) {
     if ($result = $mysqli->query($query)) {
         $text = "";
         while ($row = $result->fetch_assoc()) {
-            $text .= $row["ligne"] . "\n";
+            $text .= $row["label_valeur_champ"] . "\n";
         }
         
         status(200);

@@ -15,7 +15,16 @@
     <iframe id="viewer-store"></iframe>
     <div id="container-store">
         <div id="container-champs"></div>
-        <div id="container-classification"></div>
+        <hr/>
+        <ul id="container-classification"></ul>
+        <hr/>
+        <div id="container-details">
+            Fecha del documento : <input type="text" id="date-store"/><br/>
+            <div id="input-detail">
+                Detalle : <input type="text" id="detail-store"/>
+            </div> <?php // LOCALISATION ?>
+            <div class="boutons" id="bouton-store">Archivar el documento</div>
+        </div>
     </div>
 </div>
 
@@ -38,6 +47,9 @@
     
     $("#poignee-queue").on("dragover", handle_drag);
     $("#poignee-queue").on("drop", handle_drop);
+    
+    $("#date-store").datepicker({dateFormat: "dd/mm/yy"});
+    $("#date-store").datepicker('setDate', new Date());
     
     $.ajax({ url: "json/queue.php" })
     .done(function (data) {

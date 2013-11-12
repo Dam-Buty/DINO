@@ -258,7 +258,7 @@ var handle_files = function() {
         // Si l'extension est légale, on pousse le fichier dans la queue
         if (extension in allowed_extensions) {
             var document_li = set_li_status(create_li(this.name), -1);
-            queue.push({ document: this, status: -1, size: this.size, li: document_li, filename: "", displayname: this.name, store: { monde: "", champs: { } , categorie: "", type_doc: { } } });
+            queue.push({ document: this, status: -1, size: this.size, li: document_li, filename: "", displayname: this.name, store: { date: "", monde: "", last_champ: "", champs: { } , categorie: "", type_doc: { } } });
         }
     });
     

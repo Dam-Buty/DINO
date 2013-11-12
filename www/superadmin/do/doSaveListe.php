@@ -9,8 +9,7 @@ if ($_SESSION["superadmin"]) {
     
     foreach(explode(PHP_EOL, $_POST["liste"]) as $ligne) {
         if ($ligne != "") {
-            $champs = explode(",", $ligne);
-            $query .= "INSERT INTO `valeur_champ` (`pk_valeur_champ`, `label_valeur_champ`, `fk_champ`, `fk_monde`, `fk_client`) VALUES (" . $champs[0] . ", '" . $champs[1] . "', " . $_POST["champ"] . ", " . $_POST["monde"] . ", " . $_POST["client"] . ");";
+            $query .= "INSERT INTO `valeur_champ` (`label_valeur_champ`, `fk_champ`, `fk_monde`, `fk_client`) VALUES ('" . $ligne . "', " . $_POST["champ"] . ", " . $_POST["monde"] . ", " . $_POST["client"] . ");";
         }
     }
     
