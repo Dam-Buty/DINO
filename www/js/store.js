@@ -283,15 +283,51 @@ var reload_champs = function() {
 };
 
 var prev_document = function() {
-
+    var document = $("#popup-store").attr("data-document");
+    
+    if (document == 0) {
+        document = queue.length - 1;
+    } else {
+        document = document - 1;
+    }
+    
+    change_document(document);
 };
 
 var next_document = function() {
+    var document = $("#popup-store").attr("data-document");
     
+    if (document == queue.length - 1) {
+        document = 0;
+    } else {
+        document = parseInt(document) + 1;
+    }
+    
+    change_document(document);
+};
+
+var change_document = function(document) {
+    $('#files-list li[data-editing="1"]').addClass("done");
+    $("#files-list li").attr("data-editing", "0");
+    $('#files-list li[data-position="' + document + '"]')
+    .removeClass("done")
+    .attr("data-editing", 1);
+    $("#popup-store").attr("data-document", document);
+    
+    queue[document].store.monde = $('#mondes-store li[data-selected="1"]').attr("data-monde");
+    
+    $("#container-details").hide();
+    reload_champs();
 };
 
 var cancel_store = function() {
+    // On cache le fond opaque et le store
+    $("#opak").fadeOut();
+    $("#popup-store").fadeOut();
     
+    $('#files-list li[data-editing="1"]').addClass("done");
+    $("#files-list li").attr("data-editing", "0");
+    $("#popup-store").attr("data-document", "");
 };
 
 var archive_document = function() {
@@ -317,8 +353,29 @@ var archive_document = function() {
         },
         statusCode: {
             200: function() {
-                // TODO : une fois terminé, on élimine de la queue
+                popup('Su documento fue archivado con exito!', 'confirmation'); // LOCALISATION
+                
+                var new_position;
+                
+                // une fois terminé, on élimine de la queue
                 // et on envoie le prochain document dans la queue
+                var position = $("#popup-store").attr("data-document");
+                
+                // Si c'est le seul document de la queue on ferme le store
+                if (queue.length == 1) {
+                    cancel_store();
+                } else {
+                    if (position == queue.length - 1) {
+                        new_position = queue.length - 2;
+                    } else {
+                        new_position = position;
+                    }
+                }
+                
+                queue.splice(position, 1);
+                refresh_liste();
+                
+                change_document(new_position);
             },
             403: function() {
                 window.location.replace("index.php");
@@ -370,9 +427,9 @@ var store_document = function() {
     
     // On affiche le fond opaque et le store
     $("#opak")
-    .css("display", "block")
+    .fadeIn()
     .unbind().click(cancel_store);
-    $("#popup-store").css("display", "block");
+    $("#popup-store").fadeIn();
     
     // on déclenche le redimensionnement de la fenêtre
     $(window).trigger('resize');
