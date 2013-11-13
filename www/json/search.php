@@ -5,6 +5,62 @@ include("../includes/status.php");
 if (isset($_SESSION["niveau"])) {
     include("../includes/mysqli.php");
     
+    $query = "
+        SELECT 
+            `filename_document`, 
+            `date_document`
+        FROM 
+            `categorie` AS `ca`,
+            `type_doc` AS `td`,
+            `type_doc_document` AS `tdd`,
+            `document` AS `d`,
+            CONCAT_WS('||'";
+            
+    foreach($_POST["champ"] as $champ => $donnees) {
+        $query .= "
+                , (
+                SELECT CONCAT_WS('%%', `label_valeur_champ`, `pk_valeur_champ`)
+                FROM 
+                    `valeur_champ` AS `vc`,
+                    `document_valeur_champ` AS `dvc`
+                WHERE 
+                    `dvc`.`fk_client` = " . $_SESSION["client"] . "
+                    AND `dvc`.`fk_monde` = " . $_POST["monde"] . "
+                    AND `vc`.`fk_client` = " . $_SESSION["client"] . "
+                    AND `vc`.`fk_monde` = " . $_POST["monde"] . "
+                    
+                    AND `vc`.`fk_champ` = `dvc`.`fk_champ`
+                    AND `vc`.`pk_valeur_champ` = `dvc`.`fk_valeur_champ`
+                    
+                    AND `dvc`.`fk_document` = `d`.`filename_document`
+                    
+                    AND `dvc`.`fk_champ` = " . $donnees["pk"] . "
+                )"; 
+   }     
+   $query .=")
+        WHERE
+            `ca`.`fk_client` = " . $_SESSION["client"] . "
+            AND `ca`.`fk_monde` = " . $_POST["monde"] . "
+            AND `td`.`fk_client` = " . $_SESSION["client"] . "
+            AND `td`.`fk_monde` = " . $_POST["monde"] . "
+            AND `tdd`.`fk_client` = " . $_SESSION["client"] . "
+            AND `tdd`.`fk_monde` = " . $_POST["monde"] . "
+            AND `d`.`fk_client` = " . $_SESSION["client"] . "
+            AND `d`.`fk_monde` = " . $_POST["monde"] . "
+            
+            AND `ca`.`fk_champ` = `td`.`fk_champ`
+            AND `ca`.`pk_categorie` = `td`.`fk_categorie`
+            
+            AND `td`.`fk_champ` = `tdd`.`fk_champ`
+            AND `td`.`pk_categorie` = `tdd`.`fk_categorie`
+            AND `td`.`pk_type_doc` = `tdd`.`fk_type_doc`
+            
+            AND `tdd`.`fk_document` = `d`.`filename_document`
+            
+            AND `niveau_document` <= " . $_SESSION["niveau"] . "           
+    ";
+    
+    
     if ($_POST["cyclique"] == 1) {
         $query = "SELECT `pk_operation`, `ref_operation`, `date_operation`, `fk_user` 
                 FROM `operation` 

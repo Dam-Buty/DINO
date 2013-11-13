@@ -1,8 +1,7 @@
 
 var Core = {
     monde: 0,
-    cyclique: 0,
-    champs: { },
+    champs: {},
     recherche: [],
     limit: [0, 100],
     liste: []
@@ -42,7 +41,6 @@ var change_monde = function() {
     li.attr("data-selected", "1");
     
     Core.monde = li.attr("data-monde");
-    Core.cyclique = profil.mondes[Core.monde].cyclique;
     
     $("#search").css({"width": "100px" });
     
@@ -50,19 +48,19 @@ var change_monde = function() {
     Core.champs.length = 0;
     
     // On peuple le moteur de recherche / tri
-    $.each(profil.mondes[Core.monde].champs, function(i, champ) {
+    $.each(profil.mondes[Core.monde].cascade, function(i, champ) {
+        var champ_profil = profil.mondes[Core.monde].champs[champ];
+        
         $("#list-sort").append(
             $("<li></li>")
-            .attr({
-                "data-champ": i,
-                "data-sorted": "up"
-            })
+            .attr("data-sorted", "up")
+            .attr("data-champ", champ)
             .append(
                 $("<h1></h1>")
-                .text(champ.label)
+                .text(champ_profil.label)
             )
         );
-        Core.champs[i] = { tri: 1, group: 1, recherche: "" };
+        Core.champs[champ_profil.pk] = { tri: 1, group: 1, recherche: "" };
     });
     
     $("#list-sort").sortable();
@@ -73,15 +71,25 @@ var change_monde = function() {
 
 var charge_documents = function() {
     var termes = $("#search").val();
+    var champs = [];
+    
+    // On récupère les champs dans l'ordre de la liste
+    $.each($("#list-sort li"), function(i, li) {
+    
+        var champ = profil.mondes[Core.monde].champs[$(li).attr("data-champ")];
+        
+        champs.push(
+            $.extend(Core.champs[champ.pk], { pk: champ.pk })
+        );
+    });
     
     $.ajax({
         url: "json/search.php",
         type: "POST",
         data: {
             monde: Core.monde,
-            cyclique: Core.cyclique,
             termes: termes,
-            recherche: Core.recherche,
+            champs: champs,
             limit: Core.limit
         },
         statusCode: {
@@ -129,5 +137,5 @@ var trie_liste = function() {
 };
 
 var construit_table = function() {
-    trie_liste();
+    //trie_liste();
 };

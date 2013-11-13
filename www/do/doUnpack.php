@@ -4,10 +4,8 @@ session_start();
 if ($_SESSION["niveau"] > 10) {
     include("../includes/status.php");
     
-    //$client = $_SESSION["client"];
-    $client = 81;
-    //$document = $_POST["document"];
-    $document = "31aAUm2mSmz9.pdf";
+    $client = $_SESSION["client"];
+    $document = $_GET["document"];
     $clef = $_SESSION["clef"];
     
     $descriptorspec = array(
@@ -19,7 +17,11 @@ if ($_SESSION["niveau"] > 10) {
     $cwd = NULL;
     $env = array();
     
-    $process = proc_open("../scripts/unpacker.sh " . $client . " " . $document . ' "' . $clef . '"', $descriptorspec, $pipes, $cwd, $env);
+    echo $_POST["document"] . " : lmlm";
+    
+    $commande = "../scripts/unpacker.sh " . $client . " " . $document . ' "' . $clef . '"';
+    
+    $process = proc_open($commande, $descriptorspec, $pipes, $cwd, $env);
 
     if (is_resource($process)) {
         // $pipes now looks like this:
@@ -51,11 +53,14 @@ if ($_SESSION["niveau"] > 10) {
             echo $out;
         } else {
             status(500);
-            $json = '{ "error": "' . $return_value . '", "message": "' . $err . '" }';
+            $json = '{ "error": "' . $return_value . '", "commande": "' . $commande . '", "message": "' . $err . '" }';
         }
     } else {
         status(500);
         $json = '{ "error": "unknown" }';
     }
 }
+
+header('Content-Type: application/json');
+echo $json;
 ?>

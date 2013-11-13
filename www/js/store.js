@@ -1,7 +1,9 @@
 
 // TODO : pour proposer des défauts intelligents au prochain tour
 var Store = {
-
+    monde: "",
+    champs: {},
+    last_champ: ""
 };
 
 var change_monde_store = function() {
@@ -307,6 +309,12 @@ var next_document = function() {
 };
 
 var change_document = function(document) {
+    
+    $("#viewer-store").attr({
+        "data-document": document,
+        src: "pdfjs/viewer/viewer.html?file=" + escape("http://localhost/csstorage2/do/doUnpack.php?document=" + queue[document].filename)
+    });
+    
     $('#files-list li[data-editing="1"]').addClass("done");
     $("#files-list li").attr("data-editing", "0");
     $('#files-list li[data-position="' + document + '"]')
@@ -314,9 +322,12 @@ var change_document = function(document) {
     .attr("data-editing", 1);
     $("#popup-store").attr("data-document", document);
     
-    queue[document].store.monde = $('#mondes-store li[data-selected="1"]').attr("data-monde");
+    queue[document].store.monde = Store.monde;
+    queue[document].store.champs = Store.champs;
+    queue[document].store.last_champ = Store.last_champ;
     
     $("#container-details").hide();
+    
     reload_champs();
 };
 
@@ -354,6 +365,10 @@ var archive_document = function() {
         statusCode: {
             200: function() {
                 popup('Su documento fue archivado con exito!', 'confirmation'); // LOCALISATION
+                
+                Store.monde = store.monde;
+                Store.champs = store.champs;
+                Store.last_champ = store.last_champ;
                 
                 var new_position;
                 
@@ -424,6 +439,10 @@ var store_document = function() {
     $("#mondes-store li[data-monde=" + Core.monde + "]").find("h1").click();
         
     // On installe le viewer dans l'iframe
+    $("#viewer-store").attr({
+        "data-document": li.attr("data-position"),
+        src: "pdfjs/viewer/viewer.html?file=" + escape("http://localhost/csstorage2/do/doUnpack.php?document=" + queue[li.attr("data-position")].filename)
+    });
     
     // On affiche le fond opaque et le store
     $("#opak")
