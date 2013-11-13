@@ -60,7 +60,7 @@ var change_monde = function() {
                 .text(champ_profil.label)
             )
         );
-        Core.champs[champ_profil.pk] = { tri: 1, group: 1, recherche: "" };
+        Core.champs[champ] = { tri: 1, group: 1, recherche: "" };
     });
     
     $("#list-sort").sortable();
@@ -75,11 +75,11 @@ var charge_documents = function() {
     
     // On récupère les champs dans l'ordre de la liste
     $.each($("#list-sort li"), function(i, li) {
-    
-        var champ = profil.mondes[Core.monde].champs[$(li).attr("data-champ")];
+        var pk_champ = $(li).attr("data-champ");
+        var champ = profil.mondes[Core.monde].champs[pk_champ];
         
         champs.push(
-            $.extend(Core.champs[champ.pk], { pk: champ.pk })
+            $.extend(Core.champs[pk_champ], { pk: pk_champ })
         );
     });
     
