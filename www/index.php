@@ -14,9 +14,9 @@ session_start();
 <link rel="stylesheet" href="css/global.css?v=3" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/boutons.css?v=3" media="screen" type="text/css"/>
 
-<link rel="stylesheet" href="css/validationEngine.jquery.css?v=1" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/chosen.css?v=1" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/zebra_dialog.css?v=1" media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/validationEngine.jquery.css?v=1" media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/chosen.css?v=1" media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/zebra_dialog.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/start/jquery-ui.css" media="screen" type="text/css"/>
 
 
@@ -42,12 +42,12 @@ session_start();
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
-<script src="js/jquery.validationEngine.js?v=1"></script>
-<script src="js/jquery.validationEngine-es.js?v=1"></script>
+<script src="vendor/jquery.validationEngine.js?v=1"></script>
+<script src="vendor/jquery.validationEngine-es.js?v=1"></script>
 
-<script src="js/zebra_dialog.js?v=1"></script>
-<script src="js/jquery.sortable.js?v=1"></script>
-<script src="js/chosen.jquery.js?v=1"></script>
+<script src="vendor/zebra_dialog.js?v=1"></script>
+<script src="vendor/jquery.sortable.js?v=1"></script>
+<script src="vendor/chosen.jquery.js?v=1"></script>
 
 <script src="js/bootstrap.js?v=1"></script>
 <script src="js/application.js?v=1"></script>
