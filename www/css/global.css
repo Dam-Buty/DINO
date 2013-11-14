@@ -290,11 +290,39 @@ tr:nth-child(even):hover {
     background-color: red;
 }
 
-#div-list {
+#liste {
+   margin-right: 20px;
+   margin-left: 20px;
+}
 
+#liste ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#liste li {
+    display: none;
+}
+
+#liste li[data-niveau="0"] {
+    display: block;
+}
+
+#liste li[data-type="champ"] {
+    background-color: #121212;
+    color: white;
+}
+
+#liste li[data-type="categorie"] {
+    background-color: #848484;
+}
+
+#liste li[data-type="document"] {
+    background-color: #A1A1A1;
 }
 
 .boutons-li {
+    cursor: pointer;
     float: right;
 }
 
@@ -307,8 +335,27 @@ tr:nth-child(even):hover {
     overflow-x: hidden;
 }
 
-.boutons-li {
+.imgboutons {
     cursor: pointer;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+
+.imgboutons[data-state="closed"][data-type="champ"] {
+    background-image: url("../img/champ_closed.png");
+}
+
+.imgboutons[data-state="open"][data-type="champ"] {
+    background-image: url("../img/champ_open.png");
+}
+
+.imgboutons[data-state="closed"][data-type="categorie"] {
+    background-image: url("../img/categorie_closed.png");
+}
+
+.imgboutons[data-state="open"][data-type="categorie"] {
+    background-image: url("../img/categorie_open.png");
 }
 
 .boutons-store {
@@ -351,6 +398,10 @@ tr:nth-child(even):hover {
     -moz-border-bottom-left-radius:10px;
     -webkit-bottom-left-radius:10px;
     border-bottom-left-radius:10px;
+}
+
+.document {
+    cursor: pointer;
 }
 
 .list-mondes {

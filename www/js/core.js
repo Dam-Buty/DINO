@@ -94,10 +94,8 @@ var charge_documents = function() {
         },
         statusCode: {
             200: function(liste) {
-                if (Core.cyclique == 1) {
-                    Core.liste = liste;
-                    construit_table();
-                }
+                Core.liste = liste;
+                construit_table();
             },
             403: function() {
                 window.location.replace("index.php");
@@ -109,33 +107,194 @@ var charge_documents = function() {
     });
 };
 
-var trie_liste = function() {
-    if (Core.cyclique == 1) {
-        Core.liste.sort(function(a, b) {
-            var chaine_a, chaine_b;
-            
-            // On prend les valeurs de champs dans l'ordre de tri 
-            // On les padde à 45 caractères
-            // Et on compare la chaine résultante
-            $.each($("#list-sort").find("li"), function(i, li) {
-                var champ = $(li).attr("data-champ");
-                
-                var valeur_a = profil.mondes[Core.monde].champs[champ].liste[a.champs[champ]];
-                var valeur_b = profil.mondes[Core.monde].champs[champ].liste[b.champs[champ]];
-                
-                if (valeur_a != valeur_b) {
-                    if (valeur_a < valeur_b) {
-                        return -1;
-                    } else {
-                        return 1;
-                    }
-                }
-            });
-            return 0;
-        });
+function arraysEqual(arr1, arr2) {
+    if(arr1.length !== arr2.length)
+        return false;
+    for(var i = arr1.length; i--;) {
+        if(arr1[i] !== arr2[i])
+            return false;
     }
+
+    return true;
+}
+
+var affiche_document = function() {
+
+};
+
+var affiche_revisions = function() {
+
+};
+
+var toggle_line = function() {
+    var div = $(this);
+    var li = div.closest("li");
+    var state = li.attr("data-state");
+    var action;
+    
+    if (state == "closed") {
+        state = "open";
+        li.next("ul").children("li").slideDown("fast");
+    } else {
+        state = "closed";
+        li.next("ul").find("li").slideUp("fast");
+        li.next("ul").find("li[data-state]")
+            .attr("data-state", state)
+            .find("div").attr("data-state", state);
+    }
+    
+    li.attr("data-state", state);
+    div.attr("data-state", state);
 };
 
 var construit_table = function() {
-    //trie_liste();
+    var monde = profil.mondes[Core.monde];
+    var cascade = monde.cascade;
+    var stack_champs = [];
+    var categorie = 0;
+    var marge;
+    var ul = $("<ul></ul>");
+    var current_ul = ul;
+    var current_level = 0;
+    
+    $.each(Core.liste, function(i, ligne) {
+        console.log(ligne);
+        
+        if (ligne.type == "champ" || ligne.type == "categorie") {
+            if (ligne.niveau == 0) {
+                current_ul = ul;
+            } else {
+                for (var i = 0; i < current_level - ligne.niveau + 1;i++) {
+                    current_ul = current_ul.parent();
+                }
+            }
+        }
+        
+        switch(ligne.type) {
+            case "champ":
+                stack_champs.splice(ligne.niveau);
+                stack_champs.push(ligne.pk);
+                categorie = 0;
+                marge = ligne.niveau * 2;
+                
+                li = $("<li></li>")
+                    .attr({
+                        "data-type": ligne.type,
+                        "data-pk": ligne.pk,
+                        "data-niveau": ligne.niveau,
+                        "data-stack": stack_champs,
+                        "data-state": "closed"
+                    })
+                    .append(
+                        $("<div></div>")
+                        .attr({
+                            "data-type": ligne.type,
+                            "data-state": "closed"
+                        })
+                        .addClass("imgboutons")
+                        .click(toggle_line)
+                    ).append(
+                        $("<span></span>")
+                        .addClass("champ")
+                        .text(monde.champs[cascade[stack_champs.length - 1]].liste[ligne.pk])
+                    );
+                
+                ul_champ = $("<ul></ul>")
+                            .attr("data-stack", stack_champs);
+                
+                current_ul.append(li.css("padding-left", marge + "%"));
+                current_ul.append(ul_champ);
+                
+                current_ul = ul_champ;
+                current_level = ligne.niveau;
+                break;
+                
+            case "categorie":
+                categorie = ligne.pk;
+                var champ_parent = monde.champs[cascade[stack_champs.length - 1]];
+                marge = stack_champs.length * 2;
+                
+                li = $("<li></li>")
+                    .attr({
+                        "data-type": ligne.type,
+                        "data-pk": ligne.pk,
+                        "data-stack": stack_champs,
+                        "data-state": "closed"
+                    })
+                    .append(
+                        $("<div></div>")
+                        .attr({
+                            "data-type": ligne.type,
+                            "data-state": "closed"
+                        })
+                        .addClass("imgboutons")
+                        .click(toggle_line)
+                    ).append(
+                        $("<span></span>")
+                        .addClass("categorie")
+                        .text(champ_parent.categories[ligne.pk].label)
+                    )
+                    
+                ;
+                ul_categorie = $("<ul></ul>")
+                            .attr("data-stack", stack_champs);
+                
+                current_ul.append(li.css("padding-left", marge + "%"));
+                current_ul.append(ul_categorie);
+                
+                current_ul = ul_categorie;
+                current_level = cascade.length;
+                break;
+                
+            default: // C'est donc un document
+                    var champ_parent = monde.champs[cascade[stack_champs.length - 1]];
+                    var type, img, title;
+                    
+                    if (categorie == 0) {
+                        type = champ_parent.types[ligne.type].label;
+                        marge = stack_champs.length * 2;
+                    } else {
+                        type = champ_parent.categories[categorie].types[ligne.type].label;
+                        marge = stack_champs.length * 2 + 2;
+                    }
+                    
+                    if (ligne.revision > 1) {
+                        img = "img/history.png";
+                        title = "Existan " + (ligne.revision - 1) + " revisiones anteriores de este documento.";
+                    } else {
+                        img = "img/history_no.png";
+                        title = "No existan revisiones anteriores de este documento.";
+                    }
+                    
+                    li = $("<li></li>")
+                    .attr({
+                        "data-type": "document",
+                        "data-pk": ligne.pk,
+                        "data-stack": stack_champs,
+                        "data-filename": ligne.filename
+                    })
+                    .append(
+                        $("<div></div>").append(
+                            $("<span></span>")
+                            .addClass("document")
+                            .text(type + " " + ligne.detail)
+                            .click(affiche_document)
+                        ).append(
+                            $("<i></i>")
+                            .text(" (" + ligne.date + ") ")
+                        ).append(
+                            $("<img></img>")
+                            .attr({
+                                src: img,
+                                title: title
+                            })
+                            .addClass("imgboutons")
+                            .click(affiche_revisions)
+                        )
+                    );
+                    current_ul.append(li.css("padding-left", marge + "%"));
+        }
+    });
+    
+    $("#liste").append(ul);
 };
