@@ -39,6 +39,8 @@ var remove_champ_store = function() {
     
     var post = 0;
     
+    document.store.last_champ = "";
+    
     // TODO : tester la remontée en cascade avec plus de 2 champs...
     $.each(cascade, function(i, champ_cascade) {
         if (post) {
@@ -141,6 +143,51 @@ var change_type_store = function() {
     affiche_details();
 };
 
+var add_value = function(term) {
+    var document = queue[$("#popup-store").attr("data-document")];
+    var store = document.store;
+    var chosen = this;
+    var select = $("#container-champs select");
+    var champ = select.closest("div").attr("data-champ");
+    var parent;
+    
+    if (store.last_champ !== "") {
+        parent = store.champs[store.last_champ];
+    } else {
+        parent = 0;
+    }
+    
+    
+    $.ajax({
+        url: "do/doAddValue.php",
+        type: "POST",
+        data: {
+            monde: store.monde,
+            champ: champ,
+            valeur: term,
+            parent: parent
+        },
+        statusCode: {
+            200: function(retour) {
+                // On sauvegarde la nouvelle valeur dans le profil
+                profil.mondes[store.monde].champs[champ].liste[retour.pk] = term;
+                
+                document.store.champs[champ] = retour.pk;
+                document.store.last_champ = champ;
+                
+                $("#container-details").hide();
+                reload_champs();
+            },
+            403: function() {
+                window.location.replace("index.php");
+            },
+            500: function() {
+                popup('Error de guarda. Gracias por intentar otra vez', 'error'); // LOCALISATION
+            }
+        }
+    });
+};
+
 var reload_champs = function() {
     var document = queue[$("#popup-store").attr("data-document")];
     var monde = document.store.monde;
@@ -171,14 +218,15 @@ var reload_champs = function() {
                 statusCode: {
                     200: function(valeurs) {
                         var div = $("<div></div>")
-                                .addClass("champ-store")
-                                .attr("data-champ", champ)
-                                ;
-                                
+                            .addClass("champ-store")
+                            .attr("data-champ", champ)
+                        ;
+                        
                         var select = $("<select></select>")
                                     .change(change_champ_store)
                                     .attr("data-placeholder", "Elige un " + profil.mondes[monde].champs[champ].label) // LOCALISATION
                                     .append("<option></option>")
+                                    
                                     ;
                         
                         $.each(valeurs, function(j, valeur) {
@@ -191,13 +239,20 @@ var reload_champs = function() {
                         
                         $("#container-champs")
                         .append(
-                            div.append(select)
+                            div.append(select).append(
+                                $("<img></img>")
+                                .attr("src", "img/plus.png")
+                                .addClass("imgboutons")
+                                .click(add_value)
+                            )
                         );
                         
                         $("#container-champs")
                         .find("select")
                         .chosen({
-                            no_results_text:'Nuevo ' + profil.mondes[monde].champs[champ].label // LOCALISATION
+                            no_results_text:'Pica (+) para agregar ', // LOCALISATION
+                            create_option: add_value,
+                            skip_no_results: true
                         });
 
                     },
@@ -348,6 +403,7 @@ var archive_document = function() {
     // On stocke la date et le détail
     store.date = $("#date-store").val();
     store.type_doc.detail = $("#detail-store").val();
+    $("#detail-store").val("");
     
     $.ajax({
         url: "do/doStore.php",
@@ -439,9 +495,10 @@ var store_document = function() {
     $("#mondes-store li[data-monde=" + Core.monde + "]").find("h1").click();
         
     // On installe le viewer dans l'iframe
-    $("#viewer-store").attr({
+    $("#viewer-store")
+    .attr({
         "data-document": li.attr("data-position"),
-        src: "pdfjs/viewer/viewer.html?file=" + escape("http://localhost/csstorage2/do/doUnpack.php?document=" + queue[li.attr("data-position")].filename)
+        src: "pdfjs/viewer/viewer.html?file=" + escape("../../do/doUnpack.php?document=" + queue[li.attr("data-position")].filename)
     });
     
     // On affiche le fond opaque et le store

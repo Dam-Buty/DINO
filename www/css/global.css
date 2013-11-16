@@ -340,6 +340,7 @@ tr:nth-child(even):hover {
     width: 16px;
     height: 16px;
     display: inline-block;
+    margin-left: 1em;
 }
 
 .imgboutons[data-state="closed"][data-type="champ"] {
@@ -455,6 +456,16 @@ tr:nth-child(even):hover {
 
 #list-sort li h1 {
     font-size: 1em;
+}
+
+#viewer-global {
+    display: none;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    height: 90%;
+    width: 90%;
+    z-index: 150;
 }
 
 /* Styles pour jquery-sortable */

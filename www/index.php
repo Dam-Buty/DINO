@@ -38,6 +38,7 @@ session_start();
 <div id="content"></div>
 
 <div id="opak"></div>
+<iframe id="viewer-global"></iframe>
 
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>

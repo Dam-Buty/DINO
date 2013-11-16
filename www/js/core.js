@@ -118,8 +118,26 @@ function arraysEqual(arr1, arr2) {
     return true;
 }
 
-var affiche_document = function() {
+var cancel_view = function() {
+    $("#opak").fadeOut();
+    $("#viewer-global").fadeOut();
+};
 
+var affiche_document = function() {
+    var span = $(this);
+    var li = span.closest("li");
+    var filename = li.attr("data-filename");
+    
+    $("#viewer-global").attr({
+        "data-document": li.attr("data-position"),
+        src: "pdfjs/viewer/viewer.html?file=" + escape("../../do/doUnpack.php?document=" + filename)
+    })
+    .fadeIn();
+    
+    $("#opak")
+    .fadeIn()
+    .unbind().click(cancel_view);
+    $("#viewer-global").fadeIn();
 };
 
 var affiche_revisions = function() {
@@ -158,7 +176,7 @@ var construit_table = function() {
     var current_level = 0;
     
     $.each(Core.liste, function(i, ligne) {
-        console.log(ligne);
+        //console.log(ligne);
         
         if (ligne.type == "champ" || ligne.type == "categorie") {
             if (ligne.niveau == 0) {
@@ -281,7 +299,7 @@ var construit_table = function() {
                             .click(affiche_document)
                         ).append(
                             $("<i></i>")
-                            .text(" (" + ligne.date + ") ")
+                            .text(" (" + ligne.date + ")")
                         ).append(
                             $("<img></img>")
                             .attr({
@@ -296,5 +314,5 @@ var construit_table = function() {
         }
     });
     
-    $("#liste").append(ul);
+    $("#liste").empty().append(ul);
 };
