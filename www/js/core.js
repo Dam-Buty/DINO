@@ -8,7 +8,6 @@ var Core = {
 };
 
 var bootstrap_list = function() {
-
     // Peuple la liste des mondes    
     $.each(profil.mondes, function(i, monde) {
         $("#mondes-top").append(
@@ -141,7 +140,10 @@ var affiche_document = function() {
 };
 
 var affiche_revisions = function() {
-
+    var img = $(this);
+    var li = img.closest("li");
+    var filename = li.attr("data-filename");
+    
 };
 
 var toggle_line = function() {
