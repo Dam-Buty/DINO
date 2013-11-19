@@ -47,7 +47,6 @@ session_start();
 <script src="vendor/jquery.validationEngine-es.js?v=1"></script>
 
 <script src="vendor/zebra_dialog.js?v=1"></script>
-<script src="vendor/jquery.sortable.js?v=1"></script>
 <script src="vendor/chosen.jquery.js?v=1"></script>
 
 <script src="js/bootstrap.js?v=1"></script>

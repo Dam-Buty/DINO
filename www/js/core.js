@@ -27,8 +27,48 @@ var bootstrap_list = function() {
     $("#mondes-top").find("h1").eq(0).click();
 };
 
-var resize_input = function() {
-    $("#search").animate({"width": ($("#core-top").innerWidth() - $("#mondes-top").outerWidth() - $("#list-sort").outerWidth() - 20) + "px"});
+var load_search = function() {
+    var select = $("#search").empty();
+    
+    $.each(profil.mondes[Core.monde].cascade, function(i, pk) {
+        var champ = profil.mondes[Core.monde].champs[pk];
+        var optgroup = $("<optgroup></optgroup>")
+                        .attr({
+                            "data-type": "champ",
+                            "data-pk": pk,
+                            label: champ.pluriel
+                        });
+                        
+        $.each(champ.liste, function(j, valeur) {
+            optgroup.append(
+                $("<option></option>")
+                .attr({
+                    "data-champ": pk,
+                    "data-pk": j
+                })
+                .text(valeur)
+            );
+        })
+        
+        select.append(optgroup);
+    });
+    
+    select.chosen({
+        create_option: add_value,
+        skip_no_results: true,
+        inherit_select_classes: true,
+        placeholder_text_multiple: "Buscar en este mundo...",
+        search_contains: true
+    });
+    
+    $(".chosen-container-multi").animate({
+        width: ($("#core-top").innerWidth() - $("#mondes-top").outerWidth() - $("#list-sort").outerWidth() - 40) + "px",
+        left: ($("#mondes-top").offset().left + $("#mondes-top").outerWidth() + 20) + "px"
+    });
+    
+    $(".search-field input").animate({
+        width: "100%"
+    });
 };
 
 var change_monde = function() {
@@ -62,9 +102,9 @@ var change_monde = function() {
         Core.champs[champ] = { tri: 1, group: 1, recherche: "" };
     });
     
-    $("#list-sort").sortable();
+    $("#liste").css("padding-top", ($("#mondes-top").outerHeight() + 20) + "px");
     
-    resize_input();
+    load_search();
     charge_documents();
 };
 
@@ -143,7 +183,64 @@ var affiche_revisions = function() {
     var img = $(this);
     var li = img.closest("li");
     var filename = li.attr("data-filename");
+    var categorie = li.attr("data-categorie");
+    var type = li.attr("data-type-doc");
+    var detail = li.attr("data-detail");
+    var champ = profil.mondes[Core.monde].cascade[li.attr("data-niveau")];
     
+    if (img.attr("data-state") == "closed") {
+        $.ajax({
+            url: "json/revisions.php",
+            type: "POST",
+            data: {
+                monde: Core.monde,
+                champ: champ,
+                filename: filename,
+                categorie: categorie,
+                type: type,
+                detail: detail
+            },
+            statusCode: {
+                200: function(revisions) {
+                    img.attr("data-state", "open");
+                    $.each(revisions, function(i, revision) {
+                        var new_li = $("<li></li>")
+                                    .attr({
+                                        "data-filename": revision.filename,
+                                        "data-type": "revision"
+                                    })
+                                    .css("padding-left", li.css("padding-left"))
+                                    .append(
+                                        $("<span></span>")
+                                        .addClass("document")
+                                        .text(" > Revision " + revision.revision)
+                                        .click(affiche_document)
+                                        .append(
+                                            $("<i></i>")
+                                            .text(" (" + revision.date + ")")
+                                        )
+                                    );
+                        li.after(new_li);
+                        new_li.slideDown();
+                    });
+                },
+                403: function() {
+                    window.location.replace("index.php");
+                },
+                500: function() {
+                    popup('Error de recuperacion de los documentos. Gracias por intentar otra vez', 'error'); // LOCALISATION
+                }
+                
+            }
+        });
+    } else {
+        img.attr("data-state", "closed");
+        li.closest("ul").find('li[data-type="revision"]').slideUp({
+            complete: function() {
+                (li.closest("ul").find('li[data-type="revision"]').remove());
+            }
+        });
+    }
 };
 
 var toggle_line = function() {
@@ -161,6 +258,7 @@ var toggle_line = function() {
         li.next("ul").find("li[data-state]")
             .attr("data-state", state)
             .find("div").attr("data-state", state);
+        li.next("ul").find('li[data-type="revision"]').remove();
     }
     
     li.attr("data-state", state);
@@ -289,9 +387,12 @@ var construit_table = function() {
                     li = $("<li></li>")
                     .attr({
                         "data-type": "document",
-                        "data-pk": ligne.pk,
                         "data-stack": stack_champs,
-                        "data-filename": ligne.filename
+                        "data-filename": ligne.filename,
+                        "data-categorie": categorie,
+                        "data-type-doc": ligne.type,
+                        "data-detail": ligne.detail,
+                        "data-niveau": stack_champs.length - 1
                     })
                     .append(
                         $("<div></div>").append(
@@ -306,7 +407,8 @@ var construit_table = function() {
                             $("<img></img>")
                             .attr({
                                 src: img,
-                                title: title
+                                title: title,
+                                "data-state": "closed"
                             })
                             .addClass("imgboutons")
                             .click(affiche_revisions)

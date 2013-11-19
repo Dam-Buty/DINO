@@ -304,7 +304,7 @@ tr:nth-child(even):hover {
     display: none;
 }
 
-#liste li[data-niveau="0"] {
+#liste li[data-type="champ"][data-niveau="0"] {
     display: block;
 }
 
@@ -319,6 +319,10 @@ tr:nth-child(even):hover {
 
 #liste li[data-type="document"] {
     background-color: #A1A1A1;
+}
+
+#liste li[data-type="revision"] {
+    background-color: #B2B2B2;
 }
 
 .boutons-li {
@@ -375,12 +379,12 @@ tr:nth-child(even):hover {
     text-align: center;
 }
 
-#core-top ul {
-    display: inline;
-}
-
-#search {
-    height: 100%;
+.busquedor {
+    position: absolute !important;
+    text-align: left;
+    width: 10%;
+    left: 45%;
+    height: 2em;
     font-size: 1.5em;
     padding: 10px 1px 10px 1px;
     

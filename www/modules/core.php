@@ -1,7 +1,7 @@
 <div id="core">
     <div id="core-top">
         <ul class="list-mondes" id="mondes-top"></ul>
-        <input type="text" id="search" placeholder="Buscar..."/>
+        <select class="busquedor" type="text" id="search" multiple="multiple" data-placeholder="Buscar en este mundo..."/>
         <ul id="list-sort"></ul>
     </div>
     <div id="liste">
