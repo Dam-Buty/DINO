@@ -27,6 +27,20 @@ var bootstrap_list = function() {
     $("#mondes-top").find("h1").eq(0).click();
 };
 
+var change_tri = function() {
+    var div = $(this);
+    
+    if (div.attr("data-tri") == "ASC") {
+        div.attr("data-tri", "DESC");
+        div.find("h1").text("Z-A");
+    } else {
+        div.attr("data-tri", "ASC");
+        div.find("h1").text("A-Z");
+    }
+    
+    charge_documents();
+};
+
 var load_search = function() {
     var select = $("#search").empty();
     
@@ -78,24 +92,20 @@ var change_monde = function() {
     $("#search").css({"width": "100px" });
     
     Core.champs.length = 0;
+    Core.recherche.length = 0;
     
     $("#liste").css("padding-top", ($("#mondes-top").outerHeight() + 20) + "px");
+    
+    $("#list-sort")
+    .css("cursor", "pointer")
+    .unbind()
+    .click(change_tri);
     
     load_search();
     charge_documents();
 };
 
-var charge_documents = function() {    
-    // On récupère les champs dans l'ordre de la liste
-    $.each($("#list-sort li"), function(i, li) {
-        var pk_champ = $(li).attr("data-champ");
-        var champ = profil.mondes[Core.monde].champs[pk_champ];
-        
-        champs.push(
-            $.extend(Core.champs[pk_champ], { pk: pk_champ })
-        );
-    });
-    
+var charge_documents = function() {  
     $.ajax({
         url: "json/search.php",
         type: "POST",
@@ -103,7 +113,7 @@ var charge_documents = function() {
             monde: Core.monde,
             recherche: Core.recherche,
             champs: profil.mondes[Core.monde].cascade,
-            tri: "ASC",
+            tri: $("#list-sort").attr("data-tri"),
             limit: Core.limit
         },
         statusCode: {
@@ -343,6 +353,10 @@ var construit_table = function() {
                     var champ_parent = monde.champs[cascade[stack_champs.length - 1]];
                     var type, img, title;
                     
+                    console.log(categorie);
+                    console.log(champ_parent);
+                    console.log(ligne.type);
+                    
                     if (categorie == 0) {
                         type = champ_parent.types[ligne.type].label;
                         marge = stack_champs.length * 2;
@@ -350,6 +364,8 @@ var construit_table = function() {
                         type = champ_parent.categories[categorie].types[ligne.type].label;
                         marge = stack_champs.length * 2 + 2;
                     }
+                    
+                    console.log("Passé");
                     
                     if (ligne.revision > 1) {
                         img = "img/history.png";
