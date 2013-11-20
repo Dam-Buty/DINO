@@ -44,20 +44,55 @@ if (isset($_SESSION["niveau"])) {
             `type_doc_document` AS `tdd`,
             `document` AS `d`
         WHERE
+            # Filtre client/monde
             `td`.`fk_client` = " . $_SESSION["client"] . "
             AND `td`.`fk_monde` = " . $_POST["monde"] . "
             AND `tdd`.`fk_client` = " . $_SESSION["client"] . "
             AND `tdd`.`fk_monde` = " . $_POST["monde"] . "
             AND `d`.`fk_client` = " . $_SESSION["client"] . "
             
+            # Jointures
             AND `td`.`fk_champ` = `tdd`.`fk_champ`
             AND `td`.`fk_categorie_doc` = `tdd`.`fk_categorie_doc`
             AND `td`.`pk_type_doc` = `tdd`.`fk_type_doc`
             
             AND `tdd`.`fk_document` = `d`.`filename_document`
             
-            AND `niveau_document` <= " . $_SESSION["niveau"] . " 
+            AND `niveau_document` <= " . $_SESSION["niveau"];
             
+if (isset($_POST["recherche"])) {
+            
+ $query .= "# Recherche
+            AND ( ";
+            
+    $first = 1;
+    foreach($_POST["recherche"] as $i => $terme) {
+        if ($first) {
+            $first = 0;
+        } else {
+            $query .= " OR ";
+        }
+        
+        $query .= "(
+                    SELECT COUNT(*)
+                    FROM `document_valeur_champ` AS `dvc_search`
+                    WHERE
+                        `dvc_search`.`fk_client` = " . $_SESSION["client"] . "
+                        AND `dvc_search`.`fk_monde` = " . $_POST["monde"] . "
+                        
+                        AND `dvc_search`.`fk_document` = `d`.`filename_document`
+                        
+                        AND `dvc_search`.`fk_champ` = " . $terme["champ"] . "
+                        AND `dvc_search`.`fk_valeur_champ` = " . $terme["valeur"] . "
+                ) > 0
+        ";
+    }
+    $query .= ")";
+}
+              
+
+
+$query .= "# On ne prend que les dernieres revisions
             AND `tdd`.`revision_type_doc` = (
                 SELECT MAX(`revision_type_doc`)
                 FROM `type_doc_document` AS `tdd2`
@@ -105,13 +140,10 @@ if (isset($_SESSION["niveau"])) {
                         ORDER BY `vc3`.`fk_champ`
                     )
             )
+        # Tris
         ORDER BY "; 
-foreach($_POST["champs"] as $champ => $donnees) {
-    if ($donnees["tri"] == 1) {
-        $sens = "ASC";
-    } else {
-        $sens = "DESC";
-    }
+        
+foreach($_POST["champs"] as $idx => $champ) {
     $query .= "(
             SELECT `label_valeur_champ`
             FROM 
@@ -128,8 +160,8 @@ foreach($_POST["champs"] as $champ => $donnees) {
                 
                 AND `dvc`.`fk_document` = `d`.`filename_document`
                 
-                AND `dvc`.`fk_champ` = " . $donnees["pk"] . "
-        ) " . $sens . ", ";
+                AND `dvc`.`fk_champ` = " . $champ . "
+        ) " . $_POST["tri"] . ", ";
 }
 $query .= " (
                 SELECT `label_categorie_doc`
@@ -139,7 +171,8 @@ $query .= " (
                     AND `cd`.`fk_monde` = " . $_POST["monde"] . "
                     AND `cd`.`pk_categorie_doc` = `td`.`fk_categorie_doc`
            ) ASC, `td`.`label_type_doc` ASC, `tdd`.`detail_type_doc` ASC
-            
+        
+        # Limites    
         LIMIT " . $_POST["limit"][0] . ", " . $_POST["limit"][1] . "         
     ;";
     

@@ -53,13 +53,7 @@ var load_search = function() {
         select.append(optgroup);
     });
     
-    select.chosen({
-        create_option: add_value,
-        skip_no_results: true,
-        inherit_select_classes: true,
-        placeholder_text_multiple: "Buscar en este mundo...",
-        search_contains: true
-    });
+    select.trigger("chosen:updated");
     
     $(".chosen-container-multi").animate({
         width: ($("#core-top").innerWidth() - $("#mondes-top").outerWidth() - $("#list-sort").outerWidth() - 40) + "px",
@@ -83,24 +77,7 @@ var change_monde = function() {
     
     $("#search").css({"width": "100px" });
     
-    $("#list-sort").empty();
     Core.champs.length = 0;
-    
-    // On peuple le moteur de recherche / tri
-    $.each(profil.mondes[Core.monde].cascade, function(i, champ) {
-        var champ_profil = profil.mondes[Core.monde].champs[champ];
-        
-        $("#list-sort").append(
-            $("<li></li>")
-            .attr("data-sorted", "up")
-            .attr("data-champ", champ)
-            .append(
-                $("<h1></h1>")
-                .text(champ_profil.label)
-            )
-        );
-        Core.champs[champ] = { tri: 1, group: 1, recherche: "" };
-    });
     
     $("#liste").css("padding-top", ($("#mondes-top").outerHeight() + 20) + "px");
     
@@ -108,10 +85,7 @@ var change_monde = function() {
     charge_documents();
 };
 
-var charge_documents = function() {
-    var termes = $("#search").val();
-    var champs = [];
-    
+var charge_documents = function() {    
     // On récupère les champs dans l'ordre de la liste
     $.each($("#list-sort li"), function(i, li) {
         var pk_champ = $(li).attr("data-champ");
@@ -127,8 +101,9 @@ var charge_documents = function() {
         type: "POST",
         data: {
             monde: Core.monde,
-            termes: termes,
-            champs: champs,
+            recherche: Core.recherche,
+            champs: profil.mondes[Core.monde].cascade,
+            tri: "ASC",
             limit: Core.limit
         },
         statusCode: {

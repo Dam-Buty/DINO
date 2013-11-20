@@ -438,27 +438,15 @@ tr:nth-child(even):hover {
 }
 
 #list-sort {
-    padding-left: 0;
+    padding: 5px;
     margin: 0;
     float: right;
-}
-
-#list-sort li {
-    cursor: move;
-    list-style-type: none;
+    background-color: #00C2FF;
     border: 1px solid black;
     display: inline-block;
-    background-color: #00C2FF;
-    padding: 5px;
 }
 
-#list-sort li[data-selected="1"] {
-    border: 2px solid white;
-    background-color: #0380A7;
-    color: white;
-}
-
-#list-sort li h1 {
+#list-sort h1 {
     font-size: 1em;
 }
 
