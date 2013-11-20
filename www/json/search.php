@@ -15,14 +15,6 @@ if (isset($_SESSION["niveau"])) {
             `td`.`pk_type_doc` AS `type`,
             `tdd`.`detail_type_doc` AS `detail`,
             `tdd`.`revision_type_doc` AS `revision`,
-            (
-                SELECT `pk_categorie_doc`
-                FROM `categorie_doc` AS `cd`
-                WHERE 
-                    `cd`.`fk_client` = " . $_SESSION["client"] . "
-                    AND `cd`.`fk_monde` = " . $_POST["monde"] . "
-                    AND `cd`.`pk_categorie_doc` = `td`.`fk_categorie_doc`
-           ) AS `categorie`,
             ( SELECT GROUP_CONCAT( `pk_valeur_champ` SEPARATOR '||')
             FROM 
                 `valeur_champ` AS `vc`,
@@ -55,9 +47,9 @@ if (isset($_SESSION["niveau"])) {
             AND `td`.`fk_champ` = `tdd`.`fk_champ`
             AND `td`.`fk_categorie_doc` = `tdd`.`fk_categorie_doc`
             AND `td`.`pk_type_doc` = `tdd`.`fk_type_doc`
-            
             AND `tdd`.`fk_document` = `d`.`filename_document`
             
+            # Verification du niveau
             AND `niveau_document` <= " . $_SESSION["niveau"];
             
 if (isset($_POST["recherche"])) {
@@ -107,19 +99,19 @@ $query .= "# On ne prend que les dernieres revisions
                             SEPARATOR '||'
                          )
                         FROM 
-                            `valeur_champ` AS `vc2`,
-                            `document_valeur_champ` AS `dvc2`
+                            `valeur_champ` AS `vc_revisions`,
+                            `document_valeur_champ` AS `dvc_revisions`
                         WHERE 
-                            `dvc2`.`fk_client` = " . $_SESSION["client"] . "
-                            AND `dvc2`.`fk_monde` = " . $_POST["monde"] . "
-                            AND `vc2`.`fk_client` = " . $_SESSION["client"] . "
-                            AND `vc2`.`fk_monde` = " . $_POST["monde"] . "
+                            `dvc_revisions`.`fk_client` = " . $_SESSION["client"] . "
+                            AND `dvc_revisions`.`fk_monde` = " . $_POST["monde"] . "
+                            AND `vc_revisions`.`fk_client` = " . $_SESSION["client"] . "
+                            AND `vc_revisions`.`fk_monde` = " . $_POST["monde"] . "
                             
-                            AND `vc2`.`fk_champ` = `dvc2`.`fk_champ`
-                            AND `vc2`.`pk_valeur_champ` = `dvc2`.`fk_valeur_champ`
+                            AND `vc_revisions`.`fk_champ` = `dvc_revisions`.`fk_champ`
+                            AND `vc_revisions`.`pk_valeur_champ` = `dvc_revisions`.`fk_valeur_champ`
                             
-                            AND `dvc2`.`fk_document` = `tdd2`.`fk_document`
-                        ORDER BY `vc2`.`fk_champ`
+                            AND `dvc_revisions`.`fk_document` = `tdd2`.`fk_document`
+                        ORDER BY `vc_revisions`.`fk_champ`
                     ) = ( SELECT GROUP_CONCAT( 
                             CONCAT_WS('%%', `label_valeur_champ`, `pk_valeur_champ`)
                             SEPARATOR '||'
@@ -140,28 +132,40 @@ $query .= "# On ne prend que les dernieres revisions
                         ORDER BY `vc3`.`fk_champ`
                     )
             )
-        # Tris
-        ORDER BY "; 
+        # Tris :
+        # - Par champ n ASC ou DESC
+        # - Par nombre de champs ASC
+        # - Par champ n+1 ASC ou DESC
+        # - Par nombre de champs ASC ...
+        # - Par catégorie ASC, type ASC, détail ASC
+        ORDER BY  "; 
         
 foreach($_POST["champs"] as $idx => $champ) {
     $query .= "(
             SELECT `label_valeur_champ`
             FROM 
-                `valeur_champ` AS `vc`,
-                `document_valeur_champ` AS `dvc`
+                `valeur_champ` AS `vc_champs`,
+                `document_valeur_champ` AS `dvc_champs`
             WHERE 
-                `dvc`.`fk_client` = " . $_SESSION["client"] . "
-                AND `dvc`.`fk_monde` = " . $_POST["monde"] . "
-                AND `vc`.`fk_client` = " . $_SESSION["client"] . "
-                AND `vc`.`fk_monde` = " . $_POST["monde"] . "
+                `dvc_champs`.`fk_client` = " . $_SESSION["client"] . "
+                AND `dvc_champs`.`fk_monde` = " . $_POST["monde"] . "
+                AND `vc_champs`.`fk_client` = " . $_SESSION["client"] . "
+                AND `vc_champs`.`fk_monde` = " . $_POST["monde"] . "
                 
-                AND `vc`.`fk_champ` = `dvc`.`fk_champ`
-                AND `vc`.`pk_valeur_champ` = `dvc`.`fk_valeur_champ`
+                AND `vc_champs`.`fk_champ` = `dvc_champs`.`fk_champ`
+                AND `vc_champs`.`pk_valeur_champ` = `dvc_champs`.`fk_valeur_champ`
                 
-                AND `dvc`.`fk_document` = `d`.`filename_document`
+                AND `dvc_champs`.`fk_document` = `d`.`filename_document`
                 
-                AND `dvc`.`fk_champ` = " . $champ . "
-        ) " . $_POST["tri"] . ", ";
+                AND `dvc_champs`.`fk_champ` = " . $champ . "
+        ) " . $_POST["tri"] . ", (
+            SELECT COUNT(*) 
+            FROM `document_valeur_champ` AS `dvc_tri`
+            WHERE
+                `dvc_tri`.`fk_client` = " . $_SESSION["client"] . "
+                AND `dvc_tri`.`fk_monde` = " . $_POST["monde"] . "
+                AND `dvc_tri`.`fk_document` = `d`.`filename_document`
+        ) ASC, ";
 }
 $query .= " (
                 SELECT `label_categorie_doc`
