@@ -357,6 +357,9 @@ tr:nth-child(even):hover {
 
 .ghost-champ {
     background-color: #00AB22 !important;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-top: 1px solid black;
 }
 
 .ghost-type {

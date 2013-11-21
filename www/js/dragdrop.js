@@ -1,7 +1,7 @@
 
 var Drag = {
     timeout: undefined,
-    delay: 300
+    delay: 400
 };
 
 var dragstart = function(e) {
@@ -102,7 +102,7 @@ var ghost_type = function(params) {
 };
 
 var ghost_categorie = function(params) {
-    $("<li></li>")
+    return $("<li></li>")
         .addClass("ghost-categorie")
         .addClass("ghost")
         .attr({
@@ -137,16 +137,19 @@ var dragenter = function(e) {
     Drag.timeout = setTimeout( function() {
         
         
-        // On ferme tous les autres champs
-        li.closest("ul").children("li").find('div[data-state="open"]').not(li.find("div")).click();
-        
-        ul.children("li").find('div[data-state="open"]').click();
-        
-        li.attr("data-state", "open");
         
         // Selon l'élément sur lequel on dragge
         switch(li.attr("data-type")) {
             case "champ":
+                // On ferme tous les autres champs
+                li.closest("ul").children("li").find('div[data-state="open"]').not(li.find("div")).click();
+                console.log(li.closest("ul").children("li"));
+                
+                ul.children("li").find('div[data-state="open"]').click();
+                li.closest("ul").children('li[data-type="document"]').slideUp();
+                
+                li.attr("data-state", "open");
+                
                 var new_li;
                 var new_ul;
                 
@@ -213,7 +216,6 @@ var dragenter = function(e) {
                         $(champ).detach();
                         $(champ).next("ul").detach();
                     });
-                    console.log(champs);
                     
                     // - Types
                     var types = {};
