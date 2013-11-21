@@ -22,30 +22,18 @@ var anime_queue = function() {
     if ($("#container-queue").attr("data-state") == "closed") {
         $("#tiroir-queue").animate({ left: 0 });
         $("#poignee-queue").animate({ left: "30%" });
+        $(".chosen-container-multi").animate({ width: "300px" });
+        $("#core").animate({ left: "35%", width: "65%" }, { complete: resize_search });
         $("#container-queue").attr({ "data-state": "open" });
     } else {
         $("#tiroir-queue").animate({ left: "-30%" });
         $("#tiroir-store").animate({ left: "-65%" });
         $("#poignee-queue").animate({ left: "0" });
+        $("#core").animate({ left: "0", width: "100%" }, { complete: resize_search });
         $("#container-queue").attr({ "data-state": "closed" });
         $("#tiroir-store").attr({ "data-state": "closed" });
     }
 }
-
-var handle_drag = function(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    console.log(evt);
-    evt.dataTransfer.dropEffect = 'copy';
-};
-
-var handle_drop = function(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    console.log(evt);
-    
-    var files = evt.dataTransfer.files;
-};
 
 var refresh_liste = function() {
     queue.sort(compare);
@@ -240,8 +228,12 @@ var create_li = function(name) {
     var li = $("#modele-li-queue").clone();
     
     li.find("span").first().text(name);
-    li.attr("data-position", queue.length);
-    li.attr("id", "");
+    li.attr({ 
+        "data-position": queue.length,
+        id: ""
+    })
+    .on("dragstart", dragstart)
+    .on("dragend", dragend);
     
     return li;
 };

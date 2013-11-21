@@ -20,7 +20,6 @@ html, body {
 }
 
 #content {
-    margin-left: 5%;
     padding: 10px 0px;
     width: 90%;
 }
@@ -304,6 +303,12 @@ tr:nth-child(even):hover {
     display: none;
 }
 
+#liste li.hovering {
+    padding: 10px;
+    font-weight: bold;
+    font-size: 1em;
+}
+
 #liste li[data-type="champ"][data-niveau="0"] {
     display: block;
 }
@@ -323,6 +328,28 @@ tr:nth-child(even):hover {
 
 #liste li[data-type="revision"] {
     background-color: #B2B2B2;
+}
+
+.over {
+    color: red !important;
+}
+
+.ghost {
+    padding: 10px;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.ghost-word {
+    text-decoration: underline;
+}
+
+.ghost-champ {
+    background-color: #00AB22 !important;
+}
+
+.ghost-type {
+    background-color: #11BC33 !important;
 }
 
 .boutons-li {
@@ -372,6 +399,8 @@ tr:nth-child(even):hover {
 }
 
 #core {
+    position: absolute;
+    width: 100%;
     background-color: #A1FF94;
 }
 

@@ -62,16 +62,20 @@ var load_search = function() {
                 })
                 .text(valeur)
             );
-        })
+        });
         
         select.append(optgroup);
     });
     
     select.trigger("chosen:updated");
     
+    resize_search();
+};
+
+var resize_search = function() {
     $(".chosen-container-multi").animate({
         width: ($("#core-top").innerWidth() - $("#mondes-top").outerWidth() - $("#list-sort").outerWidth() - 40) + "px",
-        left: ($("#mondes-top").offset().left + $("#mondes-top").outerWidth() + 20) + "px"
+        left: ($("#mondes-top").outerWidth() + 20) + "px"
     });
     
     $(".search-field input").animate({
@@ -232,7 +236,6 @@ var toggle_line = function() {
     var div = $(this);
     var li = div.closest("li");
     var state = li.attr("data-state");
-    var action;
     
     if (state == "closed") {
         state = "open";
@@ -353,10 +356,6 @@ var construit_table = function() {
                     var champ_parent = monde.champs[cascade[stack_champs.length - 1]];
                     var type, img, title;
                     
-                    console.log(categorie);
-                    console.log(champ_parent);
-                    console.log(ligne.type);
-                    
                     if (categorie == 0) {
                         type = champ_parent.types[ligne.type].label;
                         marge = stack_champs.length * 2;
@@ -364,8 +363,6 @@ var construit_table = function() {
                         type = champ_parent.categories[categorie].types[ligne.type].label;
                         marge = stack_champs.length * 2 + 2;
                     }
-                    
-                    console.log("Passé");
                     
                     if (ligne.revision > 1) {
                         img = "img/history.png";
@@ -409,5 +406,9 @@ var construit_table = function() {
         }
     });
     
-    $("#liste").empty().append(ul);
+    $("#liste").empty().append(ul)
+    .find("li").on("dragenter", dragenter)
+    .on("dragover", dragover)
+    .on("dragleave", dragleave);
 };
+

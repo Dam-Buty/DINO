@@ -30,7 +30,7 @@
 
 <div id="bucket-queue" class="bucket">
     <ul>
-        <li id="modele-li-queue" class="idle">
+        <li id="modele-li-queue" class="idle" draggable="true">
             <span class="filename"></span> - 
             <span>En fila</span>
             <span class="boutons-li">
@@ -44,9 +44,6 @@
 <script type="text/javascript">
     $("#poignee-queue").click(anime_queue);
     $("#files-handler").change(handle_files);
-    
-    $("#poignee-queue").on("dragover", handle_drag);
-    $("#poignee-queue").on("drop", handle_drop);
     
     $("#date-store").datepicker({dateFormat: "dd/mm/yy"});
     $("#date-store").datepicker('setDate', new Date());

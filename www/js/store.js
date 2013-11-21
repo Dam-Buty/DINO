@@ -394,6 +394,8 @@ var cancel_store = function() {
     $('#files-list li[data-editing="1"]').addClass("done");
     $("#files-list li").attr("data-editing", "0");
     $("#popup-store").attr("data-document", "");
+    
+    charge_documents();
 };
 
 var archive_document = function() {
