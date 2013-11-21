@@ -352,6 +352,10 @@ tr:nth-child(even):hover {
     background-color: #11BC33 !important;
 }
 
+.ghost-categorie {
+    background-color: #078833 !important;
+}
+
 .boutons-li {
     cursor: pointer;
     float: right;

@@ -358,10 +358,10 @@ var construit_table = function() {
                     
                     if (categorie == 0) {
                         type = champ_parent.types[ligne.type].label;
-                        marge = stack_champs.length * 2;
+                        marge = stack_champs.length * 2 + 2;
                     } else {
                         type = champ_parent.categories[categorie].types[ligne.type].label;
-                        marge = stack_champs.length * 2 + 2;
+                        marge = stack_champs.length * 2 + 4;
                     }
                     
                     if (ligne.revision > 1) {
