@@ -121,7 +121,10 @@ if (isset($_SESSION["user"])) {
                     $profil["mondes"][$row_mondes["pk_monde"]] = [
                         "label" => $row_mondes["label_monde"],
                         "champs" => [],
-                        "cascade" => []
+                        "cascade" => [],
+                        "references" => [
+                            0 => []
+                        ]
                     ];
                     
                     //////////////////////////
@@ -148,7 +151,8 @@ if (isset($_SESSION["user"])) {
                             //////////////////////////
                             $query_liste = "
                                 SELECT `pk_valeur_champ`, 
-                                `label_valeur_champ`, ( 
+                                `label_valeur_champ`, 
+                                `fk_parent`, ( 
                                     SELECT COUNT(*) 
                                     FROM `user_valeur_champ` AS `uvc` 
                                     WHERE `uvc`.`fk_client` = " . $_SESSION["client"] . " 
@@ -162,7 +166,10 @@ if (isset($_SESSION["user"])) {
                                 WHERE `fk_client` = " . $_SESSION["client"] . " 
                                 AND `fk_monde` = " . $row_mondes["pk_monde"] . " 
                                 AND `fk_champ` = " . $row_champs["pk_champ"] . " 
-                                ORDER BY `droits_valeur_champ` DESC;";
+                                ORDER BY 
+                                    `droits_valeur_champ` DESC,
+                                    `fk_parent` ASC
+                                ;";
                             
                             if ($result_liste = $mysqli->query($query_liste)) {
                                 
@@ -170,6 +177,9 @@ if (isset($_SESSION["user"])) {
                                     
                                     if ($_SESSION["niveau"] >= 20 or $row_liste["droits_valeur_champ"]) {
                                     $profil["mondes"][$row_mondes["pk_monde"]]["champs"][$row_champs["pk_champ"]]["liste"][$row_liste["pk_valeur_champ"]] = $row_liste["label_valeur_champ"];
+                                    
+                                    // construction de la cascade de références
+                                    $profil["mondes"][$row_mondes["pk_monde"]]["references"][$row_liste["fk_parent"]][$row_liste["pk_valeur_champ"]] = [];
                                     }
                                 } // FIN WHILE LISTE
                             } else {

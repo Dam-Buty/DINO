@@ -396,7 +396,8 @@ var construit_table = function() {
                             .attr({
                                 src: img,
                                 title: title,
-                                "data-state": "closed"
+                                "data-state": "closed",
+                                "data-type": "palomita"
                             })
                             .addClass("imgboutons")
                             .click(affiche_revisions)
