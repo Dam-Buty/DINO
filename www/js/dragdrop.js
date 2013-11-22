@@ -39,12 +39,12 @@ var dragstart = function(e) {
 
 var dragend = function(e) {
     $(this).fadeTo("fast", 1);
-    $(".ghost").slideUp({ complete: function() {
-        $(".ghost").remove();
-    }});
-    $(".ghost-word").remove();
-    $(".over").removeClass("over");
-    $("#liste li").removeClass("hovering");
+//    $(".ghost").slideUp({ complete: function() {
+//        $(".ghost").remove();
+//    }});
+//    $(".ghost-word").remove();
+//    $(".over").removeClass("over");
+//    $("#liste li").removeClass("hovering");
     $('img[data-type="palomita"]').show();
 };
 
@@ -77,6 +77,8 @@ var dragenter = function(e) {
                 
                 ul.children("li").find('div[data-state="open"]').click();
                 li.closest("ul").children('li[data-type="document"]').slideUp();
+                // TODO : si on sélectionne un champ ghost 
+                // les types en racine du champ parent dansent!
                 
                 li.attr("data-state", "open");
                 
