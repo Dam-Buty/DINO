@@ -54,75 +54,6 @@ var dragover = function(e) {
     e.originalEvent.dataTransfer.dropEffect = 'move';
 };
 
-
-
-var ghost_champ = function(params) {
-    if (params.stack != "") {
-        params.stack += ",";
-    }
-    
-    return $("<li></li>")
-        .addClass("ghost-champ")
-        .addClass("ghost")
-        .attr({
-            "data-type": "champ",
-            "data-champ": params.champ,
-            "data-pk": params.pk,
-            "data-niveau": params.niveau,
-            "data-stack": params.stack
-        })
-        .append(
-            $("<div></div>")
-            .attr({
-                "data-type": "champ",
-                "data-state": "closed"
-            })
-            .addClass("imgboutons")
-        )
-        .append("Agregar a " + params.label) // LOCALISATION
-        .on("dragenter", dragenter)
-        .on("dragover", dragover)
-        .on("dragleave", dragleave);
-};
-
-
-
-var ghost_type = function(params) {
-    return $("<li></li>")
-        .addClass("ghost-type")
-        .addClass("ghost")
-        .attr({
-            "data-type": "document",
-            "data-type-doc": params.pk
-        })
-        .text("Nuevo " + params.label) // LOCALISATION
-        .on("dragenter", dragenter)
-        .on("dragover", dragover)
-        .on("dragleave", dragleave);
-};
-
-var ghost_categorie = function(params) {
-    return $("<li></li>")
-        .addClass("ghost-categorie")
-        .addClass("ghost")
-        .attr({
-            "data-type": "categorie",
-            "data-categorie": params.pk
-        })
-        .append(
-            $("<div></div>")
-            .attr({
-                "data-type": "categorie",
-                "data-state": "open"
-            })
-            .addClass("imgboutons")
-        )
-        .append(params.label)
-        .on("dragenter", dragenter)
-        .on("dragover", dragover)
-        .on("dragleave", dragleave);
-};
-
 var dragenter = function(e) {
     var li = $(this);
     var ul = li.next("ul");
@@ -143,7 +74,6 @@ var dragenter = function(e) {
             case "champ":
                 // On ferme tous les autres champs
                 li.closest("ul").children("li").find('div[data-state="open"]').not(li.find("div")).click();
-                console.log(li.closest("ul").children("li"));
                 
                 ul.children("li").find('div[data-state="open"]').click();
                 li.closest("ul").children('li[data-type="document"]').slideUp();
@@ -246,7 +176,8 @@ var dragenter = function(e) {
                         if (types[i] === undefined) {
                             new_li = ghost_type({
                                 pk: i,
-                                label: type.label
+                                label: type.label,
+                                categorie: 0
                             });
                         } else {
                             new_li = $(types[i]);
@@ -283,7 +214,8 @@ var dragenter = function(e) {
                             if (categories[i] === undefined || categories[i].types[j] === undefined) {
                                 li_type = ghost_type({
                                     pk: j,
-                                    label: type.label
+                                    label: type.label,
+                                    categorie: i
                                 });
                             } else {
                                 li_type = $(categories[i].types[j]);
@@ -341,4 +273,102 @@ var dragleave = function(e) {
     var li = $(this);
     
     li.removeClass("over");
+};
+
+var drop = function(e) {
+    if (e.stopPropagation) {
+        e.stopPropagation();
+    }
+    var monde = profil.mondes[Core.monde];
+    var position = e.originalEvent.dataTransfer.getData('text/html');
+    var document = queue[position];
+    var li = $(this);
+    
+    var stack = li.attr("data-stack").split(",");
+    
+    document.store.champs = {};
+    
+    $.each(stack, function(i, valeur) {
+        document.store.champs[monde.cascade[i]] = valeur;
+    });
+    
+    if (li.attr("data-type") == "document") {
+        document.store.categorie = li.attr("data-categorie");
+        document.store.type = li.attr("data-type-doc");
+    }
+    
+    _store_document(position);
+
+    return false;
+};
+
+var ghost_champ = function(params) {
+    if (params.stack != "") {
+        params.stack += ",";
+    }
+    
+    return $("<li></li>")
+        .addClass("ghost-champ")
+        .addClass("ghost")
+        .attr({
+            "data-type": "champ",
+            "data-champ": params.champ,
+            "data-pk": params.pk,
+            "data-niveau": params.niveau,
+            "data-stack": params.stack + params.pk
+        })
+        .append(
+            $("<div></div>")
+            .attr({
+                "data-type": "champ",
+                "data-state": "closed"
+            })
+            .addClass("imgboutons")
+        )
+        .append("Agregar a " + params.label) // LOCALISATION
+        .on("dragenter", dragenter)
+        .on("dragover", dragover)
+        .on("dragleave", dragleave)
+        .on("drop", drop);
+};
+
+
+
+var ghost_type = function(params) {
+    return $("<li></li>")
+        .addClass("ghost-type")
+        .addClass("ghost")
+        .attr({
+            "data-type": "document",
+            "data-type-doc": params.pk,
+            "data-categorie": params.categorie
+        })
+        .text("Nuevo " + params.label) // LOCALISATION
+        .on("dragenter", dragenter)
+        .on("dragover", dragover)
+        .on("dragleave", dragleave)
+        .on("drop", drop);
+};
+
+var ghost_categorie = function(params) {
+    return $("<li></li>")
+        .addClass("ghost-categorie")
+        .addClass("ghost")
+        .attr({
+            "data-type": "categorie",
+            "data-categorie": params.pk
+        })
+        .append(
+            $("<div></div>")
+            .attr({
+                "data-type": "categorie",
+                "data-state": "open"
+            })
+            .addClass("imgboutons")
+        )
+        .append(params.label)
+        .on("dragenter", dragenter)
+        .on("dragover", dragover)
+        .on("dragleave", dragleave)
+        .on("drop", drop);
 };

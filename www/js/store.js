@@ -14,6 +14,7 @@ var change_monde_store = function() {
     
     document.store.monde = li.attr("data-monde");
     document.store.champs = {};
+    document.store.last_champ = "";
     document.store.categorie = "";
     document.store.type_doc = {};
     
@@ -377,9 +378,18 @@ var change_document = function(document) {
     .attr("data-editing", 1);
     $("#popup-store").attr("data-document", document);
     
-    queue[document].store.monde = Store.monde;
-    queue[document].store.champs = Store.champs;
-    queue[document].store.last_champ = Store.last_champ;
+    if (queue[document].store.monde === "") {
+        queue[document].store.monde = Store.monde;
+    }
+    
+    $("#mondes-store li").attr("data-selected", "0");
+    
+    $('#mondes-store li[data-monde="' + queue[document].store.monde + '"').attr("data-selected", "1");
+    
+    if (queue[document].store.last_champ === "") { 
+        queue[document].store.last_champ = Store.last_champ;
+        queue[document].store.champs = Store.champs;
+    }
     
     $("#container-details").hide();
     
@@ -460,14 +470,15 @@ var archive_document = function() {
     });
 };
 
-var store_document = function() {
-    var li = $(this).closest("li");
-    
-    $(this).closest("ul").find("li").attr("data-editing", "0");
-    
+var _store_document = function(position) {
+    var li = queue[position].li;
+    var ul = li.closest("ul");
+
+
+    ul.find("li").attr("data-editing", "0");
     li.removeClass("done").attr("data-editing", "1");
     
-    $("#popup-store").attr("data-document", li.attr("data-position"));
+    $("#popup-store").attr("data-document", position);
     
     // On binde les boutons du store
     $("#prev-store").unbind().click(prev_document);
@@ -494,12 +505,18 @@ var store_document = function() {
     });
     
     // On met par défaut le monde présent dans le Core
-    $("#mondes-store li[data-monde=" + Core.monde + "]").find("h1").click();
-        
+    // (si le store est vide)
+    if (queue[position].store.monde === "") {
+        queue[position].store.monde = Core.monde;
+    }
+    
+    $('#mondes-store li[data-monde="' + queue[position].store.monde + '"]').attr("data-selected", "1");
+    Store.monde = Core.monde;  
+          
     // On installe le viewer dans l'iframe
     $("#viewer-store")
     .attr({
-        "data-document": li.attr("data-position"),
+        "data-document": position,
         src: "pdfjs/viewer/viewer.html?file=" + escape("../../do/doUnpack.php?document=" + queue[li.attr("data-position")].filename)
     });
     
@@ -511,6 +528,13 @@ var store_document = function() {
     
     // on déclenche le redimensionnement de la fenêtre
     $(window).trigger('resize');
+    
+    reload_champs();
+};
+
+var store_document = function() {
+    var li = $(this).closest("li");
+    _store_document(li.attr("data-position"));
 };
 
 // Au resize, on redimensionne l'iframe et le store

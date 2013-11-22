@@ -410,6 +410,7 @@ var construit_table = function() {
     $("#liste").empty().append(ul)
     .find("li").on("dragenter", dragenter)
     .on("dragover", dragover)
-    .on("dragleave", dragleave);
+    .on("dragleave", dragleave)
+    .on("drop", drop);
 };
 
