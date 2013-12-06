@@ -50,7 +50,11 @@ if (isset($_SESSION["niveau"])) {
             AND `tdd`.`fk_document` = `d`.`filename_document`
             
             # Verification du niveau
-            AND `niveau_document` <= " . $_SESSION["niveau"];
+            AND `niveau_document` <= " . $_SESSION["niveau"] . "
+            
+            # Filtre par dates
+            AND `date_document` BETWEEN FROM_UNIXTIME('" . $_POST["dates"]["mini"] . "') AND FROM_UNIXTIME('" . $_POST["dates"]["maxi"] . "')
+            ";
             
 if (isset($_POST["recherche"])) {
             

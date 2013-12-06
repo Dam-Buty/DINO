@@ -133,13 +133,15 @@ var change_monde = function() {
                     "max": diff - 1,
                     range: true,
                     animate: "fast",
-                    change: function() {
-                        var dates = get_dates();
-                        
-                        $("#text-date").text("Del " + dates.mini + " al " + dates.maxi)
-                    }
+                    slide: change_dates,
+                    change: charge_documents
                 });
+                
                 $("#slider-date").slider("values", 1, diff - 1);
+                change_dates();
+    
+                load_search();
+                charge_documents();
             },
             403: function() {
                 window.location.replace("index.php");
@@ -149,27 +151,49 @@ var change_monde = function() {
             }
         }
     });
-    
-    load_search();
-    charge_documents();
 };
 
-var get_dates = function() {
+var change_dates = function() {    
     var bornes = $("#slider-date").slider("values");
                         
-    var d_min = new Date(bornes[0]);
-    var d_max = new Date(bornes[1]);
+    var d_min = new Date(Core.dates[bornes[0]]);
+    var d_max = new Date(Core.dates[bornes[1]]);
     
-    var s_min = d_min.getDate() + "/" + d_min.getMonth() + "/" + d_min.getFullYear();
-    var s_max = d_max.getDate() + "/" + d_max.getMonth() + "/" + d_max.getFullYear();
+    var jour_min = d_min.getDate().toString();
+    var jour_max = d_max.getDate().toString();
     
-    return {
-        mini: s_min,
-        maxi: s_max
-    };
+    if (jour_min.length == 1) {
+        jour_min = "0" + jour_min;
+    }
+    
+    if (jour_max.length == 1) {
+        jour_max = "0" + jour_max;
+    }
+    
+    var mois_min = (d_min.getMonth() + 1).toString();
+    var mois_max = (d_max.getMonth() + 1).toString();
+    
+    if (mois_min.length == 1) {
+        mois_min = "0" + mois_min;
+    }
+    
+    if (mois_max.length == 1) {
+        mois_max = "0" + mois_max;
+    }
+    
+    var s_min = jour_min + "/" + mois_min + "/" + d_min.getFullYear();
+    var s_max = jour_max + "/" + mois_max + "/" + d_max.getFullYear();
+    
+    $("#text-date").text("Del " + s_min + " al " + s_max);
 };
 
 var charge_documents = function() {  
+    var dates = {
+        // Unixtime est en secondes, JStime est en milisecondes
+        mini: Core.dates[$("#slider-date").slider("values")[0]] / 1000,
+        maxi: Core.dates[$("#slider-date").slider("values")[1]] / 1000
+    };
+    
     $.ajax({
         url: "json/search.php",
         type: "POST",
@@ -178,7 +202,8 @@ var charge_documents = function() {
             recherche: Core.recherche,
             champs: profil.mondes[Core.monde].cascade,
             tri: $("#list-sort").attr("data-tri"),
-            limit: Core.limit
+            limit: Core.limit,
+            dates: dates
         },
         statusCode: {
             200: function(liste) {
