@@ -131,7 +131,13 @@ var change_monde = function() {
                 $("#slider-date").slider({
                     "min": 0,
                     "max": diff - 1,
-                    range: true
+                    range: true,
+                    animate: "fast",
+                    change: function() {
+                        var dates = get_dates();
+                        
+                        $("#text-date").text("Del " + dates.mini + " al " + dates.maxi)
+                    }
                 });
                 $("#slider-date").slider("values", 1, diff - 1);
             },
@@ -146,6 +152,21 @@ var change_monde = function() {
     
     load_search();
     charge_documents();
+};
+
+var get_dates = function() {
+    var bornes = $("#slider-date").slider("values");
+                        
+    var d_min = new Date(bornes[0]);
+    var d_max = new Date(bornes[1]);
+    
+    var s_min = d_min.getDate() + "/" + d_min.getMonth() + "/" + d_min.getFullYear();
+    var s_max = d_max.getDate() + "/" + d_max.getMonth() + "/" + d_max.getFullYear();
+    
+    return {
+        mini: s_min,
+        maxi: s_max
+    };
 };
 
 var charge_documents = function() {  
