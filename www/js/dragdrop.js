@@ -39,12 +39,12 @@ var dragstart = function(e) {
 
 var dragend = function(e) {
     $(this).fadeTo("fast", 1);
-//    $(".ghost").slideUp({ complete: function() {
-//        $(".ghost").remove();
-//    }});
-//    $(".ghost-word").remove();
-//    $(".over").removeClass("over");
-//    $("#liste li").removeClass("hovering");
+    $(".ghost").slideUp({ complete: function() {
+        $(".ghost").remove();
+    }});
+    $(".ghost-word").remove();
+    $(".over").removeClass("over");
+    $("#liste li").removeClass("hovering");
     $('img[data-type="palomita"]').show();
 };
 
@@ -53,6 +53,9 @@ var dragover = function(e) {
 
     e.originalEvent.dataTransfer.dropEffect = 'move';
 };
+
+// TODO : Si il existe un Contrato "de servicio", on ne peut pas dragdroper
+//          pour un Contrato "de otra cosa"
 
 var dragenter = function(e) {
     var li = $(this);
@@ -76,9 +79,6 @@ var dragenter = function(e) {
                 li.closest("ul").children("li").find('div[data-state="open"]').not(li.find("div")).click();
                 
                 ul.children("li").find('div[data-state="open"]').click();
-                li.closest("ul").children('li[data-type="document"]').slideUp();
-                // TODO : si on sélectionne un champ ghost 
-                // les types en racine du champ parent dansent!
                 
                 li.attr("data-state", "open");
                 
@@ -103,6 +103,7 @@ var dragenter = function(e) {
                         }).slideUp({
                             complete: function() { this.remove(); }
                         });
+                        $('.ghost[data-niveau="' + niveau + '"]').find("div").attr("data-state", "closed");
                     }
                     
                     ul = li.closest("ul");
@@ -128,6 +129,7 @@ var dragenter = function(e) {
                     });
                     
                 } else {
+                    li.closest("ul").children('li[data-type="document"]').slideUp();
                     champ = monde.champs[monde.cascade[li.attr("data-niveau")]];
                     
                     $(".ghost").not(".ghost-first").remove();
@@ -179,7 +181,8 @@ var dragenter = function(e) {
                             new_li = ghost_type({
                                 pk: i,
                                 label: type.label,
-                                categorie: 0
+                                categorie: 0,
+                                stack: li.attr("data-stack")
                             });
                         } else {
                             new_li = $(types[i]);
@@ -217,7 +220,8 @@ var dragenter = function(e) {
                                 li_type = ghost_type({
                                     pk: j,
                                     label: type.label,
-                                    categorie: i
+                                    categorie: i,
+                                    stack: li.attr("data-stack")
                                 });
                             } else {
                                 li_type = $(categories[i].types[j]);
@@ -281,26 +285,58 @@ var drop = function(e) {
     if (e.stopPropagation) {
         e.stopPropagation();
     }
+    
     var monde = profil.mondes[Core.monde];
     var position = e.originalEvent.dataTransfer.getData('text/html');
     var document = queue[position];
+    var store = document.store;
     var li = $(this);
     
     var stack = li.attr("data-stack").split(",");
     
-    document.store.champs = {};
+    store.monde = Core.monde;
+    
+    // On récupère les valeurs de champs dans le stack
+    store.champs = {};
     
     $.each(stack, function(i, valeur) {
-        document.store.champs[monde.cascade[i]] = valeur;
+        store.champs[monde.cascade[i]] = valeur;
+        store.last_champ = monde.cascade[i];
     });
     
+    // Si on a droppé directement sur un document
+    // on affiche les champs date et détail    
     if (li.attr("data-type") == "document") {
-        document.store.categorie = li.attr("data-categorie");
-        document.store.type = li.attr("data-type-doc");
+        store.categorie = li.attr("data-categorie");
+        store.type_doc = { pk: li.attr("data-type-doc"), detail: "" };
+        store.detail = li.attr("data-detail");
+        
+        document.li.removeClass("done");
+        document.li.attr("data-editing", 1);
+        
+        var type;
+        
+        if (store.categorie == 0) {
+            type = monde.champs[store.last_champ].types[store.type_doc.pk];
+        } else {
+            type = monde.champs[store.last_champ].categories[store.categorie].types[store.type_doc.pk];
+        }
+        
+        if (type.detail == 1) {
+            $("#input-detail").show();
+            $("#detail-store").val(store.detail);
+        } else {
+            $("#input-detail").hide();
+        }
+        
+        $("#popup-store").attr("data-document", position);
+        $("#bouton-store").unbind().click(archive_document);
+        
+        popup_details();
+    } else {
+        _store_document(position);
     }
     
-    _store_document(position);
-
     return false;
 };
 
@@ -343,7 +379,8 @@ var ghost_type = function(params) {
         .attr({
             "data-type": "document",
             "data-type-doc": params.pk,
-            "data-categorie": params.categorie
+            "data-categorie": params.categorie,
+            "data-stack": params.stack
         })
         .text("Nuevo " + params.label) // LOCALISATION
         .on("dragenter", dragenter)
@@ -368,9 +405,5 @@ var ghost_categorie = function(params) {
             })
             .addClass("imgboutons")
         )
-        .append(params.label)
-        .on("dragenter", dragenter)
-        .on("dragover", dragover)
-        .on("dragleave", dragleave)
-        .on("drop", drop);
+        .append(params.label);
 };

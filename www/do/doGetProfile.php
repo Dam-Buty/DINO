@@ -98,7 +98,7 @@ if (isset($_SESSION["user"])) {
     $profil = [
         "maxfilesize" => $maxFileSize,
         "mondes" => []
-    ];  
+    ];
     
     ////////////////////////
     // Récupération des informations générales de l'user

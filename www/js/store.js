@@ -458,7 +458,12 @@ var archive_document = function() {
                 queue.splice(position, 1);
                 refresh_liste();
                 
-                change_document(new_position);
+                if ($("#popup-store").is(":visible")) {
+                    change_document(new_position);
+                } else {
+                    $("#container-details").detach().appendTo($("#container-store"));
+                    dialogue.close();
+                }
             },
             403: function() {
                 window.location.replace("index.php");

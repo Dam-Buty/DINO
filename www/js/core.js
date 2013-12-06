@@ -4,7 +4,8 @@ var Core = {
     champs: {},
     recherche: [],
     limit: [0, 100],
-    liste: []
+    liste: [],
+    dates: []
 };
 
 var bootstrap_list = function() {
@@ -98,12 +99,50 @@ var change_monde = function() {
     Core.champs.length = 0;
     Core.recherche.length = 0;
     
-    $("#liste").css("padding-top", ($("#mondes-top").outerHeight() + 20) + "px");
-    
     $("#list-sort")
     .css("cursor", "pointer")
     .unbind()
     .click(change_tri);
+    
+    $.ajax({
+        url: "json/dates.php",
+        type: "POST",
+        data: {
+            monde: Core.monde
+        },
+        statusCode: {
+            200: function(dates) {
+                var t_mini = dates.mini.split("-");
+                var t_maxi = dates.maxi.split("-");
+                
+                var mini = new Date(t_mini[0], t_mini[1], t_mini[2]);
+                var maxi = new Date(t_maxi[0], t_maxi[1], t_maxi[2]);
+                
+                var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+
+                var diff = Math.round(Math.abs((mini.getTime() - maxi.getTime())/(oneDay)));
+                
+                Core.dates.length = 0;
+                
+                for (var i = 0; i < diff;i++) {
+                    Core.dates.push(mini.getTime() + (oneDay * i));
+                }
+                
+                $("#slider-date").slider({
+                    "min": 0,
+                    "max": diff - 1,
+                    range: true
+                });
+                $("#slider-date").slider("values", 1, diff - 1);
+            },
+            403: function() {
+                window.location.replace("index.php");
+            },
+            500: function() {
+                popup('Error de recuperacion de datos. Gracias por intentar otra vez', 'error'); // LOCALISATION
+            }
+        }
+    });
     
     load_search();
     charge_documents();
@@ -408,7 +447,7 @@ var construit_table = function() {
     });
     
     $("#liste").empty().append(ul)
-    .find("li").on("dragenter", dragenter)
+    .find('li[data-type!="categorie"]').on("dragenter", dragenter)
     .on("dragover", dragover)
     .on("dragleave", dragleave)
     .on("drop", drop);

@@ -452,6 +452,13 @@ tr:nth-child(even):hover {
     border-bottom-left-radius:10px;
 }
 
+#slider-date {
+    clear: both;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 2%;
+}
+
 .document {
     cursor: pointer;
 }

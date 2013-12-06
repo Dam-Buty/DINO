@@ -3,6 +3,8 @@
         <ul class="list-mondes" id="mondes-top"></ul>
         <select class="busquedor" type="text" id="search" multiple="multiple" data-placeholder="Buscar en este mundo..."/>
         <div id="list-sort" data-tri="ASC"><h1>A-Z</h1></div>
+        <div id="slider-date"></div>
+        <div id="text-date"></div>
     </div>
     <div id="liste">
         
