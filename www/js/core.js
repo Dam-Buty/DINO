@@ -184,7 +184,7 @@ var change_dates = function() {
     var s_min = jour_min + "/" + mois_min + "/" + d_min.getFullYear();
     var s_max = jour_max + "/" + mois_max + "/" + d_max.getFullYear();
     
-    $("#text-date").text("Del " + s_min + " al " + s_max);
+    $("#text-date").text("Del " + s_min + " al " + s_max); // LOCALISATION
 };
 
 var charge_documents = function() {  

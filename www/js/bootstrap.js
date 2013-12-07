@@ -8,7 +8,6 @@ var types = [
 ];
 
 var bootstrap = function() {
-    var HTMLMenu = "";
     $.ajax({ 
         url: "do/doGetProfile.php",
         statusCode: {
@@ -31,6 +30,18 @@ var bootstrap = function() {
         .done(function(data) {
             $("#content").append(data);
         });
+        
+        $.ajax({ 
+            url: "do/doCheckAdmin.php",
+            statusCode: {
+                200: function() {
+                    $.ajax({ url: "modules/admin.php" })
+                    .done(function(data) {
+                        $("#admin").append(data);
+                    });
+                }
+            }
+        })
         
     });
     

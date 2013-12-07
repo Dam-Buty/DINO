@@ -12,6 +12,15 @@ session_start();
 <meta content="Pagina de accesso a sus archivos digitales" name="description" />
 <link href="http://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" href="css/global.css?v=3" media="screen" type="text/css"/>
+
+<?php
+    if ($_SESSION["niveau"] > 20) {
+    ?>
+<link rel="stylesheet" href="css/admin.css?v=3" media="screen" type="text/css"/>
+    <?php
+    }
+?>
+
 <link rel="stylesheet" href="css/boutons.css?v=3" media="screen" type="text/css"/>
 
 <link rel="stylesheet" href="vendor/validationEngine.jquery.css?v=1" media="screen" type="text/css"/>
@@ -37,6 +46,15 @@ session_start();
 
 <div id="content"></div>
 
+<?php
+if ($_SESSION["niveau"] > 20) {
+    ?>
+    <div id="bouton-admin"></div>
+    <div id="admin"></div>
+    <?php
+}
+?>
+
 <div id="opak"></div>
 <iframe id="viewer-global"></iframe>
 
@@ -56,6 +74,15 @@ session_start();
 <script src="js/dragdrop.js?v=1"></script>
 <script src="js/store.js?v=1"></script>
 <script src="js/dialogues.js?v=1"></script>
+
+<?php
+    if ($_SESSION["niveau"] > 20) {
+    ?>
+<script src="js/admin.js?v=1"></script>
+<script src="js/admin/users.js?v=1"></script>
+    <?php
+    }
+?>
 
 <script type="text/javascript">
     var profil = undefined;

@@ -1,45 +1,51 @@
 <?php
 session_start();
-if ($_SESSION["niveau"] > 20) {
-    include("../includes/log.php");
+
+if (isset($_SESSION["niveau"])) {
     include("../includes/mysqli.php");
+    include("../includes/status.php");    
     
-    $niveaux = array("Cliente", "Ejecutivo", "Administrador", "Gerente");
-    
-    $first = 1;
-    
-    $json = "";
-    
-    $query = "SELECT `login_user`, `mail_user`, `niveau_user`, `fk_interlocuteur`, (SELECT GROUP_CONCAT(`valeur_champ` SEPARATOR ', ') FROM `user_champ` as `uc` WHERE `u`.`login_user` = `uc`.`login_user`) AS `valeurs_champs` FROM `user` as `u` WHERE `fk_client` = " . $_SESSION["client"] . ";";
+    $query = "SELECT `login_user`, `mail_user`, `niveau_user` FROM `user` WHERE `fk_client` = " . $_SESSION["client"] . " AND `niveau_user` < " . $_SESSION["niveau"] . ";";
     
     if ($result = $mysqli->query($query)) {
+        
+        $users = [];
+        
         while ($row = $result->fetch_assoc()) {
-            if ($json == "") {
-                $json .= "[ ";
-            } else {
-                $json .= ',';
-            }
-            $json .= '{"action": "", ';
-            $json .= '"user" : "' . $row["login_user"] . '", ';
-            $json .= '"mail" : "' . $row["mail_user"] . '", ';
-            $json .= '"type" : { "display" : "' . $niveaux[round($row["niveau_user"] / 10, 0, PHP_ROUND_HALF_DOWN)] . '", "value": "' . $row["niveau_user"] . '" }, ';
+            $users[$row["login_user"]] = [
+                "mail" => $row["mail_user"],
+                "niveau" => $row["niveau_user"],
+                "regles" => []
+            ];
             
-            if ($row["niveau_user"] > 20) {
-                $json .= '"detail" : ""';
-            } elseif ($row["niveau_user"] > 10) {
-                $json .= '"detail" : "' . $row["valeurs_champs"] . '"';
-            } else {
-                $json .= '"detail" : "' . $row["fk_interlocuteur"] . '"';
-            }
+            $query_regles = "
+                SELECT `fk_champ`, `fk_valeur_champ` 
+                FROM `user_valeur_champ`
+                WHERE `fk_user` = '" . $row["login_user"] . "'
+            ";
             
-            $json .= "}";
-        }        
-        $result->free();
-        $json .= "]";
+            if ($result_regles = $mysqli->query($query_regles)) {
+                
+                while ($row_regles = $result_regles->fetch_assoc()) {
+                    array_push($users[$row["login_user"]]["regles"], [
+                        "champ" => $row_regles["fk_champ"],
+                        "valeur" => $row_regles["fk_valeur_champ"]
+                    ]);
+                }
+            }
+        }
+        
+        $json = json_encode($users);
+        status(200);
     } else {
-        $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query . '"}';
+        status(500);
+        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
     }
-    header('Content-Type: application/json');
-    echo $json;   
+} else {
+    status(403);
+    $json = '{ "error": "nosession" }';
 }
+
+header('Content-Type: application/json');
+echo $json;
 ?>

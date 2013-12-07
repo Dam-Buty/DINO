@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <div id="core">
     <div id="core-top">
         <ul class="list-mondes" id="mondes-top"></ul>
