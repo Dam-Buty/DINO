@@ -35,6 +35,28 @@ var bootstrap_admin = function() {
     $("#menu-list li[data-action]").click(menu_action);
 };
 
+// Checks a string for a list of characters
+function countContain(string, reference)
+{ 
+    // Declare variables
+    var nCount = 0;
+
+    for (i = 0; i < string.length; i++) 
+    {
+        if (reference.indexOf(string.charAt(i)) > -1) 
+        {
+                nCount++;
+        } 
+    }
+
+    return nCount; 
+}
+
+var m_strUpperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+var m_strLowerCase = "abcdefghijklmnopqrstuvwxyz";
+var m_strNumber = "0123456789";
+var m_strCharacters = "!@#$%^&*?_~";
+
 var menu_action = function() {
     var a = $(this);
     var li = a.closest("li");
