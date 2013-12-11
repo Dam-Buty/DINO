@@ -5,6 +5,8 @@ session_start();
 <h1>Administracion de los usuarios</h1>
 <div id="users">
     <div id="add-user" class="clickable">Agregar un usuario</div>
+    <div id="regles-new-user">
+    </div>
     <div id="new-user">
     <form id="form-new-user">
         <ul>
@@ -19,7 +21,7 @@ session_start();
             <li><input type="password" placeholder="Repetir contrasena" name="pass2" id="new-pass2"></li>
             <li><input type="text" placeholder="Correo electronico" name="mail" id="new-mail"></li>
             <li>
-                <select id="niveau" data-placeholder="Nivel de usuario...">
+                <select id="new-niveau" data-placeholder="Nivel de usuario...">
                     <option value=""></option>
                     <option value="0">Visitor</option>
                     <option value="10">Archivista</option>
@@ -29,10 +31,12 @@ session_start();
                 </select>
             </li>
             <li><div id="new-regles" class="clickable"><p>Editar reglas</p></div></li>
-            <ul id="list-new-regles"></ul>
+            <li><div id="save-user" class="clickable" data-pk="new"><p>Guardar usuario</p></div></li>
+            <li id="error-new-user">Todos los campos no estan llenos!</li>
         </ul>
     </form>
-    <div id="regles-new-user">
     </div>
-    </div>
+    <ul id="liste-users"></ul>
 </div>
+
+<ul id="bucket-regles" class="liste-regles"></ul>

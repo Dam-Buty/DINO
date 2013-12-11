@@ -1,13 +1,130 @@
 
+
+
 var bootstrap_users = function() {
     // Récupère la liste des users
     $.ajax({
         url: "json/users.php",
         statusCode: {            
             200: function(users) {
-                $.each(users, function(i, user) {
+                var ul = $("#liste-users");
+                
+                $.each(users, function(login, user) {
+                     var niveau;
                      
-                });
+                     if (user.niveau >= 0 && user.niveau < 10) {
+                        niveau = "Visitor";
+                     } else if (user.niveau >= 10 && user.niveau < 20) {
+                        niveau = "Archivista";
+                     } else if (user.niveau >= 20 && user.niveau < 30) {
+                        niveau = "Administrador";
+                     } else if (user.niveau >= 30) {
+                        niveau = "Gerente";
+                     }
+                     
+                     var li = $("<li></li>")
+                            .addClass("liste")
+                            .addClass("user")
+                            .append(
+                                $("<img/>")
+                                .attr("src", "img/edit.png")
+                                .addClass("user-edit")
+                                .click(edit_user)
+                            )
+                            .append(
+                                $("<img/>")
+                                .attr("src", "img/key.png")
+                                .addClass("user-key")
+                                .click(key_user)
+                            )
+                            .append(
+                                $("<img/>")
+                                .attr("src", "img/del.png")
+                                .addClass("user-del")
+                                .click(del_user)
+                            )
+                            .append(
+                                $("<div></div>")
+                                .addClass("label-liste")
+                                .append(
+                                    $("<h1></h1>")
+                                    .text(login)
+                                    .append(
+                                        $("<i></i>")
+                                        .text(" ( " + user.mail + " )")
+                                    )
+                                )
+                                .append(
+                                    $("<p></p>")
+                                    .html("Un " + niveau + ".")
+                                )
+                            )
+                            .append(
+                                $("<div></div>")
+                                .addClass("edit")
+                                .addClass("edit-user")
+                                .append(
+                                    $("<input/>")
+                                    .attr({
+                                        type: "text",
+                                        placeholder: "Correo electronico"
+                                    })
+                                    .addClass("edit-mail")
+                                    .val(user.mail)
+                                )
+                                .append(
+                                    $("<select></select>")
+                                    .attr("data-placeholder", "Nivel de usuario...")
+                                    .addClass("edit-niveau")
+                                    .append(
+                                        $("<option></option>")
+                                        .attr("value", "")
+                                    )
+                                    .append(
+                                        $("<option></option>")
+                                        .attr("value", 0)
+                                        .text("Visitor")
+                                    )
+                                    .append(
+                                        $("<option></option>")
+                                        .attr("value", 10)
+                                        .text("Archivista")
+                                    )
+                                    .append(
+                                        $("<option></option>")
+                                        .attr("value", 20)
+                                        .text("Administrator")
+                                    )
+                                    .append(
+                                        $("<option></option>")
+                                        .attr("value", 30)
+                                        .text("Gerente")
+                                    )
+                                    .val(user.niveau)
+                                )
+                                .append(
+                                    $("<div></div>")
+                                    .addClass("clickable")
+                                    .addClass("click-regles")
+                                    .text("Editar reglas")
+                                    .click(regles_edit_user)
+                                )
+                                .append(
+                                    $("<div></div>")
+                                    .addClass("edit-regles")
+                                )
+                                .append(
+                                    $("<div></div>")
+                                    .addClass("clickable")
+                                    .text("Guardar")
+                                    .click(save_edit_user)
+                                )
+                            );
+                        ul.append(li);
+                    });
+                    
+                    // Bind d'events
+                    $(".click-regles").unbind().click(toggle_regles);
             },
             403: function() {
                 window.location.replace("index.php");
@@ -21,7 +138,140 @@ var bootstrap_users = function() {
     // Affecte les boutons
     $("#add-user").unbind().click(toggle_new_user);
     $("#new-regles").unbind().click(toggle_regles);
+    $("#save-user").unbind().click(save_user);
     
+    bootstrap_regles();
+};
+
+var bootstrap_regles = function() {
+    var ul = $("#bucket-regles");
+    
+    $.each(profil.mondes, function(i, monde) {
+        var champ = monde.champs[monde.cascade[0]];
+        var li = $("<li></li>")
+                .attr("data-monde", i)
+                .append(
+                    $("<span></span>")
+                    .text(monde.label)
+                )
+                .append(
+                    $("<select></select>")
+                    .addClass("switch-me")
+                    .click(toggle_monde)
+                    .append(
+                        $("<option></option>")
+                        .attr("value", "KO")
+                        .text("KO")
+                    )
+                    .append(
+                        $("<option></option>")
+                        .attr("value", "OK")
+                        .text("OK")
+                    )
+                );
+                
+        var newli = $("<li></li>").addClass("tableau-regle");
+        
+        var select = $("<select></select>").attr({
+            multiple: "multiple",
+            "data-placeholder": "Elige unos " + champ.pluriel + " para limitar el acceso del usuario",
+            "data-monde": li.attr("data-monde"),
+            "data-champ": monde.cascade[0]
+        });
+        
+        $.each(champ.liste, function(i, valeur) {
+            select.append(
+                $("<option></option>")
+                .attr("value", i)
+                .text(valeur)
+            );
+        });
+        
+        ul.append(li);
+        ul.append(newli.append(select));
+    });
+    
+    ul.clone().attr("id", "").appendTo($(".edit-regles"));
+    ul.clone().attr("id", "").appendTo($("#regles-new-user"));
+};
+
+
+var toggle_regles = function() {
+    var click = $(this);
+    
+    if (click.attr("id") == "new-regles") {
+        div = $("#regles-new-user");
+        ul = $("#liste-regles-new-user");
+    } else {
+        div = div.next("div");
+        ul = div.find("ul");
+    }
+    
+    
+    if (div.is(":visible")) {
+        div.slideUp();
+    } else {
+        div.slideDown({
+            complete: function() {
+                if (div.find(".switchy-container").length == 0) {
+                    div.find(".switch-me").switchy(); // style les selects en switch
+                    div.find(".switch-me").on("change", toggle_monde);
+                    div.find("select[multiple]").chosen();
+                }
+            }
+        });
+    }
+};
+
+var toggle_monde = function() {
+    var switchy = $(this);
+    var li = switchy.closest("li");
+    var monde = profil.mondes[li.attr("data-monde")];
+    var champ = monde.champs[monde.cascade[0]];
+    var newli;
+    
+    if ($(this).val() == 'OK') {
+        bgColor = '#B8DCB3';
+    } else if ($(this).val() == 'KO'){
+        bgColor = '#DCB3B3';
+        newli = li.next("li");
+        newli.slideUp();
+    }
+
+    $(this).next("div").find('.switchy-bar').animate({
+        backgroundColor: bgColor
+    });
+};
+
+var edit_user = function() {
+    var img = $(this);
+    var li = img.closest("li");
+    
+    li.find(".edit")
+    .slideDown()
+    .find(".edit-niveau").chosen({
+        inherit_select_classes: true,
+        disable_search_threshold: 10
+    });
+};
+
+var save_edit_user = function() {
+
+};
+
+var regles_edit_user = function() {
+
+};
+
+var key_user = function() {
+
+};
+
+var del_user = function() {
+
+};
+
+var toggle_new_user = function() {
     // Affecte les évènements des champs
     $("#new-login").unbind();
     $("#new-login").focus(tip_login);
@@ -37,18 +287,19 @@ var bootstrap_users = function() {
     $("#new-mail").unbind();
     $("#new-mail").keyup(check_mail);
     
-    // Style le combo
-    $("#new-user").find("#niveau").chosen({
-        width: $("#new-login").outerWidth(),
-        disable_search_threshold: 10
-    });
-};
-
-var toggle_new_user = function() {
+    
     if ($("#new-user").is(":visible")) {
         $("#new-user").slideUp();
+        $("#regles-new-user").slideUp();
     } else {
         $("#new-user").slideDown();
+        // Style le combo
+        $("#new-niveau").chosen({
+            width: $("#new-login").outerWidth(),
+            disable_search_threshold: 10
+        }).change(function() {
+            $(this).addClass("OK");
+        });
     }
 };
 
@@ -210,7 +461,69 @@ var check_mail = function() {
     }
 };
 
-var toggle_regles = function() {
+var save_user = function() {
+    var div = $(this);
+    var pk = div.attr("data-pk");
+    var message;
+    var login, pass, mail, niveau, champs;
+    champs = {};
+    
+    // Vérifie que les champs sont correctement renseignés
+    var login_ok = $("#new-login").hasClass("OK");
+    var pass_ok = $("#new-pass").hasClass("OK");
+    var mail_ok = $("#new-mail").hasClass("OK");
+    var niveau_ok = $("#new-niveau").hasClass("OK");
+    
+    if (login_ok && login_ok && login_ok && login_ok) {
+        $("#error-new-user").slideUp();
+        if (pk == "new") {
+            login = $("#new-login").val();
+            pass = $("#new-pass").val();
+            mail = $("#new-mail").val();
+            niveau = $("#new-niveau").val();
+            
+            // On récupère les champs sélectionnés
+            $("#liste-regles-new-user li[data-monde]").each(function(i, li) {
+                if ($(li).find("select").val() == "OK") {
+                    var select = $(li).next("li").find("select");
+                    champs[select.attr("data-monde")] = {
+                        champ: select.attr("data-champ"),
+                        valeurs: select.val()
+                    };
+                }
+            });
+            
+            message = "El usuario " + login + " ha sido creado con exito!";
+        }
+        
+        $.ajax({
+            url: "do/doSaveUser.php",
+            type: "POST",
+            data: {
+                pk: pk,
+                login: login,
+                pass: pass,
+                mail: mail,
+                niveau: niveau,
+                champs: champs
+            },
+            statusCode : {
+                200: function() {
+                    popup(message, "confirmation");
+                    $("#new-user").slideUp();
+                    $("#regles-new-user").slideUp();
+                    // Recharger affichage des users
+                },
+                403: function() {
+                    window.location.replace("index.php");
+                },
+                500: function() {
+                    popup("Error! Gracias por intentar otra vez...", "confirmation");
+                }
+            }
+        });
+    } else {
+        $("#error-new-user").slideDown();
+    }
     
 };
-

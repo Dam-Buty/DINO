@@ -12,8 +12,8 @@ if (isset($_SESSION["superadmin"])) {
     
     $password = custom_hash($_POST["password"] . $_POST["login"], TRUE);
 
-    echo "User : " . $clef_user . "<br/>";
-    echo "Clef : <pre>" . $clef_stockage . "</pre>";
+#    echo "User : " . $clef_user . "<br/>";
+#    echo "Clef : <pre>" . $clef_stockage . "</pre>";
     
     $query_client = "INSERT INTO `client` (`entreprise_client`, `mail_client`, `nom_contact_client`, `poste_contact_client`, `phone_contact_client`, `bucket_client`, `credit_client`) VALUES ('" . $_POST["entreprise"] . "', '" . $_POST["mail"] . "', '" . $_POST["nom_contact"] . "', '" . $_POST["poste_contact"] . "', '" . $_POST["phone_contact"] . "', '" . $_POST["bucket"] . "', " . $_POST["credit"] . ");";
     

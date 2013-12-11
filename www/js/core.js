@@ -5,7 +5,8 @@ var Core = {
     recherche: [],
     limit: [0, 100],
     liste: [],
-    dates: []
+    dates: [],
+    users: []
 };
 
 var bootstrap_list = function() {
