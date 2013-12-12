@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (isset($_SESSION["niveau"])) {
+if (isset($_SESSION["niveau"]) >= 20) {
     include("../includes/mysqli.php");
     include("../includes/status.php");    
     
@@ -27,10 +27,12 @@ if (isset($_SESSION["niveau"])) {
             if ($result_regles = $mysqli->query($query_regles)) {
                 
                 while ($row_regles = $result_regles->fetch_assoc()) {
-                    array_push($users[$row["login_user"]]["regles"], [
-                        "champ" => $row_regles["fk_champ"],
-                        "valeur" => $row_regles["fk_valeur_champ"]
-                    ]);
+                    if ($users[$row["login_user"]]["regles"][$row_regles["fk_champ"]] == null) {
+                        $users[$row["login_user"]]["regles"][$row_regles["fk_champ"]] = [];
+                    }
+                    
+                    // TODO : le problème est qu'on récupère le champ et non le monde
+                    array_push($users[$row["login_user"]]["regles"][$row_regles["fk_champ"]], $row_regles["fk_valeur_champ"]);
                 }
             }
         }

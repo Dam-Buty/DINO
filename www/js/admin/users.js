@@ -8,6 +8,8 @@ var bootstrap_users = function() {
         statusCode: {            
             200: function(users) {
                 var ul = $("#liste-users");
+
+                Core.users = users;                
                 
                 $.each(users, function(login, user) {
                      var niveau;
@@ -25,6 +27,10 @@ var bootstrap_users = function() {
                      var li = $("<li></li>")
                             .addClass("liste")
                             .addClass("user")
+                            .attr({
+                                "data-user": login,
+                                "data-state": "closed"
+                            })
                             .append(
                                 $("<img/>")
                                 .attr("src", "img/edit.png")
@@ -112,6 +118,10 @@ var bootstrap_users = function() {
                                 .append(
                                     $("<div></div>")
                                     .addClass("edit-regles")
+                                    .append(
+                                        $("<div></div>")
+                                        .css("display", "none")
+                                    )
                                 )
                                 .append(
                                     $("<div></div>")
@@ -125,6 +135,13 @@ var bootstrap_users = function() {
                     
                     // Bind d'events
                     $(".click-regles").unbind().click(toggle_regles);
+                    
+                    // Affecte les boutons
+                    $("#add-user").unbind().click(toggle_new_user);
+                    $("#new-regles").unbind().click(toggle_regles);
+                    $("#save-user").unbind().click(save_user);
+                    
+                    bootstrap_regles();
             },
             403: function() {
                 window.location.replace("index.php");
@@ -135,12 +152,6 @@ var bootstrap_users = function() {
         }   
     });
     
-    // Affecte les boutons
-    $("#add-user").unbind().click(toggle_new_user);
-    $("#new-regles").unbind().click(toggle_regles);
-    $("#save-user").unbind().click(save_user);
-    
-    bootstrap_regles();
 };
 
 var bootstrap_regles = function() {
@@ -190,9 +201,21 @@ var bootstrap_regles = function() {
         ul.append(li);
         ul.append(newli.append(select));
     });
+    ul.clone().attr("id", "").appendTo($("#regles-new-user>div"));
     
-    ul.clone().attr("id", "").appendTo($(".edit-regles"));
-    ul.clone().attr("id", "").appendTo($("#regles-new-user"));
+    // TODO : affichage des règles de chaque user
+    $.each(Core.users, function(i, user) {
+        $.each(user.regles, function(j, valeurs) {
+            $('li[data-user="chadokun"]')
+        });
+    });
+    
+    
+    $.each($(".edit-regles"), function(i, ligne) {
+        ligne.find("select[multiple]")
+    })
+    $(".edit-regles>div").append(ul.clone().attr("id", ""));
+
 };
 
 
@@ -200,26 +223,30 @@ var toggle_regles = function() {
     var click = $(this);
     
     if (click.attr("id") == "new-regles") {
-        div = $("#regles-new-user");
-        ul = $("#liste-regles-new-user");
+        div = $("#regles-new-user>div");
     } else {
-        div = div.next("div");
-        ul = div.find("ul");
+        div = click.next("div").children("div");
     }
     
+    console.log(div);
+    console.log(div.is(":visible"));
     
     if (div.is(":visible")) {
-        div.slideUp();
+        div.slideUp().fadeOut();
     } else {
-        div.slideDown({
-            complete: function() {
-                if (div.find(".switchy-container").length == 0) {
-                    div.find(".switch-me").switchy(); // style les selects en switch
-                    div.find(".switch-me").on("change", toggle_monde);
-                    div.find("select[multiple]").chosen();
-                }
-            }
-        });
+        div.fadeIn();
+        // style les champs si ce n'est déjà fait
+        if (div.find(".switchy-container").length == 0) {
+            div.find(".switch-me").switchy(); // style les selects en switch
+            div.find(".switch-me").on("change", toggle_monde);
+            div.find("select[multiple]").chosen();
+            
+//            div.find('.switchy-bar').animate({
+//                backgroundColor: "#DCB3B3"
+//            });
+//            div.find("li.tableau-regle").hide();
+            div.find(".switch-me").trigger("change");
+        }
     }
 };
 
@@ -228,14 +255,14 @@ var toggle_monde = function() {
     var li = switchy.closest("li");
     var monde = profil.mondes[li.attr("data-monde")];
     var champ = monde.champs[monde.cascade[0]];
-    var newli;
+    var newli = li.next("li");
     
     if ($(this).val() == 'OK') {
         bgColor = '#B8DCB3';
+        newli.show();
     } else if ($(this).val() == 'KO'){
         bgColor = '#DCB3B3';
-        newli = li.next("li");
-        newli.slideUp();
+        newli.hide();
     }
 
     $(this).next("div").find('.switchy-bar').animate({
@@ -247,16 +274,33 @@ var edit_user = function() {
     var img = $(this);
     var li = img.closest("li");
     
-    li.find(".edit")
-    .slideDown()
-    .find(".edit-niveau").chosen({
-        inherit_select_classes: true,
-        disable_search_threshold: 10
-    });
+    if (li.attr("data-state") == "open") {
+        li.attr("data-state", "closed")
+        .find(".edit")
+            .slideUp();
+        
+    } else {
+        li.attr("data-state", "open")
+        .find(".edit")
+            .slideDown();
+        
+        if ($(".chosen-container").length == 0) {
+            li.find(".edit")
+            .find(".edit-niveau").chosen({
+                inherit_select_classes: true,
+                disable_search_threshold: 10
+            });
+        }
+    }
 };
 
 var save_edit_user = function() {
-
+    var click = $(this);
+    var li = click.closest("li");
+    var user = Core.users(li.attr("data-user"));
+    
+    
+    
 };
 
 var regles_edit_user = function() {
@@ -288,11 +332,11 @@ var toggle_new_user = function() {
     $("#new-mail").keyup(check_mail);
     
     
-    if ($("#new-user").is(":visible")) {
-        $("#new-user").slideUp();
-        $("#regles-new-user").slideUp();
+    if ($("#new-user>div").is(":visible")) {
+        $("#new-user>div").slideUp();
+        $("#regles-new-user>div").slideUp();
     } else {
-        $("#new-user").slideDown();
+        $("#new-user>div").slideDown();
         // Style le combo
         $("#new-niveau").chosen({
             width: $("#new-login").outerWidth(),
@@ -463,7 +507,7 @@ var check_mail = function() {
 
 var save_user = function() {
     var div = $(this);
-    var pk = div.attr("data-pk");
+    var pk = div.attr("data-user");
     var message;
     var login, pass, mail, niveau, champs;
     champs = {};
