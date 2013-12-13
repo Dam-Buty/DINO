@@ -2,30 +2,15 @@
 var bootstrap_admin = function() {
     
     // Rajoute les champs dans le menu
-    $.each(profil.mondes, function(i, monde) {
-        var ul = $("<ul></ul>");
-        var li = $("<li></li>").append("<a href='#'>" + monde.label + "</a>");
-        
-        $.each(monde.champs, function(j, champ) {
-            ul.append(
-                $("<li></li>")
-                .attr({
-                    "data-champ": j,
-                    "data-action": "liste"
-                })
-                .append(
-                    $("<a></a>")
-                    .attr({
-                        href: "#"
-                    })
-                    .text(champ.pluriel)
-                )
-            );
-        });
-        
-        li.append(ul);
-        
-        $("#menu-champs").append(li);
+    $.each(profil.mondes, function(i, monde) {        
+        $("#menu-champs").append(
+            $("<li></li>")
+            .attr({
+                "data-action": "monde",
+                "data-monde": i
+            })
+            .append("<a href='#'>" + monde.label + "</a>")
+        );
     });
     
     $("#menu-list").menu();
@@ -61,12 +46,16 @@ var menu_action = function() {
     var a = $(this);
     var li = a.closest("li");
     var action = li.attr("data-action");
+    var monde = li.attr("data-monde");
     var bootstrap_action;
     
     switch(action) {
         case "users":
             bootstrap_action = bootstrap_users;
             break;
+            
+        case "monde":
+            bootstrap_action = bootstrap_monde;
     }
     
     $.ajax({

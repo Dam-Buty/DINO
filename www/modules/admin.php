@@ -3,13 +3,15 @@ session_start();
 // LOCALISATION !!!
 if ($_SESSION["niveau"] > 20) {
 ?>
+<div id="content-admin">Bienvenido en su administracion DINO...</div>
+
 <div id="menu">
     <ul id="menu-list">
         <li data-action="users">
             <a href="#" id="admin-users">Getion de usuarios</a>
         </li>
         <li>
-            <a href="#">Gestion de listas</a>
+            <a href="#">Gestion de los mundos</a>
             <ul id="menu-champs"></ul>
         </li>
         <li data-action="share">
@@ -18,7 +20,6 @@ if ($_SESSION["niveau"] > 20) {
     </ul>
 </div>
 
-<div id="content-admin">Bienvenido en su administracion DINO...</div>
 
 <script type="text/javascript">
     bootstrap_admin();

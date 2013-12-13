@@ -1,6 +1,3 @@
-
-
-
 var bootstrap_users = function() {
     // Récupère la liste des users
     $.ajax({
@@ -54,6 +51,7 @@ var bootstrap_users = function() {
                             .addClass("user")
                             .attr({
                                 "data-user": login,
+                                "data-mail": user.mail,
                                 "data-state": "closed"
                             })
                             .append(
@@ -103,7 +101,6 @@ var bootstrap_users = function() {
                                     .addClass("clickable")
                                     .addClass("click-regles")
                                     .text("Editar reglas")
-                                    .click(regles_edit_user)
                                 )
                                 .append(
                                     $("<div></div>")
@@ -322,24 +319,58 @@ var edit_user = function() {
     }
 };
 
-var save_edit_user = function() {
+var key_user = function() {
     var click = $(this);
     var li = click.closest("li");
-    
-    
-    
-};
+    var login = li.attr("data-user");
+    var mail = li.attr("data-mail");
 
-var regles_edit_user = function() {
 
-};
-
-var key_user = function() {
-
+    $.ajax({
+        url: "do/doKeyUser.php",
+        type: "POST",
+        data: {
+            login: login,
+            mail: mail
+        },
+        statusCode : {
+            200: function() {
+                popup("La contrasena del usuario <b>" + login + "</b> fue reinicialisada con exito. <br/>El recibira su nueva contrasena en la direccion de correo electronico <b>" + mail + "<b>", "confirmation");
+            },
+            403: function() {
+                window.location.replace("index.php");
+            },
+            500: function() {
+                popup("Error! Gracias por intentar otra vez...", "error");
+            }
+        }
+    });
 };
 
 var del_user = function() {
-
+    var click = $(this);
+    var li = click.closest("li");
+    var login = li.attr("data-user");
+    
+    $.ajax({
+        url: "do/doDelUser.php",
+        type: "POST",
+        data: {
+            login: login
+        },
+        statusCode : {
+            200: function() {
+                popup("El usuario <b>" + login + "</b> fue borrado con exito.", "confirmation");
+                bootstrap_users();
+            },
+            403: function() {
+                window.location.replace("index.php");
+            },
+            500: function() {
+                popup("Error! Gracias por intentar otra vez...", "error");
+            }
+        }
+    });
 };
 
 var toggle_new_user = function() {
