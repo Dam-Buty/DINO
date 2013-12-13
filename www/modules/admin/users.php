@@ -33,7 +33,7 @@ session_start();
                         </select>
                     </li>
                     <li><div id="new-regles" class="clickable"><p>Editar reglas</p></div></li>
-                    <li><div id="save-user" class="clickable" data-pk="new"><p>Guardar usuario</p></div></li>
+                    <li><div id="save-user" class="clickable" data-user="new"><p>Guardar usuario</p></div></li>
                     <li id="error-new-user">Todos los campos no estan llenos!</li>
                 </ul>
             </div>

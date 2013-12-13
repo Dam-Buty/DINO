@@ -109,17 +109,37 @@ if (isset($_SESSION["user"])) {
         if ($row = $result->fetch_assoc()) {
             $_SESSION["niveau"] = $row["niveau_user"];
             $_SESSION["client"] = $row["fk_client"];
+            
+            $profil["niveau"] = $row["niveau_user"];
                         
             //////////////////////////
             // Récupération des mondes sur lesquels l'user a des droits
             //////////////////////////
-            $query_mondes = "SELECT `pk_monde`, `label_monde` FROM `monde` WHERE `fk_client` = " . $row["fk_client"] . " AND `niveau_monde` <= " . $row["niveau_user"] . ";";
+            $query_mondes = "
+                SELECT 
+                    `pk_monde`, 
+                    `label_monde`,
+                    `niveau_monde`
+                FROM `monde` AS `m`
+                WHERE 
+                    `fk_client` = " . $row["fk_client"] . " 
+                    AND ( `niveau_monde` <= " . $row["niveau_user"] . "
+                        OR (
+                            SELECT COUNT(*)
+                            FROM `user_monde` AS `um`
+                            WHERE 
+                                `um`.`fk_client` = `m`.`fk_client`
+                                AND `um`.`fk_user` = '" . $_SESSION["user"] . "'
+                                AND `um`.`fk_monde` = `m`.`pk_monde`
+                        )
+                    );";
             
             if ($result_mondes = $mysqli->query($query_mondes)) {
                 
                 while($row_mondes = $result_mondes->fetch_assoc()) {
                     $profil["mondes"][$row_mondes["pk_monde"]] = [
                         "label" => $row_mondes["label_monde"],
+                        "niveau" => $row_mondes["niveau_monde"],
                         "champs" => [],
                         "cascade" => [],
                         "references" => [

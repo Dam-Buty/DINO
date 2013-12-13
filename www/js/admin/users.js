@@ -7,13 +7,38 @@ var bootstrap_users = function() {
         url: "json/users.php",
         statusCode: {            
             200: function(users) {
-                var ul = $("#liste-users");
+                var ul = $("#liste-users").empty();
 
                 Core.users = users;                
                 
                 $.each(users, function(login, user) {
                      var niveau;
-                     
+                     var select = $("<select></select>")
+                                .attr("data-placeholder", "Nivel de usuario...")
+                                .addClass("edit-niveau")
+                                .append(
+                                    $("<option></option>")
+                                    .attr("value", "")
+                                )
+                                .append(
+                                    $("<option></option>")
+                                    .attr("value", 0)
+                                    .text("Visitor")
+                                )
+                                .append(
+                                    $("<option></option>")
+                                    .attr("value", 10)
+                                    .text("Archivista")
+                                );
+                                
+                    if (profil.niveau >= 30) {
+                        select.append(
+                            $("<option></option>")
+                            .attr("value", 20)
+                            .text("Administrator")
+                        );
+                    }
+                          
                      if (user.niveau >= 0 && user.niveau < 10) {
                         niveau = "Visitor";
                      } else if (user.niveau >= 10 && user.niveau < 20) {
@@ -70,42 +95,7 @@ var bootstrap_users = function() {
                                 .addClass("edit")
                                 .addClass("edit-user")
                                 .append(
-                                    $("<input/>")
-                                    .attr({
-                                        type: "text",
-                                        placeholder: "Correo electronico"
-                                    })
-                                    .addClass("edit-mail")
-                                    .val(user.mail)
-                                )
-                                .append(
-                                    $("<select></select>")
-                                    .attr("data-placeholder", "Nivel de usuario...")
-                                    .addClass("edit-niveau")
-                                    .append(
-                                        $("<option></option>")
-                                        .attr("value", "")
-                                    )
-                                    .append(
-                                        $("<option></option>")
-                                        .attr("value", 0)
-                                        .text("Visitor")
-                                    )
-                                    .append(
-                                        $("<option></option>")
-                                        .attr("value", 10)
-                                        .text("Archivista")
-                                    )
-                                    .append(
-                                        $("<option></option>")
-                                        .attr("value", 20)
-                                        .text("Administrator")
-                                    )
-                                    .append(
-                                        $("<option></option>")
-                                        .attr("value", 30)
-                                        .text("Gerente")
-                                    )
+                                    select
                                     .val(user.niveau)
                                 )
                                 .append(
@@ -126,8 +116,9 @@ var bootstrap_users = function() {
                                 .append(
                                     $("<div></div>")
                                     .addClass("clickable")
+                                    .attr("data-user", login)
                                     .text("Guardar")
-                                    .click(save_edit_user)
+                                    .click(save_user)
                                 )
                             );
                         ul.append(li);
@@ -140,6 +131,9 @@ var bootstrap_users = function() {
                     $("#add-user").unbind().click(toggle_new_user);
                     $("#new-regles").unbind().click(toggle_regles);
                     $("#save-user").unbind().click(save_user);
+                    $("#new-niveau").unbind().change(toggle_niveau);
+                    $(".edit-niveau").unbind().change(toggle_niveau);
+                    //$(".edit-mail").unbind()
                     
                     bootstrap_regles();
             },
@@ -155,7 +149,7 @@ var bootstrap_users = function() {
 };
 
 var bootstrap_regles = function() {
-    var ul = $("#bucket-regles");
+    var ul = $("#bucket-regles").empty();
     
     $.each(profil.mondes, function(i, monde) {
         var champ = monde.champs[monde.cascade[0]];
@@ -171,12 +165,18 @@ var bootstrap_regles = function() {
                     .click(toggle_monde)
                     .append(
                         $("<option></option>")
-                        .attr("value", "KO")
+                        .attr({
+                            value: "KO",
+                            selected: "selected"
+                        })
                         .text("KO")
                     )
                     .append(
                         $("<option></option>")
-                        .attr("value", "OK")
+                        .attr({
+                            value: "OK"/*,
+                            selected: "selected"*/
+                        })
                         .text("OK")
                     )
                 );
@@ -201,23 +201,54 @@ var bootstrap_regles = function() {
         ul.append(li);
         ul.append(newli.append(select));
     });
-    ul.clone().attr("id", "").appendTo($("#regles-new-user>div"));
+    ul.clone().attr("id", "").appendTo($("#regles-new-user>div").empty());
+    $(".edit-regles>div").empty().append(ul.clone().attr("id", ""));
     
-    // TODO : affichage des règles de chaque user
     $.each(Core.users, function(i, user) {
-        $.each(user.regles, function(j, valeurs) {
-            $('li[data-user="chadokun"]')
+        $.each(user.mondes, function(monde, valeurs) {
+            $('li[data-user="' + i + '"]')
+            .find('li[data-monde="' + monde + '"]')
+            .find("select")
+                .val("OK")
+                .trigger("change")
+                .end()
+            .next("li")
+            .find("select")
+            .val(valeurs)
+            .trigger("chosen:updated")
         });
     });
-    
-    
-    $.each($(".edit-regles"), function(i, ligne) {
-        ligne.find("select[multiple]")
-    })
-    $(".edit-regles>div").append(ul.clone().attr("id", ""));
-
 };
 
+var toggle_niveau = function() {
+    var select = $(this);
+    var niveau = select.val();
+    var ul, click, div;
+    
+    if (select.attr("id") == "new-niveau") {
+        ul = $(".liste-regles");
+        click = $("#new-regles");
+        div = $("#regles-new-user>div");
+    } else {
+        ul = select.nextAll(".edit-regles").find("ul");
+        click = select.nextAll(".click-regles");
+        div = select.nextAll(".edit-regles")
+    }
+    
+    if (!div.find("div").is(":visible")) {
+        click.click();
+    }
+    
+    $.each(profil.mondes, function(i, monde) {
+        if (monde.niveau <= niveau) {
+            ul.find('li[data-monde="' + i + '"]')
+            .find("select").val("OK").trigger("change");
+        } else {
+            ul.find('li[data-monde="' + i + '"]')
+            .find("select").val("KO").trigger("change");
+        }
+    });
+};
 
 var toggle_regles = function() {
     var click = $(this);
@@ -227,9 +258,6 @@ var toggle_regles = function() {
     } else {
         div = click.next("div").children("div");
     }
-    
-    console.log(div);
-    console.log(div.is(":visible"));
     
     if (div.is(":visible")) {
         div.slideUp().fadeOut();
@@ -284,7 +312,7 @@ var edit_user = function() {
         .find(".edit")
             .slideDown();
         
-        if ($(".chosen-container").length == 0) {
+        if (li.find(".chosen-container").length == 0) {
             li.find(".edit")
             .find(".edit-niveau").chosen({
                 inherit_select_classes: true,
@@ -297,7 +325,6 @@ var edit_user = function() {
 var save_edit_user = function() {
     var click = $(this);
     var li = click.closest("li");
-    var user = Core.users(li.attr("data-user"));
     
     
     
@@ -494,8 +521,7 @@ var check_pass2 = function() {
 
 var check_mail = function() {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    var field = $("#new-mail");
-    var tip = $("#tip-mail");
+    var field = $(this);
     var mail = field.val();
     
     if (re.test(mail)) {
@@ -507,38 +533,51 @@ var check_mail = function() {
 
 var save_user = function() {
     var div = $(this);
+    var li = div.closest(li);
     var pk = div.attr("data-user");
     var message;
-    var login, pass, mail, niveau, champs;
-    champs = {};
+    var login, pass, mail, niveau, mondes;
+    var all_ok, error;
+    var div_user, list_user;
+    mondes = {};
     
-    // Vérifie que les champs sont correctement renseignés
-    var login_ok = $("#new-login").hasClass("OK");
-    var pass_ok = $("#new-pass").hasClass("OK");
-    var mail_ok = $("#new-mail").hasClass("OK");
-    var niveau_ok = $("#new-niveau").hasClass("OK");
+    if (pk == "new") {
+        // Vérifie que les champs sont correctement renseignés
+        all_ok = $("#new-login").hasClass("OK") && $("#new-pass").hasClass("OK") && $("#new-mail").hasClass("OK") && $("#new-niveau").hasClass("OK");
+        login = $("#new-login").val();
+        pass = $("#new-pass").val();
+        mail = $("#new-mail").val();
+        niveau = $("#new-niveau").val();
+        message = "El usuario " + login + " ha sido creado con exito!";
+        error = $("#error-new-user");
+        liste_user = $("#regles-new-user li[data-monde]");
+        
+    } else {
+        div_user = div.parent("div");
+        all_ok = true;
+        login = pk;
+        pass = "";
+        mail = "";
+        error = $();
+        niveau = div_user.find(".edit-niveau").val();
+        message = "El usuario " + login + " ha sido modificado con exito!";
+        liste_user = div_user.find("li[data-monde]");
+    }
     
-    if (login_ok && login_ok && login_ok && login_ok) {
-        $("#error-new-user").slideUp();
-        if (pk == "new") {
-            login = $("#new-login").val();
-            pass = $("#new-pass").val();
-            mail = $("#new-mail").val();
-            niveau = $("#new-niveau").val();
+    // On récupère les champs sélectionnés
+    liste_user.each(function(i, li) {
+        if ($(li).find("select").val() == "OK") {
+            var select = $(li).next("li").find("select");
             
-            // On récupère les champs sélectionnés
-            $("#liste-regles-new-user li[data-monde]").each(function(i, li) {
-                if ($(li).find("select").val() == "OK") {
-                    var select = $(li).next("li").find("select");
-                    champs[select.attr("data-monde")] = {
-                        champ: select.attr("data-champ"),
-                        valeurs: select.val()
-                    };
-                }
-            });
-            
-            message = "El usuario " + login + " ha sido creado con exito!";
+            mondes[select.attr("data-monde")] = {
+                champ: select.attr("data-champ"),
+                valeurs: select.val()
+            };
         }
+    });
+    
+    if (all_ok) {
+        error.slideUp();
         
         $.ajax({
             url: "do/doSaveUser.php",
@@ -549,14 +588,14 @@ var save_user = function() {
                 pass: pass,
                 mail: mail,
                 niveau: niveau,
-                champs: champs
+                mondes: mondes
             },
             statusCode : {
                 200: function() {
                     popup(message, "confirmation");
-                    $("#new-user").slideUp();
-                    $("#regles-new-user").slideUp();
-                    // Recharger affichage des users
+                    $("#new-user>div").slideUp();
+                    $("#regles-new-user>div").slideUp();
+                    bootstrap_users();
                 },
                 403: function() {
                     window.location.replace("index.php");
@@ -567,7 +606,7 @@ var save_user = function() {
             }
         });
     } else {
-        $("#error-new-user").slideDown();
+        error.slideDown();
     }
     
 };

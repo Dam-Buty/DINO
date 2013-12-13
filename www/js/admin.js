@@ -63,8 +63,6 @@ var menu_action = function() {
     var action = li.attr("data-action");
     var bootstrap_action;
     
-    console.log(action);
-    
     switch(action) {
         case "users":
             bootstrap_action = bootstrap_users;

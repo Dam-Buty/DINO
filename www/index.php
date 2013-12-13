@@ -70,7 +70,6 @@ if ($_SESSION["niveau"] > 20) {
 <script src="vendor/switchy.js?v=1"></script>
 
 <script src="js/bootstrap.js?v=1"></script>
-<script src="js/application.js?v=1"></script>
 <script src="js/core.js?v=1"></script>
 <script src="js/queue.js?v=1"></script>
 <script src="js/dragdrop.js?v=1"></script>

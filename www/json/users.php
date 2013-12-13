@@ -15,24 +15,55 @@ if (isset($_SESSION["niveau"]) >= 20) {
             $users[$row["login_user"]] = [
                 "mail" => $row["mail_user"],
                 "niveau" => $row["niveau_user"],
-                "regles" => []
+                "mondes" => []
             ];
             
-            $query_regles = "
-                SELECT `fk_champ`, `fk_valeur_champ` 
-                FROM `user_valeur_champ`
-                WHERE `fk_user` = '" . $row["login_user"] . "'
+            $query_mondes = "
+                SELECT 
+                    `pk_monde`, 
+                    `niveau_monde`,
+                    (
+                        SELECT COUNT(*)
+                        FROM `user_monde` AS `um`
+                        WHERE 
+                            `um`.`fk_user` = '" . $row["login_user"] . "'
+                            AND `um`.`fk_monde` = `pk_monde`
+                    ) AS `droit`
+                FROM `monde`
+                WHERE 
+                    `fk_client` = " . $_SESSION["client"] . "
+                    AND (
+                        SELECT COUNT(*)
+                        FROM `user_monde` AS `um`
+                        WHERE 
+                            `um`.`fk_user` = '" . $row["login_user"] . "'
+                            AND `um`.`fk_monde` = `pk_monde`
+                    ) = 1;
             ";
             
-            if ($result_regles = $mysqli->query($query_regles)) {
-                
-                while ($row_regles = $result_regles->fetch_assoc()) {
-                    if ($users[$row["login_user"]]["regles"][$row_regles["fk_champ"]] == null) {
-                        $users[$row["login_user"]]["regles"][$row_regles["fk_champ"]] = [];
+            if ($result_mondes = $mysqli->query($query_mondes)) {
+            
+                while ($row_mondes = $result_mondes->fetch_assoc()) {
+                    if ($row_mondes["niveau_monde"] <= $row["niveau_user"]
+                        || $row_mondes["droit"] > 0 ) {
+                            $users[$row["login_user"]]["mondes"][$row_mondes["pk_monde"]] = [];
                     }
                     
-                    // TODO : le problème est qu'on récupère le champ et non le monde
-                    array_push($users[$row["login_user"]]["regles"][$row_regles["fk_champ"]], $row_regles["fk_valeur_champ"]);
+                    $query_champs = "
+                        SELECT `fk_valeur_champ` 
+                        FROM `user_valeur_champ`
+                        WHERE 
+                            `fk_client` = " . $_SESSION["client"] . "
+                            AND `fk_monde` = " . $row_mondes["pk_monde"] . "
+                            AND `fk_user` = '" . $row["login_user"] . "'
+                    ";
+                    
+                    if ($result_champs = $mysqli->query($query_champs)) {
+                        
+                        while ($row_champs = $result_champs->fetch_assoc()) {
+                            array_push($users[$row["login_user"]]["mondes"][$row_mondes["pk_monde"]], $row_champs["fk_valeur_champ"]);
+                        }
+                    }
                 }
             }
         }
