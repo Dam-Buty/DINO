@@ -56,6 +56,7 @@ var menu_action = function() {
             
         case "monde":
             bootstrap_action = bootstrap_monde;
+            break;
     }
     
     $.ajax({
@@ -63,6 +64,11 @@ var menu_action = function() {
         statusCode: {            
             200: function(data) {
                 $("#content-admin").empty().append(data);
+                
+                if (action == "monde") {
+                    $("#liste-valeurs").attr("data-monde", monde);
+                }
+                
                 bootstrap_action();
             },
             403: function() {

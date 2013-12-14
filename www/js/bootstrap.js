@@ -47,6 +47,17 @@ var bootstrap = function() {
     
 };
 
+var _profil = function() {
+    $.ajax({ 
+        url: "do/doGetProfile.php",
+        statusCode: {
+            200: function(data) {
+                profil = data;
+            }
+        }
+    })
+};
+
 var login = function() {
     if ($("#form_login").validationEngine("validate")) {
         

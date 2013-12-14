@@ -13,7 +13,7 @@ if ($_SESSION["niveau"] >= 20) {
     ;";
     
     if ($mysqli->query($query_user)) {
-        status(200);
+        status(204);
     } else {
         status(500);
         $json = '{ "error": "mysql", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';

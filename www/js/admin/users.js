@@ -359,7 +359,7 @@ var del_user = function() {
             login: login
         },
         statusCode : {
-            200: function() {
+            204: function() {
                 popup("El usuario <b>" + login + "</b> fue borrado con exito.", "confirmation");
                 bootstrap_users();
             },
