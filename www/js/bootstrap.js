@@ -20,15 +20,16 @@ var bootstrap = function() {
         profil = data;
         
         $(".div_login").hide();
+        $("#barre-laterale").show();
         
         $.ajax({ url: "modules/core.php" })
         .done(function(data) {
-            $("#content").append(data);
+            $("#front").append(data);
         });
         
         $.ajax({ url: "modules/queue.php" })
         .done(function(data) {
-            $("#content").append(data);
+            $("#front").append(data);
         });
         
         $.ajax({ 
@@ -37,22 +38,23 @@ var bootstrap = function() {
                 200: function() {
                     $.ajax({ url: "modules/admin.php" })
                     .done(function(data) {
-                        $("#admin").append(data);
+                        $("#back").append(data);
                     });
                 }
             }
-        })
+        });
         
     });
     
 };
 
-var _profil = function() {
+var _profil = function(callback) {
     $.ajax({ 
         url: "do/doGetProfile.php",
         statusCode: {
             200: function(data) {
                 profil = data;
+                callback();
             }
         }
     })

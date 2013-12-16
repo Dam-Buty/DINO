@@ -1,9 +1,10 @@
 <?php
 session_start();
+include("../includes/status.php");  
+include("../includes/log.php");  
 
 if (isset($_SESSION["niveau"])) {
     include("../includes/mysqli.php");
-    include("../includes/status.php");
     
     $query = "SELECT `filename_document`, `display_document` FROM `document` WHERE `fk_client` = " . $_SESSION["client"] . " AND `niveau_document` IS NULL;";
     
@@ -24,15 +25,32 @@ if (isset($_SESSION["niveau"])) {
         $json_queue .= " ]";
         
         $json = str_replace('"%%QUEUE%%"', $json_queue, $json);
+        header('Content-Type: application/json');
+        echo $json;
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        write_log([
+            "libelle" => "GET queue",
+            "admin" => 0,
+            "query" => $query,
+            "statut" => 1,
+            "message" => "",
+            "erreur" => $mysqli->error,
+            "document" => "",
+            "objet" => $_SESSION["client"]
+        ]);
     }
 } else {
     status(403);
-    $json = '{ "error": "nosession" }';
+    write_log([
+        "libelle" => "GET queue",
+        "admin" => 0,
+        "query" => "",
+        "statut" => 666,
+        "message" => "",
+        "erreur" => "",
+        "document" => "",
+        "objet" => ""
+    ]);
 }
-
-header('Content-Type: application/json');
-echo $json;
 ?>

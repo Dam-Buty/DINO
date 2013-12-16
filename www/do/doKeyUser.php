@@ -1,5 +1,6 @@
 <?php
 session_start();
+include("../includes/log.php");
 if ($_SESSION["niveau"] >= 20) {
     include("../includes/mysqli.php");
     include("../includes/crypt.php");
@@ -31,14 +32,43 @@ if ($_SESSION["niveau"] >= 20) {
         // MAIL !
         status(200);
         $json = $pass;
+        write_log([
+            "libelle" => "RESET mot de passe",
+            "admin" => 1,
+            "query" => $query_user,
+            "statut" => 0,
+            "message" => "",
+            "erreur" => "",
+            "document" => "",
+            "objet" => $_POST["login"]
+        ]);
+        header('Content-Type: application/json');
+        echo $json; // TODO : on n'enverra bien sur pas le passe dans le json :)
     } else {
         status(500);
-        $json = '{ "error": "mysql", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        write_log([
+            "libelle" => "RESET mot de passe",
+            "admin" => 1,
+            "query" => $query_user,
+            "statut" => 1,
+            "message" => "",
+            "erreur" => $mysqli->error,
+            "document" => "",
+            "objet" => $_POST["login"]
+        ]);
     }
     
-    header('Content-Type: application/json');
-    echo $json;
 } else {
     header("Location: ../index.php");
+    write_log([
+        "libelle" => "RESET mot de passe",
+        "admin" => 1,
+        "query" => $query_user,
+        "statut" => 666,
+        "message" => "",
+        "erreur" => "",
+        "document" => "",
+        "objet" => $_POST["login"]
+    ]);
 }
 ?>

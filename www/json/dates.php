@@ -1,9 +1,10 @@
 <?php
 session_start();
+include("../includes/status.php");  
+include("../includes/log.php");  
 
 if (isset($_SESSION["niveau"])) {
-    include("../includes/mysqli.php");
-    include("../includes/status.php");    
+    include("../includes/mysqli.php"); 
     
     $query = "
         SELECT 
@@ -32,15 +33,32 @@ if (isset($_SESSION["niveau"])) {
         
         $json = json_encode($dates);
         status(200);
+        header('Content-Type: application/json');
+        echo $json;
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        write_log([
+            "libelle" => "GET dates min/max",
+            "admin" => 0,
+            "query" => $query,
+            "statut" => 1,
+            "message" => "",
+            "erreur" => $mysqli->error,
+            "document" => "",
+            "objet" => $_POST["monde"]
+        ]);
     }
 } else {
     status(403);
-    $json = '{ "error": "nosession" }';
+    write_log([
+        "libelle" => "GET dates min/max",
+        "admin" => 0,
+        "query" => $query,
+        "statut" => 666,
+        "message" => "",
+        "erreur" => "",
+        "document" => "",
+        "objet" => $_POST["monde"]
+    ]);
 }
-
-header('Content-Type: application/json');
-echo $json;
 ?>

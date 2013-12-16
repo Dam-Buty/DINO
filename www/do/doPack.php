@@ -1,5 +1,6 @@
 <?php
 session_start();
+include("../includes/log.php");
 
 if ($_SESSION["niveau"] > 10) {
     include("../includes/status.php");
@@ -17,7 +18,11 @@ if ($_SESSION["niveau"] > 10) {
     $cwd = NULL;
     $env = array();
     
-    $process = proc_open("../scripts/packer.sh " . $client . " " . $document . ' "' . $clef . '"', $descriptorspec, $pipes, $cwd, $env);
+    $commande = "../scripts/packer.sh " . $client . " " . $document . ' "' . $clef . '"';
+    
+    $process = proc_open($commande, $descriptorspec, $pipes, $cwd, $env);
+    
+    $commande_log = str_replace($clef, "%%CLEF%%", $commande);
 
     if (is_resource($process)) {
         // $pipes now looks like this:
@@ -39,16 +44,53 @@ if ($_SESSION["niveau"] > 10) {
 
         if ($return_value == 0) {
             status(200);
-            $json = '{ "return": "' . $out . '", "message": "' . $err . '" }';
+            write_log([
+                "libelle" => "PACK",
+                "admin" => 0,
+                "query" => $commande_log,
+                "statut" => 0,
+                "message" => "",
+                "erreur" => "",
+                "document" => $document,
+                "objet" => $document
+            ]);
         } else {
             status(500);
-            $json = '{ "error": "' . $return_value . '", "message": "' . $err . '" }';
+            write_log([
+                "libelle" => "PACK",
+                "admin" => 0,
+                "query" => $commande_log,
+                "statut" => 1,
+                "message" => $return_value,
+                "erreur" => $err,
+                "document" => $document,
+                "objet" => $document
+            ]);
         }
     } else {
         status(500);
-        $json = '{ "error": "unknown" }';
+        write_log([
+            "libelle" => "PACK",
+            "admin" => 0,
+            "query" => $commande_log,
+            "statut" => 1,
+            "message" => "",
+            "erreur" => "Inconnue",
+            "document" => $document,
+            "objet" => $document
+        ]);
     }
-    header('Content-Type: application/json');
-    echo $json;
+} else {
+    status(403);
+    write_log([
+        "libelle" => "PACK",
+        "admin" => 0,
+        "query" => "",
+        "statut" => 666,
+        "message" => "",
+        "erreur" => "",
+        "document" => $document,
+        "objet" => $document
+    ]);
 }
 ?>

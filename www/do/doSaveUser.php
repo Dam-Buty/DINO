@@ -1,9 +1,11 @@
 <?php
 session_start();
+include("../includes/status.php");
+include("../includes/log.php");
+
 if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] > 20 && $_SESSION["niveau"] > $_POST["niveau"]) {
     include("../includes/mysqli.php");
     include("../includes/crypt.php");
-    include("../includes/status.php");
     
     
     if ($_POST["pk"] == "new") {
@@ -90,8 +92,6 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] > 20 && $_SESSION["niveau"
         }
     }
     
-    echo $query;
-    
     if ($mysqli->multi_query($query)) {
         $i = 0; 
         do { 
@@ -100,17 +100,55 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] > 20 && $_SESSION["niveau"
         
         if (!$mysqli->errno) { 
             status(200);
+            write_log([
+                "libelle" => "INSERT user",
+                "admin" => 1,
+                "query" => $query,
+                "statut" => 0,
+                "message" => "",
+                "erreur" => "",
+                "document" => "",
+                "objet" => $_POST["login"]
+            ]);
         } else {
             status(500);
-            $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+            write_log([
+                "libelle" => "INSERT user",
+                "admin" => 1,
+                "query" => $query,
+                "statut" => 1,
+                "message" => "",
+                "erreur" => $mysqli->error,
+                "document" => "",
+                "objet" => $_POST["login"]
+            ]);
         }
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        write_log([
+            "libelle" => "INSERT user",
+            "admin" => 1,
+            "query" => $query,
+            "statut" => 1,
+            "message" => "",
+            "erreur" => $mysqli->error,
+            "document" => "",
+            "objet" => $_POST["login"]
+        ]);
     }
     header('Content-Type: application/json');
     echo $json;
 } else {
     status(403);
+    write_log([
+        "libelle" => "INSERT user",
+        "admin" => 1,
+        "query" => "",
+        "statut" => 666,
+        "message" => "",
+        "erreur" => "",
+        "document" => "",
+        "objet" => $_POST["login"]
+    ]);
 }
 ?>

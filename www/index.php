@@ -10,7 +10,7 @@ session_start();
 <meta content="2013-02-28" name="date" />
 <meta content="Damien BUTY" name="author" />
 <meta content="Pagina de accesso a sus archivos digitales" name="description" />
-<link href="http://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css"/>
+<link href='css/Oswald-Bold.ttf' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/global.css?v=3" media="screen" type="text/css"/>
 
 <?php
@@ -27,9 +27,7 @@ session_start();
 <link rel="stylesheet" href="vendor/chosen.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="vendor/zebra_dialog.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="vendor/switchy.css?v=1" media="screen" type="text/css"/>
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/start/jquery-ui.css" media="screen" type="text/css"/>
-
-
+<link rel="stylesheet" href="vendor/jquery-ui.css" media="screen" type="text/css"/>
 
 </head>
 <body>
@@ -43,24 +41,46 @@ session_start();
         <input type="button" id="bouton_login" value="Ingresar"/>
     </form>
 </div>
-<div id="jauge"></div>
 
-<div id="content"></div>
-
-<?php
-if ($_SESSION["niveau"] > 20) {
-    ?>
-    <div id="bouton-admin"></div>
-    <div id="admin"></div>
+<div id="front">
+    <div id="laterale-top" class="barre-laterale">
+        <h1>DINO</h1>
+        <ul id="menu-lateral">
+            <li id="menu-queue">
+                <h1>SUBIR ARCHIVO</h1>
+            </li>
     <?php
-}
-?>
+    if ($_SESSION["niveau"] > 20) {
+        ?>
+            <li id="menu-admin">
+                <h1>ADMIN</h1>
+            </li>
+        <?php
+    }
+    ?>
+        </ul>
+    </div>
+
+
+    <div id="front-top" class="barre-top">
+        <ul class="list-mondes" id="mondes-top"></ul>
+        <select class="busquedor" type="text" id="search" multiple="multiple" data-placeholder="Buscar en este mundo..."/>
+        <div id="list-sort" data-tri="ASC"><h1>A-Z</h1></div>
+        <!-- <div id="slider-date"></div>
+        <div id="text-date"></div> -->
+        
+        
+        
+    </div>
+</div>
+
+<div id="back"></div>
 
 <div id="opak"></div>
 <iframe id="viewer-global"></iframe>
 
-<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script src="vendor/jquery-1.10.2.js"></script>
+<script src="vendor/jquery-ui.js"></script>
 
 <script src="vendor/jquery.validationEngine.js?v=1"></script>
 <script src="vendor/jquery.validationEngine-es.js?v=1"></script>
@@ -70,6 +90,7 @@ if ($_SESSION["niveau"] > 20) {
 <script src="vendor/switchy.js?v=1"></script>
 
 <script src="js/bootstrap.js?v=1"></script>
+<script src="js/util.js?v=1"></script>
 <script src="js/core.js?v=1"></script>
 <script src="js/queue.js?v=1"></script>
 <script src="js/dragdrop.js?v=1"></script>
@@ -82,6 +103,7 @@ if ($_SESSION["niveau"] > 20) {
 <script src="js/admin.js?v=1"></script>
 <script src="js/admin/users.js?v=1"></script>
 <script src="js/admin/mondes.js?v=1"></script>
+<script src="js/admin/profil.js?v=1"></script>
     <?php
     }
 ?>

@@ -2,36 +2,37 @@
 session_start();
 include("../includes/status.php");
 include("../includes/log.php");
+
 if ($_SESSION["niveau"] >= 20) {
     include("../includes/mysqli.php");
     
     if ($_POST["pk"] == "new") {
         $query = "
-            INSERT INTO `valeur_champ` (
-                `label_valeur_champ`, 
+            INSERT INTO `categorie_doc` (
+                `label_categorie_doc`, 
+                `niveau_categorie_doc`,
                 `fk_champ`, 
                 `fk_monde`, 
-                `fk_client`, 
-                `fk_parent`
+                `fk_client`
             ) VALUES (
                 '" . $_POST["label"] . "',
+                " . $_POST["niveau"] . ",
                 " . $_POST["champ"] . ",
                 " . $_POST["monde"] . ",
-                " . $_SESSION["client"] . ",
-                " . $_POST["parent"] . "
+                " . $_SESSION["client"] . "
             )
         ;";
     } else {
         $query = "
-            UPDATE `valeur_champ`
+            UPDATE `categorie_doc`
             SET 
-                `label_valeur_champ` = '" . $_POST["label"] . "'
+                `label_categorie_doc` = '" . $_POST["label"] . "',
+                `niveau_categorie_doc` = " . $_POST["niveau"] . "
             WHERE
                 `fk_client` = " . $_SESSION["client"] . "
                 AND `fk_monde` = " . $_POST["monde"] . "
                 AND `fk_champ` = " . $_POST["champ"] . "
-                AND `fk_parent` = " . $_POST["parent"] . "
-                AND `pk_valeur_champ` = " . $_POST["pk"] . "
+                AND `pk_categorie_doc` = " . $_POST["pk"] . "
         ;";
     }
     
@@ -45,7 +46,7 @@ if ($_SESSION["niveau"] >= 20) {
         }
         
         write_log([
-            "libelle" => "INSERT valeur",
+            "libelle" => "INSERT categorie",
             "admin" => 1,
             "query" => $query,
             "statut" => 0,
@@ -57,7 +58,7 @@ if ($_SESSION["niveau"] >= 20) {
     } else {
         status(500);
         write_log([
-            "libelle" => "INSERT valeur",
+            "libelle" => "INSERT categorie",
             "admin" => 1,
             "query" => $query,
             "statut" => 1,
@@ -67,13 +68,12 @@ if ($_SESSION["niveau"] >= 20) {
             "objet" => $_POST["pk"]
         ]);
     }
-    
 } else {
-    status(403);
+    header("Location: ../index.php");
     write_log([
-        "libelle" => "INSERT valeur",
+        "libelle" => "INSERT categorie",
         "admin" => 1,
-        "query" => $query,
+        "query" => "",
         "statut" => 666,
         "message" => "",
         "erreur" => "",

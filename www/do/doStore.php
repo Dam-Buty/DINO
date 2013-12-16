@@ -1,6 +1,7 @@
 <?php
 session_start();
 include("../includes/status.php");
+include("../includes/log.php");
 
 function format_date($date) {
     $d = substr($date, 0, 2);
@@ -12,7 +13,7 @@ function format_date($date) {
 
 $champs = array_filter($_POST["champs"]);
 
-if ($_SESSION["niveau"] > 10) {
+if ($_SESSION["niveau"] >= 10) {
     include("../includes/mysqli.php");
     
     $query = "
@@ -89,20 +90,53 @@ if ($_SESSION["niveau"] > 10) {
         
         if (!$mysqli->errno) { 
             status(200);
-            $json = '{ "query": "' . $query . '" }';
+            write_log([
+                "libelle" => "STORE document",
+                "admin" => 0,
+                "query" => $query,
+                "statut" => 0,
+                "message" => "",
+                "erreur" => "",
+                "document" => "",
+                "objet" => $_POST["filename"]
+            ]);
         } else {
             status(500);
-            $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+            write_log([
+                "libelle" => "STORE document",
+                "admin" => 0,
+                "query" => $query,
+                "statut" => 1,
+                "message" => "",
+                "erreur" => $mysqli->error,
+                "document" => "",
+                "objet" => $_POST["filename"]
+            ]);
         }
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        write_log([
+            "libelle" => "STORE document",
+            "admin" => 0,
+            "query" => $query,
+            "statut" => 1,
+            "message" => "",
+            "erreur" => $mysqli->error,
+            "document" => "",
+            "objet" => $_POST["filename"]
+        ]);
     }    
 } else {
     status(403);
-    $json = '{ "error": "nosession" }';
+    write_log([
+        "libelle" => "STORE document",
+        "admin" => 0,
+        "query" => $query,
+        "statut" => 666,
+        "message" => "",
+        "erreur" => "",
+        "document" => "",
+        "objet" => $_POST["filename"]
+    ]);
 }
-
-header('Content-Type: application/json');
-echo $json;
 ?>

@@ -1,9 +1,10 @@
 <?php
 session_start();
+include("../includes/status.php");  
+include("../includes/log.php");  
 
 if (isset($_SESSION["niveau"])) {
     include("../includes/mysqli.php");
-    include("../includes/status.php");
     
     $query = "
             SELECT `fk_document`, `revision_type_doc`, 
@@ -82,15 +83,32 @@ if (isset($_SESSION["niveau"])) {
         
         status(200);
         $json = json_encode($revisions);
+        header('Content-Type: application/json');
+        echo $json;
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        write_log([
+            "libelle" => "GET revisions",
+            "admin" => 0,
+            "query" => $query,
+            "statut" => 1,
+            "message" => "",
+            "erreur" => $mysqli->error,
+            "document" => "",
+            "objet" => $_POST["filename"]
+        ]);
     }
 } else {
     status(403);
-    $json = '{ "error": "nosession" }';
+    write_log([
+        "libelle" => "GET revisions",
+        "admin" => 0,
+        "query" => "",
+        "statut" => 666,
+        "message" => "",
+        "erreur" => "",
+        "document" => "",
+        "objet" => $_POST["filename"]
+    ]);
 }
-
-header('Content-Type: application/json');
-echo $json;
 ?>

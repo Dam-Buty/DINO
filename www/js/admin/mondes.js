@@ -11,6 +11,12 @@ var bootstrap_monde = function() {
     $(".input-new-valeur").attr("placeholder", "Agregar un " + label); 
     ul.attr("data-champ", monde.cascade[0]);
     
+//    var lignes_ouvertes = [];
+//    
+//    // On stocke les lignes ouvertes
+//    $('#liste-valeurs li[data-state="open"]').each(function(i, ligne) {
+//        lignes_ouvertes.push([ ligne.attr("data-champ")), ligne.attr("data-valeur")]);
+//    });
     
     $("#liste-valeurs li").not("#new-valeur").remove();
     
@@ -20,6 +26,12 @@ var bootstrap_monde = function() {
     
     // Bind de boutons
     $(".add-new-valeur").unbind().click(save_valeur);
+    
+    collapse_liste($("#liste-valeurs"));
+    
+//    $.each(lignes_ouvertes, function(i, ligne){
+//        $('.valeur[data-champ="' + ligne[0] + '"][data-valeur="' + ligne[1] + '"]').click();
+//    });
 };
 
 var affiche_valeur = function(reference, niveau, ul) {
@@ -58,9 +70,8 @@ var affiche_valeur = function(reference, niveau, ul) {
             
     ul.append(li);
     
-    // Si la valeur a des enfants, on remonte récursivement
-    // en augmentant le niveau à chaque fois
-    if (monde.references[reference] !== undefined) {
+    // S'il y a des sous-niveaux,  on affiche l'input pour ajout
+    if (niveau + 1 in monde.cascade) {
         var new_valeur = $("#new-valeur").clone().attr("id", "");
         var new_champ = monde.champs[monde.cascade[niveau + 1]];
         new_valeur.find("input").attr("placeholder", "Agregar un " + new_champ.label);
@@ -77,11 +88,14 @@ var affiche_valeur = function(reference, niveau, ul) {
                     
         ul.append(new_ul);
         
-        $.each(monde.references[reference], function(i, enfant) {
-            affiche_valeur(i, niveau + 1, new_ul);
-        });
-    }
-    
+        // et les sous références s'il y en a    
+        if (monde.references[reference] !== undefined) {
+            
+            $.each(monde.references[reference], function(i, enfant) {
+                affiche_valeur(i, niveau + 1, new_ul);
+            });
+        }
+    }    
 };
 
 var toggle_edit_valeur = function() {
@@ -124,8 +138,8 @@ var save_valeur = function() {
         statusCode : {
             200: function() {
                 popup("El " + monde.champs[champ].label + " " + label + " ha sido modificado con exito!", "confirmation");
-                _profil();
-                bootstrap_monde();
+                li.find("input").val("");
+                _profil(bootstrap_monde);
             },
             403: function() {
                 window.location.replace("index.php");
@@ -205,8 +219,7 @@ var _del_valeur = function(monde, champ, pk, parent) {
             200: function() {
                 popup("El " + profil.mondes[monde].champs[champ].label + " <b>" + profil.mondes[monde].champs[champ].liste[pk] + "</b> fue borrado con exito!", "confirmation");
                 
-                _profil();
-                bootstrap_monde();
+                _profil(bootstrap_monde);
             }
             ,
             403: function() {

@@ -8,7 +8,6 @@
 <meta content="2013-02-28" name="date" />
 <meta content="Damien BUTY" name="author" />
 <meta content="CS Super Admin" name="description" />
-<link href="http://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css"/>
 <link href="css/superadmin.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>

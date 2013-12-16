@@ -1,9 +1,10 @@
 <?php
 session_start();
+include("../includes/status.php");  
+include("../includes/log.php");  
 
-if (isset($_SESSION["niveau"]) >= 20) {
-    include("../includes/mysqli.php");
-    include("../includes/status.php");    
+if ($_SESSION["niveau"] >= 20) {
+    include("../includes/mysqli.php");   
     
     $query = "SELECT `login_user`, `mail_user`, `niveau_user` FROM `user` WHERE `fk_client` = " . $_SESSION["client"] . " AND `niveau_user` < " . $_SESSION["niveau"] . ";";
     
@@ -70,15 +71,33 @@ if (isset($_SESSION["niveau"]) >= 20) {
         
         $json = json_encode($users);
         status(200);
+        header('Content-Type: application/json');
+        echo $json;
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        write_log([
+            "libelle" => "GET liste users",
+            "admin" => 1,
+            "query" => $query,
+            "statut" => 1,
+            "message" => "",
+            "erreur" => $mysqli->error,
+            "document" => "",
+            "objet" => $_SESSION["client"]
+        ]);
     }
 } else {
     status(403);
-    $json = '{ "error": "nosession" }';
+    write_log([
+        "libelle" => "GET liste users",
+        "admin" => 1,
+        "query" => $query,
+        "statut" => 666,
+        "message" => "",
+        "erreur" => "",
+        "document" => "",
+        "objet" => $_SESSION["client"]
+    ]);
 }
 
-header('Content-Type: application/json');
-echo $json;
 ?>

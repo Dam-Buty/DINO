@@ -100,9 +100,10 @@ include("../includes/mysqli.php");
     </tbody>
 </table>
 
-<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="../vendor/jquery-1.10.2.js"></script>
 <script type="text/javascript" src="js/superadmin.js"></script>
 <script type="text/javascript">
 charge_mondes();
 $(".save_liste").click(save_liste);
+$("#client").change(charge_mondes);
 </script>

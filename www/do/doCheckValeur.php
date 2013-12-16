@@ -1,5 +1,6 @@
 <?php
 session_start();
+include("../includes/log.php");
 if ($_SESSION["niveau"] >= 20) {
     include("../includes/mysqli.php");
     include("../includes/status.php");
@@ -19,14 +20,43 @@ if ($_SESSION["niveau"] >= 20) {
     if ($res = $mysqli->query($query)) {
         status(200);
         $json = $res->num_rows;
+        write_log([
+            "libelle" => "CHECK avant suppression valeur de champ",
+            "admin" => 1,
+            "query" => $query,
+            "statut" => 0,
+            "message" => $res->num_rows . " documents impactes.",
+            "erreur" => "",
+            "document" => "",
+            "objet" => $_POST["pk"]
+        ]);
+        header('Content-Type: application/json');
+        echo $json;
     } else {
         status(500);
-        $json = '{ "error": "mysql", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        write_log([
+            "libelle" => "CHECK avant suppression valeur de champ",
+            "admin" => 1,
+            "query" => $query,
+            "statut" => 1,
+            "message" => "",
+            "erreur" => $mysqli->error,
+            "document" => "",
+            "objet" => $_POST["pk"]
+        ]);
     }
 
-    header('Content-Type: application/json');
-    echo $json;
 } else {
+    write_log([
+        "libelle" => "CHECK avant suppression valeur de champ",
+        "admin" => 1,
+        "query" => "",
+        "statut" => 666,
+        "message" => "",
+        "erreur" => "",
+        "document" => "",
+        "objet" => $_POST["pk"]
+    ]);
     header("Location: ../index.php");
 }
 ?>

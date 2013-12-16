@@ -7,31 +7,37 @@ if ($_SESSION["niveau"] >= 20) {
     
     if ($_POST["pk"] == "new") {
         $query = "
-            INSERT INTO `valeur_champ` (
-                `label_valeur_champ`, 
+            INSERT INTO `type_doc` (
+                `label_type_doc`, 
+                `niveau_type_doc`,
+                `detail_type_doc`,
+                `fk_categorie_doc`,
                 `fk_champ`, 
                 `fk_monde`, 
-                `fk_client`, 
-                `fk_parent`
+                `fk_client`
             ) VALUES (
                 '" . $_POST["label"] . "',
+                " . $_POST["niveau"] . ",
+                " . $_POST["detail"] . ",
+                " . $_POST["categorie"] . ",
                 " . $_POST["champ"] . ",
                 " . $_POST["monde"] . ",
-                " . $_SESSION["client"] . ",
-                " . $_POST["parent"] . "
+                " . $_SESSION["client"] . "
             )
         ;";
     } else {
         $query = "
-            UPDATE `valeur_champ`
+            UPDATE `type_doc`
             SET 
-                `label_valeur_champ` = '" . $_POST["label"] . "'
+                `label_type_doc` = '" . $_POST["label"] . "',
+                `niveau_type_doc` = " . $_POST["niveau"] . ",
+                `detail_type_doc` = " . $_POST["detail"] . "
             WHERE
                 `fk_client` = " . $_SESSION["client"] . "
                 AND `fk_monde` = " . $_POST["monde"] . "
                 AND `fk_champ` = " . $_POST["champ"] . "
-                AND `fk_parent` = " . $_POST["parent"] . "
-                AND `pk_valeur_champ` = " . $_POST["pk"] . "
+                AND `fk_categorie_doc` = " . $_POST["categorie"] . "
+                AND `pk_type_doc` = " . $_POST["pk"] . "
         ;";
     }
     
@@ -45,7 +51,7 @@ if ($_SESSION["niveau"] >= 20) {
         }
         
         write_log([
-            "libelle" => "INSERT valeur",
+            "libelle" => "INSERT type",
             "admin" => 1,
             "query" => $query,
             "statut" => 0,
@@ -57,7 +63,7 @@ if ($_SESSION["niveau"] >= 20) {
     } else {
         status(500);
         write_log([
-            "libelle" => "INSERT valeur",
+            "libelle" => "INSERT type",
             "admin" => 1,
             "query" => $query,
             "statut" => 1,
@@ -67,11 +73,10 @@ if ($_SESSION["niveau"] >= 20) {
             "objet" => $_POST["pk"]
         ]);
     }
-    
 } else {
-    status(403);
+    header("Location: ../index.php");
     write_log([
-        "libelle" => "INSERT valeur",
+        "libelle" => "INSERT type",
         "admin" => 1,
         "query" => $query,
         "statut" => 666,

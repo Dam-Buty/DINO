@@ -8,14 +8,15 @@ if ($_SESSION["niveau"] > 20) {
 <div id="menu">
     <ul id="menu-list">
         <li data-action="users">
-            <a href="#" id="admin-users">Getion de usuarios</a>
+            <a href="#" id="admin-users">Usuarios</a>
         </li>
         <li>
-            <a href="#">Gestion de los mundos</a>
-            <ul id="menu-champs"></ul>
+            <a href="#">Listas</a>
+            <ul id="sous-menu-monde"></ul>
         </li>
-        <li data-action="share">
-            <a href="#" id="admin-share">Reglas de compartido</a>
+        <li>
+            <a href="#" id="admin-profil">Perfil documental</a>
+            <ul id="sous-menu-profil"></ul>
         </li>
     </ul>
 </div>

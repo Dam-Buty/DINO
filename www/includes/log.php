@@ -1,18 +1,55 @@
-<?
-// Fonctions de log
-// ouverture du fichier
+<?php
 
-function write_log($message) {
-    $timestamp = date("Ymd");
-    if (isset($_SESSION["username"])) {
-        $fic_log = fopen($_SERVER['DOCUMENT_ROOT'] . "/cssdev/log/" . $timestamp . "_" . $_SESSION["username"] . ".log", "a");    
+function write_log($params) {
+    if (!isset($_SESSION["user"])) {
+        $user = "";
+    } else {
+        $user = $_SESSION["user"];
     }
-    else {
-        $fic_log = fopen($_SERVER['DOCUMENT_ROOT'] . "/../log/" . $timestamp . "_" . $_SERVER['REMOTE_ADDR'] . ".log", "a");    
+    
+    if (!isset($_SESSION["client"])) {
+        $client = 0;
+    } else {
+        $client = $_SESSION["client"];
     }
-    $timestamp = date("H:i:s");
-    fwrite($fic_log, $timestamp . " : " . $message . "\n");
-    fclose($fic_log);
-    return 0;
+
+    $query_log = "
+        INSERT INTO `log` (
+            `date_operation`, 
+            `fk_user`, 
+            `fk_client`, 
+            `libelle_operation`, 
+            `admin_operation`, 
+            `query_operation`, 
+            `statut_operation`, 
+            `message_operation`, 
+            `erreur_operation`, 
+            `document_operation`, 
+            `objet_operation`
+        ) VALUES (
+            '" . date("Y-m-d H:i:s") . "',
+            '" . $user . "', 
+            " . $client . ", 
+            '" . addslashes($params["libelle"]) . "', 
+            " . $params["admin"] . ", 
+            '" . str_replace("\n", " ", addslashes($params["query"])) . "', 
+            " . $params["statut"] . ", 
+            '" . str_replace("\n", " ", addslashes($params["message"])) . "', 
+            '" . str_replace("\n", " ", addslashes($params["erreur"])) . "', 
+            '" . $params["document"] . "', 
+            '" . $params["objet"] . "'
+        );";
+        // TODO : RAJOUTER LA GESTION DU REFERRER!!!
+#    echo $query_log;
+
+    $hostname = "localhost";
+    $username = "root";
+    $dbname = "csstorage2";
+    $password = "C4dillac5";
+
+    $mysqli_log = new mysqli($hostname, $username, $password, $dbname);
+
+    $mysqli_log->query($query_log);
+#    echo $mysqli_log->error;
 }
 ?>

@@ -1,31 +1,120 @@
 html, body {
     background-color: #F3F0EB;
-    font-family: 'Roboto', sans-serif;
-    font-size: 0.9em;	
     margin: 0;
     padding: 0;
     
     overflow-x: hidden;
 }
 
-#container_content {
+/*
+        Barre latérale front
+*/
+
+#barre-laterale {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 10%;
     height: 100%;
-    margin-top: 15px;
-    background-color: #888888;
-    border: 1px solid #222222;
-    padding: 0px 10px;
-    -moz-border-radius:7px;
-    -webkit-border-radius:7px;
-    border-radius:7px;
+    background-color: #8ecb32;
 }
 
-#content {
-    padding: 10px 0px;
+#barre-laterale>h1 {
+    background-image: url(../img/dino_100.png);
+    background-repeat: no-repeat;
+    background-position: top center;
+
+    text-align: center;
+    color: white;
+    
+    font-family: 'Oswald', sans-serif;
+    
+    margin-top: 0;
+    padding-top: 105px;
+    
+    cursor: pointer;
+}
+
+#barre-laterale>h1:hover {
+    background-image: url(../img/dino_flou_100.png);
+    
+    font-family: "Courier New", Courier, monospace;
+}
+
+#menu-lateral {
+    padding-left: 0;
+}
+
+#menu-lateral li {
+    list-style-type: none;
+    cursor: pointer;
+    
+    padding-top: 75px;
+    
+    background-color: #83bc2f;
+}
+
+#menu-lateral li:hover {
+    background-color: #75a32d;
+}
+
+#menu-lateral h1 {
+    font-size: 0.9em;
+
+    text-align: center;
+    color: white;
+    
+    font-family: 'Oswald', sans-serif;
+    
+    margin: 0;
+    padding-bottom: 7px;
+}
+
+/*
+        Barre top front
+*/
+
+
+
+
+
+
+/*
+        Barre latérale front
+*/
+
+#menu-queue {
+    background-image: url(../img/document_100.png);
+    background-repeat: no-repeat;
+    background-position: top center;
+    
+    border-top: 1px dotted #558011;
+}
+
+#menu-admin {
+    background-image: url(../img/admin_100.png);
+    background-repeat: no-repeat;
+    background-position: top center;
+    
+    border-top: 1px dotted #558011;
+    border-bottom: 1px dotted #558011;
+}
+
+#front {
+    position: fixed;
+    margin-left: 15%;
     width: 90%;
+    top: 10%;
+    height: 80%;
+}
+
+#back {
+    display: none;
 }
 
 #opak { /*Shakur!*/
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -43,12 +132,12 @@ html, body {
     overflow-x: hidden;
 }
 
-table {
-    table-layout:fixed;
-    -moz-border-radius:7px;
-    -webkit-border-radius:7px;
-    border-radius:7px;
-}
+/*table {*/
+/*    table-layout:fixed;*/
+/*    -moz-border-radius:7px;*/
+/*    -webkit-border-radius:7px;*/
+/*    border-radius:7px;*/
+/*}*/
 
 tr:nth-child(odd) {
   background-color: #FFEAEA;
@@ -72,10 +161,6 @@ tr:nth-child(even):hover {
 
 .table_edition tr td:nth-child(1) {
     width: 25%;
-}
-
-#jauge {
-    display: none;
 }
 
 #container-queue {
@@ -105,9 +190,11 @@ tr:nth-child(even):hover {
     -webkit-bottom-right-radius:20px;
     border-bottom-right-radius:20px;
     
+    display: none;
 }
 
 #tiroir-queue {
+    display: none;
     position: absolute;
     
     height: 70%;

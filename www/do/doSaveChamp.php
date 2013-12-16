@@ -1,54 +1,57 @@
 <?php
 session_start();
+include("../includes/status.php");
 include("../includes/log.php");
 if ($_SESSION["niveau"] >= 20) {
     include("../includes/mysqli.php");
-    include("../includes/status.php");
     
-    $query_user = "
-        DELETE FROM `user`
+   
+    $query = "
+        UPDATE `champ`
+        SET 
+            `label_champ` = '" . $_POST["label"] . "'
         WHERE
             `fk_client` = " . $_SESSION["client"] . "
-            AND `niveau_user` <= " . $_SESSION["niveau"] . "
-            AND `login_user` = '" . $_POST["login"] . "'
+            AND `fk_monde` = " . $_POST["monde"] . "
+            AND `pk_champ` = " . $_POST["pk"] . "
     ;";
     
-    if ($mysqli->query($query_user)) {
+    if ($mysqli->query($query)) {
         status(200);
         write_log([
-            "libelle" => "DELETE utilisateur",
+            "libelle" => "INSERT champ",
             "admin" => 1,
-            "query" => $query_user,
+            "query" => $query,
             "statut" => 0,
             "message" => "",
             "erreur" => "",
             "document" => "",
-            "objet" => $_POST["login"]
+            "objet" => $_POST["pk"]
         ]);
     } else {
         status(500);
         write_log([
-            "libelle" => "DELETE utilisateur",
+            "libelle" => "INSERT champ",
             "admin" => 1,
-            "query" => $query_user,
+            "query" => $query,
             "statut" => 1,
             "message" => "",
             "erreur" => $mysqli->error,
             "document" => "",
-            "objet" => $_POST["login"]
+            "objet" => $_POST["pk"]
         ]);
     }
 } else {
     header("Location: ../index.php");
     write_log([
-        "libelle" => "DELETE utilisateur",
+        "libelle" => "INSERT champ",
         "admin" => 1,
-        "query" => $query_user,
+        "query" => $query,
         "statut" => 666,
         "message" => "",
         "erreur" => "",
         "document" => "",
-        "objet" => $_POST["login"]
+        "objet" => $_POST["pk"]
     ]);
 }
 ?>

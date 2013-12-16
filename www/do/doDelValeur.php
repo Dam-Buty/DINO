@@ -1,5 +1,6 @@
 <?php
 session_start();
+include("../includes/log.php");
 if ($_SESSION["niveau"] >= 20) {
     include("../includes/mysqli.php");
     include("../includes/status.php");
@@ -68,10 +69,29 @@ if ($_SESSION["niveau"] >= 20) {
                     AND `fk_document` = '" . $row_documents["filename_document"] . "'
             ;";
         }
+        write_log([
+            "libelle" => "GET docs a declassifier",
+            "admin" => 1,
+            "query" => $query_documents,
+            "statut" => 0,
+            "message" => "",
+            "erreur" => "",
+            "document" => "",
+            "objet" => $_POST["pk"]
+        ]);
     } else {
         $error = true;
         status(500);
-        $json = '{ "error": "mysql", "query": "' . $query_documents . '", "message": "' . $mysqli->error . '" }';
+        write_log([
+            "libelle" => "GET docs a declassifier",
+            "admin" => 1,
+            "query" => $query_documents,
+            "statut" => 1,
+            "message" => "",
+            "erreur" => $mysqli->error,
+            "document" => "",
+            "objet" => $_POST["pk"]
+        ]);
     }
 
     if (!$error) {
@@ -81,21 +101,48 @@ if ($_SESSION["niveau"] >= 20) {
                 $i++; 
             } while ($mysqli->next_result()); 
             
+            // TODO : les multi_query ne passent pas (libérer le résultat?)
+            
             if (!$mysqli->errno) { 
                 status(200);
-                $json = '{ "query": "' . $query_delete . '" }';
+                write_log([
+                    "libelle" => "DELETE valeur de champ",
+                    "admin" => 1,
+                    "query" => $query_delete,
+                    "statut" => 0,
+                    "message" => "",
+                    "erreur" => "",
+                    "document" => "",
+                    "objet" => $_POST["pk"]
+                ]);
             } else {
                 status(500);
-                $json = '{ "error": "mysqli", "query": "' . $query_delete . '", "message": "' . $mysqli->error . '" }';
+                write_log([
+                    "libelle" => "DELETE valeur de champ",
+                    "admin" => 1,
+                    "query" => $query_delete,
+                    "statut" => 1,
+                    "message" => "",
+                    "erreur" => $mysqli->error,
+                    "document" => "",
+                    "objet" => $_POST["pk"]
+                ]);
             }
         } else {
             status(500);
-            $json = '{ "error": "mysqli", "query": "' . $query_delete . '", "message": "' . $mysqli->error . '" }';
+            write_log([
+                "libelle" => "DELETE valeur de champ",
+                "admin" => 1,
+                "query" => $query_delete,
+                "statut" => 1,
+                "message" => "",
+                "erreur" => $mysqli->error,
+                "document" => "",
+                "objet" => $_POST["pk"]
+            ]);
         } 
     }     
     
-    header('Content-Type: application/json');
-    echo $json;
 } else {
     header("Location: ../index.php");
 }

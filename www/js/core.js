@@ -116,8 +116,8 @@ var change_monde = function() {
                 var t_mini = dates.mini.split("-");
                 var t_maxi = dates.maxi.split("-");
                 
-                var mini = new Date(t_mini[0], t_mini[1], t_mini[2]);
-                var maxi = new Date(t_maxi[0], t_maxi[1], t_maxi[2]);
+                var mini = new Date(t_mini[0], t_mini[1] - 1, t_mini[2]);
+                var maxi = new Date(t_maxi[0], t_maxi[1] - 1, t_maxi[2]);
                 
                 var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
 

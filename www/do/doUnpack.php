@@ -1,8 +1,9 @@
 <?php
 session_start();
+include("../includes/status.php");
+include("../includes/log.php");
 
-if ($_SESSION["niveau"] > 10) {
-    include("../includes/status.php");
+if (isset($_SESSION["niveau"])) {
     
     $client = $_SESSION["client"];
     $document = $_GET["document"];
@@ -17,9 +18,9 @@ if ($_SESSION["niveau"] > 10) {
     $cwd = NULL;
     $env = array();
     
-    echo $_POST["document"] . " : lmlm";
-    
     $commande = "../scripts/unpacker.sh " . $client . " " . $document . ' "' . $clef . '"';
+    
+    $commande_log = str_replace($clef, "CLEF", $commande);
     
     $process = proc_open($commande, $descriptorspec, $pipes, $cwd, $env);
 
@@ -53,14 +54,41 @@ if ($_SESSION["niveau"] > 10) {
             echo $out;
         } else {
             status(500);
-            $json = '{ "error": "' . $return_value . '", "commande": "' . $commande . '", "message": "' . $err . '" }';
+            write_log([
+                "libelle" => "UNPACK document",
+                "admin" => 0,
+                "query" => $commande_log,
+                "statut" => 1,
+                "message" => $return_value,
+                "erreur" => $err,
+                "document" => "",
+                "objet" => $document
+            ]);
         }
     } else {
         status(500);
-        $json = '{ "error": "unknown" }';
+        write_log([
+            "libelle" => "UNPACK document",
+            "admin" => 0,
+            "query" => $commande_log,
+            "statut" => 1,
+            "message" => "",
+            "erreur" => "unknown",
+            "document" => "",
+            "objet" => $document
+        ]);
     }
+} else {
+    status(403);
+    write_log([
+        "libelle" => "UNPACK document",
+        "admin" => 0,
+        "query" => "",
+        "statut" => 666,
+        "message" => "",
+        "erreur" => "",
+        "document" => "",
+        "objet" => $_GET["document"]
+    ]);
 }
-
-header('Content-Type: application/json');
-echo $json;
 ?>

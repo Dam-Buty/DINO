@@ -1,6 +1,7 @@
 <?php
 session_start();
-include("../includes/status.php");
+include("../includes/status.php");  
+include("../includes/log.php");  
 
 if (isset($_SESSION["niveau"])) {
     include("../includes/mysqli.php");
@@ -184,6 +185,7 @@ $query .= " (
         LIMIT " . $_POST["limit"][0] . ", " . $_POST["limit"][1] . "         
     ;";
     
+    
     if ($result = $mysqli->query($query)) {
         $valeurs_champs = [];
         $categorie = 0;
@@ -197,14 +199,8 @@ $query .= " (
             }
             
             // Rupture de valeur de champ
-            // TODO : les champs qui ne ruptent pas
             if ($champs_documents != $valeurs_champs) {
                 $categorie = 0;
-#                array_push($liste, [
-#                    "type" => "debug",
-#                    "document" => $champs_documents,
-#                    "reference" => $valeurs_champs
-#                ]);
                 
                 foreach($champs_documents as $niveau => $champ) {
                     if ($champ != $valeurs_champs[$niveau]) {
@@ -241,16 +237,34 @@ $query .= " (
             $categorie = $row["categorie"];
         }
         
+        
         $json = json_encode($liste);
+        header('Content-Type: application/json');
+        echo $json;
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        write_log([
+            "libelle" => "GET liste documents",
+            "admin" => 0,
+            "query" => $query,
+            "statut" => 1,
+            "message" => "",
+            "erreur" => $mysqli->error,
+            "document" => "",
+            "objet" => $_POST["monde"]
+        ]);
     }
 } else {
     status(403);
-    $json = '{ "error": "nosession" }';
+    write_log([
+        "libelle" => "GET liste documents",
+        "admin" => 0,
+        "query" => "",
+        "statut" => 666,
+        "message" => "",
+        "erreur" => "",
+        "document" => "",
+        "objet" => $_POST["monde"]
+    ]);
 }
-
-header('Content-Type: application/json');
-echo $json;
 ?>

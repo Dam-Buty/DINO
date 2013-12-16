@@ -1,6 +1,7 @@
 <?php
 session_start();
 include("../includes/status.php");
+include("../includes/log.php");
 
 function convertBytes( $value ) {
     if ( is_numeric( $value ) ) {
@@ -27,7 +28,7 @@ function convertBytes( $value ) {
 function recupere_types($monde, $champ, $categorie, $mysqli) {
     $types = [];
     
-    $query_types = "SELECT `pk_type_doc`, `label_type_doc`, `detail_type_doc` FROM `type_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $monde . " AND `fk_champ` = " . $champ . " AND `fk_categorie_doc` = " . $categorie . " AND `niveau_type_doc` <= " . $_SESSION["niveau"] . ";";
+    $query_types = "SELECT `pk_type_doc`, `label_type_doc`, `detail_type_doc`, `niveau_type_doc` FROM `type_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $monde . " AND `fk_champ` = " . $champ . " AND `fk_categorie_doc` = " . $categorie . " AND `niveau_type_doc` <= " . $_SESSION["niveau"] . ";";
     
     if ($result_types = $mysqli->query($query_types)) {
         while($row_types = $result_types->fetch_assoc()) {
@@ -35,6 +36,7 @@ function recupere_types($monde, $champ, $categorie, $mysqli) {
             $types[$row_types["pk_type_doc"]] = [
                 "label" => $row_types["label_type_doc"],
                 "detail" => $row_types["detail_type_doc"],
+                "niveau" => $row_types["niveau_type_doc"],
                 "details" => []
             ];
             
@@ -47,12 +49,21 @@ function recupere_types($monde, $champ, $categorie, $mysqli) {
                 if ($result_details = $mysqli->query($query_details)) {
                     
                     while($row_details = $result_details->fetch_assoc()) {
-                        array_push($types[$row_types["pk_type_doc"]], $row_details["detail_type_doc_document"]);
+                        array_push($types[$row_types["pk_type_doc"]]["details"], $row_details["detail_type_doc"]);
                     } // FIN WHILE DETAILS
                     
                 } else {
                     status(500);
-                    return '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_details . '" }';
+                    write_log([
+                        "libelle" => "GET details type doc",
+                        "admin" => 0,
+                        "query" => $query_details,
+                        "statut" => 1,
+                        "message" => "",
+                        "erreur" => $mysqli->error,
+                        "document" => "",
+                        "objet" => $_SESSION["user"]
+                    ]);
                 }
             }
         } // FIN WHILE TYPES
@@ -60,14 +71,23 @@ function recupere_types($monde, $champ, $categorie, $mysqli) {
         return $types;        
     } else {
         status(500);
-        return '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_types . '" }';
+        write_log([
+            "libelle" => "GET types doc",
+            "admin" => 0,
+            "query" => $query_types,
+            "statut" => 1,
+            "message" => "",
+            "erreur" => $mysqli->error,
+            "document" => "",
+            "objet" => $_SESSION["user"]
+        ]);
     }
 }
 
 function recupere_categories($monde, $champ, $mysqli) {    
     $categories = [];
     
-    $query_categories = "SELECT `pk_categorie_doc`, `label_categorie_doc` FROM `categorie_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $monde . " AND `fk_champ` = " . $champ . " AND `niveau_categorie_doc` <= " . $_SESSION["niveau"] . ";";
+    $query_categories = "SELECT `pk_categorie_doc`, `label_categorie_doc`, `niveau_categorie_doc` FROM `categorie_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $monde . " AND `fk_champ` = " . $champ . " AND `niveau_categorie_doc` <= " . $_SESSION["niveau"] . ";";
 
     if ($result_categories = $mysqli->query($query_categories)) {
         
@@ -75,6 +95,7 @@ function recupere_categories($monde, $champ, $mysqli) {
             
             $categories[$row_categories["pk_categorie_doc"]] = [
                 "label" => $row_categories["label_categorie_doc"],
+                "niveau" => $row_categories["niveau_categorie_doc"],
                 "types" => []
             ];
             
@@ -85,7 +106,16 @@ function recupere_categories($monde, $champ, $mysqli) {
         
     } else {
         status(500);
-        return '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_categories . '" }';
+        write_log([
+            "libelle" => "GET categories doc",
+            "admin" => 0,
+            "query" => $query_categories,
+            "statut" => 1,
+            "message" => "",
+            "erreur" => $mysqli->error,
+            "document" => "",
+            "objet" => $_SESSION["user"]
+        ]);
     }
 }
   
@@ -191,11 +221,20 @@ if (isset($_SESSION["user"])) {
                                     `fk_parent` ASC
                                 ;";
                             
+                            $all = false;
+                            $first = true;
+                            
                             if ($result_liste = $mysqli->query($query_liste)) {
                                 
                                 while($row_liste = $result_liste->fetch_assoc()) {
+                                    if ($first) {
+                                        if ($row_liste["droits_valeur_champ"] == 0) {
+                                            $all = true;
+                                        }
+                                        $first = false;
+                                    }
                                     
-                                    if ($_SESSION["niveau"] >= 20 or $row_liste["droits_valeur_champ"]) {
+                                    if ($_SESSION["niveau"] >= 20 or $row_liste["droits_valeur_champ"] or $all) {
                                     $profil["mondes"][$row_mondes["pk_monde"]]["champs"][$row_champs["pk_champ"]]["liste"][$row_liste["pk_valeur_champ"]] = $row_liste["label_valeur_champ"];
                                     
                                     // construction de la cascade de références
@@ -204,7 +243,16 @@ if (isset($_SESSION["user"])) {
                                 } // FIN WHILE LISTE
                             } else {
                                 status(500);
-                                $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
+                                write_log([
+                                    "libelle" => "GET valeurs champ",
+                                    "admin" => 0,
+                                    "query" => $query_liste,
+                                    "statut" => 1,
+                                    "message" => "",
+                                    "erreur" => $mysqli->error,
+                                    "document" => "",
+                                    "objet" => $row_champs["pk_champ"]
+                                ]);
                                 break;
                             }
                             
@@ -220,30 +268,86 @@ if (isset($_SESSION["user"])) {
                         } // FIN WHILE CHAMPS
                     } else {
                         status(500);
-                        $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
+                        write_log([
+                            "libelle" => "GET champs",
+                            "admin" => 0,
+                            "query" => $query_liste,
+                            "statut" => 1,
+                            "message" => "",
+                            "erreur" => $mysqli->error,
+                            "document" => "",
+                            "objet" => $row_mondes["pk_monde"]
+                        ]);
                         break;
                     }
                     
                 } // FIN WHILE MONDES
                 
                 status(200);
+#                write_log([
+#                    "libelle" => "GET profil",
+#                    "admin" => 0,
+#                    "query" => "...",
+#                    "statut" => 0,
+#                    "message" => "",
+#                    "erreur" => "",
+#                    "document" => "",
+#                    "objet" => $_SESSION["user"]
+#                ]);
                 $json = json_encode($profil);
+                header('Content-Type: application/json');
+                echo $json;
             } else {
                 status(500);
-                $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query_champ . '" }';
+                write_log([
+                    "libelle" => "GET mondes",
+                    "admin" => 0,
+                    "query" => $query_mondes,
+                    "statut" => 1,
+                    "message" => "",
+                    "erreur" => $mysqli->error,
+                    "document" => "",
+                    "objet" => $_SESSION["user"]
+                ]);
                 break;
             }
         } else {
             status(500);
-            $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query . '" }';
+            write_log([
+                "libelle" => "GET user",
+                "admin" => 0,
+                "query" => $query_mondes,
+                "statut" => 1,
+                "message" => "",
+                "erreur" => $mysqli->error,
+                "document" => "",
+                "objet" => $_SESSION["user"]
+            ]);
         }
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '", "query": "' . $query . '" }';
+        write_log([
+            "libelle" => "GET user",
+            "admin" => 0,
+            "query" => $query,
+            "statut" => 1,
+            "message" => "",
+            "erreur" => $mysqli->error,
+            "document" => "",
+            "objet" => $_SESSION["user"]
+        ]);
     }
-    header('Content-Type: application/json');
-    echo $json;
 } else {
     status(403);
+    write_log([
+        "libelle" => "GET user",
+        "admin" => 0,
+        "query" => "",
+        "statut" => 666,
+        "message" => "",
+        "erreur" => "",
+        "document" => "",
+        "objet" => $_SESSION["user"]
+    ]);
 }
 ?>
