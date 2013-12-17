@@ -544,9 +544,3 @@ var store_document = function() {
     var li = $(this).closest("li");
     _store_document(li.attr("data-position"));
 };
-
-// Au resize, on redimensionne l'iframe et le store
-$( window ).resize(function() {
-    $("#viewer-store").css("height", 0.97 * $("#popup-store").innerHeight() + $("#popup-store").offset().top - $("#viewer-store").offset().top + "px");
-    $("#container-store").css("height", 0.97 * $("#popup-store").innerHeight() + $("#popup-store").offset().top - $("#viewer-store").offset().top + "px");
-});

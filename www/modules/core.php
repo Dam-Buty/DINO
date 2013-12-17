@@ -8,13 +8,6 @@ session_start();
 </div>
 
 <script type="text/javascript">
-    $("#search").chosen({
-        create_option: add_value,
-        skip_no_results: true,
-        inherit_select_classes: true,
-        placeholder_text_multiple: "Buscar en este mundo...",
-        search_contains: true
-    });
     
     $("#search").change(function(evt, params) {
         Core.recherche.length = 0;

@@ -43,9 +43,9 @@ session_start();
 </div>
 
 <div id="front">
-    <div id="laterale-top" class="barre-laterale">
+    <div id="laterale-front" class="barre-laterale">
         <h1>DINO</h1>
-        <ul id="menu-lateral">
+        <ul class="menu-lateral" id="menu-front">
             <li id="menu-queue">
                 <h1>SUBIR ARCHIVO</h1>
             </li>
@@ -61,17 +61,26 @@ session_start();
         </ul>
     </div>
 
-
     <div id="front-top" class="barre-top">
+        <select class="busquedor" type="text" id="search" multiple="multiple" data-placeholder="Buscar en este mundo..." data-state="closed"></select>
+        <div id="switch-sort">
+            <select> <!-- list-sort -->
+                <option value="ASC">A-Z</option>
+                <option value="DESC">Z-A</option>
+            </select>
+        </div>
+        <div id="toggle-date"></div>
         <ul class="list-mondes" id="mondes-top"></ul>
-        <select class="busquedor" type="text" id="search" multiple="multiple" data-placeholder="Buscar en este mundo..."/>
-        <div id="list-sort" data-tri="ASC"><h1>A-Z</h1></div>
-        <!-- <div id="slider-date"></div>
-        <div id="text-date"></div> -->
-        
-        
-        
+        <div id="container-dates">
+            <div id="slider-date"></div>
+            <div id="text-date"></div>
+        </div>
     </div>
+    
+</div>
+
+<div id="front-bottom" class="barre-bottom">
+
 </div>
 
 <div id="back"></div>

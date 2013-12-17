@@ -18,30 +18,14 @@ var bootstrap_list = function() {
                 "data-monde": i,
                 "data-selected": 0
             })
-            .append(
-                $("<h1></h1>")
-                .text(monde.label)
-                .click(change_monde)
-            )
+            .text(monde.label)
+            .click(change_monde)
         );
     });
     
-    $("#mondes-top").find("h1").eq(0).click();
+    $("#mondes-top li").eq(0).click();
 };
 
-var change_tri = function() {
-    var div = $(this);
-    
-    if (div.attr("data-tri") == "ASC") {
-        div.attr("data-tri", "DESC");
-        div.find("h1").text("Z-A");
-    } else {
-        div.attr("data-tri", "ASC");
-        div.find("h1").text("A-Z");
-    }
-    
-    charge_documents();
-};
 
 var load_search = function() {
     var select = $("#search").empty();
@@ -69,20 +53,54 @@ var load_search = function() {
         select.append(optgroup);
     });
     
-    select.trigger("chosen:updated");
-    
-    resize_search();
+    if ($("#search").next("div").hasClass("chosen-container")) {
+        $("#search").trigger("chosen:updated");
+    } else {
+        $("#search").chosen({
+            skip_no_results: true,
+            width: "30%",
+            inherit_select_classes: true,
+            placeholder_text_multiple: "Buscar en este mundo...",
+            search_contains: true
+        });
+        
+        $("#search").next("div").find('.search-field input[type="text"]').css({
+            height: "40px"
+        });
+        
+        $("#search").on("chosen:showing_dropdown", large_search);
+        $("#search").change(small_search);
+    }
+        
 };
 
-var resize_search = function() {
-    $(".chosen-container-multi").animate({
-        width: ($("#core-top").innerWidth() - $("#mondes-top").outerWidth() - $("#list-sort").outerWidth() - 40) + "px",
-        left: ($("#mondes-top").outerWidth() + 20) + "px"
-    });
+var large_search = function() {
+    var select = $("#search");
+    var search = select.next("div");
+    var espace;
     
-    $(".search-field input").animate({
-        width: "100%"
-    });
+    if (select.attr("data-state") == "closed") {
+        espace = $("#toggle-date").offset().left - ($('#mondes-top li:last-child').offset().left + $('#mondes-top li:last-child').outerWidth()) - 10;
+        
+        search.animate({
+            width: search.outerWidth() + espace 
+        });
+        
+        select.attr("data-state", "open");
+    }
+        
+}
+
+var small_search = function() {
+    var select = $("#search");
+    var search = select.next("div");
+    
+    if (select.val() == null && select.attr("data-state") == "open") {
+        search.animate({
+            width: "30%" 
+        })
+        select.attr("data-state", "closed");
+    }
 };
 
 var change_monde = function() {
@@ -95,15 +113,8 @@ var change_monde = function() {
     
     Core.monde = li.attr("data-monde");
     
-    $("#search").css({"width": "100px" });
-    
     Core.champs.length = 0;
     Core.recherche.length = 0;
-    
-    $("#list-sort")
-    .css("cursor", "pointer")
-    .unbind()
-    .click(change_tri);
     
     $.ajax({
         url: "json/dates.php",
@@ -125,20 +136,27 @@ var change_monde = function() {
                 
                 Core.dates.length = 0;
                 
-                for (var i = 0; i < diff;i++) {
-                    Core.dates.push(mini.getTime() + (oneDay * i));
+                if (diff == 0) {
+                    Core.dates.push(mini.getTime());
+                    slider_maxi = 0;
+                } else {
+                    for (var i = 0; i < diff;i++) {
+                        Core.dates.push(mini.getTime() + (oneDay * i));
+                    }
+                    slider_maxi = diff - 1;
                 }
+                
                 
                 $("#slider-date").slider({
                     "min": 0,
-                    "max": diff - 1,
+                    "max": slider_maxi,
                     range: true,
                     animate: "fast",
                     slide: change_dates,
                     change: charge_documents
                 });
                 
-                $("#slider-date").slider("values", 1, diff - 1);
+                $("#slider-date").slider("values", 1, slider_maxi);
                 change_dates();
     
                 load_search();
@@ -202,7 +220,7 @@ var charge_documents = function() {
             monde: Core.monde,
             recherche: Core.recherche,
             champs: profil.mondes[Core.monde].cascade,
-            tri: $("#list-sort").attr("data-tri"),
+            tri: $("#switch-sort select").val(),
             limit: Core.limit,
             dates: dates
         },
@@ -284,7 +302,7 @@ var affiche_revisions = function() {
                                         "data-filename": revision.filename,
                                         "data-type": "revision"
                                     })
-                                    .css("padding-left", li.css("padding-left"))
+                                    .css("margin-left", li.css("margin-left"))
                                     .append(
                                         $("<span></span>")
                                         .addClass("document")
@@ -312,31 +330,31 @@ var affiche_revisions = function() {
         img.attr("data-state", "closed");
         li.closest("ul").find('li[data-type="revision"]').slideUp({
             complete: function() {
-                (li.closest("ul").find('li[data-type="revision"]').remove());
+                $(this).remove();
+//                (li.closest("ul").find('li[data-type="revision"]').remove());
             }
         });
     }
 };
 
 var toggle_line = function() {
-    var div = $(this);
-    var li = div.closest("li");
+    var li = $(this);
     var state = li.attr("data-state");
     
     if (state == "closed") {
         state = "open";
-        li.next("ul").children("li").slideDown("fast");
+        li.next("ul").slideDown("fast");
     } else {
         state = "closed";
-        li.next("ul").find("li").slideUp("fast");
-        li.next("ul").find("li[data-state]")
-            .attr("data-state", state)
-            .find("div").attr("data-state", state);
-        li.next("ul").find('li[data-type="revision"]').remove();
+        li.next("ul").slideUp("fast");
+//        li.next("ul").find("li").slideUp("fast");
+//        li.next("ul").find("li[data-state]")
+//            .attr("data-state", state)
+//            .find("div").attr("data-state", state);
+//        li.next("ul").find('li[data-type="revision"]').remove();
     }
     
     li.attr("data-state", state);
-    div.attr("data-state", state);
 };
 
 var construit_table = function() {
@@ -377,25 +395,21 @@ var construit_table = function() {
                         "data-stack": stack_champs,
                         "data-state": "closed"
                     })
+                    .click(toggle_line)
                     .append(
-                        $("<div></div>")
-                        .attr({
-                            "data-type": ligne.type,
-                            "data-state": "closed"
-                        })
-                        .addClass("imgboutons")
-                        .click(toggle_line)
-                    ).append(
                         $("<span></span>")
                         .addClass("champ")
                         .text(monde.champs[cascade[stack_champs.length - 1]].liste[ligne.pk])
                     );
                 
                 ul_champ = $("<ul></ul>")
-                            .attr("data-stack", stack_champs);
+                            .attr({
+                                "data-stack": stack_champs,
+                                "data-niveau": ligne.niveau
+                            });
                 
-                current_ul.append(li.css("padding-left", marge + "%"));
-                current_ul.append(ul_champ);
+                current_ul.append(li.css("margin-left", marge + "%"));
+                current_ul.append(ul_champ.css("margin-left", marge + "%"));
                 
                 current_ul = ul_champ;
                 current_level = ligne.niveau;
@@ -413,15 +427,8 @@ var construit_table = function() {
                         "data-stack": stack_champs,
                         "data-state": "closed"
                     })
+                    .click(toggle_line)
                     .append(
-                        $("<div></div>")
-                        .attr({
-                            "data-type": ligne.type,
-                            "data-state": "closed"
-                        })
-                        .addClass("imgboutons")
-                        .click(toggle_line)
-                    ).append(
                         $("<span></span>")
                         .addClass("categorie")
                         .text(champ_parent.categories[ligne.pk].label)
@@ -429,10 +436,13 @@ var construit_table = function() {
                     
                 ;
                 ul_categorie = $("<ul></ul>")
-                            .attr("data-stack", stack_champs);
+                            .attr({
+                                "data-stack": stack_champs,
+                                "data-type": "categorie"
+                            });
                 
-                current_ul.append(li.css("padding-left", marge + "%"));
-                current_ul.append(ul_categorie);
+                current_ul.append(li.css("margin-left", marge + "%"));
+                current_ul.append(ul_categorie.css("margin-left", marge + "%"));
                 
                 current_ul = ul_categorie;
                 current_level = cascade.length;
@@ -440,22 +450,27 @@ var construit_table = function() {
                 
             default: // C'est donc un document
                     var champ_parent = monde.champs[cascade[stack_champs.length - 1]];
-                    var type, img, title;
+                    var type, img;
                     
                     if (categorie == 0) {
                         type = champ_parent.types[ligne.type].label;
-                        marge = stack_champs.length * 2 + 2;
+                        marge = stack_champs.length * 2;
                     } else {
                         type = champ_parent.categories[categorie].types[ligne.type].label;
-                        marge = stack_champs.length * 2 + 4;
+                        marge = stack_champs.length * 2 + 2;
                     }
                     
                     if (ligne.revision > 1) {
-                        img = "img/history.png";
-                        title = "Existan " + (ligne.revision - 1) + " revisiones anteriores de este documento.";
+                        img = $("<img></img>")
+                            .attr({
+                                src: "img/revision_30.png",
+                                title: "Existan " + (ligne.revision - 1) + " revisiones anteriores de este documento.",
+                                "data-state": "closed"
+                            })
+                            .addClass("imgboutons")
+                            .click(affiche_revisions)
                     } else {
-                        img = "img/history_no.png";
-                        title = "No existan revisiones anteriores de este documento.";
+                        img = "";
                     }
                     
                     li = $("<li></li>")
@@ -477,19 +492,9 @@ var construit_table = function() {
                         ).append(
                             $("<i></i>")
                             .text(" (" + ligne.date + ")")
-                        ).append(
-                            $("<img></img>")
-                            .attr({
-                                src: img,
-                                title: title,
-                                "data-state": "closed",
-                                "data-type": "palomita"
-                            })
-                            .addClass("imgboutons")
-                            .click(affiche_revisions)
-                        )
+                        ).append(img)
                     );
-                    current_ul.append(li.css("padding-left", marge + "%"));
+                    current_ul.append(li.css("margin-left", marge + "%"));
         }
     });
     

@@ -4,23 +4,32 @@ html, body {
     padding: 0;
     
     overflow-x: hidden;
+    font-family: 'Oswald', sans-serif;
 }
 
-/*
-        Barre latérale front
-*/
+/*###########################
+        Blocs principaux
+#############################*/
 
-#barre-laterale {
+
+#back {
+    display: none;
+}
+
+/*###########################
+        Barre latérale
+#############################*/
+
+.barre-laterale {
     display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 10%;
     height: 100%;
-    background-color: #8ecb32;
 }
 
-#barre-laterale>h1 {
+.barre-laterale>h1 {
     background-image: url(../img/dino_100.png);
     background-repeat: no-repeat;
     background-position: top center;
@@ -28,64 +37,407 @@ html, body {
     text-align: center;
     color: white;
     
-    font-family: 'Oswald', sans-serif;
-    
     margin-top: 0;
     padding-top: 105px;
     
     cursor: pointer;
 }
 
-#barre-laterale>h1:hover {
+.barre-laterale>h1:hover {
     background-image: url(../img/dino_flou_100.png);
     
     font-family: "Courier New", Courier, monospace;
 }
 
-#menu-lateral {
+#laterale-front {
+    background-color: #8ecb32;
+}
+
+.menu-lateral {
     padding-left: 0;
 }
 
-#menu-lateral li {
+.menu-lateral li {
     list-style-type: none;
     cursor: pointer;
     
     padding-top: 75px;
-    
-    background-color: #83bc2f;
 }
 
-#menu-lateral li:hover {
-    background-color: #75a32d;
-}
-
-#menu-lateral h1 {
+.menu-lateral h1 {
     font-size: 0.9em;
 
     text-align: center;
     color: white;
     
-    font-family: 'Oswald', sans-serif;
-    
     margin: 0;
     padding-bottom: 7px;
 }
 
-/*
-        Barre top front
-*/
+#menu-front li {
+    background-color: #83bc2f;
+}
 
+#menu-front li:hover {
+    background-color: #75a32d;
+}
 
+/*###########################
+        Barre top
+#############################*/
 
+.barre-top {
+    position: fixed;
+    top: 0;
+    left: 10%;
+    width: 90%;
+    height: 60px;
+    
+    background-color: #d6dcea;
+    
+    border-bottom: 1px solid #a9a9a9;
+    
+    z-index: 100;
+}
 
+.busquedor {
+    float: right;
+    width: 30%;
+    height: 50px;
+    margin-top: 5px;
+    margin-right: 1%;
+}
 
+#switch-sort {
+    float: right;
+    padding-right: 1%;
+    padding-top: 16px;
+}
 
-/*
-        Barre latérale front
-*/
+#toggle-date {
+    background-image: url(../img/date_40.png);
+    float: right;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    
+    margin-top: 1%;
+    margin-right: 1%;
+}
+
+#toggle-date:hover {
+    background-image: url(../img/date_hover_40.png);
+}
+
+#container-dates {
+    display: none;
+
+	position: relative;
+	background: #d6dcea;
+	border: 1px solid #a9a9a9;
+	
+	width: 200px;
+	margin-top: 22px;
+	
+	font-size: 0.7em;
+	
+	padding: 5px;
+    text-align: center;
+}
+#container-dates:after, #container-dates:before {
+	bottom: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+#container-dates:after {
+	border-color: rgba(109, 206, 10, 0);
+	border-bottom-color: #d6dcea;
+	border-width: 10px;
+	margin-left: -10px;
+}
+#container-dates:before {
+	border-color: rgba(214, 220, 234, 0);
+	border-bottom-color: #a9a9a9;
+	border-width: 11px;
+	margin-left: -11px;
+}
+
+#slider-date {
+    clear: both;
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 2%;
+}
+
+#slider-date .ui-widget-header {
+    background: #C02121 url(images/ui-bg_gloss-wave_45_e14f1c_500x100.png) 50% 50% repeat-x;
+}
+
+.switchy-bar[data-tri="ASC"] {
+    background-image: url(../img/az.png);
+}
+
+.switchy-bar[data-tri="DESC"] {
+    background-image: url(../img/za.png);
+}
+
+/*###########################
+        Partagé : liste mondes
+#############################*/
+
+.list-mondes {
+    padding-left: 0;
+    margin: 1%;
+}
+
+.list-mondes li {
+    list-style-type: none;
+    display: table-cell;
+    background-color: #56d4eb;
+    padding: 5px;
+    height: 30px;
+    
+    text-transform: uppercase;
+    text-align: center;
+    
+    color: white;
+    
+    font-weight: bold;
+    cursor: pointer;
+    width: 100px;
+    vertical-align: middle;
+    
+    font-size: 0.7em;
+}
+
+.list-mondes li[data-selected="1"] {
+    background-color: #48afc2;
+}
+
+.list-mondes li[data-selected="0"]:hover {
+    background-color: #4ec3d7;
+}
+
+/*#####################################
+#
+#        Barre bottom
+#
+#######################################*/
+
+.barre-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 10%;
+    width: 90%;
+    height: 30px;
+    
+    background-color: #d6dcea;
+    
+    border-top: 1px solid #a9a9a9;
+    
+    z-index: 100;
+}
+
+/*#####################################
+#
+#        Liste de documents
+#
+#######################################*/
+
+#core {
+    position: fixed;
+    left: 10%;
+    top: 61px;
+    width: 90%;
+    background-color: #e7e9f0;
+    
+    padding-top: 40px;
+    
+    overflow-y: scroll;
+}
+
+#liste {
+   margin-right: 20px;
+   margin-left: 20px;
+   
+   border-top: 1px solid #dddddd;
+}
+
+#liste ul {
+    list-style-type: none;
+    padding: 0;
+    padding-top: 5px;
+}
+
+#liste li {
+    background-position: 15px 50%;
+    background-repeat: no-repeat;
+    padding-left: 55px;
+    height: 40px;
+    
+    font-weight: bold;    
+    text-transform: uppercase;
+    
+    margin-top: 5px;
+}
+
+#liste li.hovering {
+    padding: 4px;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+/*###########################
+        Champ LI
+#############################*/
+
+#liste li[data-type="champ"] {
+    background-image: url(../img/client_30.png);
+    cursor: pointer;
+}
+
+#liste li[data-type="champ"] span {
+    padding-left: 5px;
+    display: table-cell;
+    vertical-align: middle;
+    height: inherit;
+}
+
+#liste li[data-type="champ"][data-niveau="0"] {
+    display: block;
+    background-color: #8ecb32;
+    color: white;
+}
+
+#liste li[data-type="champ"][data-niveau="1"] {
+    background-color: #56d4eb;
+    color: white;
+}
+
+#liste li[data-type="champ"][data-niveau="2"] {
+    background-color: #8ecb32;
+    color: white;
+}
+
+#liste li[data-type="champ"][data-niveau="3"] {
+    background-color: #56d4eb;
+    color: white;
+}
+
+/*###########################
+        Champ UL
+#############################*/
+
+#liste ul[data-niveau] {
+    display: none;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+}
+
+#liste ul[data-niveau="0"] {
+    border-left: 2px solid #8ecb32;
+    border-right: 2px solid #8ecb32;
+    border-bottom: 10px solid #8ecb32;
+}
+
+#liste ul[data-niveau="1"] {
+    border-left: 2px solid #56d4eb;
+    border-right: 2px solid #56d4eb;
+    border-bottom: 10px solid #56d4eb;
+}
+
+#liste ul[data-niveau="2"] {
+    border-left: 2px solid #8ecb32;
+    border-right: 2px solid #8ecb32;
+    border-bottom: 10px solid #8ecb32;
+}
+
+#liste ul[data-niveau="3"] {
+    border-left: 2px solid #56d4eb;
+    border-right: 2px solid #56d4eb;
+    border-bottom: 10px solid #56d4eb;
+}
+
+/*###########################
+        Categorie
+#############################*/
+
+#liste li[data-type="categorie"] {
+    background-color: #9b9b9b;
+    cursor: pointer;
+    background-image: url(../img/categorie_30.png);
+}
+
+#liste li[data-type="categorie"] span {
+    padding-left: 5px;
+    display: table-cell;
+    vertical-align: middle;
+    height: inherit;
+}
+
+#liste ul[data-type="categorie"] {
+    display: none;
+    
+    border-left: 2px solid #9b9b9b;
+    border-right: 2px solid #9b9b9b;
+    border-bottom: 4px solid #9b9b9b;
+    
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+}
+
+/*###########################
+        Document
+#############################*/
+
+#liste li[data-type="document"] {
+    background-color: #cecece;
+    color: #5b5b5b;
+    background-image: url(../img/document_30.png);
+}
+
+#liste li[data-type="document"] div {
+    padding-left: 5px;
+    display: table-cell;
+    vertical-align: middle;
+    height: inherit;
+}
+
+/*###########################
+        Révision
+#############################*/
+
+#liste li[data-type="revision"] {
+    display: none;
+    background-color: #DEDEDE;
+    color: #5b5b5b;
+    border-left: 1px solid #cecece;
+    border-right: 1px solid #cecece;
+    border-bottom: 1px dotted #cecece;
+    margin-top: 0;
+}
+
+#liste li[data-type="revision"] span {
+    padding-left: 5px;
+    display: table-cell;
+    vertical-align: middle;
+    height: inherit;
+}
+
+/*###########################
+        TODO : A ranger
+#############################*/
 
 #menu-queue {
-    background-image: url(../img/document_100.png);
+    background-image: url(../img/upload_100.png);
     background-repeat: no-repeat;
     background-position: top center;
     
@@ -99,18 +451,6 @@ html, body {
     
     border-top: 1px dotted #558011;
     border-bottom: 1px dotted #558011;
-}
-
-#front {
-    position: fixed;
-    margin-left: 15%;
-    width: 90%;
-    top: 10%;
-    height: 80%;
-}
-
-#back {
-    display: none;
 }
 
 #opak { /*Shakur!*/
@@ -130,37 +470,6 @@ html, body {
 
 .details {
     overflow-x: hidden;
-}
-
-/*table {*/
-/*    table-layout:fixed;*/
-/*    -moz-border-radius:7px;*/
-/*    -webkit-border-radius:7px;*/
-/*    border-radius:7px;*/
-/*}*/
-
-tr:nth-child(odd) {
-  background-color: #FFEAEA;
-}
-
-tr:nth-child(even) {
-  background-color: #FFFFFF;
-}
-
-tr:nth-child(odd):hover {
-  background-color: #C0FFF5;
-}
-
-tr:nth-child(even):hover {
-  background-color: #C0FFF5;
-}
-
-.table_edition tr {
-  background-color: #FFFFFF;
-}
-
-.table_edition tr td:nth-child(1) {
-    width: 25%;
 }
 
 #container-queue {
@@ -376,58 +685,6 @@ tr:nth-child(even):hover {
     background-color: red;
 }
 
-#liste {
-   margin-right: 20px;
-   margin-left: 20px;
-}
-
-#liste>ul {
-    border-bottom: 1px solid black;
-}
-
-#liste ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-#liste li {
-    display: none;
-}
-
-#liste li.hovering {
-    padding: 4px;
-    font-weight: bold;
-    font-size: 1em;
-}
-
-#liste li[data-type="champ"][data-niveau="0"] {
-    display: block;
-}
-
-#liste li[data-type="champ"] {
-    background-color: #121212;
-    color: white;
-}
-
-#liste li[data-type="categorie"] {
-    background-color: #848484;
-    border-top: 1px solid black;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
-}
-
-#liste li[data-type="document"] {
-    background-color: white; /*#A1A1A1;*/
-    border-left: 1px solid black;
-    border-right: 1px solid black;
-}
-
-#liste li[data-type="revision"] {
-    background-color: #DEDEDE;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
-}
-
 .over {
     color: red !important;
 }
@@ -479,22 +736,6 @@ tr:nth-child(even):hover {
     margin-left: 1em;
 }
 
-.imgboutons[data-state="closed"][data-type="champ"] {
-    background-image: url("../img/champ_closed.png");
-}
-
-.imgboutons[data-state="open"][data-type="champ"] {
-    background-image: url("../img/champ_open.png");
-}
-
-.imgboutons[data-state="closed"][data-type="categorie"] {
-    background-image: url("../img/categorie_closed.png");
-}
-
-.imgboutons[data-state="open"][data-type="categorie"] {
-    background-image: url("../img/categorie_open.png");
-}
-
 .boutons-store {
     cursor: pointer;
     display: inline;
@@ -503,92 +744,8 @@ tr:nth-child(even):hover {
     font-size: 1em;
 }
 
-#core {
-    position: absolute;
-    width: 100%;
-    background-color: #A1FF94;
-}
-
-#core-top {
-    text-align: center;
-}
-
-.busquedor {
-    position: absolute !important;
-    text-align: left;
-    width: 10%;
-    left: 45%;
-    height: 2em;
-    font-size: 1.5em;
-    padding: 10px 1px 0px 1px;
-    
-    -moz-border-top-right-radius:10px;
-    -webkit-top-right-radius:10px;
-    border-top-right-radius:10px;
-    
-    -moz-border-top-left-radius:10px;
-    -webkit-top-left-radius:10px;
-    border-top-left-radius:10px;
-    
-    -moz-border-bottom-right-radius:10px;
-    -webkit-bottom-right-radius:10px;
-    border-bottom-right-radius:10px;
-    
-    -moz-border-bottom-left-radius:10px;
-    -webkit-bottom-left-radius:10px;
-    border-bottom-left-radius:10px;
-}
-
-#slider-date {
-    clear: both;
-    margin-left: 10%;
-    margin-right: 10%;
-    margin-top: 2%;
-}
-
 .document {
     cursor: pointer;
-}
-
-.list-mondes {
-    padding-left: 0;
-    margin: 0;
-}
-
-.list-mondes li {
-    list-style-type: none;
-    border: 1px solid black;
-    display: inline-block;
-    background-color: #00C2FF;
-    padding: 5px;
-}
-
-.list-mondes li[data-selected="1"] {
-    border: 2px solid white;
-    background-color: #0380A7;
-    color: white;
-}
-
-.list-mondes li h1 {
-    font-size: 1em;
-    cursor: pointer;
-}
-
-#mondes-top {
-    float: left;
-}
-
-#list-sort {
-    padding: 5px;
-    margin: 0;
-    float: right;
-    background-color: #00C2FF;
-    border: 1px solid black;
-    display: inline-block;
-}
-
-#list-sort h1 {
-    font-size: 1em;
 }
 
 #viewer-global {
@@ -599,26 +756,4 @@ tr:nth-child(even):hover {
     height: 90%;
     width: 90%;
     z-index: 150;
-}
-
-/* Styles pour jquery-sortable */
-body.dragging, body.dragging * {
-  cursor: move !important;
-}
-
-.dragged {
-  position: absolute;
-  opacity: 0.5;
-  z-index: 2000;
-}
-
-#list-search li.placeholder {
-  position: relative;
-  /** More li styles **/
-  border: 3px solid black;
-  opacity: 70%;
-}
-#list-search ul li.placeholder:before {
-  position: absolute;
-  /** Define arrowhead **/
 }
