@@ -20,18 +20,13 @@ var compare = function(a,b) {
 
 var anime_queue = function() {
     if ($("#container-queue").attr("data-state") == "closed") {
-        $("#tiroir-queue").animate({ left: 0 });
-        $("#poignee-queue").animate({ left: "30%" });
-        $(".chosen-container-multi").animate({ width: "300px" });
-        $("#core").animate({ left: "35%", width: "65%" }, { complete: resize_search });
+        $("#container-queue").animate({ left: "10%" });
+        $("#core").animate({ left: "35%", width: "65%" });
         $("#container-queue").attr({ "data-state": "open" });
     } else {
-        $("#tiroir-queue").animate({ left: "-30%" });
-        $("#tiroir-store").animate({ left: "-65%" });
-        $("#poignee-queue").animate({ left: "0" });
+        $("#container-queue").animate({ left: "-16%" });
         $("#core").animate({ left: "0", width: "100%" }, { complete: resize_search });
         $("#container-queue").attr({ "data-state": "closed" });
-        $("#tiroir-store").attr({ "data-state": "closed" });
     }
 }
 
@@ -228,7 +223,7 @@ var create_li = function(name) {
     var li = $("#modele-li-queue").clone();
     
     li.find("span").first().text(name);
-    li.attr({ 
+    li.attr({
         "data-position": queue.length,
         id: ""
     })

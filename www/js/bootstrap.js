@@ -20,14 +20,19 @@ var bootstrap = function() {
         profil = data;
         
         $(".div_login").hide();
-        $("#laterale-front").show();
+        $("#front").show();
         
         // On binde les events
-        $("#toggle-date").click(toggle_dates)
+        $("#toggle-date").click(toggle_dates);
+        $("#menu-queue").click(anime_queue);
+        $("#files-handler").change(handle_files);
         
         // On style les éléments
         $("#switch-sort select").switchy().change(toggle_tri);
         $("#switch-sort").find(".switchy-bar").attr("data-tri", "ASC");
+        
+        $("#date-store").datepicker({dateFormat: "dd/mm/yy"});
+        $("#date-store").datepicker('setDate', new Date());
         
         $.ajax({ url: "modules/core.php" })
         .done(function(data) {

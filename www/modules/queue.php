@@ -1,7 +1,12 @@
 <div id="container-queue" data-state="closed">
-    <div id="poignee-queue"></div>
     <div id="tiroir-queue">
-        <h1>Fila <input type="file" id="files-handler" name="files-handler" multiple="multiple"></h1>
+        <div id="zone-dnd">
+            <img src="img/cloud_30.png"/><br/>
+            Deposita documentos aqui<br/>para subirlos!
+        </div>
+        <div id="container-files-handler">
+            <input type="file" id="files-handler" name="files-handler" multiple="multiple">
+        </div>
         <div id="div-list"><ul id="files-list"></ul></div>
     </div>
 </div>
@@ -41,12 +46,7 @@
     </ul>
 </div>
 
-<script type="text/javascript">
-    $("#poignee-queue").click(anime_queue);
-    $("#files-handler").change(handle_files);
-    
-    $("#date-store").datepicker({dateFormat: "dd/mm/yy"});
-    $("#date-store").datepicker('setDate', new Date());
+<script type="text/javascript">    
     
     $.ajax({ url: "json/queue.php" })
     .done(function (data) {
