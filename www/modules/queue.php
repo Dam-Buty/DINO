@@ -12,23 +12,22 @@
 </div>
 
 <div id="popup-store" data-document="">
-    <div id="top-store">
-        <div id="prev-store"><img src="img/prev_big.png"/></div>
-        <ul id="mondes-store" class="list-mondes"></ul>
-        <div id="next-store"><img src="img/next_big.png"/></div>
-    </div>
+    <div id="prev-store" class="nav-store"></div>
+    <div id="next-store" class="nav-store"></div>
     <iframe id="viewer-store"></iframe>
+    <ul id="mondes-store" class="list-mondes"></ul>
     <div id="container-store">
         <div id="container-champs"></div>
         <hr/>
         <ul id="container-classification"></ul>
-        <hr/>
         <div id="container-details">
-            Fecha del documento : <input type="text" id="date-store"/><br/>
-            <div id="input-detail">
-                Detalle : <input type="text" id="detail-store"/>
-            </div> <?php // LOCALISATION ?>
-            <div class="boutons" id="bouton-store">Archivar el documento</div>
+        <hr/>
+            <div id="champs-details"><input type="text" id="date-store"/>Fecha del documento : 
+                <div id="input-detail">
+                    <input type="text" id="detail-store"/>Detalle : 
+                </div> <?php // LOCALISATION ?>
+            </div>
+            <div class="boutons" id="bouton-store">Archivar en DINO</div>
         </div>
     </div>
 </div>

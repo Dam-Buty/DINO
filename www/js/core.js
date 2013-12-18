@@ -69,6 +69,7 @@ var load_search = function() {
         });
         
         $("#search").on("chosen:showing_dropdown", large_search);
+        $("#search").on("chosen:hiding_dropdown", small_search);
         $("#search").change(small_search);
     }
         

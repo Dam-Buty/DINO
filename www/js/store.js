@@ -32,7 +32,7 @@ var remove_champ_store = function() {
     var monde = document.store.monde;
     var cascade = profil.mondes[monde].cascade;
     var div = $(this);
-    var champ = $(this).parent().closest("div").attr("data-champ");
+    var champ = $(this).closest(".champ-store").attr("data-champ");
     
     document.store.champs[champ] = "";
     document.store.categorie = "";
@@ -120,26 +120,19 @@ var remove_type_store = function() {
 
 var change_type_store = function() {
     var li = $(this);
+    var ul = $("#container-classification");
     var document = queue[$("#popup-store").attr("data-document")];
+    
+    ul.find("li").attr("data-selected", 0);
+    
+    // On referme les autres catégories
+    ul.find('li[data-categorie][data-state="open"]').not('[data-categorie="' + li.attr("data-categorie") + '"]').click();
     
     // stocke le choix de l'utilisateur
     document.store.categorie = li.attr("data-categorie");
     document.store.type_doc = { pk: li.attr("data-type"), detail: "" };
     
-    // Unbind les types
-    $("#container-classification").find("li")
-    .unbind()
-    .css("cursor", "auto");
-    
-    // affiche le bouton pour oublier le type
-    li
-    .attr("data-selected", "1")
-    .append(
-        $("<div></div>")
-        .addClass("boutons-store")
-        .text("  X")
-        .click(remove_type_store)
-    );
+    li.attr("data-selected", 1);
     
     affiche_details();
 };
@@ -208,66 +201,40 @@ var reload_champs = function() {
                 parent = document.store.champs[cascade[i - 1]];
             }
             
-            // TODO : supprimer l'ajax, faire avec le profil!!
-            // à voir si d'autres cas similaires
-            $.ajax({
-                url: "json/champ.php",
-                type: "POST",
-                data: {
-                    monde: monde,
-                    champ: champ,
-                    parent: parent
-                },
-                statusCode: {
-                    200: function(valeurs) {
-                        var div = $("<div></div>")
-                            .addClass("champ-store")
-                            .attr("data-champ", champ)
-                        ;
-                        
-                        var select = $("<select></select>")
-                                    .change(change_champ_store)
-                                    .attr("data-placeholder", "Elige un " + profil.mondes[monde].champs[champ].label) // LOCALISATION
-                                    .append("<option></option>")
-                                    
-                                    ;
-                        
-                        $.each(valeurs, function(j, valeur) {
-                            select.append(
-                                $("<option></option>")
-                                .attr("value", j)
-                                .text(valeur)
-                            );
-                        });
-                        
-                        $("#container-champs")
-                        .append(
-                            div.append(select).append(
-                                $("<img></img>")
-                                .attr("src", "img/plus.png")
-                                .addClass("imgboutons")
-                                .click(add_value)
-                            )
-                        );
-                        
-                        $("#container-champs")
-                        .find("select")
-                        .chosen({
-                            no_results_text:'Pica (+) para agregar ', // LOCALISATION
-                            create_option: add_value,
-                            skip_no_results: true
-                        });
-
-                    },
-                    403: function() {
-                        window.location.replace("index.php");
-                    },
-                    500: function() {
-                        popup('Error de recuperacion de los documentos. Gracias por intentar otra vez', 'error'); // LOCALISATION
-                    }
-                }
-            });  
-            return false;          
+            var div = $("<div></div>")
+                .addClass("champ-store")
+                .attr("data-champ", champ)
+            ;
+            
+            var select = $("<select></select>")
+                .addClass("select-champ")
+                .change(change_champ_store)
+                .attr("data-placeholder", profil.mondes[monde].champs[champ].label) // LOCALISATION
+                .append("<option></option>")
+            ;
+            
+            if (profil.mondes[monde].references[parent] !== undefined) {
+                $.each(profil.mondes[monde].references[parent], function(j, valeur) {
+                    select.append(
+                        $("<option></option>")
+                        .attr("value", j)
+                        .text(profil.mondes[monde].champs[cascade[i]].liste[j])
+                    );
+                });
+            }
+            
+            $("#container-champs").append(div.append(select));
+            
+            $("#container-champs")
+            .find("select")
+            .chosen({
+                no_results_text:'Pica (+) para agregar ', // LOCALISATION
+                create_option: add_value,
+                inherit_select_classes: true,
+                skip_no_results: true
+            });
+            
+            return false;    // On quitte la boucle pour ignorer les champs suivants      
         } else {
             var div = $("<div></div>")
                     .addClass("champ-store")
@@ -277,12 +244,13 @@ var reload_champs = function() {
             last_i = i;
             $("#container-champs").append(
                 div.append(
-                    $("<p></p>")
+                    $("<div></div>")
+                    .addClass("tag-champ")
                     .text(profil.mondes[monde].champs[champ].label + " : " + profil.mondes[monde].champs[champ].liste[document.store.champs[champ]])
                     .append(
                         $("<div></div>")
-                        .addClass("boutons-store")
-                        .text("  X")
+                        .addClass("remove-tag-champ")
+                        .text("x")
                         .click(remove_champ_store)
                     )
                 )
@@ -333,14 +301,29 @@ var reload_champs = function() {
             // On ajoute la catégorie à la liste
             $("#container-classification").append(
                 $("<li></li>")
-                .attr("data-categorie", j)
+                .attr({
+                    "data-categorie": j,
+                    "data-state": "closed"
+                })
                 .addClass("store-categorie")
                 .text(categorie.label)
-                .append(ul) // Ainsi que ses types                                
-            );
+                .click(toggle_categorie)      
+            ).append(ul); // Ainsi que ses types  
         });
     }
 };
+
+var toggle_categorie = function() {
+    var li = $(this);
+    
+    if (li.attr("data-state") == "closed") {
+        li.next("ul").slideDown();
+        li.attr("data-state", "open");
+    } else {
+        li.next("ul").slideUp();
+        li.attr("data-state", "closed");
+    }
+}
 
 var prev_document = function() {
     var document = $("#popup-store").attr("data-document");
@@ -503,11 +486,8 @@ var _store_document = function(position) {
                 "data-monde": i,
                 "data-selected": 0
             })
-            .append(
-                $("<h1></h1>")
-                .text(monde.label)
-                .click(change_monde_store)
-            )
+            .text(monde.label)
+            .click(change_monde_store)
         );
     });
     

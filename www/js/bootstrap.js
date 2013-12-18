@@ -26,33 +26,35 @@ var bootstrap = function() {
         $("#toggle-date").click(toggle_dates);
         $("#menu-queue").click(anime_queue);
         
-        // On style les éléments
-        $("#switch-sort select").switchy().change(toggle_tri);
-        $("#switch-sort").find(".switchy-bar").attr("data-tri", "ASC");
-        
-        $("#date-store").datepicker({dateFormat: "dd/mm/yy"});
-        $("#date-store").datepicker('setDate', new Date());
-        
         $.ajax({ url: "modules/core.php" })
-        .done(function(data) {
-            $("#front").append(data);
-        });
-        
-        $.ajax({ url: "modules/queue.php" })
-        .done(function(data) {
-            $("#front").append(data);
-        });
-        
-        $.ajax({ 
-            url: "do/doCheckAdmin.php",
-            statusCode: {
-                200: function() {
-                    $.ajax({ url: "modules/admin.php" })
-                    .done(function(data) {
-                        $("#back").append(data);
-                    });
+        .done(function(core) {
+            $("#front").append(core);
+            
+            $.ajax({ url: "modules/queue.php" })
+            .done(function(queue) {
+                $("#front").append(queue);
+                
+                // On style les éléments
+                $("#switch-sort select").switchy().change(toggle_tri);
+                $("#switch-sort").find(".switchy-bar").attr("data-tri", "ASC");
+                
+                $("#date-store").datepicker({dateFormat: "dd/mm/yy"});
+                $("#date-store").datepicker('setDate', new Date());
+            });
+            
+            $.ajax({ 
+                url: "do/doCheckAdmin.php",
+                statusCode: {
+                    200: function() {
+                        $.ajax({ url: "modules/admin.php" })
+                        .done(function(data) {
+                            $("#back").append(data);
+                            
+                            // On peut styler les éléments de l'admin ici
+                        });
+                    }
                 }
-            }
+            });
         });
         
         $(window).trigger('resize');
@@ -141,10 +143,10 @@ $(document).ready(function(){
 // Au resize, on redimensionne ce qui est positionné en jQuery
 // TODO : optimiser! 
 $( window ).resize(function() {
-    $("#core").animate({
+    $("#core").css({
         height: ($(window).height() - 132) + "px" // 61 px barre top
     });                                          // 31 px barre bottom + 40px padding
     
-//    $("#viewer-store").css("height", 0.97 * $("#popup-store").innerHeight() + $("#popup-store").offset().top - $("#viewer-store").offset().top + "px");
+    $("#viewer-store").css("height", ($("#popup-store").innerHeight() - parseFloat($("#popup-store").css("padding-bottom")) - parseFloat($("#popup-store").css("padding-top")) - 4) + "px");
 //    $("#container-store").css("height", 0.97 * $("#popup-store").innerHeight() + $("#popup-store").offset().top - $("#viewer-store").offset().top + "px");
 });

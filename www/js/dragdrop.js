@@ -8,6 +8,9 @@ var dragstart = function(e) {
     $(this).fadeTo("fast", 0.4);
     var monde = profil.mondes[Core.monde];
     
+    $(this).find(".details-queue").slideUp();
+    $(this).find("img").fadeOut();
+    
     e.originalEvent.dataTransfer.effectAllowed = 'move';
     e.originalEvent.dataTransfer.setData('text/html', $(this).attr("data-position"));
     
@@ -46,6 +49,9 @@ var dragend = function(e) {
     $(".over").removeClass("over");
     $("#liste li").removeClass("hovering");
     $('img[data-type="palomita"]').show();
+    
+    $(this).find(".details-queue").slideDown();
+    $(this).find("img").fadeIn();
 };
 
 var dragover = function(e) {
