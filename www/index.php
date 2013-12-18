@@ -86,6 +86,7 @@ session_start();
 <div id="back"></div>
 
 <div id="opak"></div>
+
 <iframe id="viewer-global"></iframe>
 
 <script src="vendor/jquery-1.10.2.js"></script>

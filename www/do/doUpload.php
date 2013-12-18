@@ -3,13 +3,15 @@ session_start();
 include("../includes/status.php");
 include("../includes/log.php");
 
-if ($_SESSION["niveau"] > 10) {
+if ($_SESSION["niveau"] >= 10) {
     include("../includes/mysqli.php");
     include("../includes/crypt.php");
     
     $filename = genere_clef(12, TRUE);
     
-    $query = "INSERT INTO `document` (`filename_document`, `display_document`, `fk_client`, `fk_user`, `date_upload_document`) VALUES ('" . $filename . ".pdf', '" . $_FILES['document']['name'] . "', " . $_SESSION["client"] . ", '" . $_SESSION["user"] . "', '" . date("Y-m-d H:i:s") . "');";
+    $filesize = filesize($_FILES['document']['tmp_name']);
+    
+    $query = "INSERT INTO `document` (`filename_document`, `taille_document`, `display_document`, `fk_client`, `fk_user`, `date_upload_document`) VALUES ('" . $filename . ".pdf', " . $filesize . ", '" . $_FILES['document']['name'] . "', " . $_SESSION["client"] . ", '" . $_SESSION["user"] . "', '" . date("Y-m-d H:i:s") . "');";
     
     if ($mysqli->query($query)) {
         

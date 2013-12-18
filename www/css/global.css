@@ -476,17 +476,21 @@ html, body {
     width: 25%;
     
     top: 15%;
-    left: -16%;
-}
-
-#tiroir-queue {
+    left: -18%;
+    
     padding: 5px;
     
     background-color: white;
-    
     border: 2px solid #646462;
+}
+
+#tiroir-queue {
+    position: relative;
+    height: 100%;
     
-    overflow: hidden;
+    background-color: rgba(0,0,0,0.7);
+    
+    overflow-y: auto;
     z-index: 10;
 }
 
@@ -501,11 +505,13 @@ html, body {
     vertical-align: middle;
     
     font-size: 0.7em;
+    
+    background-color: white;
 }
 
 #container-files-handler {
     background-color: #56d4eb;
-    margin-top: 5px;
+    border-top: 5px solid white;
     padding-top: 5px;
     padding-bottom: 5px;
 }
@@ -516,42 +522,75 @@ html, body {
 }
 
 #div-list {
-    overflow-y: auto;
     height: 60%;
 }
 
 #tiroir-queue ul {
     padding-left: 0;
-    margin-top: 2px;
+    margin-top: 0;
+    border-top: 5px solid white;
 }
 
 #tiroir-queue li {
     list-style-type: none;
-    margin-bottom: 2px;
+    border-bottom: 2px solid white;
+    padding: 10px;
+}
+
+#tiroir-queue li>img {
+    float: right;
+    cursor: pointer;
     
+    display: none;
 }
 
-#tiroir-queue li[data-editing="1"] {
-    background-color: blue;
+#tiroir-queue li>img.bouton-edit-li:hover {
+    content: url(../img/edit_hover_20.png);
 }
 
-#tiroir-queue li input:disabled {
-    background-color: #BEBEBE;
+#tiroir-queue li>img.bouton-del-li:hover {
+    content: url(../img/del_hover_20.png);
 }
 
-#tiroir-queue li span {
-    font-style: italic;
+#tiroir-queue .filename {
+    background-image: url(../img/document_queue_20.png);
+    background-repeat: no-repeat;
+    
+    padding-left: 25px;
+    margin-right: 50px;
+    
+    font-size: 0.8em;
+    
+    white-space: nowrap;
+    overflow: hidden;
 }
 
-#tiroir-queue li.done {
-    background-size: 0 0;
-    background-color: #19bf19;
+#tiroir-queue .progressbar {
+    margin-top: 10px;
+    height: 10px;
+    
+    display: none;
 }
 
+#tiroir-queue .details-queue {
+    font-size: 0.6em;
+    
+    margin-top: 10px;
+}
 
-/*###########################
-        TODO : A ranger
-#############################*/
+#tiroir-queue li:nth-child(odd) {
+    background-color: #bfbfbf;
+}
+
+#tiroir-queue li:nth-child(even) {
+    background-color: #9b9b9b;
+}
+
+/*#####################################
+#
+#        Popup classification
+#
+#######################################*/
 
 #opak { /*Shakur!*/
     position: fixed;
@@ -688,6 +727,33 @@ html, body {
     text-align: center;
 }
 
+/*#####################################
+#
+#        Scrollbars (webkit only!)
+#
+#######################################*/
+
+::-webkit-scrollbar {
+    width: 7px;
+    background-color: rgba(0,0,0,0);
+}
+
+::-webkit-scrollbar-track {
+    width: 3px;
+    background-color: #d6dcea;
+    border-left: 2px solid white;
+}   
+
+::-webkit-scrollbar-thumb {
+    width: 5px;
+    background-color: #54d5eb;
+    border-left: 2px solid white;
+}
+/*::-webkit-scrollbar-button  */
+/*::-webkit-scrollbar-track-piece */
+/*::-webkit-scrollbar-corner  */
+/*::-webkit-resizer  */
+
 .error {
     background-color: red;
 }
@@ -728,11 +794,6 @@ html, body {
 
 .bucket {
     display: none;
-}
-
-.filename {
-    width: 60%;
-    overflow-x: hidden;
 }
 
 .boutons-store {

@@ -36,12 +36,11 @@
 <div id="bucket-queue" class="bucket">
     <ul>
         <li id="modele-li-queue" class="idle" draggable="true">
-            <span class="filename"></span> - 
-            <span>En fila</span>
-            <span class="boutons-li">
-                <img class="bouton-edit-li" src="img/edit.png"/>
-                <img class="bouton-del-li" src="img/del.png"/>
-            </span>
+            <img class="bouton-edit-li" src="img/edit_20.png"/>
+            <img class="bouton-del-li" src="img/del_20.png"/>
+            <div class="filename"></div>
+            <div class="progressbar"></div>
+            <div class="details-queue"></div>
         </li>
     </ul>
 </div>
@@ -51,10 +50,12 @@
     $.ajax({ url: "json/queue.php" })
     .done(function (data) {
         $.each(data.queue, function() {
-            var document_li = set_li_status(create_li(this.displayname), 1);
+            var document_li = set_li_status(create_li(this.displayname, this.size, this.user, this.date), 1);
             this.li = document_li;
             queue.push(this);
         });
         refresh_liste();
     });
+    
+    $("#files-handler").change(handle_files);
 </script>

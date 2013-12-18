@@ -463,7 +463,7 @@ var construit_table = function() {
                     if (ligne.revision > 1) {
                         img = $("<img></img>")
                             .attr({
-                                src: "img/revision_30.png",
+                                src: "img/revision_15.png",
                                 title: "Existan " + (ligne.revision - 1) + " revisiones anteriores de este documento.",
                                 "data-state": "closed"
                             })

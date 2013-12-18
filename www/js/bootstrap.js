@@ -25,7 +25,6 @@ var bootstrap = function() {
         // On binde les events
         $("#toggle-date").click(toggle_dates);
         $("#menu-queue").click(anime_queue);
-        $("#files-handler").change(handle_files);
         
         // On style les éléments
         $("#switch-sort select").switchy().change(toggle_tri);

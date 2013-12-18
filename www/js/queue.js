@@ -24,8 +24,8 @@ var anime_queue = function() {
         $("#core").animate({ left: "35%", width: "65%" });
         $("#container-queue").attr({ "data-state": "open" });
     } else {
-        $("#container-queue").animate({ left: "-16%" });
-        $("#core").animate({ left: "0", width: "100%" }, { complete: resize_search });
+        $("#container-queue").animate({ left: "-18%" });
+        $("#core").animate({ left: "10%", width: "90%" });
         $("#container-queue").attr({ "data-state": "closed" });
     }
 }
@@ -61,10 +61,9 @@ var upload = function(list_element, uploader, queue_position) {
                 myXhr.upload.addEventListener('progress', function(evt) {
                     if(evt.lengthComputable){
                         var pourcentage = Math.floor((evt.loaded * 100) / evt.total);
+                        var li = list_element.li;
                         
-                        document_li = list_element.li;
-                        document_li.css("background-size", pourcentage + "%" + " 100%");
-                        document_li.find("span").eq(1).text(pourcentage + "%");
+                        li.find(".progressbar").progressbar("value", pourcentage);
                     }
                 }, false);
             }
@@ -77,11 +76,7 @@ var upload = function(list_element, uploader, queue_position) {
                 queue[queue_position].filename = data.filename;
                 
                 document_li = list_element.li;
-                document_li.css( "background-size", "0% 100%" );
-                document_li.css( "background-image", "url(img/jauge_vert.png)" );
-                document_li.css( "background-size", "35% 100%" );
-                document_li.find("span").eq(1).text("Codificando");
-                
+                document_li.find(".progressbar").progressbar("value", false);
                 
                 $.ajax({
                     url: "do/doPack.php",
@@ -91,7 +86,6 @@ var upload = function(list_element, uploader, queue_position) {
                     },
                     statusCode: {
                         200: function() {
-                            document_li.css( "background-size", "100% 100%" );
                             set_li_status(queue[queue_position].li, 1);
                             handle_uploads();
                         },
@@ -183,46 +177,55 @@ var set_li_status = function(li, status) {
     
     switch(status) {
         case -3: 
-            custom_class = "error";
-            custom_text = "FILESIZE";
             break;
         
         case -2:
-            custom_class = "error";
-            custom_text = "KO";
             break;
             
         case -1:
-            custom_class = "idle";
-            custom_text = "En fila";
             break;
             
         case 0:
-            custom_class = "uploading";
-            custom_text = "";
+            li.find(".progressbar").progressbar("value", false);
+            li.find(".progressbar").slideDown();
             break;
             
         case 1:
-            custom_class = "done";
-            custom_text = "OK";
+            li.find(".progressbar").slideUp();
+            li.children("img").fadeIn();
             break;
     };
     
-    li
-    .removeClass()
-    .css("background-size", "0 0")
-    .addClass(custom_class)
-    .find("span").eq(1)
-    .text(custom_text)
-    ;
     
     return li;
 }
 
-var create_li = function(name) {
+var create_li = function(name, size, user, date) {
     var li = $("#modele-li-queue").clone();
+    var taille;
     
-    li.find("span").first().text(name);
+    li.find(".filename").text(name);
+    
+    li.find(".progressbar").progressbar({
+        max: 100,
+        value: false
+    });
+    
+    taille = size + " o";
+    
+    if (size > 103) {
+        taille = (size / 1024).toFixed(2) + " Ko";
+    }
+    
+    if (size > 524288) {
+        taille = (size / 1048576).toFixed(2) + " Mo";
+    }
+    
+    li.find(".details-queue")
+        .append("<i>" + taille + "</i>")
+        .append(". Subido por <b>" + user + "</b> " + date + ".")    
+    ;
+    
     li.attr({
         "data-position": queue.length,
         id: ""
@@ -244,8 +247,8 @@ var handle_files = function() {
         
         // Si l'extension est légale, on pousse le fichier dans la queue
         if (extension in allowed_extensions) {
-            var document_li = set_li_status(create_li(this.name), -1);
-            queue.push({ document: this, status: -1, size: this.size, li: document_li, filename: "", displayname: this.name, store: { date: "", monde: "", last_champ: "", champs: { } , categorie: "", type_doc: { } } });
+            var document_li = set_li_status(create_li(this.name, this.size, "usted", "hoy"), -1);
+            queue.push({ document: this, status: -1, size: this.size, li: document_li, filename: "", displayname: this.name, user: "usted", date: "hoy", store: { date: "", monde: "", last_champ: "", champs: { } , categorie: "", type_doc: { } } });
         }
     });
     

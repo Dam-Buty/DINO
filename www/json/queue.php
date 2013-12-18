@@ -6,7 +6,17 @@ include("../includes/log.php");
 if (isset($_SESSION["niveau"])) {
     include("../includes/mysqli.php");
     
-    $query = "SELECT `filename_document`, `display_document` FROM `document` WHERE `fk_client` = " . $_SESSION["client"] . " AND `niveau_document` IS NULL;";
+    $query = "
+        SELECT 
+            `filename_document`, 
+            `display_document`, 
+            `taille_document`, 
+            DATE(`date_upload_document`) AS `date_doc`, 
+            `fk_user` 
+        FROM `document` 
+        WHERE 
+            `fk_client` = " . $_SESSION["client"] . " 
+            AND `niveau_document` IS NULL;";
     
     if ($result = $mysqli->query($query)) {
         status(200);
@@ -19,7 +29,16 @@ if (isset($_SESSION["niveau"])) {
                 $json_queue .= ', ';
             }
             
-            $json_queue .= '{ "document": "", "status": 1, "size": "", "li": "", "filename": "' . $row["filename_document"] . '", "displayname": "' . $row["display_document"] . '", "store": { "date": "", "monde": "", "last_champ": "", "champs": { } , "categorie": "", "type_doc": { } } }';
+            $date = substr($row["date_doc"], 8, 2) . "/" . substr($row["date_doc"], 5, 2);
+#            $date = substr($row["date_doc"], 8, 2) . "/" . substr($row["date_doc"], 5, 2) . "/" . substr($row["date_doc"], 0, 4);
+
+            if ($row["fk_user"] == $_SESSION["user"]) {
+                $user = "usted";
+            } else {
+                $user = $row["fk_user"];
+            }
+            
+            $json_queue .= '{ "document": "", "status": 1, "size": "' . $row["taille_document"] . '", "li": "", "filename": "' . $row["filename_document"] . '", "displayname": "' . $row["display_document"] . '", "user": "' . $user . '", "date": "el ' . $date . '", "store": { "date": "", "monde": "", "last_champ": "", "champs": { } , "categorie": "", "type_doc": { } } }';
         }
         
         $json_queue .= " ]";

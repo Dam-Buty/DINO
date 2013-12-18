@@ -94,7 +94,6 @@ var affiche_details = function() {
                 .types[document.store.type_doc.pk]
     }
     
-    
     if (type.detail == 1) {
         $("#input-detail").show();      
         $("#detail-store").autocomplete({
