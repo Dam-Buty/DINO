@@ -21,12 +21,7 @@ var dragstart = function(e) {
         
     e.originalEvent.dataTransfer.effectAllowed = 'move';
     e.originalEvent.dataTransfer.setData('text/html', $(this).attr("data-position"));
-    
-    //e.originalEvent.dataTransfer.setDragImage($("<img/>").attr("src", "img/dino_100.png")[0], 0, 0);
-    
-    // On cache les palomitas
-    $('img[data-type="palomita"]').hide();
-    
+            
     $("#liste li").addClass("hovering");
     
     // On ajoute le Nuevo xxx pour le premier champ
@@ -47,21 +42,36 @@ var dragstart = function(e) {
         )
         .on("dragenter", dragenter)
         .on("dragover", dragover)
-        .on("dragleave", dragleave);
+        .on("dragleave", dragleave)
+        .on("drop", drop);
     
     $("#liste>ul").prepend(li);
     li.slideDown();
+    
+    // On ajoute les divs invisibles pour le scroll 
+    $("body").append(
+        $("<div></div>")
+        .addClass("scroll-holder")
+        .attr("id", "top")
+        .on("dragenter", scrollup)
+        .on("dragleave", scrollstop)
+    ).append(
+        $("<div></div>")
+        .addClass("scroll-holder")
+        .attr("id", "bottom")
+        .on("dragenter", scrolldown)
+        .on("dragleave", scrollstop)
+    );
 };
 
 var dragend = function(e) {
     $(this).fadeTo("fast", 1);
-//    $(".ghost").slideUp({ complete: function() {
-//        $(".ghost").remove();
-//    }});
-//    $(".ghost-word").remove();
-//    $(".over").removeClass("over");
-//    $("#liste li").removeClass("hovering");
-//    $('img[data-type="palomita"]').show();
+    $(".ghost").slideUp({ complete: function() {
+        $(".ghost").remove();
+    }});
+    $(".ghost-word").remove();
+    $(".over").removeClass("over");
+    $("#liste li").removeClass("hovering");
     
     $(this).find(".details-queue").slideDown();
     $(this).find("img").fadeIn();
@@ -209,8 +219,8 @@ var dragenter = function(e) {
                             });
                         } else {
                             new_li = $(types[i]);
-                            new_li.find("div").prepend(
-                                $("<span></span>")
+                            new_li.find("span").prepend(
+                                $("<b></b>")
                                 .addClass("ghost-word")
                                 .text("Replazar ") // LOCALISATION
                             )
@@ -248,8 +258,8 @@ var dragenter = function(e) {
                                 });
                             } else {
                                 li_type = $(categories[i].types[j]);
-                                li_type.find("div").prepend(
-                                    $("<span></span>")
+                                li_type.find("span").prepend(
+                                    $("<b></b>")
                                     .addClass("ghost-word")
                                     .text("Replazar ") // LOCALISATION
                                 );
@@ -427,7 +437,7 @@ var ghost_categorie = function(params) {
 
 var scroll = function(i) {
     $("#core").animate({
-        scrollTop: $("#core").scrollTop() + i * Drag.scroll
+        scrollTop: $("#core").scrollTop() + (i * Drag.scroll)
     }, Drag.idelay, "linear");    
 };
 
@@ -450,7 +460,7 @@ var scrolldown = function(e) {
 var scrollstop = function(e) {
     if (checkleave(e)) {
         clearInterval(Drag.interval);
-        $("#core").stop();
+        $("#core").stop(true);
     }
 };
 

@@ -1,11 +1,20 @@
 var loginOK = 0;
 
-var types = [
-    { value: 0, text: "Cliente" },
-    { value: 1, text: "Ejecutivo" },
-    { value: 2, text: "Manager" },
-    { value: 3, text: "Gerente" }
-];
+var Core = {
+    admin: false,
+    monde: 0,
+    champs: {},
+    recherche: [],
+    limit: [0, 100],
+    liste: [],
+    dates: [],
+    users: []
+};
+
+var m_strUpperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+var m_strLowerCase = "abcdefghijklmnopqrstuvwxyz";
+var m_strNumber = "0123456789";
+var m_strCharacters = "!@#$%^&*?_~";
 
 var bootstrap = function() {
     $.ajax({ 
@@ -26,11 +35,6 @@ var bootstrap = function() {
         $("#toggle-date").click(toggle_dates);
         $("#menu-queue").click(anime_queue);
         
-        $("#front-top").on("dragenter", scrollup);
-        $("#front-top").on("dragleave", scrollstop);
-        $("#front-bottom").on("dragenter", scrolldown);
-        $("#front-bottom").on("dragleave", scrollstop);
-        
         $.ajax({ url: "modules/core.php" })
         .done(function(core) {
             $("#front").append(core);
@@ -50,13 +54,23 @@ var bootstrap = function() {
                     url: "do/doCheckAdmin.php",
                     statusCode: {
                         200: function() {
-                            $.ajax({ url: "modules/admin.php" })
-                            .done(function(data) {
-                                $("#back").append(data);
-                                
-                                // On peut styler les éléments de l'admin ici                                
-                                $(window).trigger('resize');
+                            $.ajax({ url: "modules/admin/users.php" })
+                            .done(function(users) {
+                                $("#backoffice").append(users);  
                             });
+                            
+                            $.ajax({ url: "modules/admin/monde.php" })
+                            .done(function(monde) {
+                                $("#backoffice").append(monde);  
+                            });
+                            
+                            $.ajax({ url: "modules/admin/profil.php" })
+                            .done(function(profil) {
+                                $("#backoffice").append(profil);  
+                            });
+                            
+                            bootstrap_admin();
+                            $(window).trigger('resize');
                         },
                         403: function() {
                             $(window).trigger('resize');
@@ -151,6 +165,10 @@ $(document).ready(function(){
 // TODO : optimiser! 
 $( window ).resize(function() {
     $("#core").css({
+        height: ($(window).height() - 92) + "px" // 61 px barre top
+    });
+    
+    $("#backoffice").css({
         height: ($(window).height() - 92) + "px" // 61 px barre top
     });                                          // 31 px barre bottom
     

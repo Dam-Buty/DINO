@@ -40,8 +40,28 @@ html, body {
     display: none;    
 }
 
+#core {
+    position: fixed;
+    left: 10%;
+    top: 61px;
+    width: 90%;
+    background-color: #e7e9f0;
+    
+    overflow-y: scroll;
+}
+
 #back {
     display: none;
+}
+
+#backoffice {
+    position: fixed;
+    left: 15%;
+    top: 61px;
+    width: 85%;
+    background-color: #e7e9f0;
+    
+    overflow-y: scroll;
 }
 
 #viewer-global {
@@ -122,17 +142,21 @@ html, body {
     position: fixed;
     top: 0;
     left: 0;
-    width: 10%;
     height: 100%;
-    z-index: 100;
+    z-index: 102;
 }
 
-.barre-laterale>h1 {
+.barre-laterale>a {
+    text-decoration: none;
+}
+
+.barre-laterale>a h1 {
     background-image: url(../img/dino_100.png);
     background-repeat: no-repeat;
     background-position: top center;
 
     text-align: center;
+    text-decoration: none;
     color: white;
     
     margin-top: 0;
@@ -141,7 +165,7 @@ html, body {
     cursor: pointer;
 }
 
-.barre-laterale>h1:hover {
+.barre-laterale>a h1:hover {
     background-image: url(../img/dino_flou_100.png);
     
     font-family: "Courier New", Courier, monospace;
@@ -149,10 +173,16 @@ html, body {
 
 #laterale-front {
     background-color: #8ecb32;
+    width: 10%;
+}
+
+#laterale-back {
+    background-color: #514985;
+    width: 15%;
 }
 
 /*###########################
-        Menu
+        Menu général
 #############################*/
 
 .menu-lateral {
@@ -162,22 +192,27 @@ html, body {
 .menu-lateral li {
     list-style-type: none;
     cursor: pointer;
-    
-    padding-top: 75px;
 }
 
 .menu-lateral h1 {
     font-size: 0.9em;
-
-    text-align: center;
     color: white;
-    
     margin: 0;
-    padding-bottom: 7px;
 }
 
+/*###########################
+        Menu front
+#############################*/
+
 #menu-front li {
+    padding-top: 75px;
+    padding-bottom: 7px;
     background-color: #83bc2f;
+    text-align: center;
+    border-top: 1px dotted #558011;
+    
+    background-repeat: no-repeat;
+    background-position: top center;
 }
 
 #menu-front li:hover {
@@ -186,32 +221,22 @@ html, body {
 
 #menu-queue {
     background-image: url(../img/upload_100.png);
-    background-repeat: no-repeat;
-    background-position: top center;
     
-    border-top: 1px dotted #558011;
 }
 
 #menu-admin {
     background-image: url(../img/admin_100.png);
-    background-repeat: no-repeat;
-    background-position: top center;
-    
-    border-top: 1px dotted #558011;
-    border-bottom: 1px dotted #558011;
 }
 
 /*#####################################
 #
-#        Barre top
+#        Barre top général
 #
 #######################################*/
 
 .barre-top {
     position: fixed;
     top: 0;
-    left: 10%;
-    width: 90%;
     height: 60px;
     
     background-color: #d6dcea;
@@ -219,6 +244,16 @@ html, body {
     border-bottom: 1px solid #a9a9a9;
     
     z-index: 100;
+}
+
+#top-front {
+    left: 10%;
+    width: 90%;
+}
+
+#top-back {
+    left: 15%;
+    width: 85%;
 }
 
 .busquedor {
@@ -338,16 +373,6 @@ html, body {
 #
 #######################################*/
 
-#core {
-    position: fixed;
-    left: 10%;
-    top: 61px;
-    width: 90%;
-    background-color: #e7e9f0;
-    
-    overflow-y: scroll;
-}
-
 #liste {
    margin-right: 20px;
    margin-left: 20px;
@@ -448,15 +473,30 @@ html, body {
     text-decoration: underline;
 }
 
-.ghost-champ {
-}
-
 .ghost-type {
     background-color: #11BC33 !important;
 }
 
 .ghost-categorie {
     background-color: #078833 !important;
+}
+
+.scroll-holder {
+    position: absolute;
+    left: 0;
+    opacity: 0;
+}
+
+#top.scroll-holder  {
+    top: 0;
+    height: 81px;
+    width: 100%;
+}
+
+#bottom.scroll-holder {
+    bottom: 0;
+    height: 50px;
+    width: 100%;
 }
 
 /*###########################

@@ -22,7 +22,7 @@ var change_monde_store = function() {
     
     li.attr("data-selected", "1");
     
-    $("#container-details").hide();
+    $("#container-details").slideUp();
     
     reload_champs();
 };
@@ -55,7 +55,7 @@ var remove_champ_store = function() {
         }
     });
     
-    $("#container-details").hide();
+    $("#container-details").slideUp();
     
     reload_champs();
 };
@@ -73,7 +73,7 @@ var change_champ_store = function() {
         document.store.champs[champ] = valeur;
         document.store.last_champ = champ;
     }
-    $("#container-details").hide();
+    $("#container-details").slideUp();
     reload_champs();
 };
 
@@ -94,17 +94,18 @@ var affiche_details = function() {
                 .types[document.store.type_doc.pk]
     }
     
+    $("#container-details").slideDown();
+    
     if (type.detail == 1) {
-        $("#input-detail").show();      
+        $("#input-detail").slideDown();      
         $("#detail-store").autocomplete({
             source: type.details
-        });
+        }); // TODO : styler l'autocomplete pour qu'il soit visible!
     } else {
-        $("#input-detail").hide();
+        $("#input-detail").slideUp();
     }
     
     $("#bouton-store").unbind().click(archive_document);
-    $("#container-details").show("slow");
 };
 
 var remove_type_store = function() {
@@ -113,7 +114,7 @@ var remove_type_store = function() {
     document.store.categorie = "";
     document.store.type_doc = {};
     
-    $("#container-details").hide();
+    $("#container-details").slideUp();
     
     reload_champs();
 };
@@ -376,7 +377,7 @@ var change_document = function(document) {
         queue[document].store.champs = Store.champs;
     }
     
-    $("#container-details").hide();
+    $("#container-details").slideUp();
     
     reload_champs();
 };

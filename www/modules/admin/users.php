@@ -2,9 +2,8 @@
 session_start();
 ?>
 <!--LOCALISATION-->
-<h1>Administracion de los usuarios</h1>
+<h1 id="titre-users">Administracion de los usuarios</h1>
 <div id="users">
-    <div id="add-user" class="clickable">Agregar un usuario</div>
     <div id="container-new-user">
         <div id="regles-new-user">
             <div style="display: none;"></div>
@@ -13,12 +12,9 @@ session_start();
             <div style="display: none;">
                 <ul>
                     <li><input type="text" placeholder="Nombre de usuario" name="login" id="new-login">
-                        <div id="tip-login" class="tip">Entre un nombre de usuario entre 8 y 32 caracteres.</div>
                     </li>
                     <li><input type="password" placeholder="Contrasena" name="pass" id="new-pass">
-                        <div id="tip-pass" class="tip">Su contrasena es la pieza llave de la seguridad de sus datos.<br/>
-                        Una contrasena robusta contiene a lo menos 8 caracteres, incluyendo una minuscula, una mayuscula, un numero y un caracter especial.<br/>
-                        Por ejemplo : <b>Bacon_2013</b> es una deliciosa contrasena.</div>    
+                        
                     </li>
                     <li><input type="password" placeholder="Repetir contrasena" name="pass2" id="new-pass2"></li>
                     <li><input type="text" placeholder="Correo electronico" name="mail" id="new-mail"></li>
@@ -32,14 +28,19 @@ session_start();
             <?php } ?>
                         </select>
                     </li>
-                    <li><div id="new-regles" class="clickable"><p>Editar reglas</p></div></li>
-                    <li><div id="save-user" class="clickable" data-user="new"><p>Guardar usuario</p></div></li>
                     <li id="error-new-user">Todos los campos no estan llenos!</li>
                 </ul>
             </div>
+            <div>
+                <div id="tip-login" class="container-error">Entre un nombre de usuario entre 8 y 32 caracteres.</div>
+                <div id="tip-pass" class="container-error">Su contrasena es la pieza llave de la seguridad de sus datos.<br/>
+                        Una contrasena robusta contiene a lo menos 8 caracteres, incluyendo una minuscula, una mayuscula, un numero y un caracter especial.<br/>
+                        Por ejemplo : <b>Bacon_2013</b> es una deliciosa contrasena.</div>    
+            </div>
         </div>
+        <div style="clear: both;"></div> <!-- TODO : utiliser le clearboth pour plus avoir à resizer le popup store! -->
     </div>
-    <div style="clear: both;"></div>
+    <div id="add-user" class="boutons">Crear usuario</div>
     <ul id="liste-users"></ul>
 </div>
 

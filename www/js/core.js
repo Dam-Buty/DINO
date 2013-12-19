@@ -1,13 +1,4 @@
 
-var Core = {
-    monde: 0,
-    champs: {},
-    recherche: [],
-    limit: [0, 100],
-    liste: [],
-    dates: [],
-    users: []
-};
 
 var bootstrap_list = function() {
     // Peuple la liste des mondes    

@@ -56,21 +56,24 @@ var bootstrap_users = function() {
                             })
                             .append(
                                 $("<img/>")
-                                .attr("src", "img/edit.png")
-                                .addClass("user-edit")
-                                .click(edit_user)
+                                .addClass("bouton-del-back")
+                                .attr("src", "img/del_back_30.png")
+                                .addClass("user-del")
+                                .click(del_user)
                             )
                             .append(
                                 $("<img/>")
-                                .attr("src", "img/key.png")
+                                .addClass("bouton-key-back")
+                                .attr("src", "img/key_back_30.png")
                                 .addClass("user-key")
                                 .click(key_user)
                             )
                             .append(
                                 $("<img/>")
-                                .attr("src", "img/del.png")
-                                .addClass("user-del")
-                                .click(del_user)
+                                .addClass("bouton-edit-back")
+                                .attr("src", "img/edit_back_30.png")
+                                .addClass("user-edit")
+                                .click(edit_user)
                             )
                             .append(
                                 $("<div></div>")
@@ -121,16 +124,15 @@ var bootstrap_users = function() {
                         ul.append(li);
                     });
                     
+                    $("#titre-users").fadeIn();
+                    $("#users").fadeIn();
+                    
                     // Bind d'events
                     $(".click-regles").unbind().click(toggle_regles);
-                    
-                    // Affecte les boutons
                     $("#add-user").unbind().click(toggle_new_user);
-                    $("#new-regles").unbind().click(toggle_regles);
                     $("#save-user").unbind().click(save_user);
                     $("#new-niveau").unbind().change(toggle_niveau);
                     $(".edit-niveau").unbind().change(toggle_niveau);
-                    //$(".edit-mail").unbind()
                     
                     bootstrap_regles();
             },
@@ -233,7 +235,7 @@ var toggle_niveau = function() {
     }
     
     if (!div.find("div").is(":visible")) {
-        click.click();
+        toggle_regles(true);
     }
     
     $.each(profil.mondes, function(i, monde) {
@@ -247,10 +249,8 @@ var toggle_niveau = function() {
     });
 };
 
-var toggle_regles = function() {
-    var click = $(this);
-    
-    if (click.attr("id") == "new-regles") {
+var toggle_regles = function(isnew) {
+    if (isnew) {
         div = $("#regles-new-user>div");
     } else {
         div = click.next("div").children("div");
@@ -399,8 +399,6 @@ var toggle_new_user = function() {
         $("#new-niveau").chosen({
             width: $("#new-login").outerWidth(),
             disable_search_threshold: 10
-        }).change(function() {
-            $(this).addClass("OK");
         });
     }
 };
@@ -409,8 +407,11 @@ var tip_login = function() {
     var field = $("#new-login");
     var tip = $("#tip-login");
     
-    // LOCALISATION
     tip.fadeIn();
+    
+    tip.offset({
+        top: field.offset().top
+    });
     
     if (field.hasClass("OK")) {
         setTimeout(function() {
@@ -473,6 +474,10 @@ var tip_pass = function() {
     
     // LOCALISATION
     tip.fadeIn();
+    
+    tip.offset({
+        top: field.offset().top
+    })
     
     if (field.hasClass("OK")) {
         setTimeout(function() {

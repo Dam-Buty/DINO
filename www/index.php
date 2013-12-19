@@ -12,6 +12,7 @@ session_start();
 <meta content="Pagina de accesso a sus archivos digitales" name="description" />
 <link href='css/Oswald-Bold.ttf' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/global.css?v=3" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/errors.css?v=3" media="screen" type="text/css"/>
 
 <?php
     if ($_SESSION["niveau"] > 20) {
@@ -44,10 +45,10 @@ session_start();
 
 <div id="front">
     <div id="laterale-front" class="barre-laterale">
-        <h1>DINO</h1>
+        <a href="index.php"><h1>DINO</h1></a>
         <ul class="menu-lateral" id="menu-front">
             <li id="menu-queue">
-                <h1>SUBIR ARCHIVO</h1>
+                <h1>SUBIR DOCUMENTOS</h1>
             </li>
     <?php
     if ($_SESSION["niveau"] > 20) {
@@ -61,7 +62,7 @@ session_start();
         </ul>
     </div>
 
-    <div id="front-top" class="barre-top">
+    <div id="top-front" class="barre-top">
         <select class="busquedor" type="text" id="search" multiple="multiple" data-placeholder="Buscar en este mundo..." data-state="closed"></select>
         <div id="switch-sort">
             <select> <!-- list-sort -->
@@ -79,11 +80,39 @@ session_start();
     
 </div>
 
-<div id="front-bottom" class="barre-bottom">
-
+<?php
+if ($_SESSION["niveau"] > 20) {
+?>
+        
+<div id="back">
+    <div id="laterale-back" class="barre-laterale">
+        <a href="index.php"><h1>DINO</h1></a>
+        <ul class="menu-lateral" id="menu-back">
+            <li id="menu-retour">
+                <h1>Mis documentos</h1>
+            </li>
+            <li id="menu-users">
+                <h1>Usuarios</h1>
+            </li>
+            <li id="menu-listes">
+                <h1>Listas</h1>
+            </li>
+            <li id="menu-profil">
+                <h1>Perfil<br/>documental</h1>
+            </li>
+        </ul>
+    </div>
+    
+    <div id="top-back" class="barre-top"></div>
+    
+    <div id="backoffice"></div>
 </div>
 
-<div id="back"></div>
+<?php
+}
+?>
+
+<div class="barre-bottom"></div>
 
 <div id="opak"></div>
 
