@@ -1,18 +1,28 @@
 
 var Drag = {
     timeout: undefined,
-    delay: 400
+    delay: 400,
+    interval: undefined,
+    idelay: 400,
+    scroll: 60
 };
 
 var dragstart = function(e) {
+    var dragged = this;
     $(this).fadeTo("fast", 0.4);
     var monde = profil.mondes[Core.monde];
     
-    $(this).find(".details-queue").slideUp();
-    $(this).find("img").fadeOut();
+    $(this).find(".details-queue").hide();
+    $(this).find("img").hide();
+    $(this).css("border-bottom", 0);
+    $(this).find(".filename").css("margin-right", 0);
     
+    e.originalEvent.dataTransfer.setDragImage(dragged, 0, 0);
+        
     e.originalEvent.dataTransfer.effectAllowed = 'move';
     e.originalEvent.dataTransfer.setData('text/html', $(this).attr("data-position"));
+    
+    //e.originalEvent.dataTransfer.setDragImage($("<img/>").attr("src", "img/dino_100.png")[0], 0, 0);
     
     // On cache les palomitas
     $('img[data-type="palomita"]').hide();
@@ -31,7 +41,10 @@ var dragstart = function(e) {
             "data-niveau": -1,
             "data-stack": ""
         })
-        .text("Otro " + monde.champs[monde.cascade[0]].label + "...") // LOCALISATION
+        .append(
+            $("<span></span>")
+            .text("Otro " + monde.champs[monde.cascade[0]].label + "...") // LOCALISATION
+        )
         .on("dragenter", dragenter)
         .on("dragover", dragover)
         .on("dragleave", dragleave);
@@ -42,16 +55,18 @@ var dragstart = function(e) {
 
 var dragend = function(e) {
     $(this).fadeTo("fast", 1);
-    $(".ghost").slideUp({ complete: function() {
-        $(".ghost").remove();
-    }});
-    $(".ghost-word").remove();
-    $(".over").removeClass("over");
-    $("#liste li").removeClass("hovering");
-    $('img[data-type="palomita"]').show();
+//    $(".ghost").slideUp({ complete: function() {
+//        $(".ghost").remove();
+//    }});
+//    $(".ghost-word").remove();
+//    $(".over").removeClass("over");
+//    $("#liste li").removeClass("hovering");
+//    $('img[data-type="palomita"]').show();
     
     $(this).find(".details-queue").slideDown();
     $(this).find("img").fadeIn();
+    $(this).css("border-bottom", "");
+    $(this).find(".filename").css("margin-right", "");
 };
 
 var dragover = function(e) {
@@ -75,8 +90,6 @@ var dragenter = function(e) {
     
     // On introduit un delay pour éviter que ça danse trop
     Drag.timeout = setTimeout( function() {
-        
-        
         
         // Selon l'élément sur lequel on dragge
         switch(li.attr("data-type")) {
@@ -129,19 +142,23 @@ var dragenter = function(e) {
                                 label: champ.liste[i]
                             });
                             
-                            marge = (niveau + 1) * 2;
-                            li.after(new_li.css({ "padding-left": marge + "%" }));
+                            marge = (niveau + 2) * 2;
+                            li.after(new_li.css({ "margin-left": marge + "%" }));
                         }
                     });
                     
                 } else {
-                    li.closest("ul").children('li[data-type="document"]').slideUp();
                     champ = monde.champs[monde.cascade[li.attr("data-niveau")]];
                     
+                    // On ferme les enfants ouverts
+                    li.next("ul").children('ul').slideUp();
+                    // les siblings ouverts
+                    li.siblings("li").next("ul").slideUp();
+                    // les lignes ghost
                     $(".ghost").not(".ghost-first").remove();
                     $(".ghost-word").remove();
-                    $("ul[data-ghost]").removeAttr("data-ghost");
-                    li.find("div").attr("data-state", "open");
+                    $("ul[data-ghost]").remove();
+                    
                     
                     /////////////////////////
                     // On détache tous les sous-éléments
@@ -198,8 +215,8 @@ var dragenter = function(e) {
                                 .text("Replazar ") // LOCALISATION
                             )
                         }
-                        marge = li.attr("data-stack").split(",").length * 2 + 2;
-                        ul.append(new_li.css({ "padding-left": marge + "%" }));
+                        marge = li.attr("data-stack").split(",").length * 2;
+                        ul.append(new_li.css({ "margin-left": marge + "%" }).show());
                     }); // FIN EACH TYPE
                     
                     // - Catégories + types
@@ -238,11 +255,11 @@ var dragenter = function(e) {
                                 );
                             }
                             marge = li.attr("data-stack").split(",").length * 2 + 4;
-                            new_ul.append(li_type.css({ "padding-left": marge + "%" }));
+                            new_ul.append(li_type.css({ "margin-left": marge + "%" }));
                         });
                         
                         marge = li.attr("data-stack").split(",").length * 2;
-                        ul.append(new_li.css({ "padding-left": marge + "%" }));
+                        ul.append(new_li.css({ "margin-left": marge + "%" }));
                         ul.append(new_ul);
                     }); // FIN EACH CATEGORIE
                     
@@ -258,6 +275,7 @@ var dragenter = function(e) {
                         if (champs[i] === undefined) {
                             var new_li = ghost_champ({
                                 champ: monde.cascade[niveau], 
+                                label_champ: monde.champs[monde.cascade[niveau]].label,
                                 pk: i, 
                                 niveau: niveau, 
                                 stack: li.attr("data-stack"), 
@@ -265,13 +283,13 @@ var dragenter = function(e) {
                             });
                             
                             marge = (niveau) * 2;
-                            li.after(new_li.css({ "padding-left": marge + "%" }));
+                            li.after(new_li.css({ "margin-left": marge + "%" }));
                         }
                         ul.append(new_li);
                     });
             }
                     
-            ul.children("li").slideDown();
+            ul.slideDown();
             
             ul.find('ul[data-ghost]').find("li").slideDown();
             break;
@@ -282,9 +300,9 @@ var dragenter = function(e) {
 };
 
 var dragleave = function(e) {
-    var li = $(this);
-    
-    li.removeClass("over");
+    if (checkleave(e)) {
+        $(this).removeClass("over");
+    }
 };
 
 var drop = function(e) {
@@ -362,14 +380,9 @@ var ghost_champ = function(params) {
             "data-stack": params.stack + params.pk
         })
         .append(
-            $("<div></div>")
-            .attr({
-                "data-type": "champ",
-                "data-state": "closed"
-            })
-            .addClass("imgboutons")
-        )
-        .append("Agregar a " + params.label) // LOCALISATION
+            $("<span></span>")
+            .append("Agregar al " + params.label_champ + " <u>" + params.label + "</u>")
+        ) // LOCALISATION
         .on("dragenter", dragenter)
         .on("dragover", dragover)
         .on("dragleave", dragleave)
@@ -388,7 +401,10 @@ var ghost_type = function(params) {
             "data-categorie": params.categorie,
             "data-stack": params.stack
         })
-        .text("Nuevo " + params.label) // LOCALISATION
+        .append(
+            $("<span></span>")
+            .text("Nuevo " + params.label) // LOCALISATION
+        )
         .on("dragenter", dragenter)
         .on("dragover", dragover)
         .on("dragleave", dragleave)
@@ -404,12 +420,56 @@ var ghost_categorie = function(params) {
             "data-categorie": params.pk
         })
         .append(
-            $("<div></div>")
-            .attr({
-                "data-type": "categorie",
-                "data-state": "open"
-            })
-            .addClass("imgboutons")
-        )
-        .append(params.label);
+            $("<span></span>")
+            .append(params.label)
+        );
 };
+
+var scroll = function(i) {
+    $("#core").animate({
+        scrollTop: $("#core").scrollTop() + i * Drag.scroll
+    }, Drag.idelay, "linear");    
+};
+
+var scrollup = function(e) {
+    scroll(-1);
+    clearInterval(Drag.interval);
+    Drag.interval = setInterval(function() {
+        scroll(-1);
+    }, Drag.idelay);
+};
+
+var scrolldown = function(e) {
+    scroll(1);
+    clearInterval(Drag.interval);
+    Drag.interval = setInterval(function() {
+        scroll(1);
+    }, Drag.idelay);
+};
+
+var scrollstop = function(e) {
+    if (checkleave(e)) {
+        clearInterval(Drag.interval);
+        $("#core").stop();
+    }
+};
+
+// On vérifie que le dragleave n'a pas été levé
+// par un élément fils en vérifiant que la souris
+// est restée dans les coordonnées de l'élément parent
+var checkleave = function(e) {
+    var x = e.originalEvent.x;
+    var y = e.originalEvent.y;
+    var element = $(e.target);
+    
+    var arrondi = function(string) {
+        return Math.ceil(parseFloat(string));
+    }
+    
+    var min_x = element.offset().left + arrondi(element.css("margin-left")) + arrondi(element.css("border-left")) + arrondi(element.css("padding-left"));
+    var max_x = element.offset().left + element.outerWidth() - 2;
+    var min_y = element.offset().top + arrondi(element.css("margin-top")) + arrondi(element.css("border-top")) + arrondi(element.css("padding-top"));
+    var max_y = element.offset().top + element.outerHeight() - 2;
+    
+    return x < min_x || x > max_x || y < min_y || y > max_y;  
+}

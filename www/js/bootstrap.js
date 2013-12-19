@@ -26,6 +26,11 @@ var bootstrap = function() {
         $("#toggle-date").click(toggle_dates);
         $("#menu-queue").click(anime_queue);
         
+        $("#front-top").on("dragenter", scrollup);
+        $("#front-top").on("dragleave", scrollstop);
+        $("#front-bottom").on("dragenter", scrolldown);
+        $("#front-bottom").on("dragleave", scrollstop);
+        
         $.ajax({ url: "modules/core.php" })
         .done(function(core) {
             $("#front").append(core);
@@ -40,24 +45,26 @@ var bootstrap = function() {
                 
                 $("#date-store").datepicker({dateFormat: "dd/mm/yy"});
                 $("#date-store").datepicker('setDate', new Date());
-            });
             
-            $.ajax({ 
-                url: "do/doCheckAdmin.php",
-                statusCode: {
-                    200: function() {
-                        $.ajax({ url: "modules/admin.php" })
-                        .done(function(data) {
-                            $("#back").append(data);
-                            
-                            // On peut styler les éléments de l'admin ici
-                        });
+                $.ajax({ 
+                    url: "do/doCheckAdmin.php",
+                    statusCode: {
+                        200: function() {
+                            $.ajax({ url: "modules/admin.php" })
+                            .done(function(data) {
+                                $("#back").append(data);
+                                
+                                // On peut styler les éléments de l'admin ici                                
+                                $(window).trigger('resize');
+                            });
+                        },
+                        403: function() {
+                            $(window).trigger('resize');
+                        }
                     }
-                }
+                });        
             });
         });
-        
-        $(window).trigger('resize');
     });
     
 };
@@ -144,8 +151,8 @@ $(document).ready(function(){
 // TODO : optimiser! 
 $( window ).resize(function() {
     $("#core").css({
-        height: ($(window).height() - 132) + "px" // 61 px barre top
-    });                                          // 31 px barre bottom + 40px padding
+        height: ($(window).height() - 92) + "px" // 61 px barre top
+    });                                          // 31 px barre bottom
     
     $("#viewer-store").css("height", ($("#popup-store").innerHeight() - parseFloat($("#popup-store").css("padding-bottom")) - parseFloat($("#popup-store").css("padding-top")) - 4) + "px");
 //    $("#container-store").css("height", 0.97 * $("#popup-store").innerHeight() + $("#popup-store").offset().top - $("#viewer-store").offset().top + "px");

@@ -484,16 +484,16 @@ var construit_table = function() {
                         "data-detail": ligne.detail,
                         "data-niveau": stack_champs.length - 1
                     })
+                    .append(img)
                     .append(
-                        $("<div></div>").append(
-                            $("<span></span>")
-                            .addClass("document")
-                            .text(type + " " + ligne.detail)
-                            .click(affiche_document)
-                        ).append(
+                        $("<span></span>")
+                        .addClass("document")
+                        .text(type + " " + ligne.detail)
+                        .click(affiche_document)
+                        .append(
                             $("<i></i>")
                             .text(" (" + ligne.date + ")")
-                        ).append(img)
+                        )
                     );
                     current_ul.append(li.css("margin-left", marge + "%"));
         }

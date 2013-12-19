@@ -25,7 +25,7 @@ html, body {
 
 ::-webkit-scrollbar-thumb {
     width: 5px;
-    background-color: #54d5eb;
+    background-color: rgba(235, 84, 84, 1);
 }
 /*::-webkit-scrollbar-button  */
 /*::-webkit-scrollbar-track-piece */
@@ -345,8 +345,6 @@ html, body {
     width: 90%;
     background-color: #e7e9f0;
     
-    padding-top: 40px;
-    
     overflow-y: scroll;
 }
 
@@ -355,6 +353,10 @@ html, body {
    margin-left: 20px;
    
    border-top: 1px solid #dddddd;
+}
+
+#liste>ul {
+    margin-top: 5px;
 }
 
 #liste ul {
@@ -375,10 +377,86 @@ html, body {
     margin-top: 5px;
 }
 
+#liste li img {
+    margin-right: 5px;
+    margin-top: 5px;
+    float: right;
+    cursor: pointer;
+}
+
+#liste li span {
+    display: table-cell;
+    vertical-align: middle;
+    height: inherit;
+}
+
+#liste li div {
+    display: table-cell;
+    vertical-align: middle;
+    height: inherit;
+}
+
+.document {
+    cursor: pointer;
+}
+
+/*#####################################
+#
+#        Drag n drop
+#
+#######################################*/
+
 #liste li.hovering {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+#liste .ghost {
     padding: 4px;
     font-weight: bold;
     font-size: 1em;
+    
+    background-color: white !important;
+    background-image: url(../img/plus_30.png) !important;
+    background-position: 95% 50% !important;
+    
+    border: 2px dashed #b8b8b8 !important;
+    
+    color: #9b9b9b !important;
+}
+
+#liste .ghost[data-type="categorie"] {
+    background-color: #484848 !important;
+    color: #888888 !important;
+}
+
+#liste .over {
+    border: 2px dashed #4D4D4D !important;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#liste .over span {
+    pointer-events: none;
+}
+
+#liste .over div {
+    pointer-events: none;
+}
+
+.ghost-word {
+    text-decoration: underline;
+}
+
+.ghost-champ {
+}
+
+.ghost-type {
+    background-color: #11BC33 !important;
+}
+
+.ghost-categorie {
+    background-color: #078833 !important;
 }
 
 /*###########################
@@ -388,34 +466,47 @@ html, body {
 #liste li[data-type="champ"] {
     background-image: url(../img/client_20.png);
     cursor: pointer;
+    color: white;
 }
 
 #liste li[data-type="champ"] span {
     padding-left: 5px;
-    display: table-cell;
-    vertical-align: middle;
-    height: inherit;
 }
 
 #liste li[data-type="champ"][data-niveau="0"] {
     display: block;
+}
+
+#liste li[data-type="champ"][data-niveau="0"]:nth-of-type(odd) {
     background-color: #8ecb32;
-    color: white;
 }
 
-#liste li[data-type="champ"][data-niveau="1"] {
+#liste li[data-type="champ"][data-niveau="0"]:nth-of-type(even) {
+    background-color: #599801;
+}
+
+#liste li[data-type="champ"][data-niveau="1"]:nth-of-type(odd) {
     background-color: #56d4eb;
-    color: white;
 }
 
-#liste li[data-type="champ"][data-niveau="2"] {
+#liste li[data-type="champ"][data-niveau="1"]:nth-of-type(even) {
+    background-color: #48afc2;
+}
+
+#liste li[data-type="champ"][data-niveau="2"]:nth-of-type(odd) {
     background-color: #8ecb32;
-    color: white;
 }
 
-#liste li[data-type="champ"][data-niveau="3"] {
+#liste li[data-type="champ"][data-niveau="2"]:nth-of-type(even) {
+    background-color: #599801;
+}
+
+#liste li[data-type="champ"][data-niveau="3"]:nth-of-type(odd) {
     background-color: #56d4eb;
-    color: white;
+}
+
+#liste li[data-type="champ"][data-niveau="3"]:nth-of-type(even) {
+    background-color: #48afc2;
 }
 
 /*###########################
@@ -429,28 +520,52 @@ html, body {
     padding-right: 5px;
 }
 
-#liste ul[data-niveau="0"] {
+#liste ul[data-niveau="0"]:nth-of-type(odd) {
     border-left: 2px solid #8ecb32;
     border-right: 2px solid #8ecb32;
     border-bottom: 10px solid #8ecb32;
 }
 
-#liste ul[data-niveau="1"] {
+#liste ul[data-niveau="0"]:nth-of-type(even) {
+    border-left: 2px solid #599801;
+    border-right: 2px solid #599801;
+    border-bottom: 10px solid #599801;
+}
+
+#liste ul[data-niveau="1"]:nth-of-type(odd) {
     border-left: 2px solid #56d4eb;
     border-right: 2px solid #56d4eb;
     border-bottom: 10px solid #56d4eb;
 }
 
-#liste ul[data-niveau="2"] {
+#liste ul[data-niveau="1"]:nth-of-type(even) {
+    border-left: 2px solid #48afc2;
+    border-right: 2px solid #48afc2;
+    border-bottom: 10px solid #48afc2;
+}
+
+#liste ul[data-niveau="2"]:nth-of-type(odd) {
     border-left: 2px solid #8ecb32;
     border-right: 2px solid #8ecb32;
     border-bottom: 10px solid #8ecb32;
 }
 
-#liste ul[data-niveau="3"] {
+#liste ul[data-niveau="2"]:nth-of-type(even) {
+    border-left: 2px solid #599801;
+    border-right: 2px solid #599801;
+    border-bottom: 10px solid #599801;
+}
+
+#liste ul[data-niveau="3"]:nth-of-type(odd) {
     border-left: 2px solid #56d4eb;
     border-right: 2px solid #56d4eb;
     border-bottom: 10px solid #56d4eb;
+}
+
+#liste ul[data-niveau="3"]:nth-of-type(even) {
+    border-left: 2px solid #48afc2;
+    border-right: 2px solid #48afc2;
+    border-bottom: 10px solid #48afc2;
 }
 
 /*###########################
@@ -467,9 +582,6 @@ html, body {
 
 #liste li[data-type="categorie"] span {
     padding-left: 5px;
-    display: table-cell;
-    vertical-align: middle;
-    height: inherit;
     color: white;
 }
 
@@ -497,11 +609,9 @@ html, body {
     font-size: 0.8em;   
 }
 
-#liste li[data-type="document"] div {
+#liste li[data-type="document"] span {
     padding-left: 5px;
-    display: table-cell;
-    vertical-align: middle;
-    height: inherit;
+    cursor: pointer;
 }
 
 /*###########################
@@ -522,9 +632,6 @@ html, body {
 
 #liste li[data-type="revision"] span {
     padding-left: 5px;
-    display: table-cell;
-    vertical-align: middle;
-    height: inherit;
 }
 
 /*#####################################
@@ -539,7 +646,7 @@ html, body {
     height: 70%;
     width: 25%;
     
-    top: 15%;
+    top: 77px;
     left: -18%;
     
     padding: 5px;
@@ -859,9 +966,9 @@ html, body {
 }
 
 #container-classification li.store-type[data-selected="1"] {
-    background-color: #888888;
+    background-color: #d6dcea;
     color: black;
-    border: 1px solid black;
+    border: 2px solid #8ecb32;
     
     background-image: url(../img/OK_15.png);
     background-position: 95% 50%;
@@ -915,35 +1022,6 @@ html, body {
     background-color: red;
 }
 
-.over {
-    color: red !important;
-}
-
-.ghost {
-    padding: 4px;
-    font-weight: bold;
-    font-size: 1em;
-}
-
-.ghost-word {
-    text-decoration: underline;
-}
-
-.ghost-champ {
-    background-color: #00AB22 !important;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
-    border-top: 1px solid black;
-}
-
-.ghost-type {
-    background-color: #11BC33 !important;
-}
-
-.ghost-categorie {
-    background-color: #078833 !important;
-}
-
 .boutons-li {
     cursor: pointer;
     float: right;
@@ -959,8 +1037,4 @@ html, body {
     color: red;
     vertical-align: super;
     font-size: 1em;
-}
-
-.document {
-    cursor: pointer;
 }
