@@ -1,10 +1,38 @@
 var bootstrap_users = function() {
+    // Vide les champs de création si on vient de sauvegarder un user
+    // TODO : remettre les messages à zéro, voir pourquoi le select niveau ne
+    //        se remet pas à zéro, et si la sauvegarde marche vraiment
+    
+    $("#new-user")
+    .find("input")
+        .removeClass()
+        .val("")
+        .end()
+    .find("select")
+        .find("#new-niveau")
+            .val("")
+            .trigger("chosen:updated")
+            .end()
+        .find("[multiple]")
+            .val("")
+            .trigger("chosen:updated")
+            .end()
+        .find(".switch-me")
+            .val("KO")
+            .trigger("change")
+            .end()
+    ;
+    
     // Récupère la liste des users
     $.ajax({
         url: "json/users.php",
         statusCode: {            
             200: function(users) {
                 var ul = $("#liste-users").empty();
+                
+                $("#regles-new-user").hide();
+                $(".container-error").hide();
+                $("#container-new-user").hide();
 
                 Core.users = users;                
                 
@@ -27,6 +55,7 @@ var bootstrap_users = function() {
                                     .attr("value", 10)
                                     .text("Archivista")
                                 );
+                    var div = $("<div></div>");
                                 
                     if (profil.niveau >= 30) {
                         select.append(
@@ -46,6 +75,24 @@ var bootstrap_users = function() {
                         niveau = "Gerente";
                      }
                      
+                    if (user.mondes.length == 0) {
+                        div.html("Este <b>" + niveau + "</b> no tiene acceso a ningun documento!");
+                    } else {
+                        div.html("Un <b>" + niveau + "</b> con acceso a :");
+                        
+                        $.each(user.mondes, function(i, monde) {
+                            if (monde.length == 0) {
+                                div.append(
+                                "<p> - <b>todo</b> el mundo <b>" + profil.mondes[i].label + "</b>.</p>"
+                                );
+                            } else {
+                                div.append(
+                                "<p> - <b>ciertos " + profil.mondes[i].champs[profil.mondes[i].cascade[0]].pluriel + "</b> del mundo <b>" + profil.mondes[i].label + "</b></p>"
+                                );
+                            }
+                        });
+                    }
+                    
                      var li = $("<li></li>")
                             .addClass("liste")
                             .addClass("user")
@@ -86,10 +133,7 @@ var bootstrap_users = function() {
                                         .text(" ( " + user.mail + " )")
                                     )
                                 )
-                                .append(
-                                    $("<p></p>")
-                                    .html("Un " + niveau + ".")
-                                )
+                                .append(div)
                             )
                             .append(
                                 $("<div></div>")
@@ -101,12 +145,6 @@ var bootstrap_users = function() {
                                 )
                                 .append(
                                     $("<div></div>")
-                                    .addClass("clickable")
-                                    .addClass("click-regles")
-                                    .text("Editar reglas")
-                                )
-                                .append(
-                                    $("<div></div>")
                                     .addClass("edit-regles")
                                     .append(
                                         $("<div></div>")
@@ -115,9 +153,10 @@ var bootstrap_users = function() {
                                 )
                                 .append(
                                     $("<div></div>")
-                                    .addClass("clickable")
-                                    .attr("data-user", login)
-                                    .text("Guardar")
+                                    .addClass("boutons")
+                                    .addClass("back")
+                                    .addClass("save-user")
+                                    .text("Guardar las modificaciones")
                                     .click(save_user)
                                 )
                             );
@@ -128,9 +167,8 @@ var bootstrap_users = function() {
                     $("#users").fadeIn();
                     
                     // Bind d'events
-                    $(".click-regles").unbind().click(toggle_regles);
-                    $("#add-user").unbind().click(toggle_new_user);
-                    $("#save-user").unbind().click(save_user);
+                    $("#toggle-new-user").unbind().click(toggle_new_user);
+                    $("#save-new-user").unbind().click(save_user);
                     $("#new-niveau").unbind().change(toggle_niveau);
                     $(".edit-niveau").unbind().change(toggle_niveau);
                     
@@ -155,10 +193,6 @@ var bootstrap_regles = function() {
         var li = $("<li></li>")
                 .attr("data-monde", i)
                 .append(
-                    $("<span></span>")
-                    .text(monde.label)
-                )
-                .append(
                     $("<select></select>")
                     .addClass("switch-me")
                     .click(toggle_monde)
@@ -178,16 +212,22 @@ var bootstrap_regles = function() {
                         })
                         .text("OK")
                     )
+                )
+                .append(
+                    $("<span></span>") // LOCALISATION
+                    .append("Mundo <b>" + monde.label + "</b>")
                 );
                 
         var newli = $("<li></li>").addClass("tableau-regle");
         
         var select = $("<select></select>").attr({
             multiple: "multiple",
-            "data-placeholder": "Elige unos " + champ.pluriel + " para limitar el acceso del usuario",
+            "data-placeholder": "Usted puede limitar el acceso a ciertos " + champ.pluriel + " seleccionandolos aqui.",
             "data-monde": li.attr("data-monde"),
             "data-champ": monde.cascade[0]
-        });
+        })
+        .addClass("select-regles")
+        .change(toggle_limite);
         
         $.each(champ.liste, function(i, valeur) {
             select.append(
@@ -201,7 +241,7 @@ var bootstrap_regles = function() {
         ul.append(newli.append(select));
     });
     ul.clone().attr("id", "").appendTo($("#regles-new-user>div").empty());
-    $(".edit-regles>div").empty().append(ul.clone().attr("id", ""));
+    $(".edit-regles").empty().append(ul.clone().attr("id", ""));
     
     $.each(Core.users, function(i, user) {
         $.each(user.mondes, function(monde, valeurs) {
@@ -217,6 +257,15 @@ var bootstrap_regles = function() {
             .trigger("chosen:updated")
         });
     });
+    
+    $(".select-regles").unbind().change(toggle_limite);
+};
+
+var toggle_limite = function() {
+    var select = $(this);
+    var li = select.closest("li");
+    
+    li.prev("li").find("select").change();    
 };
 
 var toggle_niveau = function() {
@@ -227,16 +276,18 @@ var toggle_niveau = function() {
     if (select.attr("id") == "new-niveau") {
         ul = $(".liste-regles");
         click = $("#new-regles");
-        div = $("#regles-new-user>div");
+        div = $("#regles-new-user");
     } else {
         ul = select.nextAll(".edit-regles").find("ul");
         click = select.nextAll(".click-regles");
         div = select.nextAll(".edit-regles")
     }
     
-    if (!div.find("div").is(":visible")) {
+    if (!div.is(":visible")) {
         toggle_regles(true);
     }
+    
+    select.addClass("OK");
     
     $.each(profil.mondes, function(i, monde) {
         if (monde.niveau <= niveau) {
@@ -249,29 +300,24 @@ var toggle_niveau = function() {
     });
 };
 
-var toggle_regles = function(isnew) {
+var toggle_regles = function(isnew, user) {
     if (isnew) {
-        div = $("#regles-new-user>div");
+        div = $("#regles-new-user");
+        $("#save-new-user").fadeIn();
+        div.fadeIn();
     } else {
-        div = click.next("div").children("div");
+        div = $('li[data-user="' + user + '"]').find(".edit-user");
+        div.slideDown();
     }
     
-    if (div.is(":visible")) {
-        div.slideUp().fadeOut();
-    } else {
-        div.fadeIn();
-        // style les champs si ce n'est déjà fait
-        if (div.find(".switchy-container").length == 0) {
-            div.find(".switch-me").switchy(); // style les selects en switch
-            div.find(".switch-me").on("change", toggle_monde);
-            div.find("select[multiple]").chosen();
-            
-//            div.find('.switchy-bar').animate({
-//                backgroundColor: "#DCB3B3"
-//            });
-//            div.find("li.tableau-regle").hide();
-            div.find(".switch-me").trigger("change");
-        }
+    // style les champs si ce n'est déjà fait
+    if (div.find(".switchy-container").length == 0) {
+        div.find(".switch-me").switchy(); // style les selects en switch
+        div.find(".switch-me").on("change", toggle_monde);
+        div.find("select[multiple]").chosen({
+            inherit_select_classes: true
+        });
+        div.find(".switch-me").trigger("change");
     }
 };
 
@@ -279,14 +325,26 @@ var toggle_monde = function() {
     var switchy = $(this);
     var li = switchy.closest("li");
     var monde = profil.mondes[li.attr("data-monde")];
-    var champ = monde.champs[monde.cascade[0]];
     var newli = li.next("li");
     
     if ($(this).val() == 'OK') {
         bgColor = '#B8DCB3';
+        li.find("span").empty().append("Mundo <b>" + monde.label + "</b> : el usuario tiene <b>acceso</b>");
+        
+        if (newli.find("select").val() != null) {
+            li.find("span").append(
+                " <b>unicamente a los " + monde.champs[monde.cascade[0]].pluriel + " siguientes</b> :"
+            );
+        } else {
+            li.find("span").append(
+                " <b>completo</b>"
+            );
+        }
+        
         newli.show();
     } else if ($(this).val() == 'KO'){
         bgColor = '#DCB3B3';
+        li.find("span").empty().append("Mundo <b>" + monde.label + "</b> : el usuario <b>no tiene</b> acceso" );
         newli.hide();
     }
 
@@ -302,13 +360,36 @@ var edit_user = function() {
     if (li.attr("data-state") == "open") {
         li.attr("data-state", "closed")
         .find(".edit")
-            .slideUp();
+            .slideUp()
+            .end()
+        .find(".label-liste>div")
+            .slideDown()
+            .end()
+        .animate({
+            "background-position-x": "5px",
+            "background-position-y": "50%"
+        });
         
     } else {
         li.attr("data-state", "open")
         .find(".edit")
-            .slideDown();
-        
+            .slideDown()
+            .end()
+        .find(".label-liste>div")
+            .slideUp()
+            .end()
+        .animate({
+            "background-position-x": "5px",
+            "background-position-y": "5%"
+        }, {
+            complete: function() {
+                li.animate({
+                    "background-position-x": "5px",
+                    "background-position-y": "5px"
+                })
+            }
+        });
+           
         if (li.find(".chosen-container").length == 0) {
             li.find(".edit")
             .find(".edit-niveau").chosen({
@@ -316,6 +397,8 @@ var edit_user = function() {
                 disable_search_threshold: 10
             });
         }
+        
+        toggle_regles(false, li.attr("data-user"));
     }
 };
 
@@ -387,37 +470,69 @@ var toggle_new_user = function() {
     $("#new-pass2").keyup(check_pass2);
     
     $("#new-mail").unbind();
+    $("#new-mail").focus(tip_mail);
     $("#new-mail").keyup(check_mail);
     
-    
-    if ($("#new-user>div").is(":visible")) {
-        $("#new-user>div").slideUp();
-        $("#regles-new-user>div").slideUp();
+    if ($("#container-new-user").is(":visible")) {
+        $("#container-new-user").slideUp();
+        $("#container-new-user").slideUp();
+        $("#toggle-new-user").text("Crear usuario"); // LOCALISATION
+        $("#save-new-user").fadeOut();
     } else {
-        $("#new-user>div").slideDown();
+        $("#container-new-user").slideDown();
         // Style le combo
         $("#new-niveau").chosen({
             width: $("#new-login").outerWidth(),
-            disable_search_threshold: 10
+            disable_search_threshold: 10,
+            inherit_select_classes: true
         });
+        $("#toggle-new-user").text("Cancelar creacion");
     }
 };
+
+var tip_champ = function(field, tip, ignore_KO) {
+    var delay = 800;
+    
+    if (ignore_KO === undefined) {
+        ignore_KO = false;
+    }
+    
+    // Si le champ est en premier affichage ou en erreur
+    if (!field.hasClass("OK")) {
+        $(".container-arrow").not(tip).hide();
+        
+        tip.show().css({ opacity: 0 });
+        
+        tip.offset({
+            top: (field.offset().top + (field.outerHeight() / 2)) - (tip.outerHeight() / 2)
+        });
+        
+        tip.css({
+            opacity: 1
+        });
+        
+        if (field.hasClass("KO") && !ignore_KO) {
+            tip.removeClass("OK").addClass("KO");
+        }
+    } else { // Si le champ vient de passer OK, on le repositionne
+             // parceque le texte a changé
+        tip.offset({
+            top: (field.offset().top + (field.outerHeight() / 2)) - (tip.outerHeight() / 2)
+        });
+        
+        // Et on le passe en vert
+        tip.removeClass("KO").addClass("OK");
+        setTimeout(function() {
+            tip.fadeOut();
+        }, delay);
+    }
+}
 
 var tip_login = function() {
     var field = $("#new-login");
     var tip = $("#tip-login");
     
-    tip.fadeIn();
-    
-    tip.offset({
-        top: field.offset().top
-    });
-    
-    if (field.hasClass("OK")) {
-        setTimeout(function() {
-            tip.fadeOut();
-        }, 2000);
-    }
+    tip_champ(field, tip);
 };
 
 var check_login = function() {
@@ -426,15 +541,20 @@ var check_login = function() {
     var tip = $("#tip-login");
     
     if (login.length == 0) {
-        tip_login();
+        if (field.hasClass("OK")) {
+            field.removeClass("OK").addClass("KO");
+            tip_login();
+        }
     } else {
         if (login.length < 8) {
             field.removeClass("OK").addClass("KO");
-            tip.html("Su nombre de usuario debe ser un poco mas largo... (<b>8 caracteres minimum</b>)").slideDown().fadeIn();
+            tip.html("Su nombre de usuario debe ser un poco mas largo... (<b>8 caracteres minimum</b>)");
+            tip_login();
         } else {
             if (login.length > 32) {
                 field.removeClass("OK").addClass("KO");
-                tip.html("No tenemos lugar por tanto nombre de usuario! (<b>32 caracteres maximum</b>)").slideDown().fadeIn();
+                tip.html("No tenemos lugar por tanto nombre de usuario! (<b>32 caracteres maximum</b>)");
+                tip_login();
             } else {
                 $.ajax({
                     url: "do/doCheckUser.php",
@@ -445,21 +565,22 @@ var check_login = function() {
                     statusCode: {
                         200: function() {
                             field.removeClass("OK").addClass("KO");
-                            tip.html("<b>" + login + "</b> es un excelente nombre, pero no esta disponible :(").slideDown().fadeIn();
+                            tip.html("<b>" + login + "</b> es un excelente nombre, pero no esta disponible :(");
+                            tip_login();
                         },
                         404: function() {
                             field.removeClass("KO").addClass("OK");
-                            tip.html("<b>" + login + "</b> es un excelente nombre!").slideDown().fadeIn();
-                            setTimeout(function() {
-                                tip.slideUp();
-                                tip.fadeOut();
-                            }, 2000);
+                            tip.html("<b>" + login + "</b> es un excelente nombre!")
+                           
+                            tip_login();
                         },
                         403: function() {
                             window.location.replace("index.php");
                         },
                         500: function() {
-                            tip.html('Error de verificacion. Gracias por intentar otra vez', 'error'); // LOCALISATION
+                            field.removeClass("OK").addClass("KO");
+                            tip.html('Error de verificacion. Gracias por intentar otra vez'); // LOCALISATION
+                            tip_login();
                         }
                     }
                 });
@@ -472,19 +593,7 @@ var tip_pass = function() {
     var field = $("#new-pass");
     var tip = $("#tip-pass");
     
-    // LOCALISATION
-    tip.fadeIn();
-    
-    tip.offset({
-        top: field.offset().top
-    })
-    
-    if (field.hasClass("OK")) {
-        setTimeout(function() {
-            tip.slideUp();
-            tip.fadeOut();
-        }, 2000);
-    }
+    tip_champ(field, tip);
 };
 
 var check_pass = function() {
@@ -493,38 +602,44 @@ var check_pass = function() {
     var tip = $("#tip-pass");
     
     if (pass.length == 0) {
+        if (field.hasClass("OK")) {
+            field.removeClass("OK").addClass("KO");
+        }
         tip_pass();
     } else {
         if (pass.length < 8) {
             field.removeClass("OK").addClass("KO");
-            tip.html("Su contrasena debe ser un poco mas larga... (<b>8 caracteres minimum</b>)").slideDown().fadeIn();
+            tip.html("Su contrasena debe ser un poco mas larga... (<b>8 caracteres minimum</b>)");
+            tip_pass();
         } else {
             if (pass.length > 32) {
                 field.removeClass("OK").addClass("KO");
-                tip.html("No tenemos lugar por tanta contrasena! (<b>32 caracteres maximum</b>)").slideDown().fadeIn();
+                tip.html("No tenemos lugar por tanta contrasena! (<b>32 caracteres maximum</b>)");
+                tip_pass();
             } else {
                 if (countContain(pass, m_strUpperCase) == 0) {
                     field.removeClass("OK").addClass("KO");
-                    tip.html("Su contrasena debe contener a lo menos una mayuscula!").slideDown().fadeIn();
+                    tip.html("Su contrasena debe contener a lo menos una mayuscula!");
+                    tip_pass();
                 } else {
                     if (countContain(pass, m_strLowerCase) == 0) {
                         field.removeClass("OK").addClass("KO");
-                        tip.html("Su contrasena debe contener a lo menos una minuscula!").slideDown().fadeIn();
+                        tip.html("Su contrasena debe contener a lo menos una minuscula!");
+                        tip_pass();
                     } else {
                         if (countContain(pass, m_strNumber) == 0) {
                             field.removeClass("OK").addClass("KO");
-                            tip.html("Su contrasena debe contener a lo menos un numero!").slideDown().fadeIn();
+                            tip.html("Su contrasena debe contener a lo menos un numero!");
+                            tip_pass();
                         } else {
                             if (countContain(pass, m_strCharacters) == 0) {
                                 field.removeClass("OK").addClass("KO");
-                                tip.html("Su contrasena debe contener a lo menos un caracter especial!").slideDown().fadeIn();
+                                tip.html("Su contrasena debe contener a lo menos un caracter especial!");
+                                tip_pass();
                             } else {
                                 field.removeClass("KO").addClass("OK");
-                                tip.html("$*#} es una excelente contrasena!").slideDown().fadeIn();
-                                setTimeout(function() {
-                                    tip.slideUp();
-                                    tip.fadeOut();
-                                }, 2000);
+                                tip.html("$*#} es una excelente contrasena!");
+                                tip_pass();
                             }
                         }
                     }
@@ -555,22 +670,34 @@ var check_pass2 = function() {
     }
 };
 
+var tip_mail = function() {
+    var field = $("#new-mail");
+    var tip = $("#tip-mail");
+    
+    tip_champ(field, tip, true);
+}
+
 var check_mail = function() {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     var field = $(this);
+    var tip = $("#tip-mail");
     var mail = field.val();
     
     if (re.test(mail)) {
+        tip.html("El nombre de usuario y la contrasena seran enviados a esta direccion.");
         field.removeClass("KO").addClass("OK");
+        tip_mail();
     } else {
+        tip.html("DINO would never, ever do anything to harm an innocent mailbox.");
         field.removeClass("OK").addClass("KO");
+        tip_mail();
     }
 };
 
 var save_user = function() {
     var div = $(this);
-    var li = div.closest(li);
-    var pk = div.attr("data-user");
+    var li = div.closest("li");
+    var pk = li.attr("data-user");
     var message;
     var login, pass, mail, niveau, mondes;
     var all_ok, error;
@@ -629,8 +756,7 @@ var save_user = function() {
             statusCode : {
                 200: function() {
                     popup(message, "confirmation");
-                    $("#new-user>div").slideUp();
-                    $("#regles-new-user>div").slideUp();
+                    toggle_new_user();
                     bootstrap_users();
                 },
                 403: function() {
@@ -642,7 +768,8 @@ var save_user = function() {
             }
         });
     } else {
-        error.slideDown();
+        div.addClass("KO");
+        tip_champ(div, error);
     }
     
 };

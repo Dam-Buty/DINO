@@ -12,7 +12,7 @@ session_start();
 <meta content="Pagina de accesso a sus archivos digitales" name="description" />
 <link href='css/Oswald-Bold.ttf' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/global.css?v=3" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/errors.css?v=3" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/arrows.css?v=3" media="screen" type="text/css"/>
 
 <?php
     if ($_SESSION["niveau"] > 20) {
