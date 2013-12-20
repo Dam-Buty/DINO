@@ -1,7 +1,7 @@
 var bootstrap_users = function() {
     // Vide les champs de création si on vient de sauvegarder un user
     // TODO : remettre les messages à zéro, voir pourquoi le select niveau ne
-    //        se remet pas à zéro, et si la sauvegarde marche vraiment
+    //        se remet pas à zéro
     
     $("#new-user")
     .find("input")
@@ -9,10 +9,12 @@ var bootstrap_users = function() {
         .val("")
         .end()
     .find("select")
-        .find("#new-niveau")
-            .val("")
-            .trigger("chosen:updated")
-            .end()
+        .val("")
+        .trigger("chosen:updated")
+        .end()
+    ;
+    
+    $("#regles-new-user")
         .find("[multiple]")
             .val("")
             .trigger("chosen:updated")
@@ -22,6 +24,10 @@ var bootstrap_users = function() {
             .trigger("change")
             .end()
     ;
+    
+    $("#toggle-new-user").text("Crear usuario");
+    
+    reset_tips();
     
     // Récupère la liste des users
     $.ajax({
@@ -77,6 +83,7 @@ var bootstrap_users = function() {
                      
                     if (user.mondes.length == 0) {
                         div.html("Este <b>" + niveau + "</b> no tiene acceso a ningun documento!");
+                            div.addClass("noaccess");
                     } else {
                         div.html("Un <b>" + niveau + "</b> con acceso a :");
                         
@@ -156,6 +163,7 @@ var bootstrap_users = function() {
                                     .addClass("boutons")
                                     .addClass("back")
                                     .addClass("save-user")
+                                    .attr("data-user", login)
                                     .text("Guardar las modificaciones")
                                     .click(save_user)
                                 )
@@ -259,6 +267,32 @@ var bootstrap_regles = function() {
     });
     
     $(".select-regles").unbind().change(toggle_limite);
+};
+
+var reset_tips = function() {
+    $("#tip-login").html(
+        "Entre un nombre de usuario <b>entre 8 y 32 caracteres</b>."
+    );
+    
+    $("#tip-pass").html(
+        "Su contrasena es la pieza llave de la seguridad de sus datos.<br/>" +
+        "Una contrasena robusta contiene a lo menos 8 caracteres, incluyendo :<br/>" +
+        "<ul>" +
+            "<li>una minuscula,</li>" +
+            "<li>una MAYUSCULA,</li>" + 
+            "<li>un numero</li>" + 
+            "<li>y uno de esos caracteres especiales : !@#$%^&*?_~</li>" + 
+            "</ul>" +
+            "Por ejemplo : <b>Bacon_2013</b> es una deliciosa contrasena."
+    );
+    
+    $("#tip-mail").html(
+        "DINO would never, ever do anything to harm an innocent mailbox."
+    );
+    
+    $("#error-new-user").html(
+        "Todos los campos no estan llenos!"
+    );
 };
 
 var toggle_limite = function() {
@@ -480,13 +514,19 @@ var toggle_new_user = function() {
         $("#save-new-user").fadeOut();
     } else {
         $("#container-new-user").slideDown();
+        
         // Style le combo
         $("#new-niveau").chosen({
             width: $("#new-login").outerWidth(),
             disable_search_threshold: 10,
             inherit_select_classes: true
         });
+        
+        // boutons
         $("#toggle-new-user").text("Cancelar creacion");
+        if ($("#regles-new-user").is(":visible")) {
+            $("#save-new-user").fadeIn();
+        }
     }
 };
 
@@ -696,8 +736,7 @@ var check_mail = function() {
 
 var save_user = function() {
     var div = $(this);
-    var li = div.closest("li");
-    var pk = li.attr("data-user");
+    var pk = div.attr("data-user");
     var message;
     var login, pass, mail, niveau, mondes;
     var all_ok, error;

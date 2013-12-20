@@ -23,10 +23,31 @@ var bootstrap_admin = function() {
     
     $("#menu-admin").unbind().click(toggle_admin);
     $("#menu-retour").unbind().click(toggle_admin);
-    $("#menu-users").unbind().click(bootstrap_users);
-    $("#menu-admin").unbind().click(toggle_admin);
+    $("#menu-users").unbind().click(change_admin);
+    $("#menu-listes").unbind().click(change_admin);
     $("#menu-admin").unbind().click(toggle_admin);
     
+};
+
+var change_admin = function() {
+    var div = $(this);
+    
+    $("#backoffice>h1").fadeOut();
+    $("#backoffice>div").fadeOut();
+    
+    switch(div.attr("id")) {
+        case "menu-users":
+            bootstrap_users();
+            break;
+            
+        case "menu-listes":
+            bootstrap_monde();
+            break;
+            
+        case "menu-profil":
+            bootstrap_profil();
+            break;
+    }
 };
 
 // Checks a string for a list of characters

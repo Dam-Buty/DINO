@@ -1,16 +1,45 @@
 
 
 var bootstrap_monde = function() {
-    var monde = profil.mondes[$("#liste-valeurs").attr("data-monde")];
+    
+    $("#mondes-top-back").empty();
+    
+    $.each(profil.mondes, function(i, monde) {
+        $("#mondes-top-back").append(
+            $("<li></li>")
+            .attr({
+                "data-monde": i,
+                "data-selected": 0
+            })
+            .text(monde.label)
+            .click(change_monde_liste)
+        );
+    });
+
+    $("#mondes-top-back").find("li").eq(0).click();
+    $("#mondes").fadeIn();
+};
+
+var change_monde_liste = function() {
+    var li = $(this);    
+    var monde = profil.mondes[li.attr("data-monde")];
     var champ = monde.champs[monde.cascade[0]];
     var label = champ.label;
     var pluriel = champ.pluriel;
     var ul = $("#liste-valeurs");
     
-    $("#content-admin h1").text("Administracion de " + pluriel);
-    $(".input-new-valeur").attr("placeholder", "Agregar un " + label); 
+    // On met le monde en statut sélectionné
+    li.closest("ul").find("li").attr("data-selected", "0");
+    li.attr("data-selected", "1");
+    
+    // On met le monde dans liste-valeurs
+    $("#liste-valeurs").attr("data-monde", li.attr("data-monde"));
+    
+    $("#mondes h1").text("Administracion de " + pluriel);
+    $(".input-new-valeur").attr("placeholder", "Agregar un " + label).keyup(toggle_new_valeur); 
     ul.attr("data-champ", monde.cascade[0]);
     
+    // TODO : ça!
 //    var lignes_ouvertes = [];
 //    
 //    // On stocke les lignes ouvertes
@@ -32,7 +61,7 @@ var bootstrap_monde = function() {
 //    $.each(lignes_ouvertes, function(i, ligne){
 //        $('.valeur[data-champ="' + ligne[0] + '"][data-valeur="' + ligne[1] + '"]').click();
 //    });
-};
+}
 
 var affiche_valeur = function(reference, niveau, ul) {
     var monde = profil.mondes[$("#liste-valeurs").attr("data-monde")];
@@ -46,19 +75,22 @@ var affiche_valeur = function(reference, niveau, ul) {
             .addClass("valeur")
             .attr({
                 "data-champ": pk_champ,
-                "data-valeur": reference
+                "data-valeur": reference,
+                "data-niveau": niveau
             })
             .css("margin-left", marge + "%")
             .append(
                 $("<img/>")
-                .attr("src", "img/del.png")
+                .attr("src", "img/del_back_30.png")
                 .addClass("valeur-del")
+                .addClass("bouton-del-back")
                 .click(del_valeur)
             )
             .append(
                 $("<img/>")
-                .attr("src", "img/OK.png")
+                .attr("src", "img/save_back_30.png")
                 .addClass("valeur-save")
+                .addClass("bouton-save-back")
                 .click(save_valeur)
             )
             .append(
@@ -74,12 +106,13 @@ var affiche_valeur = function(reference, niveau, ul) {
     if (niveau + 1 in monde.cascade) {
         var new_valeur = $("#new-valeur").clone().attr("id", "");
         var new_champ = monde.champs[monde.cascade[niveau + 1]];
-        new_valeur.find("input").attr("placeholder", "Agregar un " + new_champ.label);
+        new_valeur.find("input").attr("placeholder", "Agregar un " + new_champ.label).keyup(toggle_new_valeur);
                         
         var new_ul = $("<ul></ul>")
                     .attr({
                         "data-parent": reference,
-                        "data-champ": monde.cascade[niveau + 1]
+                        "data-champ": monde.cascade[niveau + 1],
+                        "data-niveau": niveau
                     })
                     .append(
                         new_valeur
@@ -102,9 +135,25 @@ var toggle_edit_valeur = function() {
     var input = $(this);
     var li = input.closest("li");
     
-    input.addClass("modified");
-    li.find(".valeur-save").fadeIn();
+    if (input.val() == "") {
+        input.removeClass("OK").addClass("KO");
+        li.find(".valeur-save").fadeOut();
+    } else {
+        input.removeClass("KO").addClass("OK");
+        li.find(".valeur-save").fadeIn();
+    }
+    
 };
+
+var toggle_new_valeur = function() {
+    var input = $(this);
+    
+    if (input.val() == "") {
+        input.next("span").fadeOut();
+    } else {
+        input.next("span").fadeIn();
+    }
+}
 
 var save_valeur = function() {
     var monde = profil.mondes[$("#liste-valeurs").attr("data-monde")];

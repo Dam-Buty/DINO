@@ -26,7 +26,7 @@ session_start();
 
 <link rel="stylesheet" href="vendor/validationEngine.jquery.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="vendor/chosen.css?v=1" media="screen" type="text/css"/>
-<link rel="stylesheet" href="vendor/zebra_dialog.css?v=1" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/zebra_dialog_custom.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="vendor/switchy.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="vendor/jquery-ui.css" media="screen" type="text/css"/>
 
@@ -103,7 +103,9 @@ if ($_SESSION["niveau"] > 20) {
         </ul>
     </div>
     
-    <div id="top-back" class="barre-top"></div>
+    <div id="top-back" class="barre-top">
+        <ul class="list-mondes" id="mondes-top-back"></ul>
+    </div>
     
     <div id="backoffice"></div>
 </div>

@@ -32,18 +32,12 @@ session_start();
             </div>
             <div style="height: 0;">
                 <div id="tip-login" class="container-arrow OK">
-                    Entre un nombre de usuario entre 8 y 32 caracteres.
                 </div>
                 <div id="tip-pass" class="container-arrow OK">
-                    Su contrasena es la pieza llave de la seguridad de sus datos.<br/>
-                    Una contrasena robusta contiene a lo menos 8 caracteres, incluyendo una minuscula, una mayuscula, un numero y un caracter especial.<br/>
-                    Por ejemplo : <b>Bacon_2013</b> es una deliciosa contrasena.   
                 </div>
                 <div id="tip-mail" class="container-arrow OK">
-                    DINO would never, ever do anything to harm an innocent mailbox.
                 </div>
                 <div id="error-new-user" class="container-arrow KO">
-                    Todos los campos no estan llenos!
                 </div>
             </div>
         </div>
