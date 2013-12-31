@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 CLIENT=$1
 DOCUMENT=$2
@@ -6,11 +6,11 @@ CLEF=$3
 CACHE=../cache/$CLIENT/
 TEMP=temp/
 
-chdir $CACHE
+cd $CACHE
 
 openssl aes-256-cbc -d -in $DOCUMENT.css -pass pass:"$CLEF" -out $TEMP$DOCUMENT.tar.gz
 if [ "$?" = "0" ]; then
-    chdir $TEMP
+    cd $TEMP
     tar -O -zxvf $DOCUMENT.tar.gz
     if [ "$?" = "0" ]; then
         rm $DOCUMENT.tar.gz

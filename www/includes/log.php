@@ -42,9 +42,10 @@ function write_log($params) {
         // TODO : RAJOUTER LA GESTION DU REFERRER!!!
 #    echo $query_log;
 
+
     $hostname = "localhost";
-    $username = "root";
-    $dbname = "csstorage2";
+    $username = "dino_baby_root";
+    $dbname = "dino_baby";
     $password = "C4dillac5";
 
     $mysqli_log = new mysqli($hostname, $username, $password, $dbname);
