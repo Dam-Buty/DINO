@@ -1,0 +1,552 @@
+
+/*#####################################
+#
+#        Général admin
+#
+#######################################*/
+
+#backoffice ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#backoffice>h1 {
+    display: none;
+    margin-left: 10px;
+    margin-right: 10px;
+    font-size: 1.2em;
+    border-bottom: 1px solid #d6dcea;
+    padding-bottom: 15px;
+}
+
+#backoffice>div {
+    display: none;
+    padding-left: 20px;
+    padding-right: 10px;
+}
+
+.liste img {
+    float: right;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+img.bouton-edit-back:hover {
+    content: url(../img/edit_back_hover_30.png);
+}
+
+img.bouton-del-back:hover {
+    content: url(../img/del_back_hover_30.png);
+}
+
+img.bouton-key-back:hover {
+    content: url(../img/key_back_hover_30.png);
+}
+
+img.bouton-save-back:hover {
+    content: url(../img/save_back_hover_30.png);
+}
+
+input {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    line-height: 2em;
+    background-image: url(../img/gradient_input.png);
+    background-repeat: repeat-x;
+    background-size: contain;
+    border: 1px solid white;
+    padding-left: 10px;
+    border-radius: 5px;
+    
+    color: #535353;
+}
+
+input.KO {
+    border: 3px dotted #E23C3C;
+}
+
+input.OK {
+    border: 3px dotted #83bc2f;
+}
+
+#new-user input {
+    width: 90%;
+}
+
+
+/*#####################################
+#
+#        Menu back
+#
+#######################################*/
+
+#menu-back li {
+    padding-left: 50px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    
+    border-top: 1px dotted #3A335E;
+    
+    background-color: #514985;
+    background-repeat: no-repeat;
+    background-position: 5% 50%;
+    
+    height: 40px;
+}
+
+#menu-back li:hover {
+    background-color: #4a427b;
+}
+
+#menu-back h1 {
+    display: table-cell;
+    vertical-align: middle;
+    height: inherit;
+}
+
+#menu-retour {
+    background-image: url(../img/retour_40.png);
+    background-color: #83bc2f !important;
+    border-top: none !important;
+}
+
+#menu-users {
+    background-image: url(../img/user_40.png);
+}
+
+#menu-listes {
+    background-image: url(../img/list_40.png);
+}
+
+#menu-profil {
+    background-image: url(../img/profil_40.png);
+    border-bottom: 1px dotted #3A335E;
+}
+
+/*#####################################
+#
+#        Gestion users
+#
+#######################################*/
+
+#bucket-regles {
+    position: absolute;
+    left: -999999px;
+    width: 100%;
+}
+
+/*###########################
+        Partagé : REGLES
+#############################*/
+
+#regles-new-user {
+    width: 59%;
+    top: 0;
+    float: right;
+}
+
+.liste-regles .switchy-container {
+    margin: 0;
+    margin-bottom: 5px;
+}
+
+.edit-user .liste-regles>li {
+    font-size: 1.2em;
+}
+
+.tableau-regle {
+}
+
+.liste-regles>li>span {
+    font-size: 0.8em;
+    padding-bottom: 5px;
+}
+
+.liste-regles>li>span b {
+    text-transform: uppercase;
+}
+
+.liste-regles {
+    margin: 0;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    background-color: #C2C2C2;
+}
+
+.liste-regles>li {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 5px;
+}
+
+.liste-regles>li:nth-child(odd) {
+    border-top: 1px solid #949494;
+}
+
+.liste-regles>li:first-child {
+    border-top: none;
+}
+
+.liste-regles select {
+    width: 100%;
+}
+
+/*###########################
+        Chosen règles
+#############################*/
+
+.liste-regles .select-regles>input {
+    border-radius: 0;
+    color: white;
+    border: 0;
+    text-transform: uppercase;
+    box-shadow: none;
+}
+
+/* Fond champ */
+.liste-regles li:nth-child(4n+2) .select-regles>ul>li>input {
+    background: #8ecb32 !important;
+}
+
+.liste-regles li:nth-child(4n+4) .select-regles>ul>li>input {
+    background: #56d4eb !important;
+}
+
+.liste-regles li:nth-child(4n+2) .chosen-choices {
+    background: #8ecb32 !important;
+    border: 1px solid #558011;
+}
+
+.liste-regles li:nth-child(4n+4) .chosen-choices {
+    background: #56d4eb !important;
+    border: 1px solid #48afc2; !important;
+}
+
+/* valeur sélectionnée */
+.liste-regles li:nth-child(4n+2) .highlighted {
+    background: #75a32d !important;
+}
+
+.liste-regles li:nth-child(4n+4) .highlighted {
+    background: #48afc2 !important;
+}
+
+/* Fond drop */
+.liste-regles li:nth-child(4n+2) .chosen-drop {
+    background: #8ecb32 !important;
+}
+
+.liste-regles li:nth-child(4n+4) .chosen-drop {
+    background: #56d4eb !important;
+}
+
+/*###########################
+        CREATION
+#############################*/
+
+#container-new-user {
+    display: none;
+    position: relative;
+    border: 1px solid #838383;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+#new-user {
+    width: 35%;
+}
+
+#error-new-user {
+    display: none;
+}
+
+.select-new-niveau {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 95%;
+    line-height: 2em;
+    border-radius: 5px;
+    color: #535353;
+}
+
+#new-user  ::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #535353;
+}
+
+#new-user  :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #535353;
+}
+
+#new-user  ::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #535353;
+}
+
+#new-user  :-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #535353;
+}
+
+/*###########################
+        Liste users
+#############################*/
+
+#liste-users>li {
+    background-image: url(../img/user_grey_40.png);
+    background-position: 5px 50%;
+    background-repeat: no-repeat;
+    
+    padding-left: 60px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    
+    margin-top: 15px;
+    
+    font-size: 0.8em;
+}
+
+.liste {
+    border-top: 1px solid #949494;
+}
+
+.liste:first-of-type {
+    border-top: none;
+}
+
+#edit-user {
+    display: none;
+}
+
+.label-liste i {
+    font-weight: normal;
+    position: absolute;
+    right: 0;
+}
+
+.label-liste h1 {
+    font-size: 1em;
+    font-weight: bold;
+    margin: 0;
+    margin-bottom: 6px;
+    position: relative;
+    width: 50%;
+}
+
+.label-liste>div {
+    font-size: 0.9em;
+    margin: 0;
+    margin-bottom: 3px;
+    margin-top: 3px;
+    
+    border: 1px solid #B9B9B9;
+    background-color: #d6dcea;
+    
+    padding: 5px;
+    
+    width: 50%;
+}
+
+.label-liste p {
+    font-size: 0.9em;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+.label-liste b {
+    text-transform: uppercase;
+}
+
+.label-liste .noaccess {
+    background-color: #DCB3B3;
+}
+
+/*###########################
+        Edition d'user
+#############################*/
+
+.edit {
+    display: none;
+}
+
+.edit-niveau {
+    width: 35%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.error-edit-user {
+    display: none;
+}
+
+.tip {
+    display: none;
+}
+
+/*#####################################
+#
+#        Edition des mondes
+#
+#######################################*/
+
+#mondes {
+    margin: 10px;
+}
+
+#mondes ul {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-top: 5px;
+}
+
+#liste-valeurs li {
+    margin-top: 5px;
+}
+
+.add-valeur {
+    border: 2px dashed #b8b8b8;
+    padding: 5px;
+    color: #9b9b9b;
+}
+
+.add-new-valeur {
+    display: none;
+}
+
+li.valeur {
+    background-image: url(../img/tag_30.png);
+    background-position: 5px 50%;
+    background-repeat: no-repeat;
+    padding-left: 45px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    height: 40px;
+    border-top: none;
+}
+
+li.valeur[data-niveau="0"]:nth-of-type(odd) {
+    background-color: #8ecb32;
+}
+
+li.valeur[data-niveau="0"]:nth-of-type(even) {
+    background-color: #599801;
+}
+
+li.valeur[data-niveau="1"]:nth-of-type(odd) {
+    background-color: #56d4eb;
+}
+
+li.valeur[data-niveau="1"]:nth-of-type(even) {
+    background-color: #48afc2;
+}
+
+li.valeur[data-niveau="2"]:nth-of-type(odd) {
+    background-color: #8ecb32;
+}
+
+li.valeur[data-niveau="2"]:nth-of-type(even) {
+    background-color: #599801;
+}
+
+li.valeur[data-niveau="3"]:nth-of-type(odd) {
+    background-color: #56d4eb;
+}
+
+li.valeur[data-niveau="3"]:nth-of-type(even) {
+    background-color: #48afc2;
+}
+
+#mondes ul[data-niveau] {
+    display: none;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+}
+
+#mondes ul[data-niveau="0"]:nth-of-type(even) {
+    border-left: 2px solid #8ecb32;
+    border-right: 2px solid #8ecb32;
+    border-bottom: 10px solid #8ecb32;
+}
+
+#mondes ul[data-niveau="0"]:nth-of-type(odd) {
+    border-left: 2px solid #599801;
+    border-right: 2px solid #599801;
+    border-bottom: 10px solid #599801;
+}
+
+#mondes ul[data-niveau="1"]:nth-of-type(even) {
+    border-left: 2px solid #56d4eb;
+    border-right: 2px solid #56d4eb;
+    border-bottom: 10px solid #56d4eb;
+}
+
+#mondes ul[data-niveau="1"]:nth-of-type(odd) {
+    border-left: 2px solid #48afc2;
+    border-right: 2px solid #48afc2;
+    border-bottom: 10px solid #48afc2;
+}
+
+#mondes ul[data-niveau="2"]:nth-of-type(even) {
+    border-left: 2px solid #8ecb32;
+    border-right: 2px solid #8ecb32;
+    border-bottom: 10px solid #8ecb32;
+}
+
+#mondes ul[data-niveau="2"]:nth-of-type(odd) {
+    border-left: 2px solid #599801;
+    border-right: 2px solid #599801;
+    border-bottom: 10px solid #599801;
+}
+
+#mondes ul[data-niveau="3"]:nth-of-type(even) {
+    border-left: 2px solid #56d4eb;
+    border-right: 2px solid #56d4eb;
+    border-bottom: 10px solid #56d4eb;
+}
+
+#mondes ul[data-niveau="3"]:nth-of-type(odd) {
+    border-left: 2px solid #48afc2;
+    border-right: 2px solid #48afc2;
+    border-bottom: 10px solid #48afc2;
+}
+
+li.profil {
+    background-image: url(../img/list.png);
+    background-position: 0 5px;
+    background-repeat: no-repeat;
+    padding-left: 45px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    height: 40px;
+}
+
+li.profil-champ {
+    background-color: green;
+}
+
+li.profil-categorie {
+    background-color: grey;
+}
+
+#liste-profil ul {
+    border: 1px solid black;
+}
+
+.profil span {
+    margin-left: 5%;
+}
+
+.editable {
+    height: 40px;
+    font-size: 1em;
+    padding: 5px;
+    border: 1px solid gray;
+}
+
+.valeur-save {
+    display: none;
+}
+
+.profil-save {
+    display: none;
+}

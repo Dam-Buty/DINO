@@ -1,0 +1,80 @@
+
+/*
+    Kudos to http://cssarrowplease.com/
+*/
+
+.container-arrow {
+    display: none;
+	position: relative;
+	left: 100%;
+	font-size: 0.9em;
+	padding: 15px;
+	
+	width: 150%;
+	
+	font-size: 0.8em;
+	color: white;
+	text-align: justify;
+}
+
+.container-arrow ul {
+    margin-left: 2em !important;
+    margin-top: 1em !important;
+    margin-bottom: 1em !important;
+    list-style-type: square !important;
+}
+
+.container-arrow:after, .container-arrow:before {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.container-arrow:after {
+	border-width: 8px;
+	margin-top: -8px;
+}
+.container-arrow:before {
+	border-width: 11px;
+	margin-top: -11px;
+}
+
+.container-arrow.OK {
+	background: #3ac828;
+	border: 2px solid #7ad16f;
+}
+
+.container-arrow.OK:after {
+	border-color: rgba(233, 6, 13, 0);
+	border-right-color: #3ac828;
+}
+
+.container-arrow.OK:before {
+	border-color: rgba(237, 156, 166, 0);
+	border-right-color: #7ad16f;
+}
+
+.container-arrow.KO {
+	background: #E9060D;
+	border: 2px solid #ed9ca6;
+}
+
+.container-arrow.KO:after {
+	border-color: rgba(233, 6, 13, 0);
+	border-right-color: #E9060D;
+}
+
+.container-arrow.KO:before {
+	border-color: rgba(237, 156, 166, 0);
+	border-right-color: #ed9ca6;
+}
+
+#error-new-user {
+    left: 125%;
+}
+

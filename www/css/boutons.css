@@ -1,0 +1,56 @@
+
+.boutons {
+    padding: 10px;
+    box-sizing: border-box;
+    
+    color: white;
+    text-transform: uppercase;
+    text-align: center;
+    
+    cursor: pointer;
+    box-shadow: 0 0 3px white inset, 0 1px 1px rgba(0, 0, 0, 0.1);
+    
+    border-width: 2px;
+    border-style: solid;
+}
+
+#bouton-store {
+    margin-left: 25%;
+    margin-top: 10px;
+    background-color: #8ecb32;
+    border-color: #75a32d;
+    width: 50%;
+}
+
+#bouton-store:hover {
+    background-color: #75a32d;
+}
+
+.back {
+    background-color: #514985;
+}
+
+#toggle-new-user {
+    font-size: 0.7em;
+    float: left;
+    width: 20%;
+}
+
+#save-new-user {
+    font-size: 0.7em;
+    display: none;
+    margin-left: 10px;
+    float: left;
+    width: 20%;
+}
+
+.save-user {
+    margin-top: 10px;
+    font-size: 0.9em;
+    width: 20%;
+}
+
+.add-new-valeur {
+    width: 35%;
+    float: right;
+}

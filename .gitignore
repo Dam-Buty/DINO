@@ -1,7 +1,7 @@
 *.pdf
 *.log
 *.tar.gz
-*.css
 *.bak
 test_session.php
+www/cache/*/*.css
 
