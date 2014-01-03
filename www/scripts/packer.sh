@@ -5,7 +5,7 @@ DOCUMENT=$2
 CLEF=$3
 TEMP=../cache/$CLIENT/temp/
 
-chdir $TEMP
+cd $TEMP
 
 tar -zcvf $DOCUMENT.tar.gz $DOCUMENT 1>&2
 if [ "$?" = "0" ]; then
