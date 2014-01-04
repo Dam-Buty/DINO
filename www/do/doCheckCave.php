@@ -10,10 +10,12 @@ $temp_path = "../cache/" . $_SESSION["client"] . "/temp/";
 
 if ($cave = opendir($cave_path)) {
     $err = false;
+    $empty = true;
 
     // On liste tous les fichiers du spool
     while($file = readdir($cave)) {
         if ($file != "." && $file != "..") {
+            $empty = false;
 	        $elements = explode("__", $file);
 	        
 	        // si le document vient du printer du client

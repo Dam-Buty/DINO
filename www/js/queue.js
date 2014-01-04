@@ -50,7 +50,7 @@ var get_queue = function() {
 //      - quand c'est packé on release le document
 // - et on repart en demander un nouveau
 var clean_cave = function() {
-    $.ajax(
+    $.ajax({
         url: "do/doRequestDocument.php",
         type: "POST",
         statusCode : {
@@ -81,6 +81,7 @@ var clean_cave = function() {
                                         var document_li = set_li_status(create_li(document.displayname, document.size, document.user, document.date), 1);
                                         document.li = document_li;
                                         queue.push(document);
+                                        // TODO : ils ne se mettent pas bien dans la queue, en tout cas ils sont pas navigables via le store
                                         clean_cave();
                                     },
                                     500: function() {
@@ -107,7 +108,7 @@ var clean_cave = function() {
                 popup("Error! Gracias por intentar otra vez...", "error");
             }
         }
-    )
+    })
 }
 
 
