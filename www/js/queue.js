@@ -10,11 +10,112 @@ var queue = [];
 
 var uploading = [undefined, undefined, undefined];
 
+var bootstrap_queue = function() {
+    $.ajax({
+        url: "do/doCheckCave.php",
+        type: "POST",
+        statusCode : {
+            200: function() {
+                clean_cave();
+                get_queue();
+            },
+            403: function() {
+                window.location.replace("index.php");
+            },
+            500: function() {
+                popup("Error! Gracias por intentar otra vez...", "error");
+            }
+        }
+    });
+}
+
+var get_queue = function() {
+    $.ajax({ url: "json/queue.php" })
+    .done(function (data) {
+        $.each(data.queue, function() {
+            var document_li = set_li_status(create_li(this.displayname, this.size, this.user, this.date), 1);
+            this.li = document_li;
+            queue.push(this);
+        });
+        refresh_liste();
+    });
+    
+    $("#files-handler").unbind().change(handle_files);
+}
+
+// - Demande un document dans la cave.
+//      - le script marque le document en statut 888 pour pas qu'il se fasse attraper
+//        par qqn d'autre
+//      - on reçoit un filename qu'on envoie au packer
+//      - quand c'est packé on release le document
+// - et on repart en demander un nouveau
+var clean_cave = function() {
+    $.ajax(
+        url: "do/doRequestDocument.php",
+        type: "POST",
+        statusCode : {
+            200: function(document) {
+                $("#pre-jauge").text("Impresora virtual : "); // LOCALISATION
+                $("#post-jauge").text("Procesando " + document.filename);
+                $("#jauge-notification").progressbar({
+                    max: 100,
+                    value: false
+                });
+                
+                $.ajax({
+                    url: "do/doPack.php",
+                    type: "POST",
+                    data: {
+                        document: document.filename
+                    },
+                    statusCode: {
+                        200: function() {
+                            $.ajax({
+                                url: "do/doReleaseDocument.php",
+                                type: "POST",
+                                data: {
+                                    document: document.filename
+                                },
+                                statusCode: {
+                                    200: function() {
+                                        var document_li = set_li_status(create_li(document.displayname, document.size, document.user, document.date), 1);
+                                        document.li = document_li;
+                                        queue.push(document);
+                                        clean_cave();
+                                    },
+                                    500: function() {
+                                        popup("Error! Gracias por intentar otra vez...", "error");
+                                    }
+                                }
+                            });
+                        },
+                        500: function() {
+                            popup("Error! Gracias por intentar otra vez...", "error");
+                        }
+                    }
+                });
+            },
+            204: function() {
+                $("#pre-jauge").fadeOut();
+                $("#post-jauge").fadeOut();
+                $("#jauge-notification").fadeOut();
+            },
+            403: function() {
+                window.location.replace("index.php");
+            },
+            500: function() {
+                popup("Error! Gracias por intentar otra vez...", "error");
+            }
+        }
+    )
+}
+
+
 var compare = function(a,b) {
   if (a.status > b.status)
-     return -1;
+     return 1;
   if (a.status < b.status)
-    return 1;
+    return -1;
   return 0;
 }
 
@@ -87,6 +188,7 @@ var upload = function(list_element, uploader, queue_position) {
                     statusCode: {
                         200: function() {
                             set_li_status(queue[queue_position].li, 1);
+                            
                             handle_uploads();
                         },
                         500: function() {

@@ -7,6 +7,4 @@ if ($_SESSION["niveau"] >= 20) {
 } else {
     status(403);
 }
-header('Content-Type: application/json');
-echo $json;
 ?>

@@ -45,16 +45,6 @@
 </div>
 
 <script type="text/javascript">    
-    
-    $.ajax({ url: "json/queue.php" })
-    .done(function (data) {
-        $.each(data.queue, function() {
-            var document_li = set_li_status(create_li(this.displayname, this.size, this.user, this.date), 1);
-            this.li = document_li;
-            queue.push(this);
-        });
-        refresh_liste();
-    });
-    
-    $("#files-handler").change(handle_files);
+
+    bootstrap_queue();
 </script>

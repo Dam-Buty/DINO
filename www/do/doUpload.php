@@ -46,7 +46,7 @@ if ($_SESSION["niveau"] >= 10) {
     } else {
         status(500);
         write_log([
-            "libelle" => "MOVE uploaded document",
+            "libelle" => "INSERT nouveau document",
             "admin" => 0,
             "query" => $query,
             "statut" => 1,
@@ -59,7 +59,7 @@ if ($_SESSION["niveau"] >= 10) {
 } else {
     status(403);
     write_log([
-        "libelle" => "MOVE uploaded document",
+        "libelle" => "UPLOAD",
         "admin" => 0,
         "query" => $query,
         "statut" => 666,

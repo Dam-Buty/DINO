@@ -133,12 +133,13 @@ if (isset($_SESSION["user"])) {
     ////////////////////////
     // Récupération des informations générales de l'user
     ////////////////////////
-    $query = "SELECT `niveau_user`, `fk_client` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = '" . $_SESSION["user"] . "';";
+    $query = "SELECT `niveau_user`, `fk_client`, `printer_client` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = '" . $_SESSION["user"] . "';";
     
     if ($result = $mysqli->query($query)) {
         if ($row = $result->fetch_assoc()) {
             $_SESSION["niveau"] = $row["niveau_user"];
             $_SESSION["client"] = $row["fk_client"];
+            $_SESSION["printer"] = $row["printer_client"];
             
             $profil["niveau"] = $row["niveau_user"];
                         
