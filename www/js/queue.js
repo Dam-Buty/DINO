@@ -55,12 +55,7 @@ var clean_cave = function() {
         type: "POST",
         statusCode : {
             200: function(document) {
-                $("#pre-jauge").text("Impresora virtual : "); // LOCALISATION
-                $("#post-jauge").text("Procesando " + document.filename);
-                $("#jauge-notification").progressbar({
-                    max: 100,
-                    value: false
-                });
+                $("#container-notification").show().text("Impresora virtual : Procesando " + document.filename); // LOCALISATION
                 
                 $.ajax({
                     url: "do/doPack.php",
@@ -97,9 +92,7 @@ var clean_cave = function() {
                 });
             },
             204: function() {
-                $("#pre-jauge").fadeOut();
-                $("#post-jauge").fadeOut();
-                $("#jauge-notification").fadeOut();
+                $("#container-notification").fadeOut();
             },
             403: function() {
                 window.location.replace("index.php");

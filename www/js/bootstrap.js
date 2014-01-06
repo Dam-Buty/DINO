@@ -35,6 +35,10 @@ var bootstrap = function() {
         $("#toggle-date").click(toggle_dates);
         $("#menu-queue").click(anime_queue);
         
+        if (profil.printer != "") {
+            $("#help-printer").fadeIn().click(help_printer);
+        }
+        
         $.ajax({ url: "modules/core.php" })
         .done(function(core) {
             $("#front").append(core);
@@ -80,6 +84,10 @@ var bootstrap = function() {
             });
         });
     });
+    
+};
+
+var help_printer = function() {
     
 };
 

@@ -115,11 +115,8 @@ if ($_SESSION["niveau"] > 20) {
 ?>
 
 <div class="barre-bottom">
-    <div id="container-notification">
-        <div id="pre-jauge"></div>
-        <div id="jauge-notification"></div>
-        <div id="post-jauge"></div>
-    </div>
+    <div id="container-notification"></div>
+    <img id="help-printer" src="img/printer_20.png">
 </div>
 
 <div id="opak"></div>

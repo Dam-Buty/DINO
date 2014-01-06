@@ -142,6 +142,7 @@ if (isset($_SESSION["user"])) {
             $_SESSION["printer"] = $row["printer_client"];
             
             $profil["niveau"] = $row["niveau_user"];
+            $profil["printer"] = $row["printer_client"];
                         
             //////////////////////////
             // Récupération des mondes sur lesquels l'user a des droits
