@@ -530,7 +530,6 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
 
 #liste-profil li {
     margin-top: 5px;
-    
     font-size: 0.8em;
 }
 
@@ -585,6 +584,13 @@ li.add-profil {
     color: #9b9b9b;
     
     display: none;
+}
+
+li.add-profil img {
+    float: right;
+    cursor: pointer;
+    margin-right: 5px;
+    margin-top: 5px;
 }
 
 li.add-profil-categorie {

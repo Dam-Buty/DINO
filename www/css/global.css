@@ -763,8 +763,10 @@ html, body {
 }
 
 #container-files-handler input {
-    width: 90%;
+    width: 85%;
     margin-left: 5%;
+    border: 0;
+    background-image: none;
 }
 
 /*###########################
@@ -1091,6 +1093,7 @@ html, body {
 #champs-details input {
     float: right;
     margin-top: 1px;
+    line-height: 1em;
 }
 
 .error {

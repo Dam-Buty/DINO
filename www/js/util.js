@@ -1,5 +1,5 @@
 
-var collapse_liste = function(liste) {
+var collapse_liste = function(liste, default_state) {
     var toggle_line = function() {
         var click = $(this);
         var li = click.closest("li");
@@ -15,21 +15,31 @@ var collapse_liste = function(liste) {
             }
         }
     };
+    
+    if (default_state === undefined) {
+        default_state = "closed"
+    }
 
-    liste.find("ul").hide();
-    liste.find("li.liste")
-        .attr("data-state", "closed")
-        .css("position", "relative")
-        .append(
-            $("<div></div>")
-            .css({
-                position: "absolute",
-                top: 0,
-                height: "100%",
-                left: 0,
-                width: "40px"
-            })
-            .css("cursor", "pointer")
-            .click(toggle_line)
-        );
+    liste.find("li.liste").each(function(i, ligne) {
+        if ($(ligne).next("ul").length != 0) {
+            $(ligne).attr("data-state", default_state)
+                .css("position", "relative")
+                .append(
+                    $("<div></div>")
+                    .css({
+                        position: "absolute",
+                        top: 0,
+                        height: "100%",
+                        left: 0,
+                        width: "40px"
+                    })
+                    .css("cursor", "pointer")
+                    .click(toggle_line)
+                );
+        }
+    });
+        
+    if (default_state == "closed") {
+        liste.find("ul").hide();
+    }
 };

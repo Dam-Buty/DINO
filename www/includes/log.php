@@ -43,9 +43,14 @@ function write_log($params) {
 #    echo $query_log;
 
 
+#    $hostname = "localhost";
+#    $username = "dino_baby_root";
+#    $dbname = "dino_baby";
+#    $password = "C4dillac5";
+
     $hostname = "localhost";
-    $username = "dino_baby_root";
-    $dbname = "dino_baby";
+    $username = "root";
+    $dbname = "dino";
     $password = "C4dillac5";
 
     $mysqli_log = new mysqli($hostname, $username, $password, $dbname);

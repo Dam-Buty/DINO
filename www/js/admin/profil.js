@@ -79,10 +79,12 @@ var change_monde_profil = function() {
         niveau++;
     });
     
-    $(".edit-niveau-profil").chosen({
+    $("#liste-profil li").not(".add-profil").find(".edit-niveau-profil").chosen({
         disable_search_threshold: 10,
         inherit_select_classes: true
     });
+    
+    collapse_liste($("#liste-profil"), "open");
 }
 var affiche_ligne = function(type, pk, label, marge, obj) {
     var message = "";
@@ -192,6 +194,7 @@ var affiche_ligne = function(type, pk, label, marge, obj) {
         .addClass("profil-" + type);
     } else {
         li.addClass("add-profil")
+        .addClass("profil")
         .addClass("add-profil-" + type);
     }
     
@@ -226,15 +229,16 @@ var toggle_categorie_profil = function() {
         }
         li_new.slideDown({
             complete: function() {
-                li_new.find(".edit-niveau-profil").chosen({
-                    disable_search_threshold: 10,
-                    inherit_select_classes: true
-                });
+                if (li_new.find(".chosen-container").length == 0) {
+                    li_new.find(".edit-niveau-profil").chosen({
+                        disable_search_threshold: 10,
+                        inherit_select_classes: true
+                    });
+                }
             }
         });
     }
     
-    chosen_profil(li);
 };
 
 var toggle_type_profil = function() {
@@ -250,19 +254,20 @@ var toggle_type_profil = function() {
         }
         li_new.slideDown({
             complete: function() {
-                li_new.find(".edit-niveau-profil").chosen({
-                    disable_search_threshold: 10,
-                    inherit_select_classes: true
-                });
+                if (li_new.find(".chosen-container").length == 0) {
+                    li_new.find(".edit-niveau-profil").chosen({
+                        disable_search_threshold: 10,
+                        inherit_select_classes: true
+                    });
+                }
             }
         });
     }
     
-    chosen_profil(li);
 };
 
 var save_profil = function() {
-    var monde = $("#liste-profil").attr("data-monde");
+    var monde = $('#mondes-top-back li[data-selected="1"]').attr("data-monde");
     var click = $(this);
     var li = click.closest("li");
     var type = li.attr("data-type");
@@ -369,5 +374,4 @@ var save_profil = function() {
             
             break;
     }
-    
 };

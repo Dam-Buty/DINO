@@ -28,7 +28,7 @@ session_start();
 <link rel="stylesheet" href="vendor/chosen.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/zebra_dialog_custom.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="vendor/switchy.css?v=1" media="screen" type="text/css"/>
-<link rel="stylesheet" href="vendor/jquery-ui.css" media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/jquery-ui-1.10.3.custom.css" media="screen" type="text/css"/>
 
 </head>
 <body>
