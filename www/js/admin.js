@@ -1,31 +1,11 @@
 
 var bootstrap_admin = function() {
     
-    // Rajoute les champs dans le menu
-//    $.each(profil.mondes, function(i, monde) {        
-//        $("#sous-menu-monde").append(
-//            $("<li></li>")
-//            .attr({
-//                "data-action": "monde",
-//                "data-monde": i
-//            })
-//            .append("<a href='#'>Mundo " + monde.label + "</a>")
-//        );   
-//        $("#sous-menu-profil").append(
-//            $("<li></li>")
-//            .attr({
-//                "data-action": "profil",
-//                "data-monde": i
-//            })
-//            .append("<a href='#'>Mundo " + monde.label + "</a>")
-//        );
-//    });
-    
     $("#menu-admin").unbind().click(toggle_admin);
     $("#menu-retour").unbind().click(toggle_admin);
     $("#menu-users").unbind().click(change_admin);
     $("#menu-listes").unbind().click(change_admin);
-    $("#menu-admin").unbind().click(toggle_admin);
+    $("#menu-profil").unbind().click(change_admin);
     
 };
 
@@ -66,54 +46,6 @@ function countContain(string, reference)
 
     return nCount; 
 }
-
-
-//var menu_action = function() {
-//    var a = $(this);
-//    var li = a.closest("li");
-//    var action = li.attr("data-action");
-//    var monde = li.attr("data-monde");
-//    var bootstrap_action;
-//    
-//    switch(action) {
-//        case "users":
-//            bootstrap_action = bootstrap_users;
-//            break;
-//            
-//        case "monde":
-//            bootstrap_action = bootstrap_monde;
-//            break;
-//            
-//        case "profil":
-//            bootstrap_action = bootstrap_profil;
-//            break;
-//    }
-//    
-//    $.ajax({
-//        url: "modules/admin/" + action + ".php",
-//        statusCode: {            
-//            200: function(data) {
-//                $("#content-admin").empty().append(data);
-//                
-//                if (action == "monde") {
-//                    $("#liste-valeurs").attr("data-monde", monde);
-//                }
-//                
-//                if (action == "profil") {
-//                    $("#liste-profil").attr("data-monde", monde);
-//                }
-//                
-//                bootstrap_action();
-//            },
-//            403: function() {
-//                window.location.replace("index.php");
-//            },
-//            500: function() {
-//                popup('Error de recuperacion de datos. Gracias por intentar otra vez', 'error'); // LOCALISATION
-//            }
-//        }
-//    });
-//};
 
 var toggle_admin = function() {
     if (Core.admin) {

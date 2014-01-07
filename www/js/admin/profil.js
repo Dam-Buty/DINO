@@ -1,15 +1,40 @@
 
 var bootstrap_profil = function() {
-    var monde = profil.mondes[$("#liste-profil").attr("data-monde")];
+    
+    $("#mondes-top-back").empty();
+    
+    $.each(profil.mondes, function(i, monde) {
+        $("#mondes-top-back").append(
+            $("<li></li>")
+            .attr({
+                "data-monde": i,
+                "data-selected": 0
+            })
+            .text(monde.label)
+            .click(change_monde_profil)
+        );
+    });
+    
+    $("#profil").fadeIn();
+    $("#mondes-top-back").find("li").eq(0).click();
+};
+
+var change_monde_profil = function() {
+    var li = $(this);
+    var monde = profil.mondes[li.attr("data-monde")];
     var ul = $("#liste-profil").empty();
     var marge = 0;
     var niveau = 0;
+    
+    // On met le monde en statut sélectionné
+    li.closest("ul").find("li").attr("data-selected", "0");
+    li.attr("data-selected", "1");
     
     // Pour chaque champ, dans l'ordre
     $.each(monde.cascade, function(i, pk) {
         var marge_base = marge;
         var champ = monde.champs[pk];
-        var new_ul = $("<ul></ul>").css("margin-left", marge + "%");
+        var new_ul = $("<ul></ul>").css("margin-left", marge + "%").addClass("liste-champ");
         
         // On affiche le champ
         ul.append(affiche_ligne("champ", pk, champ.label, marge));
@@ -17,6 +42,10 @@ var bootstrap_profil = function() {
         ul = new_ul;
                 
         marge += 2;
+        
+        // NEW categorie
+        ul.append(affiche_ligne("categorie", "new", "", marge, { niveau: "0" }));
+        
         
         // NEW type
         ul.append(affiche_ligne("type", "new", "", marge, { detail: "0", niveau: "0" }));
@@ -26,12 +55,9 @@ var bootstrap_profil = function() {
             ul.append(affiche_ligne("type", j, type.label, marge, type));
         });
         
-        // NEW categorie
-        ul.append(affiche_ligne("categorie", "new", "", marge, { niveau: "0" }));
-        
         // On liste les catégories et leurs types
         $.each(champ.categories, function(j, categorie) {
-            var ul_categorie = $("<ul></ul>").css("margin-left", marge + "%");
+            var ul_categorie = $("<ul></ul>").css("margin-left", marge + "%").addClass("liste-categorie");
             
             ul.append(affiche_ligne("categorie", j, categorie.label, marge, categorie));
             
@@ -53,11 +79,11 @@ var bootstrap_profil = function() {
         niveau++;
     });
     
-    $(".edit-niveau").chosen({
-        disable_search_threshold: 10
-    })
-};
-
+    $(".edit-niveau-profil").chosen({
+        disable_search_threshold: 10,
+        inherit_select_classes: true
+    });
+}
 var affiche_ligne = function(type, pk, label, marge, obj) {
     var message = "";
     var select, input;
@@ -72,9 +98,6 @@ var affiche_ligne = function(type, pk, label, marge, obj) {
     }
     
     var li = $("<li></li>")
-        .addClass("liste")
-        .addClass("profil")
-        .addClass("profil-" + type)
         .attr({
             "data-type": type,
             "data-pk": pk
@@ -91,22 +114,23 @@ var affiche_ligne = function(type, pk, label, marge, obj) {
             .keyup(toggle_edit_profil)
         );
         
-    if (type == "type") {
-        input = $("<input></input>")
-            .attr("type", "checkbox")
-            .change(toggle_edit_profil)
-            ;
-            
-        if (obj.detail == 1) {
-            input.attr("checked", "checked");
-        }
-            
-        li.append(input).append("Detalle");
-    }
-        
     if (type == "categorie" || type == "type") {
+    
+        if (type == "type") {
+            input = $("<input></input>")
+                .attr("type", "checkbox")
+                .change(toggle_edit_profil)
+                ;
+                
+            if (obj.detail == 1) {
+                input.attr("checked", "checked");
+            }
+                
+            li.append(input).append("Detalle");
+        }
+        
         select = $("<select></select>")
-            .addClass("edit-niveau")
+            .addClass("edit-niveau-profil")
             .attr("data-placeholder", "Selectionar un nivel")
             .append(
                 $("<option></option>")
@@ -143,19 +167,37 @@ var affiche_ligne = function(type, pk, label, marge, obj) {
             )
         );
     }
+    
+    if (pk != "new") {
+        if (type == "champ") {
+            li.append(
+                $("<img/>")
+                .attr("src", "img/categorie_30.png")
+                .addClass("profil-toggle-categorie")
+                .click(toggle_categorie_profil)
+            );
+        }
         
-    switch(type) {
-        case "type": 
-            message = "Agregar un tipo de documentos";
-            break;
-        case "categorie":
-            message = "Agregar una categoria de documentos";
-            break;
+        if (type == "champ" || type == "categorie") {
+            li.append(
+                $("<img/>")
+                .attr("src", "img/document_30.png")
+                .addClass("profil-toggle-type")
+                .click(toggle_type_profil)
+            )
+        }
+    
+        li.addClass("liste")
+        .addClass("profil")
+        .addClass("profil-" + type);
+    } else {
+        li.addClass("add-profil")
+        .addClass("add-profil-" + type);
     }
     
     li.append(
         $("<img/>")
-        .attr("src", "img/OK.png")
+        .attr("src", "img/save_back_30.png")
         .addClass("profil-save")
         .click(save_profil)
     );
@@ -169,6 +211,54 @@ var toggle_edit_profil = function() {
     
     input.addClass("modified");
     li.find(".profil-save").fadeIn();
+};
+
+var toggle_categorie_profil = function() {
+    var img = $(this);
+    var li = img.closest("li");
+    var li_new = li.next("ul").children(".add-profil-categorie");
+    
+    if (li_new.is(":visible")) {
+        li_new.slideUp();
+    } else {
+        if (li.attr("data-state") == "closed") {
+            li.children("div").click();
+        }
+        li_new.slideDown({
+            complete: function() {
+                li_new.find(".edit-niveau-profil").chosen({
+                    disable_search_threshold: 10,
+                    inherit_select_classes: true
+                });
+            }
+        });
+    }
+    
+    chosen_profil(li);
+};
+
+var toggle_type_profil = function() {
+    var img = $(this);
+    var li = img.closest("li");
+    var li_new = li.next("ul").children(".add-profil-type");
+    
+    if (li_new.is(":visible")) {
+        li_new.slideUp();
+    } else {
+        if (li.attr("data-state") == "closed") {
+            li.children("div").click();
+        }
+        li_new.slideDown({
+            complete: function() {
+                li_new.find(".edit-niveau-profil").chosen({
+                    disable_search_threshold: 10,
+                    inherit_select_classes: true
+                });
+            }
+        });
+    }
+    
+    chosen_profil(li);
 };
 
 var save_profil = function() {

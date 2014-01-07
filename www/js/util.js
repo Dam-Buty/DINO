@@ -17,7 +17,7 @@ var collapse_liste = function(liste) {
     };
 
     liste.find("ul").hide();
-    liste.find("li.valeur")
+    liste.find("li.liste")
         .attr("data-state", "closed")
         .css("position", "relative")
         .append(
