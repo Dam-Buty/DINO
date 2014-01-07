@@ -25,7 +25,8 @@ function write_log($params) {
             `message_operation`, 
             `erreur_operation`, 
             `document_operation`, 
-            `objet_operation`
+            `objet_operation`,
+            `referrer_operation`
         ) VALUES (
             '" . date("Y-m-d H:i:s") . "',
             '" . $user . "', 
@@ -37,9 +38,9 @@ function write_log($params) {
             '" . str_replace("\n", " ", addslashes($params["message"])) . "', 
             '" . str_replace("\n", " ", addslashes($params["erreur"])) . "', 
             '" . $params["document"] . "', 
-            '" . $params["objet"] . "'
+            '" . $params["objet"] . "',
+            '" . $_SERVER['HTTP_REFERER'] . "'
         );";
-        // TODO : RAJOUTER LA GESTION DU REFERRER!!!
 #    echo $query_log;
 
 

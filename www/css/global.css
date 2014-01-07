@@ -1117,4 +1117,6 @@ html, body {
     font-size: 1em;
 }
 
-
+ul.ui-autocomplete {
+    z-index: 1000;
+}
