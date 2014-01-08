@@ -126,48 +126,9 @@ var _profil = function(callback) {
     })
 };
 
-var login = function() {
-    if ($("#form_login").validationEngine("validate")) {
-        
-        $.ajax( {
-            url: "do/doLogin.php",
-            type: "POST",
-            data: {
-                login: $("#login").val(),
-                password: $("#pass").val()
-            },
-            statusCode: {
-                200: bootstrap,
-                403: function(xhr) {
-                    if (xhr.responseJSON.error == "login") {
-                        $("#login").validationEngine("showPrompt", "Su nombre de usuario es desconocido", "error");
-                    } else if (xhr.responseJSON.error == "pass") {
-                        $("#pass").validationEngine("showPrompt", "Su contraseña es invalida", "error");
-                    }
-                },
-                500: function() {
-                    $("#bouton_login").validationEngine("showPrompt", "Un problema ha occurrido. Gracias por intentar otra vez.", "error");
-                }
-            }
-        });
-    }
-};
-
 $(document).ready(function(){
-    $.ajax({ url: "do/doCheckLogin.php" })
-        .done(function(data) {
-            if (data.OK) {
-                $(".div_login").hide();
-                bootstrap();
-            } else {
-                $("#form_login").validationEngine('attach', {focusFirstField: true});
-                $("#bouton_login").click(login);
-            }
-        }
-    );
+    bootstrap();
 });
-
-
 
 // Au resize, on redimensionne ce qui est positionné en jQuery
 $( window ).resize(function() {

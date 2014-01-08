@@ -49,28 +49,6 @@ img.bouton-save-back:hover {
     content: url(../img/save_back_hover_30.png);
 }
 
-input {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    line-height: 2em;
-    background-image: url(../img/gradient_input.png);
-    background-repeat: repeat-x;
-    background-size: contain;
-    border: 1px solid white;
-    padding-left: 10px;
-    border-radius: 5px;
-    
-    color: #535353;
-}
-
-input.KO {
-    border: 3px dotted #E23C3C;
-}
-
-input.OK {
-    border: 3px dotted #83bc2f;
-}
-
 #new-user input {
     width: 90%;
 }
