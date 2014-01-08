@@ -1,5 +1,4 @@
 
-// TODO : pour proposer des défauts intelligents au prochain tour
 var Store = {
     monde: "",
     champs: {},
@@ -42,7 +41,6 @@ var remove_champ_store = function() {
     
     document.store.last_champ = "";
     
-    // TODO : tester la remontée en cascade avec plus de 2 champs...
     $.each(cascade, function(i, champ_cascade) {
         if (post) {
             document.store.champs[champ_cascade] = "";
@@ -100,7 +98,7 @@ var affiche_details = function() {
         $("#input-detail").slideDown();      
         $("#detail-store").autocomplete({
             source: type.details
-        }); // TODO : styler l'autocomplete pour qu'il soit visible!
+        });
     } else {
         $("#input-detail").slideUp();
     }

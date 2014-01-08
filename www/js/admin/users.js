@@ -1,7 +1,5 @@
 var bootstrap_users = function() {
     // Vide les champs de création si on vient de sauvegarder un user
-    // TODO : remettre les messages à zéro, voir pourquoi le select niveau ne
-    //        se remet pas à zéro
     
     $("#new-user")
     .find("input")

@@ -51,7 +51,7 @@ function write_log($params) {
 
     $hostname = "localhost";
     $username = "root";
-    $dbname = "dino";
+    $dbname = "dino_baby";
     $password = "C4dillac5";
 
     $mysqli_log = new mysqli($hostname, $username, $password, $dbname);

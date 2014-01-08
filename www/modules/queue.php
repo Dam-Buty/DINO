@@ -14,8 +14,8 @@
 <div id="popup-store" data-document="">
     <div id="prev-store" class="nav-store"></div>
     <div id="next-store" class="nav-store"></div>
-    <iframe id="viewer-store"></iframe>
     <ul id="mondes-store" class="list-mondes"></ul>
+    <iframe id="viewer-store"></iframe>
     <div id="container-store">
         <div id="container-champs"></div>
         <hr/>
@@ -30,6 +30,7 @@
             <div class="boutons" id="bouton-store">Archivar en DINO</div>
         </div>
     </div>
+    <div style="clear: both;"></div> 
 </div>
 
 <div id="bucket-queue" class="bucket">

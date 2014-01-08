@@ -39,13 +39,12 @@ var change_monde_liste = function() {
     $(".input-new-valeur").attr("placeholder", "Agregar un " + label).keyup(toggle_new_valeur); 
     ul.attr("data-champ", monde.cascade[0]);
     
-    // TODO : ça!
-//    var lignes_ouvertes = [];
-//    
-//    // On stocke les lignes ouvertes
-//    $('#liste-valeurs li[data-state="open"]').each(function(i, ligne) {
-//        lignes_ouvertes.push([ ligne.attr("data-champ")), ligne.attr("data-valeur")]);
-//    });
+    var lignes_ouvertes = [];
+    
+    // On stocke les lignes ouvertes
+    $('#liste-valeurs li[data-state="open"]').each(function(i, ligne) {
+        lignes_ouvertes.push([ $(ligne).attr("data-champ"), $(ligne).attr("data-valeur")]);
+    });
     
     $("#liste-valeurs li").not("#new-valeur").remove();
     
@@ -58,9 +57,9 @@ var change_monde_liste = function() {
     
     collapse_liste($("#liste-valeurs"));
     
-//    $.each(lignes_ouvertes, function(i, ligne){
-//        $('.valeur[data-champ="' + ligne[0] + '"][data-valeur="' + ligne[1] + '"]').click();
-//    });
+    $.each(lignes_ouvertes, function(i, ligne) {
+        $('#liste-valeurs li[data-champ="' + ligne[0] + '"][data-valeur="' + ligne[1] + '"]').find("div").click();
+    });
 }
 
 var affiche_valeur = function(reference, niveau, ul) {

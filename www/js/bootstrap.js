@@ -170,7 +170,6 @@ $(document).ready(function(){
 
 
 // Au resize, on redimensionne ce qui est positionné en jQuery
-// TODO : optimiser! 
 $( window ).resize(function() {
     $("#core").css({
         height: ($(window).height() - 92) + "px" // 61 px barre top
@@ -179,7 +178,4 @@ $( window ).resize(function() {
     $("#backoffice").css({
         height: ($(window).height() - 92) + "px" // 61 px barre top
     });                                          // 31 px barre bottom
-    
-    $("#viewer-store").css("height", ($("#popup-store").innerHeight() - parseFloat($("#popup-store").css("padding-bottom")) - parseFloat($("#popup-store").css("padding-top")) - 4) + "px");
-//    $("#container-store").css("height", 0.97 * $("#popup-store").innerHeight() + $("#popup-store").offset().top - $("#viewer-store").offset().top + "px");
 });

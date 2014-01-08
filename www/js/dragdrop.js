@@ -85,9 +85,6 @@ var dragover = function(e) {
     e.originalEvent.dataTransfer.dropEffect = 'move';
 };
 
-// TODO : Si il existe un Contrato "de servicio", on ne peut pas dragdroper
-//          pour un Contrato "de otra cosa"
-
 var dragenter = function(e) {
     var li = $(this);
     var ul = li.next("ul");

@@ -901,6 +901,7 @@ html, body {
 #viewer-store {
     float: left;
     width: 45%;
+    height: 95%;
 }
 
 #container-store {

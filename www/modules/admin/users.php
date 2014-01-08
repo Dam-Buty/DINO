@@ -41,7 +41,7 @@ session_start();
                 </div>
             </div>
         </div>
-        <div style="clear: both;"></div> <!-- TODO : utiliser le clearboth pour plus avoir à resizer le popup store! -->
+        <div style="clear: both;"></div>
     </div>
     <div id="toggle-new-user" class="boutons back">Crear usuario</div><div id="save-new-user" class="boutons back" data-user="new">Guardar usuario</div>
     <div style="clear: both;"></div>

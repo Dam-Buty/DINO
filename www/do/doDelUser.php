@@ -14,7 +14,7 @@ if ($_SESSION["niveau"] >= 20) {
     ;";
     
     if ($mysqli->query($query_user)) {
-        status(200);
+        status(204);
         write_log([
             "libelle" => "DELETE utilisateur",
             "admin" => 1,

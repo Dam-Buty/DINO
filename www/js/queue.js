@@ -245,8 +245,6 @@ var remove_document = function() {
     var position = $(this).closest("li").attr("data-position");
     var list_element = queue[position];
     
-    // TODO : c'est plus simple si le fichier est en erreur (pas d'AJAX)
-    
     $.ajax({
         url: "do/doRemoveFromQueue.php",
         type: "POST",

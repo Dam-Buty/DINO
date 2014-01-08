@@ -101,8 +101,6 @@ if ($_SESSION["niveau"] >= 20) {
                 $i++; 
             } while ($mysqli->next_result()); 
             
-            // TODO : les multi_query ne passent pas (libérer le résultat?)
-            
             if (!$mysqli->errno) { 
                 status(200);
                 write_log([
