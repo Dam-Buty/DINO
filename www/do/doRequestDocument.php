@@ -39,7 +39,7 @@ if (isset($_SESSION["niveau"])) {
                     "filename" => $row["filename_document"],
                     "displayname" => $row["display_document"],
                     "user" => $user,
-                    "date" => "el ' . $date . '",
+                    "date" => "el " . $date,
                     "store" => [
                         "date" => "",
                         "monde" => "",

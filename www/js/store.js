@@ -354,7 +354,7 @@ var change_document = function(document) {
     
     $("#viewer-store").attr({
         "data-document": document,
-        src: "pdfjs/viewer/viewer.html?file=" + escape("http://localhost/csstorage2/do/doUnpack.php?document=" + queue[document].filename)
+        src: "pdfjs/viewer/viewer.html?file=" + escape("../../do/doUnpack.php?document=" + queue[document].filename)
     });
     
     $('#files-list li[data-editing="1"]').addClass("done");

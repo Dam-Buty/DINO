@@ -16,7 +16,6 @@ var bootstrap_queue = function() {
         type: "POST",
         statusCode : {
             200: function() {
-                clean_cave();
                 get_queue();
             },
             403: function() {
@@ -38,6 +37,7 @@ var get_queue = function() {
             queue.push(this);
         });
         refresh_liste();
+        clean_cave();
     });
     
     $("#files-handler").unbind().change(handle_files);
@@ -76,7 +76,6 @@ var clean_cave = function() {
                                         var document_li = set_li_status(create_li(document.displayname, document.size, document.user, document.date), 1);
                                         document.li = document_li;
                                         queue.push(document);
-                                        // TODO : ils ne se mettent pas bien dans la queue, en tout cas ils sont pas navigables via le store
                                         clean_cave();
                                     },
                                     500: function() {
@@ -93,6 +92,7 @@ var clean_cave = function() {
             },
             204: function() {
                 $("#container-notification").fadeOut();
+                refresh_liste();
             },
             403: function() {
                 window.location.replace("index.php");
