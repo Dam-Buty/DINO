@@ -399,7 +399,15 @@ html, body {
 }
 
 #help-printer:hover {
-    content: url(../img/printer_20_hover.png);
+    content: url(../img/printer_hover_20.png);
+}
+
+#logout:hover {
+    content: url(../img/logout_hover_20.png);
+}
+
+#params:hover {
+    content: url(../img/params_hover_20.png);
 }
 
 /*#####################################

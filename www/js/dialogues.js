@@ -34,3 +34,5 @@ var popup_details = function() {
         dialogue.close();
     })
 };
+
+

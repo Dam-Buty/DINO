@@ -39,6 +39,9 @@ var bootstrap = function() {
             $("#help-printer").fadeIn().click(help_printer);
         }
         
+        $("#logout").fadeIn().click(logout);
+        $("#params").fadeIn().click(params);
+        
         $.ajax({ url: "modules/core.php" })
         .done(function(core) {
             $("#front").append(core);
@@ -88,6 +91,14 @@ var bootstrap = function() {
 };
 
 var help_printer = function() {
+    
+};
+
+var logout = function() {
+    window.location.replace("logout.php");
+};
+
+var params = function() {
     
 };
 

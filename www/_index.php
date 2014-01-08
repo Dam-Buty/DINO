@@ -40,11 +40,17 @@ if (isset($_SESSION)) {
     <div id="laterale-front" class="barre-laterale">
         <a href="index.php"><h1>DINO</h1></a>
         <ul class="menu-lateral" id="menu-front">
+    <?php
+    if ($_SESSION["niveau"] >= 10) {
+        ?>
             <li id="menu-queue">
                 <h1>SUBIR DOCUMENTOS</h1>
             </li>
+        <?php
+    }
+    ?>
     <?php
-    if ($_SESSION["niveau"] > 20) {
+    if ($_SESSION["niveau"] >= 20) {
         ?>
             <li id="menu-admin">
                 <h1>ADMIN</h1>
@@ -109,6 +115,8 @@ if ($_SESSION["niveau"] > 20) {
 
 <div class="barre-bottom">
     <div id="container-notification"></div>
+    <img id="logout" src="img/logout_20.png">
+    <img id="params" src="img/params_20.png">
     <img id="help-printer" src="img/printer_20.png">
 </div>
 
