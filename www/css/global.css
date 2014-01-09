@@ -808,12 +808,12 @@ html, body {
     display: none;
 }
 
-#tiroir-queue li>img.bouton-edit-li:hover {
-    content: url(../img/edit_hover_20.png);
+.bouton-edit-li:hover {
+    content: url(../img/edit_hover_30.png);
 }
 
-#tiroir-queue li>img.bouton-del-li:hover {
-    content: url(../img/del_hover_20.png);
+.bouton-del-li:hover {
+    content: url(../img/del_hover_15.png);
 }
 
 #tiroir-queue .filename {
@@ -913,7 +913,7 @@ html, body {
 #viewer-store {
     float: left;
     width: 45%;
-    height: 95%;
+    height: 90%;
 }
 
 #container-store {
@@ -936,6 +936,24 @@ html, body {
 
 .champ-store {
     margin-bottom: 5px;
+}
+
+#nom-doc-store {
+    text-align: center;
+    
+    line-height: 30px;
+    font-size: 1em;
+    text-transform: uppercase;
+    
+    height: 30px;
+    width: 45%;
+    
+    background-color: #888888;
+    border: 2px #888888 solid;
+    
+    color: white;
+    
+    overflow-x: hidden;
 }
 
 /*#container-store hr {*/

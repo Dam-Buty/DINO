@@ -14,6 +14,7 @@
 <div id="popup-store" data-document="">
     <div id="prev-store" class="nav-store"></div>
     <div id="next-store" class="nav-store"></div>
+    <div id="nom-doc-store"></div>
     <ul id="mondes-store" class="list-mondes"></ul>
     <iframe id="viewer-store"></iframe>
     <div id="container-store">
@@ -36,8 +37,8 @@
 <div id="bucket-queue" class="bucket">
     <ul>
         <li id="modele-li-queue" class="idle" draggable="true">
-            <img class="bouton-edit-li" src="img/edit_20.png"/>
-            <img class="bouton-del-li" src="img/del_20.png"/>
+            <img class="bouton-del-li" src="img/del_15.png"/>
+            <img class="bouton-edit-li" src="img/edit_30.png"/>
             <div class="filename"></div>
             <div class="progressbar"></div>
             <div class="details-queue"></div>

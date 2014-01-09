@@ -100,7 +100,8 @@ var affiche_details = function() {
             source: type.details
         });
     } else {
-        $("#input-detail").slideUp();
+        $("#input-detail").slideUp()
+            .find("input").val("");
     }
     
     $("#bouton-store").unbind().click(archive_document);
@@ -165,6 +166,12 @@ var add_value = function(term) {
                 // On sauvegarde la nouvelle valeur dans le profil
                 profil.mondes[store.monde].champs[champ].liste[retour.pk] = term;
                 
+                if (profil.mondes[store.monde].references[parent] === undefined) {
+                    profil.mondes[store.monde].references[parent] = {};
+                }
+                
+                profil.mondes[store.monde].references[parent][retour.pk] = [];
+                
                 document.store.champs[champ] = retour.pk;
                 document.store.last_champ = champ;
                 
@@ -227,7 +234,8 @@ var reload_champs = function() {
             $("#container-champs")
             .find("select")
             .chosen({
-                no_results_text:'Pica (+) para agregar ', // LOCALISATION
+                no_results_text:'Empeza a teclar para agregar un ' + profil.mondes[monde].champs[champ].label,
+                create_option_text:'Agregar ' + profil.mondes[monde].champs[champ].label + " ", // LOCALISATION
                 create_option: add_value,
                 inherit_select_classes: true,
                 skip_no_results: true
@@ -354,6 +362,9 @@ var change_document = function(document) {
         "data-document": document,
         src: "pdfjs/viewer/viewer.html?file=" + escape("../../do/doUnpack.php?document=" + queue[document].filename)
     });
+       
+    // On met le nom du fichier
+    $("#nom-doc-store").text(queue[document].displayname);
     
     $('#files-list li[data-editing="1"]').addClass("done");
     $("#files-list li").attr("data-editing", "0");
@@ -401,12 +412,11 @@ var archive_document = function() {
     store.type_doc.detail = $("#detail-store").val();
     $("#detail-store").val("");
     
+    
     $.ajax({
-        url: "do/doStore.php",
+        url: "do/doCheckRevision.php",
         type: "POST",
         data: {
-            filename: document.filename,
-            date: store.date,
             monde: store.monde,
             categorie: store.categorie,
             type: store.type_doc.pk,
@@ -416,38 +426,62 @@ var archive_document = function() {
         },
         statusCode: {
             200: function() {
-                popup('Su documento fue archivado con exito!', 'confirmation'); // LOCALISATION
-                
-                Store.monde = store.monde;
-                Store.champs = store.champs;
-                Store.last_champ = store.last_champ;
-                
-                var new_position;
-                
-                // une fois terminé, on élimine de la queue
-                // et on envoie le prochain document dans la queue
-                var position = $("#popup-store").attr("data-document");
-                
-                // Si c'est le seul document de la queue on ferme le store
-                if (queue.length == 1) {
-                    cancel_store();
-                } else {
-                    if (position == queue.length - 1) {
-                        new_position = queue.length - 2;
-                    } else {
-                        new_position = position;
+                $.ajax({
+                    url: "do/doStore.php",
+                    type: "POST",
+                    data: {
+                        filename: document.filename,
+                        date: store.date,
+                        monde: store.monde,
+                        categorie: store.categorie,
+                        type: store.type_doc.pk,
+                        detail: store.type_doc.detail,
+                        champs: store.champs,
+                        maxchamp: store.last_champ
+                    },
+                    statusCode: {
+                        200: function() {
+                            popup('Su documento fue archivado con exito!', 'confirmation'); // LOCALISATION
+                            
+                            Store.monde = store.monde;
+                            Store.champs = store.champs;
+                            Store.last_champ = store.last_champ;
+                            
+                            var new_position;
+                            
+                            // une fois terminé, on élimine de la queue
+                            // et on envoie le prochain document dans la queue
+                            var position = $("#popup-store").attr("data-document");
+                            
+                            // Si c'est le seul document de la queue on ferme le store
+                            if (queue.length == 1) {
+                                cancel_store();
+                            } else {
+                                if (position == queue.length - 1) {
+                                    new_position = queue.length - 2;
+                                } else {
+                                    new_position = position;
+                                }
+                            }
+                            
+                            queue.splice(position, 1);
+                            refresh_liste();
+                            
+                            if ($("#popup-store").is(":visible")) {
+                                change_document(new_position);
+                            } else {
+                                $("#container-details").detach().appendTo($("#container-store"));
+                                dialogue.close();
+                            }
+                        },
+                        403: function() {
+                            window.location.replace("index.php");
+                        },
+                        500: function() {
+                            popup('Error de recuperacion de los documentos. Gracias por intentar otra vez', 'error'); // LOCALISATION
+                        }
                     }
-                }
-                
-                queue.splice(position, 1);
-                refresh_liste();
-                
-                if ($("#popup-store").is(":visible")) {
-                    change_document(new_position);
-                } else {
-                    $("#container-details").detach().appendTo($("#container-store"));
-                    dialogue.close();
-                }
+                });
             },
             403: function() {
                 window.location.replace("index.php");
@@ -505,6 +539,9 @@ var _store_document = function(position) {
         "data-document": position,
         src: "pdfjs/viewer/viewer.html?file=" + escape("../../do/doUnpack.php?document=" + queue[li.attr("data-position")].filename)
     });
+    
+    // On met le nom du fichier
+    $("#nom-doc-store").text(queue[li.attr("data-position")].displayname);
     
     // On affiche le fond opaque et le store
     $("#opak")
