@@ -1118,13 +1118,13 @@ html, body {
 #champs-details {
     border: 1px solid black;
     padding: 5px;
-    line-height: 2em;
+    line-height: 2.5em;
 }
 
 #champs-details input {
     float: right;
     margin-top: 1px;
-    line-height: 1em;
+    line-height: 1.5em;
 }
 
 .error {

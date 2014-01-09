@@ -47,7 +47,10 @@ if ($_SESSION["niveau"] >= 10) {
                     WHERE `tdd`.`fk_client` = " . $_SESSION["client"] . " 
                         AND `tdd`.`fk_monde` = " . $_POST["monde"] . " 
                         AND `tdd`.`fk_categorie_doc` = " . $_POST["categorie"] . " 
-                        AND `tdd`.`fk_type_doc` = " . $_POST["type"] . " ";
+                        AND `tdd`.`fk_type_doc` = " . $_POST["type"] . " 
+                        AND `tdd`.`detail_type_doc` = '" . $_POST["detail"] . "'
+                        
+                        ";
                         
                         foreach($champs as $pk => $valeur) {
                             $query .= " 

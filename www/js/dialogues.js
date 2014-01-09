@@ -28,7 +28,7 @@ var popup_details = function() {
     
     $(".ZebraDialogOverlay").unbind().click(function(){
         var document = queue[$('li[data-editing="1"]').attr("data-position")];
-        $("#container-details").detach().appendTo($("#container-store"));
+        $("#container-details").detach().appendTo($("#container-store")).hide();
         document.li.addClass("done");
         document.li.attr("data-editing", 0);
         dialogue.close();
@@ -48,7 +48,7 @@ var popup_pass = function() {
     );
     
     $(".ZebraDialogOverlay").unbind().click(function(){
-        $("#container-pass").hide();
+        $("#container-change-pass").appendTo($("body")).hide();
         dialogue.close();
     });
 };
@@ -66,9 +66,7 @@ var popup_mail = function() {
     );
     
     $(".ZebraDialogOverlay").unbind().click(function(){
-        $("#container-mail").hide();
+        $("#container-change-mail").appendTo($("body")).hide();
         dialogue.close();
     });
 };
-
-

@@ -417,6 +417,7 @@ var archive_document = function() {
         url: "do/doCheckRevision.php",
         type: "POST",
         data: {
+            filename: document.filename,
             monde: store.monde,
             categorie: store.categorie,
             type: store.type_doc.pk,
@@ -426,72 +427,99 @@ var archive_document = function() {
         },
         statusCode: {
             200: function() {
-                $.ajax({
-                    url: "do/doStore.php",
-                    type: "POST",
-                    data: {
-                        filename: document.filename,
-                        date: store.date,
-                        monde: store.monde,
-                        categorie: store.categorie,
-                        type: store.type_doc.pk,
-                        detail: store.type_doc.detail,
-                        champs: store.champs,
-                        maxchamp: store.last_champ
-                    },
-                    statusCode: {
-                        200: function() {
-                            popup('Su documento fue archivado con exito!', 'confirmation'); // LOCALISATION
-                            
-                            Store.monde = store.monde;
-                            Store.champs = store.champs;
-                            Store.last_champ = store.last_champ;
-                            
-                            var new_position;
-                            
-                            // une fois terminé, on élimine de la queue
-                            // et on envoie le prochain document dans la queue
-                            var position = $("#popup-store").attr("data-document");
-                            
-                            // Si c'est le seul document de la queue on ferme le store
-                            if (queue.length == 1) {
-                                cancel_store();
-                            } else {
-                                if (position == queue.length - 1) {
-                                    new_position = queue.length - 2;
-                                } else {
-                                    new_position = position;
-                                }
-                            }
-                            
-                            queue.splice(position, 1);
-                            refresh_liste();
-                            
-                            if ($("#popup-store").is(":visible")) {
-                                change_document(new_position);
-                            } else {
-                                $("#container-details").detach().appendTo($("#container-store"));
-                                dialogue.close();
-                            }
-                        },
-                        403: function() {
-                            window.location.replace("index.php");
-                        },
-                        500: function() {
-                            popup('Error de recuperacion de los documentos. Gracias por intentar otra vez', 'error'); // LOCALISATION
+                var champ = profil.mondes[store.monde].champs[store.last_champ];
+                var type;
+                
+                if (store.categorie == 0 || store.categorie == "") {
+                    type = champ.types[store.type_doc.pk];
+                } else {
+                    type = champ.categories[store.categorie].types[store.type_doc.pk];
+                }
+                
+                message = "Ya existe un <b>" + type.label + " " + store.type_doc.detail + "</b> por el <b>" + champ.label + " <u>" + champ.liste[store.champs[store.last_champ]] + "</u></b>. Si picas <i>Confirmar</i>, se creara una nueva <b>revision</b> de este documento.";
+            
+                $.Zebra_Dialog(message, {
+                    'type':     'question',
+                    'title':    "Nueva revision de documento",
+                    'buttons':  ["Confirmar (<i>crear una nueva revision</i>)", 'Cancelar'],
+                    'onClose':  function(caption) {
+                        if (caption.indexOf("Confirmar") > -1) { 
+                            _archive_document(document, store);
                         }
                     }
-                });
+                });            
+            },
+            204: function() {
+                _archive_document(document, store);
             },
             403: function() {
                 window.location.replace("index.php");
             },
             500: function() {
-                popup('Error de recuperacion de los documentos. Gracias por intentar otra vez', 'error'); // LOCALISATION
+                popup('Error! Gracias por intentar otra vez', 'error'); // LOCALISATION
             }
         }
     });
 };
+
+var _archive_document = function(document, store) {
+    $.ajax({
+        url: "do/doStore.php",
+        type: "POST",
+        data: {
+            filename: document.filename,
+            date: store.date,
+            monde: store.monde,
+            categorie: store.categorie,
+            type: store.type_doc.pk,
+            detail: store.type_doc.detail,
+            champs: store.champs,
+            maxchamp: store.last_champ
+        },
+        statusCode: {
+            200: function() {
+                popup('Su documento fue archivado con exito!', 'confirmation'); // LOCALISATION
+                
+                Store.monde = store.monde;
+                Store.champs = store.champs;
+                Store.last_champ = store.last_champ;
+                
+                var new_position;
+                
+                // une fois terminé, on élimine de la queue
+                // et on envoie le prochain document dans la queue
+                var position = $("#popup-store").attr("data-document");
+                
+                // Si c'est le seul document de la queue on ferme le store
+                if (queue.length == 1) {
+                    cancel_store();
+                } else {
+                    if (position == queue.length - 1) {
+                        new_position = queue.length - 2;
+                    } else {
+                        new_position = position;
+                    }
+                }
+                
+                queue.splice(position, 1);
+                refresh_liste();
+                
+                if ($("#popup-store").is(":visible")) {
+                    change_document(new_position);
+                } else {
+                    $("#container-details").detach().appendTo($("#container-store")).hide();
+                    dialogue.close();
+                }
+            },
+            403: function() {
+                window.location.replace("index.php");
+            },
+            500: function() {
+                popup('Error! Gracias por intentar otra vez', 'error'); // LOCALISATION
+            }
+        }
+    });
+}
 
 var _store_document = function(position) {
     var li = queue[position].li;
