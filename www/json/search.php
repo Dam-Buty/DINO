@@ -217,7 +217,7 @@ $query .= " (
             if ($row["categorie"] != $categorie) {
                 array_push($liste, [
                     "type" => "categorie",
-                    "niveau" => count($_POST["champs"]),
+                    "niveau" => count($champs_documents),
                     "pk" => $row["categorie"]
                 ]);
             }

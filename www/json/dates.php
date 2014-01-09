@@ -31,6 +31,14 @@ if (isset($_SESSION["niveau"])) {
             $dates["maxi"] = $row["max"];
         }
         
+        if ($dates["mini"] == null) {
+            $dates["mini"] = date("Y-m-d");
+        }
+        
+        if ($dates["maxi"] == null) {
+            $dates["maxi"] = date("Y-m-d");
+        }
+        
         $json = json_encode($dates);
         status(200);
         header('Content-Type: application/json');

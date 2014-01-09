@@ -268,12 +268,7 @@ var reload_champs = function() {
                     $("<div></div>")
                     .addClass("tag-champ")
                     .text(profil.mondes[monde].champs[champ].label + " : " + profil.mondes[monde].champs[champ].liste[document.store.champs[champ]])
-                    .append(
-                        $("<div></div>")
-                        .addClass("remove-tag-champ")
-                        .text("x")
-                        .click(remove_champ_store)
-                    )
+                    .click(remove_champ_store)
                 )
             );
         } 

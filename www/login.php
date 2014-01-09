@@ -3,13 +3,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es">
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
-<title>CS Storage</title>
+<title>DINO</title>
 <meta content="2013-02-28" name="date" />
 <meta content="Damien BUTY" name="author" />
-<meta content="Pagina de accesso a sus archivos digitales" name="description" />
+<meta content="La revolucion documental" name="description" />
 <link href='css/Oswald-Bold.ttf' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/login.css" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/inputs.css" media="screen" type="text/css"/>
+<link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 
 </head>
 

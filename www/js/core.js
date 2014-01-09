@@ -357,23 +357,15 @@ var construit_table = function() {
     var marge;
     var ul = $("<ul></ul>");
     var current_ul = ul;
+    var stack_ul = [ul];
     var current_level = 0;
     
     $.each(Core.liste, function(i, ligne) {
         //console.log(ligne);
         
-        if (ligne.type == "champ" || ligne.type == "categorie") {
-            if (ligne.niveau == 0) {
-                current_ul = ul;
-            } else {
-                for (var i = 0; i < current_level - ligne.niveau + 1;i++) {
-                    current_ul = current_ul.parent();
-                }
-            }
-        }
-        
         switch(ligne.type) {
             case "champ":
+                current_ul = stack_ul[ligne.niveau];
                 stack_champs.splice(ligne.niveau);
                 stack_champs.push(ligne.pk);
                 categorie = 0;
@@ -403,11 +395,13 @@ var construit_table = function() {
                 current_ul.append(li.css("margin-left", marge + "%"));
                 current_ul.append(ul_champ.css("margin-left", marge + "%"));
                 
-                current_ul = ul_champ;
+                stack_ul[ligne.niveau + 1] = ul_champ;
+                stack_ul.length = ligne.niveau + 2;
                 current_level = ligne.niveau;
                 break;
                 
             case "categorie":
+                current_ul = stack_ul[ligne.niveau];
                 categorie = ligne.pk;
                 var champ_parent = monde.champs[cascade[stack_champs.length - 1]];
                 marge = stack_champs.length * 2;
@@ -436,11 +430,13 @@ var construit_table = function() {
                 current_ul.append(li.css("margin-left", marge + "%"));
                 current_ul.append(ul_categorie.css("margin-left", marge + "%"));
                 
-                current_ul = ul_categorie;
-                current_level = cascade.length;
+                stack_ul[ligne.niveau + 1] = ul_categorie;
+                stack_ul.length = ligne.niveau + 2;
+                current_level = ligne.niveau;
                 break;
                 
             default: // C'est donc un document
+                    current_ul = stack_ul[stack_ul.length - 1]; 
                     var champ_parent = monde.champs[cascade[stack_champs.length - 1]];
                     var type, img;
                     
