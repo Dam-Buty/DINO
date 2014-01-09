@@ -146,7 +146,7 @@ if ($_SESSION["niveau"] > 20) {
         </ul>
         Por ejemplo : <b>Bacon_2013</b> es una deliciosa contrasena.
     </div>
-</div>
+</div> 
 
 <div id="container-change-mail">
     <ul class="container-params" id="container-old-pass-mail">

@@ -17,7 +17,7 @@ var dialogue;
 var popup_details = function() {
     dialogue = new $.Zebra_Dialog(
         "", {
-            buttons: false,
+            buttons: false, 
             type: false,
             source: {
                 inline: $("#container-details").show()

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #
 # DinoCave
-# - Script de post-processing pour CUPS-PDF
+# - Script de post-processing pour CUPS-PDF   
 #   Identifie la queue d'origine d'un PDF, et le copie dans le repertoire adequat
 
 import os
