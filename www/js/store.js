@@ -241,6 +241,20 @@ var reload_champs = function() {
                 skip_no_results: true
             });
             
+            
+            $("#container-champs")
+            .find("select")
+            .next("div")
+            .find("input")
+            .keyup(function(event) {
+                if (event.which == 13) {
+                    $("#container-champs").find("select").next("div").find("li.create-option").click();
+                }
+                
+                console.log(event.which);
+            })
+            
+            
             return false;    // On quitte la boucle pour ignorer les champs suivants      
         } else {
             var div = $("<div></div>")
@@ -437,17 +451,12 @@ var archive_document = function() {
                 }
                 
                 message = "Ya existe un <b>" + type.label + " " + store.type_doc.detail + "</b> por el <b>" + champ.label + " <u>" + champ.liste[store.champs[store.last_champ]] + "</u></b>. Si picas <i>Confirmar</i>, se creara una nueva <b>revision</b> de este documento.";
-            
-                $.Zebra_Dialog(message, {
-                    'type':     'question',
-                    'title':    "Nueva revision de documento",
-                    'buttons':  ["Confirmar (<i>crear una nueva revision</i>)", 'Cancelar'],
-                    'onClose':  function(caption) {
-                        if (caption.indexOf("Confirmar") > -1) { 
-                            _archive_document(document, store);
-                        }
-                    }
-                });            
+                
+                var callback = function() {
+                    _archive_document(document, store);
+                };
+                
+                popup_confirmation(message, "Nueva revision de documento", "Confirmar (<i>crear una nueva revision</i>)", callback);
             },
             204: function() {
                 _archive_document(document, store);

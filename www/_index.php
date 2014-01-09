@@ -18,7 +18,7 @@ if (isset($_SESSION)) {
 <link rel="stylesheet" href="css/arrows.css?v=3" media="screen" type="text/css"/>
 
 <?php
-    if ($_SESSION["niveau"] > 20) {
+    if ($_SESSION["niveau"] >= 20) {
     ?>
 <link rel="stylesheet" href="css/admin.css?v=3" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/inputs.css?v=3" media="screen" type="text/css"/>
@@ -80,7 +80,7 @@ if (isset($_SESSION)) {
 </div>
 
 <?php
-if ($_SESSION["niveau"] > 20) {
+if ($_SESSION["niveau"] >= 20) {
 ?>
         
 <div id="back">
@@ -187,7 +187,7 @@ if ($_SESSION["niveau"] > 20) {
 <script src="js/params.js?v=1"></script>
 
 <?php
-    if ($_SESSION["niveau"] > 20) {
+    if ($_SESSION["niveau"] >= 20) {
     ?>
 <script src="js/admin.js?v=1"></script>
 <script src="js/admin/users.js?v=1"></script>

@@ -439,27 +439,36 @@ var key_user = function() {
     var li = click.closest("li");
     var login = li.attr("data-user");
     var mail = li.attr("data-mail");
+    
+    var message = "La contrasena del usuario <b>" + login + "</b> esta a punto de ser reinicialisada. <br/>El usuario recibira su nueva contrasen en su mail <b>" + mail + "</b>.";
+    
+    var title = "Reinicialisacion de contrasena";
+    
+    var bouton = "Confirmar (<i>Reinicialisar contrasena</i>)";
 
-
-    $.ajax({
-        url: "do/doKeyUser.php",
-        type: "POST",
-        data: {
-            login: login,
-            mail: mail
-        },
-        statusCode : {
-            200: function() {
-                popup("La contrasena del usuario <b>" + login + "</b> fue reinicialisada con exito. <br/>El recibira su nueva contrasena en la direccion de correo electronico <b>" + mail + "<b>", "confirmation");
+    var callback = function() {
+        $.ajax({
+            url: "do/doKeyUser.php",
+            type: "POST",
+            data: {
+                login: login,
+                mail: mail
             },
-            403: function() {
-                window.location.replace("index.php");
-            },
-            500: function() {
-                popup("Error! Gracias por intentar otra vez...", "error");
+            statusCode : {
+                200: function() {
+                    popup("La contrasena del usuario <b>" + login + "</b> fue reinicialisada con exito. <br/>El recibira su nueva contrasena en la direccion de correo electronico <b>" + mail + "<b>", "confirmation");
+                },
+                403: function() {
+                    window.location.replace("index.php");
+                },
+                500: function() {
+                    popup("Error! Gracias por intentar otra vez...", "error");
+                }
             }
-        }
-    });
+        });
+    };
+    
+    popup_confirmation(message, title, bouton, callback);
 };
 
 var del_user = function() {
@@ -467,25 +476,35 @@ var del_user = function() {
     var li = click.closest("li");
     var login = li.attr("data-user");
     
-    $.ajax({
-        url: "do/doDelUser.php",
-        type: "POST",
-        data: {
-            login: login
-        },
-        statusCode : {
-            204: function() {
-                popup("El usuario <b>" + login + "</b> fue borrado con exito.", "confirmation");
-                bootstrap_users();
+    var message = "Estas seguro de querer borrar el usuario <b>" + login + "</b>? <br/>Esta accion es <b>irreversible</b>!";
+    
+    var title = "Supresion de usuario";
+    
+    var bouton = "Confirmar (<i>borrar usuario</i>)";
+    
+    var callback = function() {
+        $.ajax({
+            url: "do/doDelUser.php",
+            type: "POST",
+            data: {
+                login: login
             },
-            403: function() {
-                window.location.replace("index.php");
-            },
-            500: function() {
-                popup("Error! Gracias por intentar otra vez...", "error");
+            statusCode : {
+                204: function() {
+                    popup("El usuario <b>" + login + "</b> fue borrado con exito.", "confirmation");
+                    bootstrap_users();
+                },
+                403: function() {
+                    window.location.replace("index.php");
+                },
+                500: function() {
+                    popup("Error! Gracias por intentar otra vez...", "error");
+                }
             }
-        }
-    });
+        });
+    };
+    
+    popup_confirmation(message, title, bouton, callback);
 };
 
 var toggle_new_user = function() {

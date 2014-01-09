@@ -70,3 +70,17 @@ var popup_mail = function() {
         dialogue.close();
     });
 };
+
+var popup_confirmation = function(message, titre, bouton, callback) {
+    $.Zebra_Dialog(message, {
+        'type':     'question',
+        'title':    titre,
+        'buttons':  [bouton, 'Cancelar'],
+        'onClose':  function(caption) {
+                        if (caption.indexOf("Confirmar") > -1) {
+                            callback();
+                        }
+                    }
+    });
+}
+

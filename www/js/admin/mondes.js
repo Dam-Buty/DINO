@@ -232,16 +232,11 @@ var del_valeur = function() {
                     titre = "Confirmar";
                 }
                 
-                $.Zebra_Dialog(message, {
-                    'type':     'question',
-                    'title':    titre,
-                    'buttons':  [bouton, 'Cancelar'],
-                    'onClose':  function(caption) {
-                        if (caption.indexOf("Confirmar") > -1) {
-                            _del_valeur($("#liste-valeurs").attr("data-monde"), champ, pk, parent);
-                        }
-                    }
-                });
+                var callback = function() {
+                    _del_valeur($("#liste-valeurs").attr("data-monde"), champ, pk, parent);
+                };
+                
+                popup_confirmation(message, titre, bouton, callback);
             },
             403: function() {
                 window.location.replace("index.php");
