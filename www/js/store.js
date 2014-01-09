@@ -507,6 +507,7 @@ var _archive_document = function(document, store) {
                 
                 queue.splice(position, 1);
                 refresh_liste();
+                $('#mondes-top li[data-selected="1"]').click();
                 
                 if ($("#popup-store").is(":visible")) {
                     change_document(new_position);

@@ -132,10 +132,10 @@ var change_monde = function() {
                     Core.dates.push(mini.getTime());
                     slider_maxi = 0;
                 } else {
-                    for (var i = 0; i < diff;i++) {
+                    for (var i = 0; i <= diff;i++) {
                         Core.dates.push(mini.getTime() + (oneDay * i));
                     }
-                    slider_maxi = diff - 1;
+                    slider_maxi = diff;
                 }
                 
                 
