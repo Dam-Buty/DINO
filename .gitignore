@@ -4,4 +4,5 @@
 *.bak
 test_session.php
 www/cache/*/*.css
+key.php
 

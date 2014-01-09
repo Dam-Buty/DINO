@@ -60,7 +60,7 @@ if (isset($_SESSION["niveau"])) {
                 "query" => $commande_log,
                 "statut" => 1,
                 "message" => $return_value,
-                "erreur" => $err,
+                "erreur" => $err, // TODO : la clef peut venir se cacher dans l'erreur!!  (par exemple si pas de doc)
                 "document" => "",
                 "objet" => $document
             ]);

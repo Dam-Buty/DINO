@@ -43,3 +43,41 @@ var collapse_liste = function(liste, default_state) {
         liste.find("ul").hide();
     }
 };
+
+var tip_champ = function(field, tip, ignore_KO) {
+    var delay = 800;
+    
+    if (ignore_KO === undefined) {
+        ignore_KO = false;
+    }
+    
+    // Si le champ est en premier affichage ou en erreur
+    if (!field.hasClass("OK")) {
+        $(".container-arrow").not(tip).hide();
+        
+        tip.show().css({ opacity: 0 });
+        
+        tip.offset({
+            top: (field.offset().top + (field.outerHeight() / 2)) - (tip.outerHeight() / 2)
+        });
+        
+        tip.css({
+            opacity: 1
+        });
+        
+        if (field.hasClass("KO") && !ignore_KO) {
+            tip.removeClass("OK").addClass("KO");
+        }
+    } else { // Si le champ vient de passer OK, on le repositionne
+             // parceque le texte a changé
+        tip.offset({
+            top: (field.offset().top + (field.outerHeight() / 2)) - (tip.outerHeight() / 2)
+        });
+        
+        // Et on le passe en vert
+        tip.removeClass("KO").addClass("OK");
+        setTimeout(function() {
+            tip.fadeOut();
+        }, delay);
+    }
+};

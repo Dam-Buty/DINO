@@ -54,3 +54,9 @@
     width: 35%;
     float: right;
 }
+
+.boutons-param {
+    margin-top: 10px;
+    background-color: #8ecb32;
+    border-color: #75a32d;
+}

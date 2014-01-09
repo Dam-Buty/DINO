@@ -116,8 +116,54 @@ if ($_SESSION["niveau"] > 20) {
 <div class="barre-bottom">
     <div id="container-notification"></div>
     <img id="logout" src="img/logout_20.png">
-    <img id="params" src="img/params_20.png">
+    <img id="bouton-pass" src="img/pass_20.png">
+    <img id="bouton-mail" src="img/mail_20.png">
     <img id="help-printer" src="img/printer_20.png">
+</div>
+
+<div id="container-change-pass">
+    <ul class="container-params" id="container-old-pass">
+        <li>Gracias por entrar su contrasena <b>de origen</b> :</li>
+        <li><input type="password" id="pass-old" placeholder="Contrasena de origen"/></li>
+        <li><div id="confirm-password" class="boutons boutons-param">Confirmar</div></li>
+    </ul>
+    <div id="tip-old-pass-params" class="container-arrow KO arrow-params">
+        Su contrasena no es valida!
+    </div>
+    <ul class="container-params" id="container-new-pass">
+        <li><input type="password" id="pass-params" placeholder="Entre una nueva contrasena"/></li>
+        <li><input type="password" id="pass2-params" placeholder="Repite su contrasena"/></li>
+        <li><div id="change-password" class="boutons boutons-param">Guardar contrasena</div></li>
+    </ul>
+    <div id="tip-pass-params" class="container-arrow OK arrow-params">
+        Su contrasena es la pieza llave de la seguridad de sus datos.<br/>
+        Una contrasena robusta contiene a lo menos 8 caracteres, incluyendo :<br/>
+        <ul>
+            <li>una minuscula,</li>
+            <li>una MAYUSCULA,</li> 
+            <li>un numero</li>
+            <li>y uno de esos caracteres especiales : !@#$%^&*?_~</li>
+        </ul>
+        Por ejemplo : <b>Bacon_2013</b> es una deliciosa contrasena.
+    </div>
+</div>
+
+<div id="container-change-mail">
+    <ul class="container-params" id="container-old-pass-mail">
+        <li>Gracias por entrar su contrasena :</li>
+        <li><input type="password" id="pass-old-mail" placeholder="Contrasena"/></li>
+        <li><div id="confirm-password-mail" class="boutons boutons-param">Confirmar</div></li>
+    </ul>
+    <div id="tip-old-pass-params-mail" class="container-arrow KO arrow-params">
+        Su contrasena no es valida!
+    </div>
+    <ul class="container-params" id="container-new-mail">
+        <li><input type="text" id="mail-params" placeholder="Entre un nuevo correo electronico"/></li>
+        <li><div id="change-mail" class="boutons boutons-param">Guardar email</div></li>
+    </ul>
+    <div id="tip-mail-params" class="container-arrow OK arrow-params">
+        DINO would never, ever do anything to harm an innocent mailbox.
+    </div>
 </div>
 
 <div id="opak"></div>
@@ -138,6 +184,7 @@ if ($_SESSION["niveau"] > 20) {
 <script src="js/dragdrop.js?v=1"></script>
 <script src="js/store.js?v=1"></script>
 <script src="js/dialogues.js?v=1"></script>
+<script src="js/params.js?v=1"></script>
 
 <?php
     if ($_SESSION["niveau"] > 20) {

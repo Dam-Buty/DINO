@@ -7,8 +7,6 @@ include("../includes/status.php");
 $login = $_POST["login"];
 $password = $_POST["password"];
 
-$err = 0;
-
 $query = "SELECT `mail_user`, `mdp_user`, `clef_user` FROM `user` WHERE `login_user` = '" . $login . "';";
 
 if ($result = $mysqli->query($query)) {
@@ -67,7 +65,6 @@ if ($result = $mysqli->query($query)) {
     }
 } else {
     status(500);
-    $json = '{ "error": "mysqli", "message": "' . $mysqli->error . '"}';
     write_log([
         "libelle" => "LOGIN",
         "admin" => 0,

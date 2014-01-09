@@ -40,7 +40,23 @@ var bootstrap = function() {
         }
         
         $("#logout").fadeIn().click(logout);
-        $("#params").fadeIn().click(params);
+        $("#bouton-pass").fadeIn().click(popup_pass);
+        $("#bouton-mail").fadeIn().click(popup_mail);
+        
+        $("#pass-params").focus(tip_pass_params);
+        $("#pass-params").keyup(check_pass_params);
+        $("#pass2-params").keyup(check_pass2_params);
+        
+        $("#confirm-password").click(confirme_password);
+        $("#change-password").click(change_password);
+        
+        $("#mail-params").focus(tip_mail_params);
+        $("#mail-params").keyup(check_mail_params);
+        
+        $("#confirm-password-mail").click(confirme_password_mail);
+        $("#change-mail").click(change_mail);
+        
+        collapse_liste($("#edit-params"));
         
         $.ajax({ url: "modules/core.php" })
         .done(function(core) {
@@ -96,10 +112,6 @@ var help_printer = function() {
 
 var logout = function() {
     window.location.replace("logout.php");
-};
-
-var params = function() {
-    
 };
 
 var toggle_tri = function() {

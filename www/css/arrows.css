@@ -78,3 +78,9 @@
     left: 125%;
 }
 
+.arrow-params {
+    width: 50%;
+    left: 45%;
+    position: absolute;
+}
+

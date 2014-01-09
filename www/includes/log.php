@@ -42,7 +42,7 @@ function write_log($params) {
             '" . $_SERVER['HTTP_REFERER'] . "'
         );";
 #    echo $query_log;
-
+// TODO : gestion de l'IP!
 
 #    $hostname = "localhost";
 #    $username = "dino_baby_root";

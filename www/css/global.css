@@ -406,8 +406,12 @@ html, body {
     content: url(../img/logout_hover_20.png);
 }
 
-#params:hover {
-    content: url(../img/params_hover_20.png);
+#pass:hover {
+    content: url(../img/pass_hover_20.png);
+}
+
+#mail:hover {
+    content: url(../img/mail_hover_20.png);
 }
 
 /*#####################################
@@ -1128,4 +1132,41 @@ html, body {
 
 ul.ui-autocomplete {
     z-index: 1000;
+}
+
+/*#####################################
+#
+#        Edit params
+#
+#######################################*/
+
+#container-change-pass {
+    display: none;
+}
+
+#container-change-mail {
+    display: none;
+}
+
+.container-params {
+    list-style-type: none;
+    text-align: left;
+    
+    padding: 0;
+}
+
+.container-params input {
+    width: 35%;
+}
+
+.container-params div {
+    width: 35%;
+}
+
+#container-new-pass {
+    display: none;
+}
+
+#container-new-mail {
+    display: none;
 }
