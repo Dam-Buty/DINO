@@ -214,7 +214,9 @@ var charge_documents = function() {
             champs: profil.mondes[Core.monde].cascade,
             tri: $("#switch-sort select").val(),
             limit: Core.limit,
-            dates: dates
+            dates: dates,
+            all: profil.mondes[Core.monde].all,
+            droits: profil.mondes[Core.monde].champs[profil.mondes[Core.monde].cascade[0]].liste
         },
         statusCode: {
             200: function(liste) {
@@ -244,7 +246,7 @@ function arraysEqual(arr1, arr2) {
 
 var cancel_view = function() {
     $("#opak").fadeOut();
-    $("#viewer-global").fadeOut();
+    $("#container-viewer-global").fadeOut();
 };
 
 var affiche_document = function() {
@@ -256,12 +258,11 @@ var affiche_document = function() {
         "data-document": li.attr("data-position"),
         src: "pdfjs/viewer/viewer.html?file=" + escape("../../do/doUnpack.php?document=" + filename)
     })
-    .fadeIn();
+    $("#container-viewer-global").fadeIn();
     
     $("#opak")
     .fadeIn()
     .unbind().click(cancel_view);
-    $("#viewer-global").fadeIn();
 };
 
 var affiche_revisions = function() {

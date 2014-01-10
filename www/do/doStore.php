@@ -19,7 +19,7 @@ if ($_SESSION["niveau"] >= 10) {
     $query = "
         UPDATE `document` 
         SET 
-            niveau_document = 10, 
+            niveau_document = 0, 
             date_document = '" . format_date($_POST["date"]) . "' 
         WHERE `filename_document` = '" . $_POST["filename"] . "';
         INSERT INTO `type_doc_document` (

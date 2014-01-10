@@ -169,7 +169,10 @@ if ($_SESSION["niveau"] >= 20) {
 
 <div id="opak"></div>
 
-<iframe id="viewer-global"></iframe>
+<div id="container-viewer-global">
+    <div id="poignee-viewer-global"></div>
+    <iframe id="viewer-global"></iframe>
+</div>
 
 <script src="vendor/jquery-1.10.2.js"></script>
 <script src="vendor/jquery-ui.js"></script>

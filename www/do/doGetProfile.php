@@ -155,15 +155,13 @@ if (isset($_SESSION["user"])) {
                 FROM `monde` AS `m`
                 WHERE 
                     `fk_client` = " . $row["fk_client"] . " 
-                    AND ( `niveau_monde` <= " . $row["niveau_user"] . "
-                        OR (
+                    AND (
                             SELECT COUNT(*)
                             FROM `user_monde` AS `um`
                             WHERE 
                                 `um`.`fk_client` = `m`.`fk_client`
                                 AND `um`.`fk_user` = '" . $_SESSION["user"] . "'
                                 AND `um`.`fk_monde` = `m`.`pk_monde`
-                        )
                     );";
             
             if ($result_mondes = $mysqli->query($query_mondes)) {
@@ -172,6 +170,7 @@ if (isset($_SESSION["user"])) {
                     $profil["mondes"][$row_mondes["pk_monde"]] = [
                         "label" => $row_mondes["label_monde"],
                         "niveau" => $row_mondes["niveau_monde"],
+                        "all" => "bogus",
                         "champs" => [],
                         "cascade" => [],
                         "references" => [
@@ -200,6 +199,7 @@ if (isset($_SESSION["user"])) {
                             //////////////////////////
                             // Récupération des valeurs de champ sur lesquelles
                             // l'user a des droits
+                            // Attention, pour les niveau 1 et + , il a accés à tout! TODO
                             //////////////////////////
                             $query_liste = "
                                 SELECT `pk_valeur_champ`, 
@@ -228,13 +228,20 @@ if (isset($_SESSION["user"])) {
                             
                             if ($result_liste = $mysqli->query($query_liste)) {
                                 
-                                while($row_liste = $result_liste->fetch_assoc()) {
-                                    if ($first) {
-                                        if ($row_liste["droits_valeur_champ"] == 0) {
-                                            $all = true;
+                            while($row_liste = $result_liste->fetch_assoc()) {
+                                if ($first) {
+                                    if ($row_liste["droits_valeur_champ"] == 0) {
+                                        $all = true;
+                                        if ($profil["mondes"][$row_mondes["pk_monde"]]["all"] == "bogus") {
+                                            $profil["mondes"][$row_mondes["pk_monde"]]["all"] = true;   
                                         }
-                                        $first = false;
+                                    } else {
+                                        if ($profil["mondes"][$row_mondes["pk_monde"]]["all"] == "bogus") {
+                                            $profil["mondes"][$row_mondes["pk_monde"]]["all"] = false;   
+                                        }
                                     }
+                                    $first = false;
+                                }
                                     
                                     if ($_SESSION["niveau"] >= 20 or $row_liste["droits_valeur_champ"] or $all) {
                                     $profil["mondes"][$row_mondes["pk_monde"]]["champs"][$row_champs["pk_champ"]]["liste"][$row_liste["pk_valeur_champ"]] = $row_liste["label_valeur_champ"];

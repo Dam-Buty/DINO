@@ -16,7 +16,7 @@ if (isset($_SESSION["niveau"])) {
             `td`.`pk_type_doc` AS `type`,
             `tdd`.`detail_type_doc` AS `detail`,
             `tdd`.`revision_type_doc` AS `revision`,
-            ( SELECT GROUP_CONCAT( `pk_valeur_champ` SEPARATOR '||')
+            ( SELECT GROUP_CONCAT( `pk_valeur_champ` SEPARATOR '||' )
             FROM 
                 `valeur_champ` AS `vc`,
                 `document_valeur_champ` AS `dvc`
@@ -87,9 +87,44 @@ if (isset($_POST["recherche"])) {
     $query .= ")";
 }
               
+if ($_POST["all"] == "false") {
+    $query .= "
+            # On ne prend que les documents auxquels l'user a droit 
+            AND (
+                SELECT COUNT(*)
+                FROM `document_valeur_champ` AS `dvc_droits`
+                WHERE 
+                    `dvc_droits`.`fk_client` = " . $_SESSION["client"] . "
+                    AND `dvc_droits`.`fk_monde` = " . $_POST["monde"] . "
+                        
+                    AND `dvc_droits`.`fk_document` = `d`.`filename_document`
+                    
+                    AND `dvc_droits`.`fk_champ` = " . $_POST["champs"][0] . "
+                    AND (
+                        ";
+                        
+    $first_droit = true;
+                    
+        foreach($_POST["droits"] as $pk => $label) {
+            if (!first_droit) {
+                $query .= "
+                        OR ";
+            } else {
+                $first_droit = false;
+            }
+        
+            $query .= "`dvc_droits`.`fk_valeur_champ` = " . $pk . "";
+        }
+                        
+    $query .= "
+                    )
+                    
+            ) > 0
+    ";
+}
 
-
-$query .= "# On ne prend que les dernieres revisions
+$query .= "
+            # On ne prend que les dernieres revisions
             AND `tdd`.`revision_type_doc` = (
                 SELECT MAX(`revision_type_doc`)
                 FROM `type_doc_document` AS `tdd2`
@@ -184,7 +219,6 @@ $query .= " (
         # Limites    
         LIMIT " . $_POST["limit"][0] . ", " . $_POST["limit"][1] . "         
     ;";
-    
     
     if ($result = $mysqli->query($query)) {
         $valeurs_champs = [];

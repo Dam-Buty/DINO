@@ -72,6 +72,8 @@ var bootstrap = function() {
                 
                 $("#date-store").datepicker({dateFormat: "dd/mm/yy"});
                 $("#date-store").datepicker('setDate', new Date());
+                
+                $("#container-viewer-global").draggable({ handle: "div" }).resizable();
             
                 $.ajax({ 
                     url: "do/doCheckAdmin.php",
