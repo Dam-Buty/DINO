@@ -368,7 +368,7 @@ var next_document = function() {
 var change_document = function(document) {
     
     $("#viewer-store").attr({
-        "data-document": li.attr("data-position"),
+        "data-document": queue[document].li.attr("data-position"),
         src: "modules/viewer.php?document=" + queue[document].filename
     });
        
