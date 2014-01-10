@@ -43,7 +43,7 @@ if (isset($_SESSION["user"])) {
                 <a href="<?php echo $lien; ?>">
                     <img class="nopreview" src="<?php echo $image; ?>"/>
                     <p>
-                        No hay previsualisaion por los archivos de tipo <b><?php echo $extension; ?></b>.<br/><br/>
+                        No hay previsualisacion por los archivos de tipo <b><?php echo $extension; ?></b>.<br/><br/>
                         Puedes descargar el archivo <pre><b><?php echo $filename; ?></b></pre> dando click en el DINO.
                     </p>
                 </a>

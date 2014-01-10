@@ -229,7 +229,8 @@ var upload = function(list_element, uploader, queue_position) {
 ///////////////////:
 // Cherche un uploader libre et lui attribue le premier fichier de la queue
 var handle_uploads = function() {
-    refresh_liste();
+    
+    console.log(uploading);
     
     $.each(uploading, function(i, uploader) {
         if (uploader === undefined) {
@@ -238,7 +239,6 @@ var handle_uploads = function() {
                     if (document.size > profil.maxfilesize) {
                         queue[j].status = -3;
                         set_li_status(queue[j].li, -3);
-                        refresh_liste();
                     } else {
                         queue[j].status = 0;
                         uploading[i] = document.document;
@@ -359,6 +359,7 @@ var handle_files = function(files) {
         }
     });
     
+    refresh_liste();
     handle_uploads();
 };
 
