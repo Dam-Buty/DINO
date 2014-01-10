@@ -519,6 +519,16 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
     font-size: 0.8em;
 }
 
+#liste-profil li img {
+    margin-top: 0;
+}
+
+#liste-profil li input {
+    margin-top: 0px;
+    line-height: 1em;
+    font-size: 0.9em;
+}
+
 .liste-champ {
     border-left: 2px solid #8ecb32;
     border-right: 2px solid #8ecb32;
@@ -532,13 +542,13 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
 }
 
 li.profil {
-    background-image: url(../img/tag_30.png);
+    background-image: url(../img/tag_20.png);
     background-position: 5px 50%;
     background-repeat: no-repeat;
-    padding-left: 45px;
+    padding-left: 30px;
     padding-top: 5px;
     padding-bottom: 5px;
-    height: 40px;
+    height: 20px;
     border-top: none;
 }
 
@@ -548,19 +558,19 @@ li.profil-champ {
 
 li.profil-categorie {
     background-color: #9b9b9b;
-    background-image: url(../img/folder_30.png);
+    background-image: url(../img/folder_20.png);
 }
 
 li.profil-type {
     background-color: #cecece;
-    background-image: url(../img/document_30.png);
+    background-image: url(../img/document_20.png);
 }
 
 li.add-profil {
     height: 40px;
     border: 2px dashed #b8b8b8;
     
-    padding-left: 45px;
+    padding-left: 30px;
     padding-top: 5px;
     padding-bottom: 5px;
     
@@ -580,11 +590,11 @@ li.add-profil img {
 }
 
 li.add-profil-categorie {
-    background-image: url(../img/folder_30.png);
+    background-image: url(../img/folder_20.png);
 }
 
 li.add-profil-type {
-    background-image: url(../img/document_30.png);
+    background-image: url(../img/document_20.png);
 }
 
 .profil span {
@@ -600,8 +610,7 @@ li.add-profil-type {
 
 .edit-niveau-profil {
     width: 25%;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: -5px;
 }
 
 .valeur-save {
@@ -610,6 +619,12 @@ li.add-profil-type {
 
 .profil-save {
     display: none;
-    border: 2px solid #514985;
+    border: 1px solid #514985;
     padding: 1px;
+    box-sizing: border-box;
+    height: 20px;
+}
+
+.profil-save:hover {
+    content: url(../img/save_back_hover_20.png);
 }

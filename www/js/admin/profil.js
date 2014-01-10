@@ -44,7 +44,7 @@ var change_monde_profil = function() {
         var new_ul = $("<ul></ul>").css("margin-left", marge + "%").addClass("liste-champ");
         
         // On affiche le champ
-        ul.append(affiche_ligne("champ", pk, champ.label, marge));
+        ul.append(affiche_ligne("champ", pk, champ.label, marge, {niveau: i}));
         ul.append(new_ul);
         ul = new_ul;
                 
@@ -95,7 +95,7 @@ var change_monde_profil = function() {
 }
 var affiche_ligne = function(type, pk, label, marge, obj) {
     var message = "";
-    var select, input;
+    var select, input, pre_input;
     
     switch(type) {
         case "type": 
@@ -103,6 +103,9 @@ var affiche_ligne = function(type, pk, label, marge, obj) {
             break;
         case "categorie":
             message = "Agregar una categoria de documentos";
+            break;
+        case "champ":
+            pre_input = "Nivel " + (obj.niveau + 1) + " : ";
             break;
     }
     
@@ -112,6 +115,7 @@ var affiche_ligne = function(type, pk, label, marge, obj) {
             "data-pk": pk
         })
         .css("margin-left", marge + "%")
+        .append(pre_input)
         .append(
             $("<input/>")
             .attr({
@@ -181,7 +185,7 @@ var affiche_ligne = function(type, pk, label, marge, obj) {
         if (type == "champ") {
             li.append(
                 $("<img/>")
-                .attr("src", "img/categorie_30.png")
+                .attr("src", "img/categorie_20.png")
                 .addClass("profil-toggle-categorie")
                 .click(toggle_categorie_profil)
             );
@@ -190,7 +194,7 @@ var affiche_ligne = function(type, pk, label, marge, obj) {
         if (type == "champ" || type == "categorie") {
             li.append(
                 $("<img/>")
-                .attr("src", "img/document_30.png")
+                .attr("src", "img/document_20.png")
                 .addClass("profil-toggle-type")
                 .click(toggle_type_profil)
             )
@@ -207,7 +211,7 @@ var affiche_ligne = function(type, pk, label, marge, obj) {
     
     li.append(
         $("<img/>")
-        .attr("src", "img/save_back_30.png")
+        .attr("src", "img/save_back_20.png")
         .addClass("profil-save")
         .click(save_profil)
     );
