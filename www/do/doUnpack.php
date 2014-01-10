@@ -7,6 +7,7 @@ if (isset($_SESSION["niveau"])) {
     
     $client = $_SESSION["client"];
     $document = $_GET["document"];
+    $extension = pathinfo($document, PATHINFO_EXTENSION);
     $clef = $_SESSION["clef"];
     
     $descriptorspec = array(
@@ -46,8 +47,26 @@ if (isset($_SESSION["niveau"])) {
             status(200);
             header("Cache-Control: must-revalidate, post-check=0, pre-check=0"); 
             header("Pragma: public");
-            header("Content-type: application/pdf");
-            header("Content-Disposition: inline; filename=remplacer.pdf");
+            
+            switch ($extension) {
+                case "pdf":
+                    header("Content-type: application/pdf");
+                    break;
+                case "jpg":
+                    header("Content-type: image/jpg");
+                    break;
+                case "png":
+                    header("Content-type: image/png");
+                    break;
+                case "gif":
+                    header("Content-type: image/gif");
+                    break;
+                default:
+                    header("Content-type: application/octet-stream");
+                    break;
+            }
+            
+            header("Content-Disposition: inline; filename=" . $document);
             header("Content-Transfer-Encoding: binary");
             header("Content-Length: " . strlen($out));
             header("Accept-Ranges: bytes");

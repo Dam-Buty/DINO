@@ -8,14 +8,15 @@ if ($_SESSION["niveau"] >= 10) {
     include("../includes/crypt.php");
     
     $filename = genere_clef(12, TRUE);
+    $extension = pathinfo($_FILES['document']['name'], PATHINFO_EXTENSION);
     
     $filesize = filesize($_FILES['document']['tmp_name']);
     
-    $query = "INSERT INTO `document` (`filename_document`, `taille_document`, `display_document`, `fk_client`, `fk_user`, `date_upload_document`) VALUES ('" . $filename . ".pdf', " . $filesize . ", '" . $_FILES['document']['name'] . "', " . $_SESSION["client"] . ", '" . $_SESSION["user"] . "', '" . date("Y-m-d H:i:s") . "');";
+    $query = "INSERT INTO `document` (`filename_document`, `taille_document`, `display_document`, `fk_client`, `fk_user`, `date_upload_document`) VALUES ('" . $filename . "." . $extension . "', " . $filesize . ", '" . $_FILES['document']['name'] . "', " . $_SESSION["client"] . ", '" . $_SESSION["user"] . "', '" . date("Y-m-d H:i:s") . "');";
     
     if ($mysqli->query($query)) {
         
-        if (move_uploaded_file($_FILES['document']['tmp_name'], "../cache/" . $_SESSION["client"] . "/temp/" . $filename . ".pdf")) {
+        if (move_uploaded_file($_FILES['document']['tmp_name'], "../cache/" . $_SESSION["client"] . "/temp/" . $filename . "." . $extension)) {
             status(201);
             write_log([
                 "libelle" => "UPLOAD document",
@@ -25,9 +26,9 @@ if ($_SESSION["niveau"] >= 10) {
                 "message" => "",
                 "erreur" => "",
                 "document" => "",
-                "objet" => $filename
+                "objet" => $filename . "." . $extension
             ]);
-            $json = '{ "status": "OK", "filename": "' . $filename . '.pdf" }';
+            $json = '{ "status": "OK", "filename": "' . $filename . '.' . $extension . '" }';
             header('Content-Type: application/json');
             echo $json;
         } else {
@@ -40,7 +41,7 @@ if ($_SESSION["niveau"] >= 10) {
                 "message" => "",
                 "erreur" => "",
                 "document" => "",
-                "objet" => $filename
+                "objet" => $filename . "." . $extension
             ]);
         }
     } else {
@@ -53,7 +54,7 @@ if ($_SESSION["niveau"] >= 10) {
             "message" => "",
             "erreur" => $mysqli->error,
             "document" => "",
-            "objet" => $filename
+            "objet" => $filename . "." . $extension
         ]);
     }
 } else {

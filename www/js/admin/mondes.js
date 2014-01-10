@@ -269,6 +269,7 @@ var _del_valeur = function(monde, champ, pk, parent) {
             200: function() {
                 popup("El " + profil.mondes[monde].champs[champ].label + " <b>" + profil.mondes[monde].champs[champ].liste[pk] + "</b> fue borrado con exito!", "confirmation");
                 get_queue();
+                charge_documents();
                 _profil(bootstrap_monde);
             }
             ,

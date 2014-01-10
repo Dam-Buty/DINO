@@ -3,8 +3,19 @@ var allowed_extensions = {
     "jpg": 1,
     "png": 1,
     "gif": 1,
-    "xml": 1
+    "doc": 1,
+    "xls": 1,
+    "ppt": 1,
+    "docx": 1,
+    "xlsx": 1,
+    "pptx": 1
 }
+
+var img_extensions =  {
+    "jpg": 1,
+    "png": 1,
+    "gif": 1
+};
 
 var queue = [];
 
