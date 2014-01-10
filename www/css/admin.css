@@ -610,4 +610,6 @@ li.add-profil-type {
 
 .profil-save {
     display: none;
+    border: 2px solid #514985;
+    padding: 1px;
 }

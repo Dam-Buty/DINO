@@ -137,7 +137,6 @@ if (isset($_SESSION["user"])) {
     
     if ($result = $mysqli->query($query)) {
         if ($row = $result->fetch_assoc()) {
-            $_SESSION["niveau"] = $row["niveau_user"];
             $_SESSION["client"] = $row["fk_client"];
             $_SESSION["printer"] = $row["printer_client"];
             

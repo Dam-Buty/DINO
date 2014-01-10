@@ -7,13 +7,14 @@ include("../includes/status.php");
 $login = $_POST["login"];
 $password = $_POST["password"];
 
-$query = "SELECT `mail_user`, `mdp_user`, `clef_user` FROM `user` WHERE `login_user` = '" . $login . "';";
+$query = "SELECT `mail_user`, `mdp_user`, `clef_user`, `niveau_user` FROM `user` WHERE `login_user` = '" . $login . "';";
 
 if ($result = $mysqli->query($query)) {
     if ($row = $result->fetch_assoc()) {
         if ($row["mdp_user"] == custom_hash($password . $login, TRUE)) {
             session_start();
             $_SESSION["user"] = $login;
+            $_SESSION["niveau"] = $row["niveau_user"];
             
             // On décrypte la clef
             $clef_cryptee = $row["clef_user"];
