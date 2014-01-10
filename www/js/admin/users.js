@@ -1,6 +1,8 @@
 var bootstrap_users = function() {
     // Vide les champs de création si on vient de sauvegarder un user
     
+    $("#mondes-top-back").empty();
+    
     $("#new-user")
     .find("input")
         .removeClass()
@@ -86,14 +88,16 @@ var bootstrap_users = function() {
                         div.html("Un <b>" + niveau + "</b> con acceso a :");
                         
                         $.each(user.mondes, function(i, monde) {
-                            if (monde.length == 0) {
-                                div.append(
-                                "<p> - <b>todo</b> el mundo <b>" + profil.mondes[i].label + "</b>.</p>"
-                                );
-                            } else {
-                                div.append(
-                                "<p> - <b>ciertos " + profil.mondes[i].champs[profil.mondes[i].cascade[0]].pluriel + "</b> del mundo <b>" + profil.mondes[i].label + "</b></p>"
-                                );
+                            if (profil.mondes[i] !== undefined) {
+                                if (monde.length == 0) {
+                                    div.append(
+                                    "<p> - <b>todo</b> el mundo <b>" + profil.mondes[i].label + "</b>.</p>"
+                                    );
+                                } else {
+                                    div.append(
+                                    "<p> - <b>ciertos " + profil.mondes[i].champs[profil.mondes[i].cascade[0]].pluriel + "</b> del mundo <b>" + profil.mondes[i].label + "</b></p>"
+                                    );
+                                }
                             }
                         });
                     }
@@ -273,7 +277,7 @@ var reset_tips = function() {
     );
     
     $("#tip-pass").html(
-        "Su contrasena es la pieza llave de la seguridad de sus datos.<br/>" +
+        "Su contrasena es la pieza clave de la seguridad de sus datos.<br/>" +
         "Una contrasena robusta contiene a lo menos 8 caracteres, incluyendo :<br/>" +
         "<ul>" +
             "<li>una minuscula,</li>" +
@@ -760,6 +764,13 @@ var save_user = function() {
     if (all_ok) {
         error.slideUp();
         
+        // Récupère les mondes auxquels l'user a droit
+        var mondes_droits = [];
+        
+        $.each(profil.mondes, function(i, monde) {
+            mondes_droits.push(i);
+        });
+        
         $.ajax({
             url: "do/doSaveUser.php",
             type: "POST",
@@ -769,7 +780,8 @@ var save_user = function() {
                 pass: pass,
                 mail: mail,
                 niveau: niveau,
-                mondes: mondes
+                mondes: mondes,
+                droits: mondes_droits
             },
             statusCode : {
                 200: function() {

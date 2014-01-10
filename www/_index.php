@@ -22,12 +22,12 @@ if (isset($_SESSION)) {
     if ($_SESSION["niveau"] >= 20) {
     ?>
 <link rel="stylesheet" href="css/admin.css?v=3" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/inputs.css?v=3" media="screen" type="text/css"/>
     <?php
     }
 ?>
 
 <link rel="stylesheet" href="css/boutons.css?v=3" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/inputs.css?v=3" media="screen" type="text/css"/>
 
 <link rel="stylesheet" href="vendor/chosen.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/zebra_dialog_custom.css?v=1" media="screen" type="text/css"/>
@@ -137,7 +137,7 @@ if ($_SESSION["niveau"] >= 20) {
         <li><div id="change-password" class="boutons boutons-param">Guardar contrasena</div></li>
     </ul>
     <div id="tip-pass-params" class="container-arrow OK arrow-params">
-        Su contrasena es la pieza llave de la seguridad de sus datos.<br/>
+        Su contrasena es la pieza clave de la seguridad de sus datos.<br/>
         Una contrasena robusta contiene a lo menos 8 caracteres, incluyendo :<br/>
         <ul>
             <li>una minuscula,</li>

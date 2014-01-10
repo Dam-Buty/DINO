@@ -106,7 +106,7 @@ if ($_POST["all"] == "false") {
     $first_droit = true;
                     
         foreach($_POST["droits"] as $pk => $label) {
-            if (!first_droit) {
+            if (!$first_droit) {
                 $query .= "
                         OR ";
             } else {

@@ -42,7 +42,7 @@ if ($_SESSION["niveau"] >= 20) {
         ]);
     }
 } else {
-    header("Location: ../index.php");
+    status(403);
     write_log([
         "libelle" => "INSERT champ",
         "admin" => 1,

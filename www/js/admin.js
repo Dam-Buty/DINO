@@ -11,6 +11,10 @@ var bootstrap_admin = function() {
 
 var change_admin = function() {
     var div = $(this);
+    var li = div.closest("li");
+    
+    li.closest("ul").find("li").attr("data-selected", 0);
+    li.attr("data-selected", 1);
     
     $("#backoffice>h1").fadeOut();
     $("#backoffice>div").fadeOut();
@@ -29,23 +33,6 @@ var change_admin = function() {
             break;
     }
 };
-
-// Checks a string for a list of characters
-function countContain(string, reference)
-{ 
-    // Declare variables
-    var nCount = 0;
-
-    for (i = 0; i < string.length; i++) 
-    {
-        if (reference.indexOf(string.charAt(i)) > -1) 
-        {
-                nCount++;
-        } 
-    }
-
-    return nCount; 
-}
 
 var toggle_admin = function() {
     if (Core.admin) {
@@ -72,7 +59,6 @@ var toggle_admin = function() {
             }
         });
         Core.admin = true;
-        bootstrap_users();
-    }
-            
+        $("#menu-users").click();
+    }      
 };

@@ -1,5 +1,12 @@
 
 var bootstrap_profil = function() {
+    var monde;
+
+    if ($("#mondes-top-back li").length > 0) {
+        monde = $('#mondes-top-back li[data-selected="1"]').index();
+    } else {
+        monde = 0;
+    }
     
     $("#mondes-top-back").empty();
     
@@ -16,7 +23,7 @@ var bootstrap_profil = function() {
     });
     
     $("#profil").fadeIn();
-    $("#mondes-top-back").find("li").eq(0).click();
+    $("#mondes-top-back").find("li").eq(monde).click();
 };
 
 var change_monde_profil = function() {

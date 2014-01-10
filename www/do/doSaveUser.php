@@ -3,7 +3,7 @@ session_start();
 include("../includes/status.php");
 include("../includes/log.php");
 
-if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] > 20 && $_SESSION["niveau"] > $_POST["niveau"]) {
+if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau"] > $_POST["niveau"]) {
     include("../includes/mysqli.php");
     include("../includes/crypt.php");
     
@@ -50,7 +50,26 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] > 20 && $_SESSION["niveau"
         DELETE FROM `user_monde`
             WHERE 
                 `fk_client` = " . $_SESSION["client"] . "
-                AND `fk_user` = '" . $_POST["login"] . "';";
+                AND `fk_user` = '" . $_POST["login"] . "'
+                AND (
+                    ";
+                    
+    $first_droit = true;
+
+    foreach($_POST["droits"] as $key => $monde) {
+        if (!$first_droit) {
+            $query .= "
+                    OR ";
+        } else {
+            $first_droit = false;
+        }
+        $query .= "`fk_monde` = " . $monde . "";
+    }
+                    
+                    
+                    
+         $query .=  "
+                );";
     
     if (is_array($_POST["mondes"])) {
         foreach($_POST["mondes"] as $monde => $valeurs) {

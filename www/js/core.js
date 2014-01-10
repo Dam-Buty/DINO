@@ -439,7 +439,7 @@ var construit_table = function() {
             default: // C'est donc un document
                     current_ul = stack_ul[stack_ul.length - 1]; 
                     var champ_parent = monde.champs[cascade[stack_champs.length - 1]];
-                    var type, img;
+                    var type, img_revisions, img_del;
                     
                     if (categorie == 0) {
                         type = champ_parent.types[ligne.type].label;
@@ -449,8 +449,8 @@ var construit_table = function() {
                         marge = stack_champs.length * 2 + 2;
                     }
                     
-                    if (ligne.revision > 1) {
-                        img = $("<img></img>")
+                    if (ligne.revision > 1 && profil.niveau > 0) {
+                        img_revisions = $("<img></img>")
                             .attr({
                                 src: "img/revision_15.png",
                                 title: "Existan " + (ligne.revision - 1) + " revisiones anteriores de este documento.",
@@ -459,7 +459,19 @@ var construit_table = function() {
                             .addClass("imgboutons")
                             .click(affiche_revisions)
                     } else {
-                        img = "";
+                        img_revisions = "";
+                    }
+                    
+                    if (profil.niveau >= 10) {
+                        img_del = $("<img></img>")
+                        .attr({
+                            src: "img/del_15.png",
+                            title: "Declasificar documento"
+                        })
+                        .addClass("imgboutons")
+                        .click(del_document)
+                    } else {
+                        img_del = "";
                     }
                     
                     li = $("<li></li>")
@@ -472,7 +484,8 @@ var construit_table = function() {
                         "data-detail": ligne.detail,
                         "data-niveau": stack_champs.length - 1
                     })
-                    .append(img)
+                    .append(img_del)
+                    .append(img_revisions)
                     .append(
                         $("<span></span>")
                         .addClass("document")
@@ -492,5 +505,42 @@ var construit_table = function() {
     .on("dragover", dragover)
     .on("dragleave", dragleave)
     .on("drop", drop);
+};
+
+var del_document = function() {
+    var img = $(this);
+    var li = img.closest("li");
+    var filename = li.attr("data-filename");
+
+    var message = "Este documento esta a punto de ser declasificado.<br/><b>No sera borrado del sistema!</b><br/>Lo encontraras en tu <b>fila de entrada</b>, donde podras borrarlo definitivamente o clasificarlo otra vez.<br/>Si existe una revision mas antigua de este documento, esta version sera restaurada.";
+    
+    var title = "Declasificacion de documento";
+    
+    var bouton = "Confirmar (<i>Declasificar documento</i>)";
+
+    var callback = function() {
+        $.ajax({
+            url: "do/doRequeueDocument.php",
+            type: "POST",
+            data: {
+                filename: filename
+            },
+            statusCode : {
+                200: function() {
+                    popup("El documento fue declasificado con exito!", "confirmation");
+                    get_queue();
+                    charge_documents();
+                },
+                403: function() {
+                    window.location.replace("index.php");
+                },
+                500: function() {
+                    popup("Error! Gracias por intentar otra vez...", "error");
+                }
+            }
+        });
+    };
+    
+    popup_confirmation(message, title, bouton, callback);
 };
 

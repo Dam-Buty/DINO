@@ -1,4 +1,22 @@
 
+
+// Checks a string for a list of characters
+function countContain(string, reference)
+{ 
+    // Declare variables
+    var nCount = 0;
+
+    for (i = 0; i < string.length; i++) 
+    {
+        if (reference.indexOf(string.charAt(i)) > -1) 
+        {
+                nCount++;
+        } 
+    }
+
+    return nCount; 
+}
+
 var collapse_liste = function(liste, default_state) {
     var toggle_line = function() {
         var click = $(this);

@@ -75,7 +75,11 @@ img.bouton-save-back:hover {
 }
 
 #menu-back li:hover {
-    background-color: #4a427b;
+    background-color: #2F2663;
+}
+
+#menu-back li[data-selected="1"] {
+    background-color: #2F2663;
 }
 
 #menu-back h1 {
@@ -88,6 +92,10 @@ img.bouton-save-back:hover {
     background-image: url(../img/retour_40.png);
     background-color: #83bc2f !important;
     border-top: none !important;
+}
+
+#menu-retour:hover {
+    background-color: #75a32d !important;
 }
 
 #menu-users {

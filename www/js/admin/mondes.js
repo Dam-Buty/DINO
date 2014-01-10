@@ -1,6 +1,13 @@
 
 
 var bootstrap_monde = function() {
+    var monde;
+
+    if ($("#mondes-top-back li").length > 0) {
+        monde = $('#mondes-top-back li[data-selected="1"]').index();
+    } else {
+        monde = 0;
+    }
     
     $("#mondes-top-back").empty();
     
@@ -16,7 +23,7 @@ var bootstrap_monde = function() {
         );
     });
 
-    $("#mondes-top-back").find("li").eq(0).click();
+    $("#mondes-top-back").find("li").eq(monde).click();
     $("#mondes").fadeIn();
 };
 
@@ -261,7 +268,7 @@ var _del_valeur = function(monde, champ, pk, parent) {
         statusCode : {
             200: function() {
                 popup("El " + profil.mondes[monde].champs[champ].label + " <b>" + profil.mondes[monde].champs[champ].liste[pk] + "</b> fue borrado con exito!", "confirmation");
-                
+                get_queue();
                 _profil(bootstrap_monde);
             }
             ,
