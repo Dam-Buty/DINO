@@ -51,22 +51,24 @@ if (isset($_SESSION["niveau"])) {
             switch ($extension) {
                 case "pdf":
                     header("Content-type: application/pdf");
+                    header("Content-Disposition: inline; filename=" . $document);
                     break;
                 case "jpg":
-                    header("Content-type: image/jpg");
-                    break;
                 case "png":
-                    header("Content-type: image/png");
-                    break;
                 case "gif":
-                    header("Content-type: image/gif");
+                    header("Content-type: image/jpg");
+                    if (isset($_GET["download"])) {
+                        header("Content-Disposition: attachment; filename=" . $document);
+                    }else {
+                        header("Content-Disposition: inline; filename=" . $document);
+                    }
                     break;
                 default:
                     header("Content-type: application/octet-stream");
+                    header("Content-Disposition: attachment; filename=" . $document);
                     break;
             }
             
-            header("Content-Disposition: inline; filename=" . $document);
             header("Content-Transfer-Encoding: binary");
             header("Content-Length: " . strlen($out));
             header("Accept-Ranges: bytes");

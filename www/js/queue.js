@@ -343,8 +343,10 @@ var create_li = function(name, size, user, date) {
 
 ////////////////////////////
 // Gestion des fichiers entrés dans l'input
-var handle_files = function() {
-    files = $("#files-handler").prop("files");
+var handle_files = function(files) {
+    if (files instanceof FileList === false) {
+        files = $("#files-handler").prop("files");
+    }
     
     $.each(files, function() {
         var file_tab = this.name.split(".");

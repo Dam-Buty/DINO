@@ -1,0 +1,23 @@
+
+body {
+    background-color: #DBDBDB;
+    text-align: center;
+    font-size: 1.1em;
+}
+
+img.document {
+    width: 100%;
+}
+
+img.nopreview {
+    width: 50%;
+}
+
+a {
+    text-decoration: none;
+    color: #4b4b4b;
+}
+
+pre {
+    border: 1px solid #4b4b4b;
+}

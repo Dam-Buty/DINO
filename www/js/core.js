@@ -254,26 +254,10 @@ var affiche_document = function() {
     var li = span.closest("li");
     var filename = li.attr("data-filename");
     
-    var extension = filename.split('.').pop();
-    
-    var src;
-    
-    if (extension == "pdf") {
-        src: "pdfjs/viewer/viewer.html?file=" + escape("../../do/doUnpack.php?document=" + filename)
-    } else {
-        if (extension in img_extensions) {
-            src = "do/doUnpack.php?document=" + filename
-        }
-    }
-    
     $("#viewer-global").attr({
         "data-document": li.attr("data-position"),
-        src: src
-    })
-    
-    if (extension in img_extensions) {
-        $("#viewer-global").contents().find("img").css("width", "100%")
-    }
+        src: "modules/viewer.php?document=" + filename
+    });
     
     $("#container-viewer-global").fadeIn();
     

@@ -367,26 +367,10 @@ var next_document = function() {
 
 var change_document = function(document) {
     
-    var extension = queue[document].filename.split('.').pop();
-    
-    var src;
-    
-    if (extension == "pdf") {
-        src: "pdfjs/viewer/viewer.html?file=" + escape("../../do/doUnpack.php?document=" + queue[document].filename)
-    } else {
-        if (extension in img_extensions) {
-            src = "do/doUnpack.php?document=" + queue[document].filename
-        }
-    }
-    
     $("#viewer-store").attr({
-        "data-document": document,
-        src: src
+        "data-document": li.attr("data-position"),
+        src: "modules/viewer.php?document=" + queue[document].filename
     });
-    
-    if (extension in img_extensions) {
-        $("#viewer-store").contents().find("img").css("width", "100%")
-    }
        
     // On met le nom du fichier
     $("#nom-doc-store").text(queue[document].displayname);
@@ -584,27 +568,10 @@ var _store_document = function(position) {
           
     // On installe le viewer dans l'iframe
     
-    var extension = queue[li.attr("data-position")].filename.split('.').pop();
-    
-    var src;
-    
-    if (extension == "pdf") {
-        src: "pdfjs/viewer/viewer.html?file=" + escape("../../do/doUnpack.php?document=" + queue[li.attr("data-position")].filename)
-    } else {
-        if (extension in img_extensions) {
-            src = "do/doUnpack.php?document=" + queue[li.attr("data-position")].filename
-        }
-    }
-    
-    $("#viewer-store")
-    .attr({
-        "data-document": position,
-        src: src
+    $("#viewer-store").attr({
+        "data-document": li.attr("data-position"),
+        src: "modules/viewer.php?document=" + queue[li.attr("data-position")].filename
     });
-    
-    if (extension in img_extensions) {
-        $("#viewer-store").contents().find("img").css("width", "100%")
-    }
     
     // On met le nom du fichier
     $("#nom-doc-store").text(queue[li.attr("data-position")].displayname);

@@ -74,7 +74,14 @@ var bootstrap = function() {
                 $("#date-store").datepicker('setDate', new Date());
                 
                 $("#container-viewer-global").draggable({ handle: "div" }).resizable();
-            
+                
+                // On installe le drag'n'drop
+                $("#zone-dnd").on("dragenter", dragenter_files);
+                $("#zone-dnd").on("dragover", dragover_files);
+                $("#zone-dnd").on("dragleave", dragleave_files);
+                $("#zone-dnd").on("dragend", dragend_files);
+                $("#zone-dnd").on("drop", drop_files);
+                
                 $.ajax({ 
                     url: "do/doCheckAdmin.php",
                     statusCode: {
