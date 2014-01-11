@@ -31,6 +31,8 @@ function mail($adresse, $mail, $attach = [], $subst = []) {
             'attachment' => $attach
         ]
     );
+    
+    echo $result;
 }
 
 mail("dam.buty@gmail.com", "creation_visiteur", [], [
