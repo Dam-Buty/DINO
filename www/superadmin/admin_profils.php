@@ -12,6 +12,7 @@ include("../includes/mysqli.php");
     }
 ?>
 </select><br/><br/>
+<input type="submit" value="Régénérer droits" id="regenerate"/>
 
 <table id="mondes" data-selected="0">
     <thead>
@@ -106,4 +107,20 @@ include("../includes/mysqli.php");
 charge_mondes();
 $(".save_liste").click(save_liste);
 $("#client").change(charge_mondes);
+$("#regenerate").click(function() {
+    var mondes = [];
+    
+    $.each($('tr[data-monde][data-monde!="new"]'), function(i, tr) {
+        mondes.push($(tr).attr("data-monde"));
+    });
+
+    $.ajax({
+        url: "do/doRegenerate.php",
+        type: "POST",
+        data: {
+            client: $("#client").val(),
+            mondes: mondes
+        }
+    });    
+});
 </script>

@@ -22,8 +22,10 @@ if (isset($_SESSION["superadmin"])) {
         $query_user = "INSERT INTO `user` (`login_user`, `mdp_user`, `mail_user`, `niveau_user`, `fk_client`, `clef_user`) VALUES ('" . $_POST["login"] . "', '" . $password . "', '" . $_POST["mail"] . "', 30, " . $idclient . ", '" . $clef_cryptee . "');";
         
         if ($mysqli->query($query_user)) {
-            mkdir("../../cache/" + $idclient);
-            mkdir("../../cache/" + $idclient + "/temp");
+            chdir("../../cache/");
+            mkdir($idclient);
+            chdir($idclient);
+            mkdir("temp");
             header("Location: ../index.php");
         } else {
             echo $query_user . "<br/>";
