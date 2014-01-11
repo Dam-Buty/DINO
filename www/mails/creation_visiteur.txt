@@ -1,0 +1,14 @@
+Hola %user%,
+
+%client% tiene documentos que quiere compartir contigo!
+
+Para consultarlos, solo necesitas conectarte en la pagina http://my.dino.mx con las informaciones siguientes :
+
+- Nombre de usuario : %user%
+- Contrasena        : %pass%
+
+Te recomendamos que cambias tu contrasena durante tu primera conexion, para garantizar que tus datos sean accesibles solo para ti.
+
+Saludos,
+El Equipo DINO
+http://www.dino.mx
