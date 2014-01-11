@@ -2,4 +2,4 @@
 
 NOW=$(date +"%Y-%m-%d-%H-%M-%S")
 
-fswebcam -d /dev/video1 $NOW.jpg
+fswebcam -d /dev/video1 ~/commitpics/$NOW.jpg
