@@ -1,87 +1,37 @@
 <html>
 <head>
-<style type="text/css">
-
-body {
-    color: #484848; 
-    font-face: Verdana, Geneva, sans-serif;
-    font-size: 0.9em;
-}
-
-div {
-    border: 2px solid rgba(89, 152, 1, 0.25);
-    border-radius: 5px;
-    padding: 10px;
-    
-    margin-bottom: 10px;
-    
-    width: auto;
-}
-
-p {
-    margin-left: 5%;
-}
-
-div p {
-    margin-left: 0;
-}
-
-h1 {
-    font-size: 1.1em;
-    font-weight: bold;
-}
-
-div>div {
-    width: 60%;
-    margin-left: 20%;
-    background-color: #8ECB32;
-    color: white;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-ul {
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-li {
-    margin-top: 0;
-    margin-bottom: 0;
-}
-
-</style>
 </head>
 
-<body>
-<div>
-<h1>Hola <b>%user%</b>,</h1>
+<body style="color: #484848; font-face: Verdana, Geneva, sans-serif; font-size: 0.9em;">
 
-<p>
-<b>%client%</b> tiene documentos que quiere compartir contigo!
-</p>
+<div style="border: 2px solid rgba(89, 152, 1, 0.25); border-radius: 5px; padding: 10px; margin-bottom: 10px; width: auto;">
+    <h1 style="font-size: 1.1em; font-weight: bold;">Hola <b>%user%</b>,</h1>
 
-<p>
-Para consultarlos, solo necesitas conectarte en la pagina <a href="http://my.dino.mx">http://my.dino.mx</a> con las informaciones siguientes :
-</p>
+    <p>
+        <b>%client%</b> tiene documentos que quiere compartir contigo!
+    </p>
 
-<div>
-    <ul>
-        <li><b>Nombre de usuario</b> : %user%</li>
-        <li><b>Contrasena</b>        : %pass%</li>
-    </ul>
+    <p>
+        Para consultarlos, solo necesitas conectarte en la pagina <a href="http://my.dino.mx">http://my.dino.mx</a> con las informaciones siguientes :
+    </p>
+
+    <div style="width: 60%; margin-left: 20%; background-color: #8ECB32; border-radius: 5px; color: white; padding-top: 5px; padding-bottom: 5px; margin-top: 0; margin-bottom: 0;">
+        <ul style="margin-top: 0; margin-bottom: 0;">
+            <li style="margin-top: 0; margin-bottom: 0;"><b>Nombre de usuario</b> : %user%</li>
+            <li style="margin-top: 0; margin-bottom: 0;"><b>Contrasena</b>        : %pass%</li>
+        </ul>
+    </div>
+
+    <p>
+        Te recomendamos que cambias tu contrasena durante tu primera conexion, para garantizar que tus datos sean accesibles solo para ti.
+    </p>
 </div>
 
-<p>
-Te recomendamos que cambias tu contrasena durante tu primera conexion, para garantizar que tus datos sean accesibles solo para ti.
+<p style="margin-left: 5%;">
+    Saludos,<br/>
+    <b>El Equipo DINO</b><br/>
+    <a href="http://my.dino.mx"><img src="http://dino.mx/dino_mail.png" alt="DINO" title="DINO"/></a>
 </p>
-</div>
-<p>
-Saludos,<br/>
-<b>El Equipo DINO</b><br/>
-<a href="http://my.dino.mx"><img src="http://dino.mx/dino_mail.png" alt="DINO" title="DINO"/></a>
-</p>
+
 </body>
 </html>

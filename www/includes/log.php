@@ -44,15 +44,15 @@ function write_log($params) {
 #    echo $query_log;
 // TODO : gestion de l'IP!
 
-#    $hostname = "localhost";
-#    $username = "dino_baby_root";
-#    $dbname = "dino_baby";
-#    $password = "C4dillac5";
-
     $hostname = "localhost";
-    $username = "root";
+    $username = "dino_baby_root";
     $dbname = "dino_baby";
     $password = "C4dillac5";
+
+#    $hostname = "localhost";
+#    $username = "root";
+#    $dbname = "dino_baby";
+#    $password = "C4dillac5";
 
     $mysqli_log = new mysqli($hostname, $username, $password, $dbname);
 

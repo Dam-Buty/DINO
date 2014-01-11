@@ -1,0 +1,14 @@
+Hola %user%,
+
+Tu cuenta DINO ha sido creada!
+
+Para empezar a archivar y consultar los documentos de tu empresa %client%, solo necesitas conectarte en la pagina http://my.dino.mx con las informaciones siguientes :
+
+- Nombre de usuario : %user%
+- Contrasena        : %pass%
+
+Te recomendamos que cambias tu contrasena durante tu primera conexion, para garantizar que tus datos sean accesibles solo para ti.
+
+Saludos,
+El Equipo DINO
+http://www.dino.mx

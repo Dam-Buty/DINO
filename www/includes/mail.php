@@ -1,12 +1,12 @@
 <?php
+require 'vendor/autoload.php';
+use Mailgun\Mailgun;
 
-function mail($adresse, $mail, $attach = [], $subst = []) {
-    require 'vendor/autoload.php';
-    use Mailgun\Mailgun;
+function dinomail($adresse, $mail, $attach = [], $subst = []) {
 
     # Instantiate the client.
     $mgClient = new Mailgun('key-8mwfyrfwzmam66qe-20my2lqcmt-o6k4');
-    $domain = "baby.dino.mx";
+    $domain = "dino.mx";
     
     // Récupère le contenu du mail
     
@@ -15,8 +15,8 @@ function mail($adresse, $mail, $attach = [], $subst = []) {
     $sujet = file_get_contents("../mails/" . $mail . ".subject");
     
     foreach($subst as $key => $value) {
-        $text = str_replace("$" . $key . "$", $value, $text);
-        $html = str_replace("$" . $key . "$", $value, $html);
+        $text = str_replace("%" . $key . "%", $value, $text);
+        $html = str_replace("%" . $key . "%", $value, $html);
     }
 
     # Make the call to the client.
@@ -31,14 +31,5 @@ function mail($adresse, $mail, $attach = [], $subst = []) {
             'attachment' => $attach
         ]
     );
-    
-    echo $result;
 }
-
-mail("dam.buty@gmail.com", "creation_visiteur", [], [
-    "user" => "dam.buty",
-    "client" => "Correo Solucion",
-    "pass" => "Pa55w0rD"
-]);
-
 ?>

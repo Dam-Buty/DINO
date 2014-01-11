@@ -5,6 +5,7 @@ if ($_SESSION["niveau"] >= 20) {
     include("../includes/mysqli.php");
     include("../includes/crypt.php");
     include("../includes/status.php");
+    include("../includes/mail.php");
     
     // On génère un nouveau mot de passe
     $pass = genere_clef(10);
@@ -30,8 +31,13 @@ if ($_SESSION["niveau"] >= 20) {
     if ($mysqli->query($query_user)) {
         // mail($_POST["mail"] , "Su contrasena fue reinicialisada!" , "Su nueva contrasena : " . $pass );
         // MAIL !
+        
+        dinomail($_POST["mail"], "reset_pass", [], [
+            "user" => $_POST["login"],
+            "pass" => $pass
+        ]);
+        
         status(200);
-        $json = $pass;
         write_log([
             "libelle" => "RESET mot de passe",
             "admin" => 1,
@@ -42,8 +48,6 @@ if ($_SESSION["niveau"] >= 20) {
             "document" => "",
             "objet" => $_POST["login"]
         ]);
-        header('Content-Type: application/json');
-        echo $json; // TODO : on n'enverra bien sur pas le passe dans le json :)
     } else {
         status(500);
         write_log([

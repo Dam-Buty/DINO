@@ -6,6 +6,7 @@ include("../includes/log.php");
 if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau"] > $_POST["niveau"]) {
     include("../includes/mysqli.php");
     include("../includes/crypt.php");
+    include("../includes/mail.php");
     
     
     if ($_POST["pk"] == "new") {
@@ -118,6 +119,26 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
         } while ($mysqli->next_result()); 
         
         if (!$mysqli->errno) { 
+            
+            switch($_POST["niveau"]) {
+                case "0": 
+                    $mail = "creation_visiteur";
+                    break;
+                case "10":
+                    $mail = "creation_archiviste";
+                    break;
+                case "20":
+                    $mail = "creation_admin";
+                    break;
+            }
+
+            dinomail($_POST["mail"], $mail, [], [
+                "user" => $_POST["login"],
+                "client" => $_SESSION["nom_client"],
+                "pass" => $_POST["pass"]
+            ]);
+            
+            
             status(200);
             write_log([
                 "libelle" => "INSERT user",
