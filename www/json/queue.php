@@ -16,7 +16,9 @@ if (isset($_SESSION["niveau"])) {
         FROM `document` 
         WHERE 
             `fk_client` = " . $_SESSION["client"] . " 
-            AND `niveau_document` IS NULL;";
+            AND `niveau_document` IS NULL
+        ORDER BY `display_document` ASC;
+            ;";
     
     if ($result = $mysqli->query($query)) {
         status(200);

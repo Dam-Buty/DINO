@@ -11,7 +11,9 @@ var allowed_extensions = {
     "pptx": 1,
     "zip": 1,
     "rar": 1,
-    "odt": 1
+    "odt": 1,
+    "epub": 1,
+    "mobi": 1
 }
 
 var img_extensions =  {
@@ -124,7 +126,15 @@ var compare = function(a,b) {
      return 1;
   if (a.status < b.status)
     return -1;
-  return 0;
+  if (a.status = b.status) {
+    if (a.displayname < b.displayname) {
+        return -1;
+    }
+    if (a.displayname > b.displayname) {
+        return 1;
+    }
+    return 0;
+  }
 }
 
 var anime_queue = function() {
@@ -356,7 +366,7 @@ var handle_files = function(files) {
         var extension = file_tab[file_tab.length - 1];
         
         // Si l'extension est légale, on pousse le fichier dans la queue
-        if (extension in allowed_extensions) {
+        if (extension.toLowerCase() in allowed_extensions) {
             var document_li = set_li_status(create_li(this.name, this.size, "usted", "hoy"), -1);
             queue.push({ document: this, status: -1, size: this.size, li: document_li, filename: "", displayname: this.name, user: "usted", date: "hoy", store: { date: "", monde: "", last_champ: "", champs: { } , categorie: "", type_doc: { } } });
         }

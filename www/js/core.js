@@ -199,10 +199,13 @@ var change_dates = function() {
 };
 
 var charge_documents = function() {  
+
+    var oneDay = 24*60*60*1000;
+    
     var dates = {
         // Unixtime est en secondes, JStime est en milisecondes
         mini: Core.dates[$("#slider-date").slider("values")[0]] / 1000,
-        maxi: Core.dates[$("#slider-date").slider("values")[1]] / 1000
+        maxi: ((Core.dates[$("#slider-date").slider("values")[1]] + oneDay) / 1000) - 1
     };
     
     $.ajax({
