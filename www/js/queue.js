@@ -8,7 +8,10 @@ var allowed_extensions = {
     "ppt": 1,
     "docx": 1,
     "xlsx": 1,
-    "pptx": 1
+    "pptx": 1,
+    "zip": 1,
+    "rar": 1,
+    "odt": 1
 }
 
 var img_extensions =  {
