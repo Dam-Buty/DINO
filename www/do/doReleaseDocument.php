@@ -11,14 +11,17 @@ if (isset($_SESSION["niveau"])) {
         SET
             `niveau_document` = NULL
         WHERE 
-            `fk_client` = " . $_SESSION["client"] . "
-            AND `filename_document` = '" . $_POST["document"] . "'
+            `fk_client` = " .  . "
+            AND `filename_document` = '" .  . "'
     ;";
     
-    if ($mysqli->query($query_update)) {
+    $result_update = dino_query($query_update,[
+        "client" => $_SESSION["client"],
+        "filename" => $_POST["document"]
+    ]);
+    
+    if ($result_update["status"]) {
         status(200);
-        header('Content-Type: application/json');
-        echo json_encode($document);
     } else {
         status(500);
         write_log([
@@ -26,10 +29,10 @@ if (isset($_SESSION["niveau"])) {
             "admin" => 0,
             "query" => $query_update,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result_update["errinfo"][2],
+            "erreur" => $result_update["errno"],
             "document" => "",
-            "objet" => $POST["filename_document"]
+            "objet" => $POST["document"]
         ]);
     }
 } else {
@@ -42,7 +45,7 @@ if (isset($_SESSION["niveau"])) {
         "message" => "",
         "erreur" => "",
         "document" => "",
-        "objet" => ""
+        "objet" => $POST["document"]
     ]);
 }
 ?>

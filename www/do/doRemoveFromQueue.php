@@ -9,9 +9,16 @@ if ($_SESSION["niveau"] >= 10) {
     $path = "../cache/" . $_SESSION["client"] . "/" . $_POST["filename"] . ".css";
     
     if (unlink($path)) {
-        $query = "DELETE FROM `document` WHERE `filename_document` = '" . $_POST["filename"] . "';";
+        $query = "
+            DELETE FROM `document` 
+            WHERE `filename_document` = :filename
+        ;";
+    
+        $result = dino_query($query,[
+            "filename" => $_POST["document"]
+        ]);
         
-        if ($mysqli->query($query)) {
+        if ($result["status"]) {
             status(204);
             write_log([
                 "libelle" => "DELETE document de la queue",
@@ -30,8 +37,8 @@ if ($_SESSION["niveau"] >= 10) {
                 "admin" => 0,
                 "query" => $query,
                 "statut" => 1,
-                "message" => "",
-                "erreur" => $mysqli->error,
+                "message" => $result_update["errinfo"][2],
+                "erreur" => $result_update["errno"],
                 "document" => $_POST["filename"],
                 "objet" => $_POST["filename"]
             ]);
@@ -44,8 +51,8 @@ if ($_SESSION["niveau"] >= 10) {
             "admin" => 0,
             "query" => "unlink " . $path,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result_update["errinfo"][2],
+            "erreur" => $result_update["errno"],
             "document" => $_POST["filename"],
             "objet" => $_POST["filename"]
         ]);

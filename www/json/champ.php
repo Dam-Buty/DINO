@@ -6,13 +6,32 @@ include("../includes/log.php");
 if (isset($_SESSION["niveau"])) {
     include("../includes/mysqli.php");  
     
-    $query = "SELECT `pk_valeur_champ`, `label_valeur_champ` FROM `valeur_champ` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $_POST["monde"] . " AND `fk_parent` = " . $_POST["parent"] . " AND `fk_champ` = " . $_POST["champ"] . ";";
+    $query = "
+        SELECT 
+            `pk_valeur_champ`, 
+            `label_valeur_champ` 
+        FROM `valeur_champ` 
+        WHERE 
+            `fk_client` = :client
+            AND `fk_monde` = :monde
+            AND `fk_parent` = :parent
+            AND `fk_champ` = :champ
+        ;";
+        
+    $params = [
+        "client" => $_SESSION["client"],
+        "monde" => $_POST["monde"],
+        "parent" => $_POST["parent"],
+        "champ" => $_POST["champ"]
+    ];
     
-    if ($result = $mysqli->query($query)) {
+    $result = dino_query($query, $params);
+    
+    if ($result["status"]) {
         
         $valeurs = [];
         
-        while ($row = $result->fetch_assoc()) {
+        foreach($result["result"] as $row) {
             $valeurs[$row["pk_valeur_champ"]] = $row["label_valeur_champ"];
         }
         
@@ -27,8 +46,8 @@ if (isset($_SESSION["niveau"])) {
             "admin" => 0,
             "query" => $query,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => $_POST["champ"]
         ]);

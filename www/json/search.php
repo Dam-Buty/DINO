@@ -8,6 +8,35 @@ if (isset($_SESSION["niveau"])) {
     
     $liste = [];
     
+    $params = [
+        "dvcClient" => $_SESSION["client"],
+        "dvcMonde" => $_POST["monde"],
+        "vcClient" => $_SESSION["client"],
+        "vcMonde" => $_POST["monde"],
+        "tdClient" => $_SESSION["client"],
+        "tdMonde" => $_POST["monde"],
+        "tddClient" => $_SESSION["client"],
+        "tddMonde" => $_POST["monde"],
+        "dClient" => $_SESSION["client"],
+        "niveau" => $_SESSION["niveau"],
+        "mini" => $_POST["dates"]["mini"],
+        "maxi" => $_POST["dates"]["maxi"],
+        "tdd2Client" => $_SESSION["client"],
+        "tdd2Monde" => $_POST["monde"],
+        "dvc2Client" => $_SESSION["client"],
+        "dvc2Monde" => $_POST["monde"],
+        "vc2Client" => $_SESSION["client"],
+        "vc2Monde" => $_POST["monde"],
+        "dvc3Client" => $_SESSION["client"],
+        "dvc3Monde" => $_POST["monde"],
+        "vc3Client" => $_SESSION["client"],
+        "vc3Monde" => $_POST["monde"],
+        "cdClient" => $_SESSION["client"],
+        "cdMonde" => $_POST["monde"],
+        "limitStart" => $_POST["limit"][0],
+        "limit" => $_POST["limit"][1]
+    ]; 
+    
     $query = "
         SELECT 
             `d`.`filename_document` AS `filename`, 
@@ -21,10 +50,10 @@ if (isset($_SESSION["niveau"])) {
                 `valeur_champ` AS `vc`,
                 `document_valeur_champ` AS `dvc`
             WHERE 
-                `dvc`.`fk_client` = " . $_SESSION["client"] . "
-                AND `dvc`.`fk_monde` = " . $_POST["monde"] . "
-                AND `vc`.`fk_client` = " . $_SESSION["client"] . "
-                AND `vc`.`fk_monde` = " . $_POST["monde"] . "
+                `dvc`.`fk_client` = :dvcClient
+                AND `dvc`.`fk_monde` = :dvcMonde
+                AND `vc`.`fk_client` = :vcClient
+                AND `vc`.`fk_monde` = :vcMonde
                 
                 AND `vc`.`fk_champ` = `dvc`.`fk_champ`
                 AND `vc`.`pk_valeur_champ` = `dvc`.`fk_valeur_champ`
@@ -38,12 +67,12 @@ if (isset($_SESSION["niveau"])) {
             `document` AS `d`
         WHERE
             # Filtre client/monde
-            `td`.`fk_client` = " . $_SESSION["client"] . "
-            AND `td`.`fk_monde` = " . $_POST["monde"] . "
-            AND `tdd`.`fk_client` = " . $_SESSION["client"] . "
-            AND `tdd`.`fk_monde` = " . $_POST["monde"] . "
-            AND `d`.`fk_client` = " . $_SESSION["client"] . "
-            
+            `td`.`fk_client` = :tdClient
+            AND `td`.`fk_monde` = :tdMonde
+            AND `tdd`.`fk_client` = :tddClient
+            AND `tdd`.`fk_monde` = :tddMonde
+            AND `d`.`fk_client` = :dClient
+
             # Jointures
             AND `td`.`fk_champ` = `tdd`.`fk_champ`
             AND `td`.`fk_categorie_doc` = `tdd`.`fk_categorie_doc`
@@ -51,12 +80,15 @@ if (isset($_SESSION["niveau"])) {
             AND `tdd`.`fk_document` = `d`.`filename_document`
             
             # Verification du niveau
-            AND `niveau_document` <= " . $_SESSION["niveau"] . "
+            AND `niveau_document` <= :niveau
             
             # Filtre par dates
-            AND `date_document` BETWEEN FROM_UNIXTIME('" . $_POST["dates"]["mini"] . "') AND FROM_UNIXTIME('" . $_POST["dates"]["maxi"] . "')
+            AND `date_document` BETWEEN FROM_UNIXTIME(:mini) AND FROM_UNIXTIME(:maxi)
             ";
-            
+        
+           
+           
+           
 if (isset($_POST["recherche"])) {
             
  $query .= "# Recherche
@@ -74,15 +106,20 @@ if (isset($_POST["recherche"])) {
                     SELECT COUNT(*)
                     FROM `document_valeur_champ` AS `dvc_search`
                     WHERE
-                        `dvc_search`.`fk_client` = " . $_SESSION["client"] . "
-                        AND `dvc_search`.`fk_monde` = " . $_POST["monde"] . "
+                        `dvc_search`.`fk_client` = :searchClient" . $i . "
+                        AND `dvc_search`.`fk_monde` = :searchMonde" . $i . "
                         
                         AND `dvc_search`.`fk_document` = `d`.`filename_document`
                         
-                        AND `dvc_search`.`fk_champ` = " . $terme["champ"] . "
-                        AND `dvc_search`.`fk_valeur_champ` = " . $terme["valeur"] . "
+                        AND `dvc_search`.`fk_champ` = :searchChamp" . $i . "
+                        AND `dvc_search`.`fk_valeur_champ` = :searchTerme" . $i . "
                 ) > 0
         ";
+        
+        $params["searchClient" . $i] = $_SESSION["client"];
+        $params["searchMonde" . $i] = $_POST["monde"];
+        $params["searchChamp" . $i] = $terme["champ"];
+        $params["searchTerme" . $i] = $terme["valeur"];
     }
     $query .= ")";
 }
@@ -94,15 +131,19 @@ if ($_POST["all"] == "false") {
                 SELECT COUNT(*)
                 FROM `document_valeur_champ` AS `dvc_droits`
                 WHERE 
-                    `dvc_droits`.`fk_client` = " . $_SESSION["client"] . "
-                    AND `dvc_droits`.`fk_monde` = " . $_POST["monde"] . "
+                    `dvc_droits`.`fk_client` = :droitsClient
+                    AND `dvc_droits`.`fk_monde` = :droitsMonde
                         
                     AND `dvc_droits`.`fk_document` = `d`.`filename_document`
                     
-                    AND `dvc_droits`.`fk_champ` = " . $_POST["champs"][0] . "
+                    AND `dvc_droits`.`fk_champ` = :droitsChamp
                     AND (
                         ";
-                        
+    
+    $params["droitsClient"] = $_SESSION["client"];
+    $params["droitsMonde"] = $_POST["monde"];
+    $params["droitsChamp"] = $_POST["champs"][0];
+                       
     $first_droit = true;
                     
         foreach($_POST["droits"] as $pk => $label) {
@@ -113,7 +154,9 @@ if ($_POST["all"] == "false") {
                 $first_droit = false;
             }
         
-            $query .= "`dvc_droits`.`fk_valeur_champ` = " . $pk . "";
+            $query .= "`dvc_droits`.`fk_valeur_champ` = :droitsValeur" . $pk . "";
+            
+            $params["droitsValeur" . $pk] = $pk;
         }
                         
     $query .= "
@@ -122,15 +165,15 @@ if ($_POST["all"] == "false") {
             ) > 0
     ";
 }
-
+    
 $query .= "
             # On ne prend que les dernieres revisions
             AND `tdd`.`revision_type_doc` = (
                 SELECT MAX(`revision_type_doc`)
                 FROM `type_doc_document` AS `tdd2`
                 WHERE 
-                    `tdd2`.`fk_client` = " . $_SESSION["client"] . "
-                    AND `tdd2`.`fk_monde` = " . $_POST["monde"] . "
+                    `tdd2`.`fk_client` = :tdd2Client
+                    AND `tdd2`.`fk_monde` = :tdd2Monde
                     AND `tdd2`.`fk_categorie_doc` = `tdd`.`fk_categorie_doc`
                     AND `tdd2`.`fk_type_doc` = `tdd`.`fk_type_doc`
                     AND `tdd2`.`detail_type_doc` = `tdd`.`detail_type_doc`
@@ -142,10 +185,11 @@ $query .= "
                             `valeur_champ` AS `vc_revisions`,
                             `document_valeur_champ` AS `dvc_revisions`
                         WHERE 
-                            `dvc_revisions`.`fk_client` = " . $_SESSION["client"] . "
-                            AND `dvc_revisions`.`fk_monde` = " . $_POST["monde"] . "
-                            AND `vc_revisions`.`fk_client` = " . $_SESSION["client"] . "
-                            AND `vc_revisions`.`fk_monde` = " . $_POST["monde"] . "
+                            `dvc_revisions`.`fk_client` = :dvc2Client
+                            AND `dvc_revisions`.`fk_monde` = :dvc2Monde
+                            
+                            AND `vc_revisions`.`fk_client` = :vc2Client
+                            AND `vc_revisions`.`fk_monde` = :vc2Monde
                             
                             AND `vc_revisions`.`fk_champ` = `dvc_revisions`.`fk_champ`
                             AND `vc_revisions`.`pk_valeur_champ` = `dvc_revisions`.`fk_valeur_champ`
@@ -160,10 +204,11 @@ $query .= "
                             `valeur_champ` AS `vc3`,
                             `document_valeur_champ` AS `dvc3`
                         WHERE 
-                            `dvc3`.`fk_client` = " . $_SESSION["client"] . "
-                            AND `dvc3`.`fk_monde` = " . $_POST["monde"] . "
-                            AND `vc3`.`fk_client` = " . $_SESSION["client"] . "
-                            AND `vc3`.`fk_monde` = " . $_POST["monde"] . "
+                            `dvc3`.`fk_client` = :dvc3Client
+                            AND `dvc3`.`fk_monde` = :dvc3Monde
+                            
+                            AND `vc3`.`fk_client` = :vc3Client
+                            AND `vc3`.`fk_monde` = :vc3Monde
                             
                             AND `vc3`.`fk_champ` = `dvc3`.`fk_champ`
                             AND `vc3`.`pk_valeur_champ` = `dvc3`.`fk_valeur_champ`
@@ -187,44 +232,56 @@ foreach($_POST["champs"] as $idx => $champ) {
                 `valeur_champ` AS `vc_champs`,
                 `document_valeur_champ` AS `dvc_champs`
             WHERE 
-                `dvc_champs`.`fk_client` = " . $_SESSION["client"] . "
-                AND `dvc_champs`.`fk_monde` = " . $_POST["monde"] . "
-                AND `vc_champs`.`fk_client` = " . $_SESSION["client"] . "
-                AND `vc_champs`.`fk_monde` = " . $_POST["monde"] . "
+                `dvc_champs`.`fk_client` = :orderDvcClient" . $idx . "
+                AND `dvc_champs`.`fk_monde` = :orderDvcMonde" . $idx . "
+                AND `vc_champs`.`fk_client` = :orderVcClient" . $idx . "
+                AND `vc_champs`.`fk_monde` = :orderVcMonde" . $idx . "
                 
                 AND `vc_champs`.`fk_champ` = `dvc_champs`.`fk_champ`
                 AND `vc_champs`.`pk_valeur_champ` = `dvc_champs`.`fk_valeur_champ`
                 
                 AND `dvc_champs`.`fk_document` = `d`.`filename_document`
                 
-                AND `dvc_champs`.`fk_champ` = " . $champ . "
-        ) " . $_POST["tri"] . ", (
+                AND `dvc_champs`.`fk_champ` = :orderDvcChamp" . $idx . "
+        ) :orderTri" . $idx . ", (
             SELECT COUNT(*) 
             FROM `document_valeur_champ` AS `dvc_tri`
             WHERE
-                `dvc_tri`.`fk_client` = " . $_SESSION["client"] . "
-                AND `dvc_tri`.`fk_monde` = " . $_POST["monde"] . "
+                `dvc_tri`.`fk_client` = :order2DvcClient" . $idx . "
+                AND `dvc_tri`.`fk_monde` = :order2DvcMonde" . $idx . "
                 AND `dvc_tri`.`fk_document` = `d`.`filename_document`
         ) ASC, ";
+        
+    $params["orderDvcClient" . $idx] = $_SESSION["client"];
+    $params["orderDvcMonde" . $idx] = $_POST["monde"];
+    $params["orderVcClient" . $idx] = $_SESSION["client"];
+    $params["orderVcMonde" . $idx] = $_POST["monde"];
+    $params["orderDvcChamp" . $idx] = $champ;
+    $params["orderTri" . $idx] = $_POST["tri"];
+    $params["order2DvcClient" . $idx] = $_SESSION["client"];
+    $params["order2DvcMonde" . $idx] = $_POST["monde"];
 }
+
 $query .= " (
                 SELECT `label_categorie_doc`
                 FROM `categorie_doc` AS `cd`
                 WHERE 
-                    `cd`.`fk_client` = " . $_SESSION["client"] . "
-                    AND `cd`.`fk_monde` = " . $_POST["monde"] . "
+                    `cd`.`fk_client` = :cdClient
+                    AND `cd`.`fk_monde` = :cdMonde
                     AND `cd`.`pk_categorie_doc` = `td`.`fk_categorie_doc`
            ) ASC, `td`.`label_type_doc` ASC, `tdd`.`detail_type_doc` ASC
         
         # Limites    
-        LIMIT " . $_POST["limit"][0] . ", " . $_POST["limit"][1] . "         
+        LIMIT :limitStart, :limit  
     ;";
     
-    if ($result = $mysqli->query($query)) {
+    $result = dino_query($query, $params);
+    
+    if ($result["status"]) {
         $valeurs_champs = [];
         $categorie = 0;
         
-        while ($row = $result->fetch_assoc()) {
+        foreach($result["result"] as $row) {
             $champs_documents = [];
             
             // Extraction des valeurs de champs
@@ -282,8 +339,8 @@ $query .= " (
             "admin" => 0,
             "query" => $query,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => $_POST["monde"]
         ]);

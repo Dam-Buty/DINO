@@ -19,17 +19,24 @@ if (isset($_SESSION["niveau"])) {
         FROM `document`, `type_doc_document` 
         WHERE 
             `type_doc_document`.`fk_document` = `document`.`filename_document`
-            AND `document`.`fk_client` = " . $_SESSION["client"] . " 
-            AND `type_doc_document`.`fk_monde` = " . $_POST["monde"] . ";";
+            AND `document`.`fk_client` = :client
+            AND `type_doc_document`.`fk_monde` = :monde;";
+        
+    $params = [
+        "client" => $_SESSION["client"],
+        "monde" => $_POST["monde"]
+    ];
     
-    if ($result = $mysqli->query($query)) {
+    $result = dino_query($query, $params);
+    
+    if ($result["status"]) {
         
         $dates = [];
         
-        while ($row = $result->fetch_assoc()) {
-            $dates["mini"] = $row["min"];
-            $dates["maxi"] = $row["max"];
-        }
+        $row = $result["result"][0];
+        
+        $dates["mini"] = $row["min"];
+        $dates["maxi"] = $row["max"];
         
         if ($dates["mini"] == null) {
             $dates["mini"] = date("Y-m-d");
@@ -50,8 +57,8 @@ if (isset($_SESSION["niveau"])) {
             "admin" => 0,
             "query" => $query,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => $_POST["monde"]
         ]);

@@ -15,79 +15,73 @@ if (isset($_SESSION["niveau"])) {
             `fk_user` 
         FROM `document` 
         WHERE 
-            `fk_client` = " . $_SESSION["client"] . " 
+            `fk_client` = :client
             AND `niveau_document` = 999
         LIMIT 1
         ;";
     
+    $result = dino_query($query, [
+        "client" => $_SESSION["client"]
+    ]);
+    
     $document = [];
     
-    if ($result = $mysqli->query($query)) {
-        if ($result->num_rows == 0) {
+    if ($result["status"]) {
+        if (count($result["result"]) == 0) {
             status(204);
         } else {
-            if ($row = $result->fetch_assoc()) {
                 
-                $date = substr($row["date_doc"], 8, 2) . "/" . substr($row["date_doc"], 5, 2);
-                $user = $row["fk_user"];
-                
-                $document = [
-                    "document" => "",
-                    "status" => 1,
-                    "size" => $row["taille_document"],
-                    "li" => "",
-                    "filename" => $row["filename_document"],
-                    "displayname" => $row["display_document"],
-                    "user" => $user,
-                    "date" => "el " . $date,
-                    "store" => [
-                        "date" => "",
-                        "monde" => "",
-                        "last_champ" => "",
-                        "champs" => [],
-                        "categorie" => "",
-                        "type_doc" => []
-                    ]
-                ];
-                
-                $query_update = "
-                    UPDATE `document`
-                    SET
-                        `niveau_document` = 888
-                    WHERE 
-                        `fk_client` = " . $_SESSION["client"] . "
-                        AND `filename_document` = '" . $row["filename_document"] . "'
-                ;";
-                
-                if ($mysqli->query($query_update)) {
-                    status(200);
-                    header('Content-Type: application/json');
-                    echo json_encode($document);
-                } else {
-                    status(500);
-                    write_log([
-                        "libelle" => "UPDATE document a cleaner",
-                        "admin" => 0,
-                        "query" => $query_update,
-                        "statut" => 1,
-                        "message" => "",
-                        "erreur" => $mysqli->error,
-                        "document" => "",
-                        "objet" => $row["filename_document"]
-                    ]);
-                }
-                
+            $date = substr($row["date_doc"], 8, 2) . "/" . substr($row["date_doc"], 5, 2);
+            $user = $row["fk_user"];
+            
+            $document = [
+                "document" => "",
+                "status" => 1,
+                "size" => $row["taille_document"],
+                "li" => "",
+                "filename" => $row["filename_document"],
+                "displayname" => $row["display_document"],
+                "user" => $user,
+                "date" => "el " . $date,
+                "store" => [
+                    "date" => "",
+                    "monde" => "",
+                    "last_champ" => "",
+                    "champs" => [],
+                    "categorie" => "",
+                    "type_doc" => []
+                ]
+            ];
+            
+            $query_update = "
+                UPDATE `document`
+                SET
+                    `niveau_document` = 888
+                WHERE 
+                    `fk_client` = :client
+                    AND `filename_document` = :filename
+            ;";
+            
+            $result_update = dino_query($query_update, [
+                "client" => $_SESSION["client"],
+                "filename" => $row["filename_document"]
+            ]);
+            
+            if ($result_update["status"]) {
+                status(200);
+                header('Content-Type: application/json');
+                echo json_encode($document);
             } else {
                 status(500);
                 write_log([
-                    "libelle" => "GET document a cleaner",
+                    "libelle" => "UPDATE document a cleaner",
                     "admin" => 0,
-                    "query" => $query,
+                    "query" => $query_update,
                     "statut" => 1,
-                    "message" => "",
-                    "erreur" => $mysqli->error,
+                    "message" => $result_update["errinfo"][2],
+                    "erreur" => $result_update["errno"],
                     "document" => "",
-                    "objet" => $_SESSION["client"]
+                    "objet" => $row["filename_document"]
                 ]);
             }
         }
@@ -98,8 +92,8 @@ if (isset($_SESSION["niveau"])) {
             "admin" => 0,
             "query" => $query,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => $_SESSION["client"]
         ]);

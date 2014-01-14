@@ -6,6 +6,14 @@ include("../includes/log.php");
 if ($_SESSION["niveau"] >= 20) {
     include("../includes/mysqli.php");
     
+    $params = [
+        "categorie" => $_POST["label"],
+        "niveau" => $_POST["niveau"],
+        "client" => $_SESSION["client"],
+        "monde" => $_POST["monde"],
+        "champ" => $_POST["champ"]
+    ];
+    
     if ($_POST["pk"] == "new") {
         $query = "
             INSERT INTO `categorie_doc` (
@@ -15,32 +23,36 @@ if ($_SESSION["niveau"] >= 20) {
                 `fk_monde`, 
                 `fk_client`
             ) VALUES (
-                '" . $_POST["label"] . "',
-                " . $_POST["niveau"] . ",
-                " . $_POST["champ"] . ",
-                " . $_POST["monde"] . ",
-                " . $_SESSION["client"] . "
+                :categorie,
+                :niveau,
+                :champ,
+                :monde,
+                :client
             )
         ;";
     } else {
         $query = "
             UPDATE `categorie_doc`
             SET 
-                `label_categorie_doc` = '" . $_POST["label"] . "',
-                `niveau_categorie_doc` = " . $_POST["niveau"] . "
+                `label_categorie_doc` = :categorie,
+                `niveau_categorie_doc` = :niveau
             WHERE
-                `fk_client` = " . $_SESSION["client"] . "
-                AND `fk_monde` = " . $_POST["monde"] . "
-                AND `fk_champ` = " . $_POST["champ"] . "
-                AND `pk_categorie_doc` = " . $_POST["pk"] . "
+                `fk_client` = :client
+                AND `fk_monde` = :monde
+                AND `fk_champ` = :champ
+                AND `pk_categorie_doc` = :pk
         ;";
+        
+        $params["pk"] = $_POST["pk"];
     }
     
-    if ($mysqli->query($query)) {
+    $result = dino_query($query, $params);
+    
+    if ($result["status"]) {
         status(200);
         
         if ($_POST["pk"] == "new") {
-            $objet = $mysqli->insert_id;
+            $objet = $result["result"];
         } else {
             $objet = $_POST["pk"];
         }
@@ -62,8 +74,8 @@ if ($_SESSION["niveau"] >= 20) {
             "admin" => 1,
             "query" => $query,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => $_POST["pk"]
         ]);

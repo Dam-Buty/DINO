@@ -8,12 +8,18 @@ if ($_SESSION["niveau"] >= 20) {
     $query_user = "
         DELETE FROM `user`
         WHERE
-            `fk_client` = " . $_SESSION["client"] . "
-            AND `niveau_user` <= " . $_SESSION["niveau"] . "
-            AND `login_user` = '" . $_POST["login"] . "'
+            `fk_client` = :client
+            AND `niveau_user` <= :niveau
+            AND `login_user` = :login
     ;";
     
-    if ($mysqli->query($query_user)) {
+    $result = dino_query($query,[
+        "client" => $_SESSION["client"],
+        "niveau" => $_SESSION["niveau"],
+        "login" => $_POST["login"]
+    ]);
+    
+    if ($result["status"]) {
         status(204);
         write_log([
             "libelle" => "DELETE utilisateur",
@@ -32,14 +38,14 @@ if ($_SESSION["niveau"] >= 20) {
             "admin" => 1,
             "query" => $query_user,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => $_POST["login"]
         ]);
     }
 } else {
-    header("Location: ../index.php");
+    status(403);
     write_log([
         "libelle" => "DELETE utilisateur",
         "admin" => 1,

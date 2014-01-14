@@ -9,14 +9,21 @@ if ($_SESSION["niveau"] >= 20) {
     $query = "
         UPDATE `champ`
         SET 
-            `label_champ` = '" . $_POST["label"] . "'
+            `label_champ` = :label
         WHERE
-            `fk_client` = " . $_SESSION["client"] . "
-            AND `fk_monde` = " . $_POST["monde"] . "
-            AND `pk_champ` = " . $_POST["pk"] . "
-    ;";
+            `fk_client` = :client
+            AND `fk_monde` = :monde
+            AND `pk_champ` = :champ
+    ;";       
+      
+    $result = dino_query($query,[
+        "label" => $_POST["label"],
+        "client" => $_SESSION["client"],
+        "monde" => $_POST["monde"],
+        "champ" => $_POST["pk"]
+    ]);  
     
-    if ($mysqli->query($query)) {
+    if ($result["status"]) {
         status(200);
         write_log([
             "libelle" => "INSERT champ",
@@ -35,8 +42,8 @@ if ($_SESSION["niveau"] >= 20) {
             "admin" => 1,
             "query" => $query,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => $_POST["pk"]
         ]);

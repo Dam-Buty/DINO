@@ -6,19 +6,35 @@ include("../includes/log.php");
 if ($_SESSION["niveau"] >= 20) {
     include("../includes/mysqli.php");   
     
-    $query = "SELECT `login_user`, `mail_user`, `niveau_user` FROM `user` WHERE `fk_client` = " . $_SESSION["client"] . " AND `niveau_user` < " . $_SESSION["niveau"] . ";";
+    $query = "
+        SELECT 
+            `login_user`, 
+            `mail_user`, 
+            `niveau_user` 
+        FROM `user` 
+        WHERE 
+            `fk_client` = :client
+            AND `niveau_user` < :niveau
+    ;";
+        
+    $params = [
+        "client" => $_SESSION["client"],
+        "niveau" => $_SESSION["niveau"]
+    ];
     
-    if ($result = $mysqli->query($query)) {
+    $result = dino_query($query, $params);
+    
+    if ($result["status"]) {
         
         $users = [];
         
-        while ($row = $result->fetch_assoc()) {
+        foreach($result["result"] as $row) {
             $users[$row["login_user"]] = [
                 "mail" => $row["mail_user"],
                 "niveau" => $row["niveau_user"],
                 "mondes" => []
             ];
-            
+                        
             $query_mondes = "
                 SELECT 
                     `pk_monde`, 
@@ -27,24 +43,32 @@ if ($_SESSION["niveau"] >= 20) {
                         SELECT COUNT(*)
                         FROM `user_monde` AS `um`
                         WHERE 
-                            `um`.`fk_user` = '" . $row["login_user"] . "'
+                            `um`.`fk_user` = :user
                             AND `um`.`fk_monde` = `pk_monde`
                     ) AS `droit`
                 FROM `monde`
                 WHERE 
-                    `fk_client` = " . $_SESSION["client"] . "
+                    `fk_client` = :client
                     AND (
                         SELECT COUNT(*)
                         FROM `user_monde` AS `um`
                         WHERE 
-                            `um`.`fk_user` = '" . $row["login_user"] . "'
+                            `um`.`fk_user` = :user2
                             AND `um`.`fk_monde` = `pk_monde`
                     ) = 1;
             ";
             
-            if ($result_mondes = $mysqli->query($query_mondes)) {
+            $params_mondes = [
+                "user" => $row["login_user"],
+                "client" => $_SESSION["client"],
+                "user2" => $row["login_user"]
+            ];
             
-                while ($row_mondes = $result_mondes->fetch_assoc()) {
+            $result_mondes = dino_query($query_mondes, $params_mondes);
+            
+            if ($result_mondes["status"]) {
+            
+                foreach($result_mondes["result"] as $row_mondes) {
                     if ($row_mondes["niveau_monde"] <= $row["niveau_user"]
                         || $row_mondes["droit"] > 0 ) {
                             $users[$row["login_user"]]["mondes"][$row_mondes["pk_monde"]] = [];
@@ -54,14 +78,22 @@ if ($_SESSION["niveau"] >= 20) {
                         SELECT `fk_valeur_champ` 
                         FROM `user_valeur_champ`
                         WHERE 
-                            `fk_client` = " . $_SESSION["client"] . "
-                            AND `fk_monde` = " . $row_mondes["pk_monde"] . "
-                            AND `fk_user` = '" . $row["login_user"] . "'
+                            `fk_client` = :client
+                            AND `fk_monde` = :monde
+                            AND `fk_user` = :user
                     ";
                     
-                    if ($result_champs = $mysqli->query($query_champs)) {
+                    $params_champs = [
+                        "client" => $_SESSION["client"],
+                        "monde" => $row_mondes["pk_monde"],
+                        "user" => $row["login_user"]
+                    ];
+                    
+                    $result_champs = dino_query($query_champs, $params_champs);
+                    
+                    if ($result_champs["status"]) {
                         
-                        while ($row_champs = $result_champs->fetch_assoc()) {
+                        foreach($result_champs["result"] as $row_champs) {
                             array_push($users[$row["login_user"]]["mondes"][$row_mondes["pk_monde"]], $row_champs["fk_valeur_champ"]);
                         }
                     }
@@ -80,8 +112,8 @@ if ($_SESSION["niveau"] >= 20) {
             "admin" => 1,
             "query" => $query,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => $_SESSION["client"]
         ]);

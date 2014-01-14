@@ -9,7 +9,6 @@ if ($_SESSION["niveau"] >= 20) {
     
     // On génère un nouveau mot de passe
     $pass = genere_clef(10);
-    //$pass = "C4dillac5";
     
     $clef_user = custom_hash($_POST["login"] . $pass . $_POST["mail"]);
     $clef_stockage = $_SESSION["clef"];
@@ -20,18 +19,23 @@ if ($_SESSION["niveau"] >= 20) {
     $query_user = "
         UPDATE `user`
         SET 
-            `mdp_user` = '" . $password_stockable . "',
-            `clef_user` = '" . $clef_cryptee . "'
+            `mdp_user` = :pass,
+            `clef_user` = :clef
         WHERE
-            `fk_client` = " . $_SESSION["client"] . "
-            AND `niveau_user` <= " . $_SESSION["niveau"] . "
-            AND `login_user` = '" . $_POST["login"] . "'
+            `fk_client` = :client
+            AND `niveau_user` <= :niveau
+            AND `login_user` = :login
     ;";
+            
+    $result_user = dino_query($query_user, [
+        "pass" => $password_stockable,
+        "clef" => $clef_cryptee,
+        "client" => $_SESSION["client"],
+        "niveau" => $_SESSION["niveau"],
+        "login" => $_POST["login"]
+    ]);
     
-    if ($mysqli->query($query_user)) {
-        // mail($_POST["mail"] , "Su contrasena fue reinicialisada!" , "Su nueva contrasena : " . $pass );
-        // MAIL !
-        
+    if ($result_user["status"]) {
         dinomail($_POST["mail"], "reset_pass", [], [
             "user" => $_POST["login"],
             "pass" => $pass
@@ -55,8 +59,8 @@ if ($_SESSION["niveau"] >= 20) {
             "admin" => 1,
             "query" => $query_user,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result_user["errinfo"][2],
+            "erreur" => $result_user["errno"],
             "document" => "",
             "objet" => $_POST["login"]
         ]);

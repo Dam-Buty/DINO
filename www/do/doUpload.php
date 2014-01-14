@@ -12,9 +12,35 @@ if ($_SESSION["niveau"] >= 10) {
     
     $filesize = filesize($_FILES['document']['tmp_name']);
     
-    $query = "INSERT INTO `document` (`filename_document`, `taille_document`, `display_document`, `fk_client`, `fk_user`, `date_upload_document`) VALUES ('" . $filename . "." . $extension . "', " . $filesize . ", '" . $_FILES['document']['name'] . "', " . $_SESSION["client"] . ", '" . $_SESSION["user"] . "', '" . date("Y-m-d H:i:s") . "');";
+    $query = "
+        INSERT INTO `document` (
+            `filename_document`, 
+            `taille_document`, 
+            `display_document`, 
+            `fk_client`, 
+            `fk_user`, 
+            `date_upload_document`
+        ) VALUES (
+            :filename, 
+            :taille, 
+            :display, 
+            :client, 
+            :user, 
+            :date
+        );";
     
-    if ($mysqli->query($query)) {
+    $params = [
+        "filename" => $filename . "." . $extension,
+        "taille" => $filesize,
+        "display" =>$_FILES['document']['name'],
+        "client" =>$_SESSION["client"],
+        "user" => $_SESSION["user"],
+        "date" =>  date("Y-m-d H:i:s")
+    ];
+    
+    $result = dino_query($query, $params);
+    
+    if ($result["status"]) {
         
         if (move_uploaded_file($_FILES['document']['tmp_name'], "../cache/" . $_SESSION["client"] . "/temp/" . $filename . "." . $extension)) {
             status(201);
@@ -51,8 +77,8 @@ if ($_SESSION["niveau"] >= 10) {
             "admin" => 0,
             "query" => $query,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => $filename . "." . $extension
         ]);
