@@ -29,12 +29,17 @@ if ($cave = opendir($cave_path)) {
 	                SELECT `filename_document`
 	                FROM `document`
 	                WHERE
-	                    `fk_client` = " . $_SESSION["client"] . "
-	                    AND `job_document` = " . $elements[1] . "
+	                    `fk_client` = :client
+	                    AND `job_document` = :job
 	            ;";
 	            
-	            if ($result = $mysqli->query($query_check)) {
-	                if ($result->num_rows == 0) {
+                $result_check = dino_query($query_check,[
+                    "client" => $_SESSION["client"],
+                    "job" => $elements[1]
+                ]);
+	            
+	            if ($result_check["status"]) {
+	                if (count($result_check["result"]) == 0) {
                         $query = "
                             INSERT INTO `document` (
                                 `filename_document`, 
@@ -46,20 +51,29 @@ if ($cave = opendir($cave_path)) {
                                 `date_upload_document`,
                                 `niveau_document`
                             ) VALUES (
-                                '" . $filename . ".pdf', 
-                                " . $elements[1] . ",
-                                " . $filesize . ", 
-                                '" . $elements[2] . "', 
-                                " . $_SESSION["client"] . ", 
-                                '" . $_SESSION["printer"] . "', 
-                                '" . date("Y-m-d H:i:s") . "',
+                                :filename, 
+                                :job,
+                                :taille, 
+                                :display, 
+                                :client, 
+                                :user, 
+                                :date,
                                 999
                             )
                         ;";
                         
-                        if ($mysqli->query($query)) {        
+                        $result = dino_query($query,[
+                            "filename" => $filename. ".pdf",
+                            "job" => $elements[1],
+                            "taille" => $filesize,
+                            "display" => $elements[2],
+                            "client" => $_SESSION["client"],
+                            "user" => $_SESSION["printer"],
+                            "date" => date("Y-m-d H:i:s")
+                        ]);
+                        
+                        if ($result["status"]) {        
                             if (copy($cave_path . $file, "../cache/" . $_SESSION["client"] . "/temp/" . $filename . ".pdf")) {
-                                status(201);
                                 write_log([
                                     "libelle" => "UNCAVE document",
                                     "admin" => 0,
@@ -92,8 +106,8 @@ if ($cave = opendir($cave_path)) {
                                 "admin" => 0,
                                 "query" => $query,
                                 "statut" => 1,
-                                "message" => "",
-                                "erreur" => $mysqli->error,
+                                "message" => $result["errinfo"][2],
+                                "erreur" => $result["errno"],
                                 "document" => "",
                                 "objet" => $filename
                             ]);
@@ -108,8 +122,8 @@ if ($cave = opendir($cave_path)) {
                         "admin" => 0,
                         "query" => $query_check,
                         "statut" => 1,
-                        "message" => "",
-                        "erreur" => $mysqli->error,
+                        "message" => $result["errinfo"][2],
+                        "erreur" => $result["errno"],
                         "document" => $file,
                         "objet" => $elements[1]
                     ]);
@@ -122,7 +136,7 @@ if ($cave = opendir($cave_path)) {
     }
     
     if (!$err) {
-        status(200);
+        status(201);
     }
 } else {
     status(500);

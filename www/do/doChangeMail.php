@@ -12,79 +12,78 @@ if (isset($_SESSION["user"])) {
 
     $login = $_SESSION["user"];
 
-    $query = "SELECT `mdp_user`, `clef_user`, `mail_user` FROM `user` WHERE `login_user` = '" . $login . "';";
+    $query = "SELECT `mdp_user`, `clef_user`, `mail_user` FROM `user` WHERE `login_user` = :login ;";
+    
+    $result = dino_query($query,[
+        "login" => $login
+    ]);
 
-    if ($result = $mysqli->query($query)) {
-        if ($row = $result->fetch_assoc()) {
-            if ($row["mdp_user"] == custom_hash($pass . $login, TRUE)) {  
-                $old_mail = $row["mail_user"];
-                
-                // On décrypte la clef
-                $clef_cryptee = $row["clef_user"];
-                $old_clef = custom_hash($login . $pass . $old_mail);
-                $clef_stockage = decrypte($old_clef, $clef_cryptee);
-                
-                // et on la recrypte avec le nouveau mail
-                $new_clef = custom_hash($login . $pass . $new_mail);
-                $clef_recryptee = crypte($new_clef, $clef_stockage);
-                
-                $query_change = "
-                    UPDATE `user`
-                    SET
-                        `mail_user` = '" . $new_mail . "',
-                        `clef_user` = '" . $clef_recryptee . "'
-                    WHERE
-                        `login_user` = '" . $login . "'            
-                ";
-                
-                if ($result = $mysqli->query($query_change)) {
-                    status(200);
-                    write_log([
-                        "libelle" => "CHANGE MAIL",
-                        "admin" => 0,
-                        "query" => $query_change,
-                        "statut" => 0,
-                        "message" => "",
-                        "erreur" => "",
-                        "document" => "",
-                        "objet" => $login
-                    ]);
-                } else {
-                    status(500);
-                    write_log([
-                        "libelle" => "CHANGE MAIL",
-                        "admin" => 0,
-                        "query" => $query_change,
-                        "statut" => 1,
-                        "message" => "",
-                        "erreur" => $mysqli->error,
-                        "document" => "",
-                        "objet" => $login
-                    ]);
-                }
-            } else {
-                status(403);
-                $json = '{ "error": "pass" }';
+    if ($result["status"]) {
+    
+        $row = $result["result"][0];
+        
+        if ($row["mdp_user"] == custom_hash($pass . $login, TRUE)) {  
+            $old_mail = $row["mail_user"];
+            
+            // On décrypte la clef
+            $clef_cryptee = $row["clef_user"];
+            $old_clef = custom_hash($login . $pass . $old_mail);
+            $clef_stockage = decrypte($old_clef, $clef_cryptee);
+            
+            // et on la recrypte avec le nouveau mail
+            $new_clef = custom_hash($login . $pass . $new_mail);
+            $clef_recryptee = crypte($new_clef, $clef_stockage);
+            
+            $query_change = "
+                UPDATE `user`
+                SET
+                    `mail_user` = :mail,
+                    `clef_user` = :clef
+                WHERE
+                    `login_user` = :login      
+            ;";
+            
+            $result_change = dino_query($query_change,[
+                "mail" => $new_mail,
+                "clef" => $clef_recryptee,
+                "login" => $login
+            ]);
+            
+            if ($result_change["status"]) {
+                status(200);
                 write_log([
-                    "libelle" => "CHECK PASS",
+                    "libelle" => "CHANGE MAIL",
                     "admin" => 0,
-                    "query" => $query,
-                    "statut" => 555,
+                    "query" => $query_change,
+                    "statut" => 0,
                     "message" => "",
-                    "erreur" => "pass",
+                    "erreur" => "",
+                    "document" => "",
+                    "objet" => $login
+                ]);
+            } else {
+                status(500);
+                write_log([
+                    "libelle" => "CHANGE MAIL",
+                    "admin" => 0,
+                    "query" => $query_change,
+                    "statut" => 1,
+                    "message" => $result["errinfo"][2],
+                    "erreur" => $result["errno"],
                     "document" => "",
                     "objet" => $login
                 ]);
             }
         } else {
-            status(500);
+            status(403);
+            $json = '{ "error": "pass" }';
             write_log([
                 "libelle" => "CHECK PASS",
                 "admin" => 0,
                 "query" => $query,
-                "statut" => 1,
+                "statut" => 555,
                 "message" => "",
-                "erreur" => $mysqli->error,
+                "erreur" => "pass",
                 "document" => "",
                 "objet" => $login
             ]);
@@ -96,8 +95,8 @@ if (isset($_SESSION["user"])) {
             "admin" => 0,
             "query" => $query,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => $login
         ]);

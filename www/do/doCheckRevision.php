@@ -11,31 +11,48 @@ if ($_SESSION["niveau"] >= 10) {
     $query = "
         SELECT `revision_type_doc` 
         FROM `type_doc_document` AS `tdd`
-        WHERE `tdd`.`fk_client` = " . $_SESSION["client"] . " 
-            AND `tdd`.`fk_monde` = " . $_POST["monde"] . " 
-            AND `tdd`.`fk_categorie_doc` = " . $_POST["categorie"] . " 
-            AND `tdd`.`fk_type_doc` = " . $_POST["type"] . " 
-            AND `tdd`.`detail_type_doc` = '" . $_POST["detail"] . "'
+        WHERE `tdd`.`fk_client` = :client 
+            AND `tdd`.`fk_monde` = :monde
+            AND `tdd`.`fk_categorie_doc` = :categorie
+            AND `tdd`.`fk_type_doc` = :type 
+            AND `tdd`.`detail_type_doc` = :detail
             
     ";
+    
+    $params = [
+        "client" => $_SESSION["client"],
+        "monde" => $_POST["monde"],
+        "categorie" => $_POST["categorie"],
+        "type" => $_POST["type"],
+        "detail" => $_POST["detail"]
+    ];
             
             foreach($champs as $pk => $valeur) {
                 $query .= " 
             AND (
                 SELECT COUNT(*) 
                 FROM `document_valeur_champ` AS `dvc` 
-                WHERE `dvc`.`fk_client` = '" . $_SESSION["client"] . "' 
-                    AND `dvc`.`fk_monde` = " . $_POST["monde"] . " 
-                    AND `dvc`.`fk_champ` = " . $pk . "
-                    AND `dvc`.`fk_valeur_champ` = " . $valeur . "
+                WHERE `dvc`.`fk_client` = :client" . $pk . "
+                    AND `dvc`.`fk_monde` = :monde" . $pk . "
+                    AND `dvc`.`fk_champ` = :pk" . $pk . "
+                    AND `dvc`.`fk_valeur_champ` = :valeur" . $pk . "
                     AND `dvc`.`fk_document` = `tdd`.`fk_document`
                 ) > 0";
+                
+                array_push($params, [
+                    "client" . $pk => $_SESSION["client"],
+                    "monde" . $pk => $_POST["monde"],
+                    "pk" . $pk => $pk,
+                    "valeur" . $pk => $valeur
+                ])
             }
     $query .= "
         ;";      
+    
+    $result = dino_query($query, $params);
                              
-    if ($res = $mysqli->query($query)) {
-        if ($res->num_rows != 0) {
+    if ($result["status"]) {
+        if (count($result["result"]) > 0) {
             status(200);
         } else {
             status(204);
@@ -47,8 +64,8 @@ if ($_SESSION["niveau"] >= 10) {
             "admin" => 0,
             "query" => $query,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => $_POST["filename"]
         ]);

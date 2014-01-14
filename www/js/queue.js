@@ -31,7 +31,7 @@ var bootstrap_queue = function() {
         url: "do/doCheckCave.php",
         type: "POST",
         statusCode : {
-            200: function() {
+            201: function() {
                 get_queue();
             },
             403: function() {

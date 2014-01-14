@@ -9,11 +9,27 @@ if ($_SESSION["niveau"] >= 10) {
     $query = "
         INSERT INTO `valeur_champ`
         (`fk_client`, `fk_monde`, `fk_champ`, `fk_parent`, `label_valeur_champ`)
-        VALUES (" . $_SESSION["client"] . ", " . $_POST["monde"] . ", " . $_POST["champ"] . ", " . $_POST["parent"] . ", '" . $_POST["valeur"] . "');";
+        VALUES (
+            :client, 
+            :monde, 
+            :champ, 
+            :parent, 
+            :valeur
+    );";
+    
+    $result = dino_query($query,[
+        "client" => $_SESSION["client"],
+        "monde" => $_POST["monde"],
+        "champ" => $_POST["champ"],
+        "parent" => $_POST["parent"],
+        "valeur" => $_POST["valeur"]
+    ]);
         
-    if ($result = $mysqli->query($query)) {
+    if ($result["status"]) {
         status(200);
-        $json = '{ "pk": "' . $mysqli->insert_id . '" }';
+        $json = url_encode([
+            "pk" => $result["result"]
+        ]);
         
         write_log([
             "libelle" => "INSERT valeur de champ",
@@ -23,7 +39,7 @@ if ($_SESSION["niveau"] >= 10) {
             "message" => "",
             "erreur" => "",
             "document" => "",
-            "objet" => $mysqli->insert_id,
+            "objet" => $result["result"],
             "mysqli" => $mysqli
         ]);
         
@@ -36,8 +52,8 @@ if ($_SESSION["niveau"] >= 10) {
             "admin" => 0,
             "query" => $query,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => 0,
             "mysqli" => $mysqli

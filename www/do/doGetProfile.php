@@ -28,10 +28,30 @@ function convertBytes( $value ) {
 function recupere_types($monde, $champ, $categorie, $mysqli) {
     $types = [];
     
-    $query_types = "SELECT `pk_type_doc`, `label_type_doc`, `detail_type_doc`, `niveau_type_doc` FROM `type_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $monde . " AND `fk_champ` = " . $champ . " AND `fk_categorie_doc` = " . $categorie . " AND `niveau_type_doc` <= " . $_SESSION["niveau"] . ";";
+    $query_types = "
+        SELECT 
+            `pk_type_doc`, 
+            `label_type_doc`, 
+            `detail_type_doc`, 
+            `niveau_type_doc` 
+        FROM `type_doc` 
+        WHERE 
+            `fk_client` = :client
+            AND `fk_monde` = :monde
+            AND `fk_champ` = :champ
+            AND `fk_categorie_doc` = :categorie
+            AND `niveau_type_doc` <= :niveau;";
+            
+    $result_types = dino_query($query_types,[
+        "client" => $_SESSION["client"],
+        "monde" => $monde,
+        "champ" => $champ,
+        "categorie" => $categorie,
+        "niveau" => $_SESSION["niveau"] 
+    ]);
     
-    if ($result_types = $mysqli->query($query_types)) {
-        while($row_types = $result_types->fetch_assoc()) {
+    if ($result_types["status"]) {
+        foreach($result_types["result"] as $row_types) {
             
             $types[$row_types["pk_type_doc"]] = [
                 "label" => $row_types["label_type_doc"],
@@ -44,11 +64,27 @@ function recupere_types($monde, $champ, $categorie, $mysqli) {
             // pour les types de doc à détails
             if ($row_types["detail_type_doc"] == 1) {
                 
-                $query_details = "SELECT DISTINCT(`detail_type_doc`) FROM `type_doc_document` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $monde . " AND `fk_champ` = " . $champ . " AND `fk_categorie_doc` = " . $categorie . " AND `fk_type_doc` = " . $row_types["pk_type_doc"] . " ORDER BY `detail_type_doc`;";
+                $query_details = "
+                    SELECT DISTINCT(`detail_type_doc`) 
+                    FROM `type_doc_document` 
+                    WHERE 
+                        `fk_client` = :client
+                        AND `fk_monde` = :monde
+                        AND `fk_champ` = :champ
+                        AND `fk_categorie_doc` = :categorie
+                        AND `fk_type_doc` = :type
+                    ORDER BY `detail_type_doc`;";
                 
-                if ($result_details = $mysqli->query($query_details)) {
-                    
-                    while($row_details = $result_details->fetch_assoc()) {
+                $result_details = dino_query($query_details,[
+                    "client" => $_SESSION["client"],
+                    "monde" => $monde,
+                    "champ" => $champ,
+                    "categorie" => $categorie,
+                    "type" => $row_types["pk_type_doc"]
+                ]);
+                
+                if ($result_details["status"]) {
+                    foreach($result_details["result"] as $row_details) {
                         array_push($types[$row_types["pk_type_doc"]]["details"], $row_details["detail_type_doc"]);
                     } // FIN WHILE DETAILS
                     
@@ -59,8 +95,8 @@ function recupere_types($monde, $champ, $categorie, $mysqli) {
                         "admin" => 0,
                         "query" => $query_details,
                         "statut" => 1,
-                        "message" => "",
-                        "erreur" => $mysqli->error,
+                        "message" => $result["errinfo"][2],
+                        "erreur" => $result["errno"],
                         "document" => "",
                         "objet" => $_SESSION["user"]
                     ]);
@@ -76,8 +112,8 @@ function recupere_types($monde, $champ, $categorie, $mysqli) {
             "admin" => 0,
             "query" => $query_types,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => $_SESSION["user"]
         ]);
@@ -87,11 +123,27 @@ function recupere_types($monde, $champ, $categorie, $mysqli) {
 function recupere_categories($monde, $champ, $mysqli) {    
     $categories = [];
     
-    $query_categories = "SELECT `pk_categorie_doc`, `label_categorie_doc`, `niveau_categorie_doc` FROM `categorie_doc` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $monde . " AND `fk_champ` = " . $champ . " AND `niveau_categorie_doc` <= " . $_SESSION["niveau"] . ";";
+    $query_categories = "
+        SELECT 
+            `pk_categorie_doc`, 
+            `label_categorie_doc`, 
+            `niveau_categorie_doc` 
+        FROM `categorie_doc` 
+        WHERE 
+            `fk_client` = :client
+            AND `fk_monde` = :monde
+            AND `fk_champ` = :champ
+            AND `niveau_categorie_doc` <= :niveau ;";
 
-    if ($result_categories = $mysqli->query($query_categories)) {
-        
-        while($row_categories = $result_categories->fetch_assoc()) {
+    $result_categories = dino_query($query_categories,[
+        "client" => $_SESSION["client"],
+        "monde" => $monde,
+        "champ" => $champ,
+        "niveau" => $_SESSION["niveau"] 
+    ]);
+    
+    if ($result_categories["status"]) {
+        foreach($result_categories["result"] as $row_categories) {
             
             $categories[$row_categories["pk_categorie_doc"]] = [
                 "label" => $row_categories["label_categorie_doc"],
@@ -111,8 +163,8 @@ function recupere_categories($monde, $champ, $mysqli) {
             "admin" => 0,
             "query" => $query_categories,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => $_SESSION["user"]
         ]);
@@ -121,7 +173,7 @@ function recupere_categories($monde, $champ, $mysqli) {
   
 
 if (isset($_SESSION["user"])) {
-    include("../includes/mysqli.php");
+    include("../includes/PDO.php");
     
     $maxFileSize = convertBytes( ini_get( 'upload_max_filesize' ) );
     
@@ -133,10 +185,16 @@ if (isset($_SESSION["user"])) {
     ////////////////////////
     // Récupération des informations générales de l'user
     ////////////////////////
-    $query = "SELECT `niveau_user`, `fk_client`, `printer_client`, `entreprise_client` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = '" . $_SESSION["user"] . "';";
+    $query = "SELECT `niveau_user`, `fk_client`, `printer_client`, `entreprise_client` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = :login ;";
     
-    if ($result = $mysqli->query($query)) {
-        if ($row = $result->fetch_assoc()) {
+    $result = dino_query($query,[
+        "login" => $_SESSION["user"]
+    ]);
+    
+    if ($result["status"]) {
+        if (count($result["result"]) > 0) {
+            $row = $result["result"][0];
+            
             $_SESSION["client"] = $row["fk_client"];
             $_SESSION["printer"] = $row["printer_client"];
             $_SESSION["nom_client"] = $row["entreprise_client"];
@@ -154,19 +212,25 @@ if (isset($_SESSION["user"])) {
                     `niveau_monde`
                 FROM `monde` AS `m`
                 WHERE 
-                    `fk_client` = " . $row["fk_client"] . " 
+                    `fk_client` = :client
                     AND (
                             SELECT COUNT(*)
                             FROM `user_monde` AS `um`
                             WHERE 
                                 `um`.`fk_client` = `m`.`fk_client`
-                                AND `um`.`fk_user` = '" . $_SESSION["user"] . "'
+                                AND `um`.`fk_user` = :user
                                 AND `um`.`fk_monde` = `m`.`pk_monde`
                     );";
             
-            if ($result_mondes = $mysqli->query($query_mondes)) {
+            
+            $result_mondes = dino_query($query_mondes,[
+                "client" => $row["fk_client"],
+                "user" => $_SESSION["user"]
+            ]);
+            
+            if ($result_mondes["status"]) {
                 
-                while($row_mondes = $result_mondes->fetch_assoc()) {
+                foreach($result_mondes["result"] as $row_mondes) {
                     $profil["mondes"][$row_mondes["pk_monde"]] = [
                         "label" => $row_mondes["label_monde"],
                         "niveau" => $row_mondes["niveau_monde"],
@@ -181,11 +245,16 @@ if (isset($_SESSION["user"])) {
                     //////////////////////////
                     // Récupération des champs
                     //////////////////////////
-                    $query_champs = "SELECT `pk_champ`, `label_champ`, `pluriel_champ` FROM `champ` WHERE `fk_client` = " . $_SESSION["client"] . " AND `fk_monde` = " . $row_mondes["pk_monde"] . " ORDER BY `pk_champ` ASC;";
+                    $query_champs = "SELECT `pk_champ`, `label_champ`, `pluriel_champ` FROM `champ` WHERE `fk_client` = :client AND `fk_monde` = :monde ORDER BY `pk_champ` ASC;";
                     
-                    if ($result_champs = $mysqli->query($query_champs)) {
+                    $result_champs = dino_query($query_champs,[
+                        "client" => $_SESSION["client"],
+                        "monde" => $row_mondes["pk_monde"]
+                    ]);
+                    
+                    if ($result_champs["status"]) {
                         
-                        while($row_champs = $result_champs->fetch_assoc()) {
+                        foreach($result_champs["result"] as $row_champs) {
                             $profil["mondes"][$row_mondes["pk_monde"]]["champs"][$row_champs["pk_champ"]] = [
                                 "label" => $row_champs["label_champ"],
                                 "pluriel" => $row_champs["pluriel_champ"],
@@ -203,45 +272,54 @@ if (isset($_SESSION["user"])) {
                             //////////////////////////
                             $query_liste = "
                                 SELECT `pk_valeur_champ`, 
-                                `label_valeur_champ`, 
-                                `fk_parent`, ( 
-                                    SELECT COUNT(*) 
-                                    FROM `user_valeur_champ` AS `uvc` 
-                                    WHERE `uvc`.`fk_client` = " . $_SESSION["client"] . " 
-                                    AND `uvc`.`fk_monde` = " . $row_mondes["pk_monde"] . " 
-                                    AND `uvc`.`fk_champ` = " . $row_champs["pk_champ"] . " 
-                                    AND `uvc`.`fk_user` = '" . $_SESSION["user"] . "' 
-                                    AND `uvc`.`fk_valeur_champ` = `vc`.`pk_valeur_champ`
-                                ) 
-                                AS `droits_valeur_champ` 
+                                    `label_valeur_champ`, 
+                                    `fk_parent`, ( 
+                                        SELECT COUNT(*) 
+                                        FROM `user_valeur_champ` AS `uvc` 
+                                        WHERE `uvc`.`fk_client` = :client
+                                        AND `uvc`.`fk_monde` = :monde
+                                        AND `uvc`.`fk_champ` = :champ
+                                        AND `uvc`.`fk_user` = :user
+                                        AND `uvc`.`fk_valeur_champ` = `vc`.`pk_valeur_champ`
+                                    ) AS `droits_valeur_champ` 
                                 FROM `valeur_champ` AS `vc` 
-                                WHERE `fk_client` = " . $_SESSION["client"] . " 
-                                AND `fk_monde` = " . $row_mondes["pk_monde"] . " 
-                                AND `fk_champ` = " . $row_champs["pk_champ"] . " 
+                                WHERE `fk_client` = :client1
+                                    AND `fk_monde` = :monde1
+                                    AND `fk_champ` = :champ1
                                 ORDER BY 
                                     `droits_valeur_champ` DESC,
                                     `fk_parent` ASC
                                 ;";
+                              
+                            $result_liste = dino_query($query_liste,[
+                                "client" => $_SESSION["client"],
+                                "monde" => $row_mondes["pk_monde"],
+                                "champ" => $row_champs["pk_champ"],
+                                "user" => $_SESSION["user"],
+                                "client1" => $_SESSION["client"],
+                                "monde1" => $row_mondes["pk_monde"],
+                                "champ1" => $row_champs["pk_champ"]
+                            ]);     
                             
                             $all = false;
                             $first = true;
                             
-                            if ($result_liste = $mysqli->query($query_liste)) {
-                                
-                            while($row_liste = $result_liste->fetch_assoc()) {
-                                if ($first) {
-                                    if ($row_liste["droits_valeur_champ"] == 0) {
-                                        $all = true;
-                                        if ($profil["mondes"][$row_mondes["pk_monde"]]["all"] == "bogus") {
-                                            $profil["mondes"][$row_mondes["pk_monde"]]["all"] = true;   
+                            if ($result_liste["status"]) {
+                                    
+                                foreach($result_liste["result"] as $row_liste) {
+                                    if ($first) {
+                                        if ($row_liste["droits_valeur_champ"] == 0) {
+                                            $all = true;
+                                            if ($profil["mondes"][$row_mondes["pk_monde"]]["all"] == "bogus") {
+                                                $profil["mondes"][$row_mondes["pk_monde"]]["all"] = true;   
+                                            }
+                                        } else {
+                                            if ($profil["mondes"][$row_mondes["pk_monde"]]["all"] == "bogus") {
+                                                $profil["mondes"][$row_mondes["pk_monde"]]["all"] = false;   
+                                            }
                                         }
-                                    } else {
-                                        if ($profil["mondes"][$row_mondes["pk_monde"]]["all"] == "bogus") {
-                                            $profil["mondes"][$row_mondes["pk_monde"]]["all"] = false;   
-                                        }
+                                        $first = false;
                                     }
-                                    $first = false;
-                                }
                                     
                                     if ($_SESSION["niveau"] >= 20 or $row_liste["droits_valeur_champ"] or $all) {
                                     $profil["mondes"][$row_mondes["pk_monde"]]["champs"][$row_champs["pk_champ"]]["liste"][$row_liste["pk_valeur_champ"]] = $row_liste["label_valeur_champ"];
@@ -257,8 +335,8 @@ if (isset($_SESSION["user"])) {
                                     "admin" => 0,
                                     "query" => $query_liste,
                                     "statut" => 1,
-                                    "message" => "",
-                                    "erreur" => $mysqli->error,
+                                    "message" => $result["errinfo"][2],
+                                    "erreur" => $result["errno"],
                                     "document" => "",
                                     "objet" => $row_champs["pk_champ"]
                                 ]);
@@ -282,8 +360,8 @@ if (isset($_SESSION["user"])) {
                             "admin" => 0,
                             "query" => $query_liste,
                             "statut" => 1,
-                            "message" => "",
-                            "erreur" => $mysqli->error,
+                            "message" => $result["errinfo"][2],
+                            "erreur" => $result["errno"],
                             "document" => "",
                             "objet" => $row_mondes["pk_monde"]
                         ]);
@@ -293,16 +371,6 @@ if (isset($_SESSION["user"])) {
                 } // FIN WHILE MONDES
                 
                 status(200);
-#                write_log([
-#                    "libelle" => "GET profil",
-#                    "admin" => 0,
-#                    "query" => "...",
-#                    "statut" => 0,
-#                    "message" => "",
-#                    "erreur" => "",
-#                    "document" => "",
-#                    "objet" => $_SESSION["user"]
-#                ]);
                 $json = json_encode($profil);
                 header('Content-Type: application/json');
                 echo $json;
@@ -313,22 +381,22 @@ if (isset($_SESSION["user"])) {
                     "admin" => 0,
                     "query" => $query_mondes,
                     "statut" => 1,
-                    "message" => "",
-                    "erreur" => $mysqli->error,
+                    "message" => $result["errinfo"][2],
+                    "erreur" => $result["errno"],
                     "document" => "",
                     "objet" => $_SESSION["user"]
                 ]);
                 break;
             }
         } else {
-            status(500);
+            status(403);
             write_log([
                 "libelle" => "GET user",
                 "admin" => 0,
-                "query" => $query_mondes,
+                "query" => $query,
                 "statut" => 1,
                 "message" => "",
-                "erreur" => $mysqli->error,
+                "erreur" => "Incohérence Session/BDD",
                 "document" => "",
                 "objet" => $_SESSION["user"]
             ]);
@@ -340,8 +408,8 @@ if (isset($_SESSION["user"])) {
             "admin" => 0,
             "query" => $query,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => $_SESSION["user"]
         ]);
@@ -356,7 +424,7 @@ if (isset($_SESSION["user"])) {
         "message" => "",
         "erreur" => "",
         "document" => "",
-        "objet" => $_SESSION["user"]
+        "objet" => ""
     ]);
 }
 ?>

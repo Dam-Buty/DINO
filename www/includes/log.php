@@ -26,37 +26,41 @@ function write_log($params) {
             `erreur_operation`, 
             `document_operation`, 
             `objet_operation`,
-            `referrer_operation`
+            `referrer_operation`,
+            `ip_operation`
         ) VALUES (
-            '" . date("Y-m-d H:i:s") . "',
-            '" . $user . "', 
-            " . $client . ", 
-            '" . addslashes($params["libelle"]) . "', 
-            " . $params["admin"] . ", 
-            '" . str_replace("\n", " ", addslashes($params["query"])) . "', 
-            " . $params["statut"] . ", 
-            '" . str_replace("\n", " ", addslashes($params["message"])) . "', 
-            '" . str_replace("\n", " ", addslashes($params["erreur"])) . "', 
-            '" . $params["document"] . "', 
-            '" . $params["objet"] . "',
-            '" . $_SERVER['HTTP_REFERER'] . "'
-        );";
-#    echo $query_log;
-// TODO : gestion de l'IP!
+            :date,
+            :user,
+            :client,
+            :libelle,
+            :admin,
+            :query,
+            :statut,
+            :message,
+            :erreur,
+            :document,
+            :objet,
+            :referrer,
+            :ip
+        )
+    ;";
+        
+    $params_log = [
+        "date" => date("Y-m-d H:i:s"),
+        "user" => $user ,
+        "client" => $client,
+        "libelle" => $params["libelle"],
+        "admin" => $params["admin"],
+        "query" => $params["query"],
+        "statut" => $params["statut"],
+        "message" => $params["message"],
+        "erreur" => $params["erreur"],
+        "document" => $params["document"],
+        "objet" => $params["objet"],
+        "referrer" => $_SERVER['HTTP_REFERER'],
+        "ip" => $_SERVER['REMOTE_ADDR']
+    ];
 
-    $hostname = "localhost";
-    $username = "dino_baby_root";
-    $dbname = "dino_baby";
-    $password = "C4dillac5";
-
-#    $hostname = "localhost";
-#    $username = "root";
-#    $dbname = "dino_baby";
-#    $password = "C4dillac5";
-
-    $mysqli_log = new mysqli($hostname, $username, $password, $dbname);
-
-    $mysqli_log->query($query_log);
-#    echo $mysqli_log->error;
+    dino_query($query_log, $params_log);
 }
 ?>

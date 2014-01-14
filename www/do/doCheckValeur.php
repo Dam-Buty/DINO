@@ -8,24 +8,33 @@ if ($_SESSION["niveau"] >= 20) {
         SELECT `filename_document`
         FROM `document` AS `d`, `document_valeur_champ` AS `dvc`
         WHERE 
-            `d`.`fk_client` = " . $_SESSION["client"] . "
+            `d`.`fk_client` = :dClient
             
-            AND `dvc`.`fk_client` = " . $_SESSION["client"] . "
-            AND `dvc`.`fk_monde` = " . $_POST["monde"] . "
-            AND `dvc`.`fk_champ` = " . $_POST["champ"] . "
-            AND `dvc`.`fk_valeur_champ` = " . $_POST["pk"] . "
+            AND `dvc`.`fk_client` = :dvcClient
+            AND `dvc`.`fk_monde` = :monde
+            AND `dvc`.`fk_champ` = :champ
+            AND `dvc`.`fk_valeur_champ` = :pk
             
             AND `d`.`filename_document` = `dvc`.`fk_document`
     ;";
-    if ($res = $mysqli->query($query)) {
+    
+    $result = dino_query($query,[
+        "dClient" => $_SESSION["client"],
+        "dvcClient" => $_SESSION["client"],
+        "monde" => $_POST["monde"],
+        "champ" => $_POST["champ"],
+        "pk" => $_POST["pk"]
+    ]);
+    
+    if ($result["status"]) {
         status(200);
-        $json = $res->num_rows;
+        $json = count($result["result"]);
         write_log([
             "libelle" => "CHECK avant suppression valeur de champ",
             "admin" => 1,
             "query" => $query,
             "statut" => 0,
-            "message" => $res->num_rows . " documents impactes.",
+            "message" => $json . " documents impactes.",
             "erreur" => "",
             "document" => "",
             "objet" => $_POST["pk"]
@@ -39,8 +48,8 @@ if ($_SESSION["niveau"] >= 20) {
             "admin" => 1,
             "query" => $query,
             "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
+            "message" => $result["errinfo"][2],
+            "erreur" => $result["errno"],
             "document" => "",
             "objet" => $_POST["pk"]
         ]);
