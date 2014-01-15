@@ -4,7 +4,7 @@ include("../includes/status.php");
 include("../includes/log.php");
 
 if ($_SESSION["niveau"] >= 10) {
-    include("../includes/mysqli.php");
+    include("../includes/PDO.php");
     include("../includes/crypt.php");
     
     $filename = genere_clef(12, TRUE);

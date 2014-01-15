@@ -4,7 +4,7 @@ include("../includes/status.php");
 include("../includes/log.php");  
 
 if (isset($_SESSION["niveau"])) {
-    include("../includes/mysqli.php");
+    include("../includes/PDO.php");
     
     $liste = [];
     
@@ -32,9 +32,7 @@ if (isset($_SESSION["niveau"])) {
         "vc3Client" => $_SESSION["client"],
         "vc3Monde" => $_POST["monde"],
         "cdClient" => $_SESSION["client"],
-        "cdMonde" => $_POST["monde"],
-        "limitStart" => $_POST["limit"][0],
-        "limit" => $_POST["limit"][1]
+        "cdMonde" => $_POST["monde"]
     ]; 
     
     $query = "
@@ -126,7 +124,7 @@ if (isset($_POST["recherche"])) {
               
 if ($_POST["all"] == "false") {
     $query .= "
-            # On ne prend que les documents auxquels l'user a droit 
+            # On ne prend que les documents auxquels il a droit 
             AND (
                 SELECT COUNT(*)
                 FROM `document_valeur_champ` AS `dvc_droits`
@@ -154,9 +152,9 @@ if ($_POST["all"] == "false") {
                 $first_droit = false;
             }
         
-            $query .= "`dvc_droits`.`fk_valeur_champ` = :droitsValeur" . $pk . "";
+            $query .= "`dvc_droits`.`fk_valeur_champ` = :droitsValeur" . $pk;
             
-            $params["droitsValeur" . $pk] = $pk;
+            $params["droitsValeur" . $pk] = (string)$pk;
         }
                         
     $query .= "
@@ -217,7 +215,7 @@ $query .= "
                         ORDER BY `vc3`.`fk_champ`
                     )
             )
-        # Tris :
+        # Tris
         # - Par champ n ASC ou DESC
         # - Par nombre de champs ASC
         # - Par champ n+1 ASC ou DESC
@@ -226,6 +224,11 @@ $query .= "
         ORDER BY  "; 
         
 foreach($_POST["champs"] as $idx => $champ) {
+    $tri_whitelist = [
+        "ASC" => "ASC",
+        "DESC" => "DESC"
+    ];
+    
     $query .= "(
             SELECT `label_valeur_champ`
             FROM 
@@ -243,7 +246,7 @@ foreach($_POST["champs"] as $idx => $champ) {
                 AND `dvc_champs`.`fk_document` = `d`.`filename_document`
                 
                 AND `dvc_champs`.`fk_champ` = :orderDvcChamp" . $idx . "
-        ) :orderTri" . $idx . ", (
+        ) " . $tri_whitelist[$_POST["tri"]] . ", (
             SELECT COUNT(*) 
             FROM `document_valeur_champ` AS `dvc_tri`
             WHERE
@@ -257,7 +260,6 @@ foreach($_POST["champs"] as $idx => $champ) {
     $params["orderVcClient" . $idx] = $_SESSION["client"];
     $params["orderVcMonde" . $idx] = $_POST["monde"];
     $params["orderDvcChamp" . $idx] = $champ;
-    $params["orderTri" . $idx] = $_POST["tri"];
     $params["order2DvcClient" . $idx] = $_SESSION["client"];
     $params["order2DvcMonde" . $idx] = $_POST["monde"];
 }
@@ -272,7 +274,7 @@ $query .= " (
            ) ASC, `td`.`label_type_doc` ASC, `tdd`.`detail_type_doc` ASC
         
         # Limites    
-        LIMIT :limitStart, :limit  
+        LIMIT 0, 100
     ;";
     
     $result = dino_query($query, $params);

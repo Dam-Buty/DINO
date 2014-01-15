@@ -2,7 +2,7 @@
 session_start();
 include("../includes/log.php");
 if ($_SESSION["niveau"] >= 20) {
-    include("../includes/mysqli.php");
+    include("../includes/PDO.php");
     include("../includes/status.php");
     
     $query_user = "
@@ -13,13 +13,13 @@ if ($_SESSION["niveau"] >= 20) {
             AND `login_user` = :login
     ;";
     
-    $result = dino_query($query,[
+    $result_user = dino_query($query_user,[
         "client" => $_SESSION["client"],
         "niveau" => $_SESSION["niveau"],
         "login" => $_POST["login"]
     ]);
     
-    if ($result["status"]) {
+    if ($result_user["status"]) {
         status(204);
         write_log([
             "libelle" => "DELETE utilisateur",
@@ -38,8 +38,8 @@ if ($_SESSION["niveau"] >= 20) {
             "admin" => 1,
             "query" => $query_user,
             "statut" => 1,
-            "message" => $result["errinfo"][2],
-            "erreur" => $result["errno"],
+            "message" => $result_user["errinfo"][2],
+            "erreur" => $result_user["errno"],
             "document" => "",
             "objet" => $_POST["login"]
         ]);

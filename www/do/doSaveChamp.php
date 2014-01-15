@@ -3,7 +3,7 @@ session_start();
 include("../includes/status.php");
 include("../includes/log.php");
 if ($_SESSION["niveau"] >= 20) {
-    include("../includes/mysqli.php");
+    include("../includes/PDO.php");
     
    
     $query = "

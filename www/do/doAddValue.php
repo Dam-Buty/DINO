@@ -3,7 +3,7 @@ session_start();
 include("../includes/log.php");
 
 if ($_SESSION["niveau"] >= 10) {
-    include("../includes/mysqli.php");
+    include("../includes/PDO.php");
     include("../includes/status.php");    
     
     $query = "
@@ -27,9 +27,6 @@ if ($_SESSION["niveau"] >= 10) {
         
     if ($result["status"]) {
         status(200);
-        $json = url_encode([
-            "pk" => $result["result"]
-        ]);
         
         write_log([
             "libelle" => "INSERT valeur de champ",
@@ -44,7 +41,9 @@ if ($_SESSION["niveau"] >= 10) {
         ]);
         
         header('Content-Type: application/json');
-        echo $json;
+        echo json_encode([
+            "pk" => $result["result"]
+        ]);
     } else {
         status(500);
         write_log([

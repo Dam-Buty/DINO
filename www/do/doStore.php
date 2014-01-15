@@ -14,7 +14,7 @@ function format_date($date) {
 $champs = array_filter($_POST["champs"]);
 
 if ($_SESSION["niveau"] >= 10) {
-    include("../includes/mysqli.php");
+    include("../includes/PDO.php");
     
     
     
@@ -33,7 +33,7 @@ if ($_SESSION["niveau"] >= 10) {
     $result_document = dino_query($query_document, $params_document);
         
     if ($result_document["status"]) {
-        $params = [
+        $params_type = [
             "type" => $_POST["type"],
             "categorie" => $_POST["categorie"],
             "champ" => $_POST["maxchamp"],

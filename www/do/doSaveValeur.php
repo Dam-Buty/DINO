@@ -3,7 +3,7 @@ session_start();
 include("../includes/status.php");
 include("../includes/log.php");
 if ($_SESSION["niveau"] >= 20) {
-    include("../includes/mysqli.php");
+    include("../includes/PDO.php");
     
     $params = [
         "label" => $_POST["label"],
@@ -33,7 +33,7 @@ if ($_SESSION["niveau"] >= 20) {
         $query = "
             UPDATE `valeur_champ`
             SET 
-                `label_valeur_champ` = '" . $_POST["label"] . "'
+                `label_valeur_champ` = :label
             WHERE
                 `fk_client` = :client
                 AND `fk_monde` = :monde

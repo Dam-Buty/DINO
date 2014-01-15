@@ -2,7 +2,7 @@
 session_start();
 include("../includes/log.php");
 if ($_SESSION["niveau"] >= 20) {
-    include("../includes/mysqli.php");
+    include("../includes/PDO.php");
     include("../includes/status.php");
     
     // On identifie d'abord les documents à déclassifier
@@ -52,7 +52,7 @@ if ($_SESSION["niveau"] >= 20) {
             "champ" => $_POST["champ"],
             "pk" => $_POST["pk"],
             "parent" => $_POST["parent"],
-            "fkParent" => $_POST["parent"]
+            "fkParent" => $_POST["pk"]
         ]);
         
         if ($result_delete["status"]) {
@@ -73,7 +73,7 @@ if ($_SESSION["niveau"] >= 20) {
             ]);    
                
             if ($result_delete2["status"]) {    
-                foreach ($result_documents as $row_documents) {
+                foreach ($result_documents["result"] as $row_documents) {
                     $query_del_docs .= "
                         UPDATE `document`
                         SET `niveau_document` = NULL
@@ -92,7 +92,7 @@ if ($_SESSION["niveau"] >= 20) {
                             DELETE FROM `type_doc_document`
                             WHERE 
                                 `fk_client` = :client
-                                AND `filename_document` = :filename
+                                AND `fk_document` = :filename
                         ;";
                     
                         $result_del_types = dino_query($query_del_types,[
@@ -105,7 +105,7 @@ if ($_SESSION["niveau"] >= 20) {
                                 DELETE FROM `document_valeur_champ`
                                 WHERE 
                                     `fk_client` = :client
-                                    AND `filename_document` = :filename
+                                    AND `fk_document` = :filename
                             ;";
                             
                             $result_del_valeurs = dino_query($query_del_valeurs,[
@@ -116,7 +116,7 @@ if ($_SESSION["niveau"] >= 20) {
                             if (!$result_del_valeurs["status"]) {
                                 status(500);
                                 write_log([
-                                    "libelle" => "GET docs a declassifier",
+                                    "libelle" => "DELETE valeurs champs",
                                     "admin" => 1,
                                     "query" => $query_del_valeurs,
                                     "statut" => 1,
@@ -130,7 +130,7 @@ if ($_SESSION["niveau"] >= 20) {
                         } else {
                             status(500);
                             write_log([
-                                "libelle" => "GET docs a declassifier",
+                                "libelle" => "DELETE type doc",
                                 "admin" => 1,
                                 "query" => $query_del_types,
                                 "statut" => 1,
@@ -144,7 +144,7 @@ if ($_SESSION["niveau"] >= 20) {
                     } else {
                         status(500);
                         write_log([
-                            "libelle" => "GET docs a declassifier",
+                            "libelle" => "UPDATE declassifie doc",
                             "admin" => 1,
                             "query" => $query_del_docs,
                             "statut" => 1,
@@ -171,7 +171,7 @@ if ($_SESSION["niveau"] >= 20) {
             } else {
                 status(500);
                 write_log([
-                    "libelle" => "GET docs a declassifier",
+                    "libelle" => "DELETE User Valeur_champ",
                     "admin" => 1,
                     "query" => $query_delete2,
                     "statut" => 1,
@@ -185,7 +185,7 @@ if ($_SESSION["niveau"] >= 20) {
         } else {
             status(500);
             write_log([
-                "libelle" => "GET docs a declassifier",
+                "libelle" => "DELETE valeurs de champ",
                 "admin" => 1,
                 "query" => $query_delete,
                 "statut" => 1,

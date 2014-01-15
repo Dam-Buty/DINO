@@ -2,7 +2,7 @@
 session_start();
 
 if (isset($_SESSION["user"])) {
-    include("../includes/mysqli.php");
+    include("../includes/PDO.php");
     include("../includes/log.php");
     include("../includes/crypt.php");
     include("../includes/status.php");

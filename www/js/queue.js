@@ -45,6 +45,7 @@ var bootstrap_queue = function() {
 }
 
 var get_queue = function() {
+    queue.length = 0;
     $.ajax({ url: "json/queue.php" })
     .done(function (data) {
         $.each(data.queue, function() {

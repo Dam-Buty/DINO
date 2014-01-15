@@ -1,5 +1,5 @@
 <?php
-include("../includes/mysqli.php");
+include("../includes/PDO.php");
 include("../includes/status.php");
 
 $query = "SELECT * FROM `user` WHERE `login_user` = :login;";

@@ -4,7 +4,7 @@ include("../includes/status.php");
 include("../includes/log.php");  
 
 if (isset($_SESSION["niveau"])) {
-    include("../includes/mysqli.php"); 
+    include("../includes/PDO.php"); 
     
     $query = "
         SELECT 

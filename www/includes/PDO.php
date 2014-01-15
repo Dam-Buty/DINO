@@ -9,6 +9,9 @@ function dino_query($query, $params = []) {
     $username = "root";
     $dbname = "dino_baby";
     $password = "C4dillac5";
+    
+#    echo $query;
+#    var_dump($params);
 
     try {
         $dbh = new PDO("mysql:host=" . $hostname . ";dbname=" . $dbname, $username, $password);
@@ -36,7 +39,7 @@ function dino_query($query, $params = []) {
                 case "INSERT":
                     return [
                         "status" => true,
-                        "result" => $stmt->lastInsertId()
+                        "result" => $dbh->lastInsertId()
                     ];
                     break;
                 case "UPDATE":

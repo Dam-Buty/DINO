@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../includes/mysqli.php");
+include("../includes/PDO.php");
 include("../includes/crypt.php");
 include("../includes/status.php");
 include("../includes/log.php");

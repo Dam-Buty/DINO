@@ -6,7 +6,7 @@ include("../includes/log.php");
 $champs = array_filter($_POST["champs"]);
 
 if ($_SESSION["niveau"] >= 10) {
-    include("../includes/mysqli.php");
+    include("../includes/PDO.php");
     
     $query = "
         SELECT `revision_type_doc` 
@@ -39,12 +39,11 @@ if ($_SESSION["niveau"] >= 10) {
                     AND `dvc`.`fk_document` = `tdd`.`fk_document`
                 ) > 0";
                 
-                array_push($params, [
-                    "client" . $pk => $_SESSION["client"],
-                    "monde" . $pk => $_POST["monde"],
-                    "pk" . $pk => $pk,
-                    "valeur" . $pk => $valeur
-                ])
+                $params["client" . $pk] = $_SESSION["client"];
+                $params["monde" . $pk] = $_POST["monde"];
+                $params["pk" . $pk] = $pk;
+                $params["valeur" . $pk] = $valeur;
+                
             }
     $query .= "
         ;";      

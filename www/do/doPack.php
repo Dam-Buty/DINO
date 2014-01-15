@@ -1,6 +1,7 @@
 <?php
 session_start();
 include("../includes/log.php");
+include("../includes/PDO.php");
 
 if ($_SESSION["niveau"] > 10) {
     include("../includes/status.php");

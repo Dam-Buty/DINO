@@ -4,7 +4,7 @@ include("../includes/status.php");
 include("../includes/log.php");
 
 if ($_SESSION["niveau"] >= 20) {
-    include("../includes/mysqli.php");
+    include("../includes/PDO.php");
     
     $params = [
         "categorie" => $_POST["label"],

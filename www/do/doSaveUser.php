@@ -4,7 +4,7 @@ include("../includes/status.php");
 include("../includes/log.php");
 
 if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau"] > $_POST["niveau"]) {
-    include("../includes/mysqli.php");
+    include("../includes/PDO.php");
     include("../includes/crypt.php");
     include("../includes/mail.php");
     
@@ -66,7 +66,7 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
     
     if ($result_user["status"]) {
         
-        $query_del_droits == "
+        $query_del_droits = "
             DELETE FROM `user_monde`
                 WHERE 
                     `fk_client` = :client
@@ -90,7 +90,7 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
             }
             
             $query_del_droits .= "`fk_monde` = :monde" . $key;
-            $params["monde" . $key] = $monde;
+            $params_del_droits["monde" . $key] = $monde;
         }
                        
         $query_del_droits .=  "
@@ -143,15 +143,15 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
                  
                     if ($result_del_vc["status"]) {
                         foreach($valeurs["valeurs"] as $i => $valeur) {
-                            $query_insert_vc .= "
+                            $query_insert_vc = "
                                 INSERT INTO `user_valeur_champ`
                                 (`fk_client`, `fk_monde`, `fk_champ`, `fk_user`, `fk_valeur_champ`) 
                                 VALUES (
-                                    " . $_SESSION["client"] . ",
-                                    " . $monde . ",
-                                    " . $valeurs["champ"] . ",
-                                    '" . $_POST["login"] . "',
-                                    " . $valeur . "
+                                    :client,
+                                    :monde,
+                                    :champ,
+                                    :login,
+                                    :valeur
                                 );
                             "; 
                         

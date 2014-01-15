@@ -2,7 +2,7 @@
 session_start();
 include("../includes/log.php");
 if ($_SESSION["niveau"] >= 10) {
-    include("../includes/mysqli.php");
+    include("../includes/PDO.php");
     include("../includes/status.php");
     
     $query_document = "
@@ -23,7 +23,7 @@ if ($_SESSION["niveau"] >= 10) {
             DELETE FROM `type_doc_document`
             WHERE 
                 `fk_client` = :client
-                AND `filename_document` = :filename ;";
+                AND `fk_document` = :filename ;";
             
         $result_type = dino_query($query_type,[
             "client" => $_SESSION["client"],
@@ -36,7 +36,7 @@ if ($_SESSION["niveau"] >= 10) {
                 DELETE FROM `document_valeur_champ`
                 WHERE 
                     `fk_client` = :client
-                    AND `filename_document` = :filename ;"; 
+                    AND `fk_document` = :filename ;"; 
                      
             $result_valeur = dino_query($query_valeur,[
                 "client" => $_SESSION["client"],

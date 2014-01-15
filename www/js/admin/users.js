@@ -793,7 +793,7 @@ var save_user = function() {
                     window.location.replace("index.php");
                 },
                 500: function() {
-                    popup("Error! Gracias por intentar otra vez...", "confirmation");
+                    popup("Error! Gracias por intentar otra vez...", "error");
                 }
             }
         });
