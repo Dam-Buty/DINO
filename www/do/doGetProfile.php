@@ -372,6 +372,10 @@ if (isset($_SESSION["user"])) {
                 
                 status(200);
                 $json = json_encode($profil);
+                
+#                var_dump( json_last_error() );
+##                var_dump( $profil );
+#                var_dump( utf8_decode($profil) );
                 header('Content-Type: application/json');
                 echo $json;
             } else {

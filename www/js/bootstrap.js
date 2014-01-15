@@ -27,6 +27,7 @@ var bootstrap = function() {
     })
     .done(function (data) {
         profil = data;
+        console.log(data);
         
         $(".div_login").hide();
         $("#front").show();
