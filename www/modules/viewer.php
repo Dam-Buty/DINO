@@ -32,9 +32,8 @@ if (isset($_SESSION["user"])) {
             $image = "../do/doUnpack.php?document=" . $filename;
         ?>
                 <a href="<?php echo $lien; ?>">
-                    <img class="document" src="<?php echo $image; ?>"/>
+                    <img class="document-img" src="<?php echo $image; ?>"/>
                 </a>
-    
         <?php
         } else {
             $image = "../img/dino_head.png";
@@ -53,6 +52,8 @@ if (isset($_SESSION["user"])) {
         ?>
      <a>
 
+<script src="../vendor/jquery-1.10.2.js"></script>
+<script src="../js/viewer.js"></script>
 </body>
 </html>
        

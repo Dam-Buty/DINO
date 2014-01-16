@@ -154,7 +154,8 @@ var dragenter = function(e) {
                                     pk: i, 
                                     niveau: niveau + 1, 
                                     stack: li.attr("data-stack"), 
-                                    label: champ.liste[i]
+                                    label: champ.liste[i],
+                                    label_champ: monde.champs[monde.cascade[niveau + 1]].label
                                 });
                                 
                                 marge = (niveau + 2) * 2;

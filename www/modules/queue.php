@@ -12,11 +12,13 @@
 </div>
 
 <div id="popup-store" data-document="">
-    <div id="prev-store" class="nav-store"></div>
-    <div id="next-store" class="nav-store"></div>
+    <div id="container-nav">
+        <div id="prev-store" class="nav-store"></div>
+        <div id="next-store" class="nav-store"></div>
+    </div>
     <div id="nom-doc-store"></div>
-    <ul id="mondes-store" class="list-mondes"></ul>
     <iframe id="viewer-store"></iframe>
+    <ul id="mondes-store" class="list-mondes"></ul>
     <div id="container-store">
         <div id="container-champs"></div>
         <hr/>

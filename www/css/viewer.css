@@ -5,8 +5,8 @@ body {
     font-size: 1.1em;
 }
 
-img.document {
-    width: 100%;
+.document-img {
+    width: 95%;
 }
 
 img.nopreview {

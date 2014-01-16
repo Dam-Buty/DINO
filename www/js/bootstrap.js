@@ -58,6 +58,8 @@ var bootstrap = function() {
         $("#confirm-password-mail").click(confirme_password_mail);
         $("#change-mail").click(change_mail);
         
+        $("#bouton-close-viewer").click(cancel_view);
+        
         collapse_liste($("#edit-params"));
         
         $.ajax({ url: "modules/core.php" })
@@ -181,4 +183,15 @@ $( window ).resize(function() {
     $("#backoffice").css({
         height: ($(window).height() - 92) + "px" // 61 px barre top
     });                                          // 31 px barre bottom
+});
+
+$( document ).keyup(function(e) {
+    var code = e.keyCode ? e.keyCode : e.which;
+    
+    console.log(code);
+    
+    if (code == 27) {
+        $("#opak").click();
+        $("#opak-tuto").click();
+    }
 });

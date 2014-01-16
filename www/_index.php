@@ -99,9 +99,15 @@ if ($_SESSION["niveau"] >= 20) {
             <li id="menu-listes">
                 <h1>Listas</h1>
             </li>
+<?php
+if ($_SESSION["niveau"] >= 30) {
+?>
             <li id="menu-profil">
                 <h1>Perfil<br/>documental</h1>
             </li>
+<?php
+}
+?>
         </ul>
     </div>
     
@@ -173,7 +179,9 @@ if ($_SESSION["niveau"] >= 20) {
 <div id="opak"></div>
 
 <div id="container-viewer-global">
-    <div id="poignee-viewer-global"></div>
+    <div id="poignee-viewer-global">
+        <img id="bouton-close-viewer" src="img/del_20.png"/>
+    </div>
     <iframe id="viewer-global"></iframe>
 </div>
 

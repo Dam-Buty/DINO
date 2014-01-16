@@ -72,15 +72,22 @@ html, body {
     height: 90%;
     width: 90%;
     z-index: 250;
+    padding: 20px;
+    padding-top: 0;
 }
 
 #poignee-viewer-global {
     width: 100%;
-    height: 2%;
+    height: 20px;
     background-color: #9B9B9B;
     border: 2px dashed #BFBFBF;
     
     cursor: move;
+}
+
+#poignee-viewer-global img {
+    float: right;
+    cursor: pointer;
 }
 
 #viewer-global {
@@ -892,6 +899,12 @@ html, body {
     overflow-y: auto;
 }
 
+#container-nav {
+    position: relative;
+    width: 46%;
+    margin-top: -40px;
+}
+
 .nav-store {
     position: absolute;
     top: 0;
@@ -899,15 +912,12 @@ html, body {
     height: 30px;
     width: 30px;
     
-    margin-top: 5px;
-    
     cursor: pointer;
 }
 
 #prev-store {
     background-image: url(../img/prev_30.png);
     left: 0;
-    margin-left: 5px;
 }
 
 #prev-store:hover {
@@ -917,7 +927,6 @@ html, body {
 #next-store {
     background-image: url(../img/next_30.png);
     right: 0;
-    margin-right: 5px;
 }
 
 #next-store:hover {
@@ -941,7 +950,7 @@ html, body {
 #mondes-store {
     margin: 0;
     margin-left: 50%;
-    margin-top: -30px;
+    margin-top: -65px;
 }
 
 #container-champs {
@@ -956,7 +965,7 @@ html, body {
     text-align: center;
     
     line-height: 30px;
-    font-size: 1em;
+    font-size: 0.9em;
     text-transform: uppercase;
     
     height: 30px;
@@ -968,6 +977,8 @@ html, body {
     color: white;
     
     overflow-x: hidden;
+    
+    margin-top: 40px;
 }
 
 /*#container-store hr {*/

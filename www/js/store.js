@@ -178,7 +178,7 @@ var add_value = function(term) {
                 // On sauvegarde la nouvelle valeur dans le profil
                 profil.mondes[store.monde].champs[champ].liste[retour.pk] = term;
                 
-                if (profil.mondes[store.monde].references[parent] === undefined) {
+                if (profil.mondes[store.monde].references[parent].length == 0) {
                     profil.mondes[store.monde].references[parent] = {};
                 }
                 
