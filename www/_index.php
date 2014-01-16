@@ -16,6 +16,7 @@ if (isset($_SESSION)) {
 <link href='css/Oswald-Bold.ttf' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/global.css?v=3" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/arrows.css?v=3" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/tuto.css?v=3" media="screen" type="text/css"/>
 <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 
 <?php
@@ -33,6 +34,7 @@ if (isset($_SESSION)) {
 <link rel="stylesheet" href="css/zebra_dialog_custom.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="vendor/switchy.css?v=1" media="screen" type="text/css"/>
 <link rel="stylesheet" href="vendor/jquery-ui-1.10.3.custom.css" media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/tooltipster.css" media="screen" type="text/css"/>
 
 </head>
 <body>
@@ -120,6 +122,7 @@ if ($_SESSION["niveau"] >= 20) {
     <img id="bouton-pass" src="img/pass_20.png">
     <img id="bouton-mail" src="img/mail_20.png">
     <img id="help-printer" src="img/printer_20.png">
+    <img id="bouton-tuto" src="img/tuto_20.png">
 </div>
 
 <div id="container-change-pass">
@@ -180,6 +183,7 @@ if ($_SESSION["niveau"] >= 20) {
 <script src="vendor/zebra_dialog.js?v=1"></script>
 <script src="vendor/chosen.jquery.js?v=1"></script>
 <script src="vendor/switchy.js?v=1"></script>
+<script src="vendor/jquery.tooltipster.js?v=1"></script>
 
 <script src="js/bootstrap.js?v=1"></script>
 <script src="js/util.js?v=1"></script>
@@ -189,6 +193,7 @@ if ($_SESSION["niveau"] >= 20) {
 <script src="js/store.js?v=1"></script>
 <script src="js/dialogues.js?v=1"></script>
 <script src="js/params.js?v=1"></script>
+<script src="js/tuto.js?v=1"></script>
 
 <?php
     if ($_SESSION["niveau"] >= 20) {

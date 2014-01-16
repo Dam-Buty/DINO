@@ -17,11 +17,17 @@ var change_monde_store = function() {
     document.store.categorie = "";
     document.store.type_doc = {};
     
+    Store.monde = li.attr("data-monde");
+    
     ul.find("li").attr("data-selected", "0");
     
     li.attr("data-selected", "1");
     
     $("#container-details").slideUp();
+    
+    if (Tuto.etape == 3) {
+        Tuto.next();
+    }
     
     reload_champs();
 };
@@ -177,6 +183,11 @@ var add_value = function(term) {
                 
                 $("#container-details").hide();
                 reload_champs();
+                
+                if (Tuto.etape == 4) {
+                    Store.champs[champ] = retour.pk;
+                    Tuto.next();
+                }
             },
             403: function() {
                 window.location.replace("index.php");
@@ -530,6 +541,9 @@ var _store_document = function(position) {
     var li = queue[position].li;
     var ul = li.closest("ul");
 
+    if (Tuto.etape == 2) {
+        Tuto.next();
+    }
 
     ul.find("li").attr("data-editing", "0");
     li.removeClass("done").attr("data-editing", "1");

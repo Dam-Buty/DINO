@@ -244,8 +244,6 @@ var upload = function(list_element, uploader, queue_position) {
 // Cherche un uploader libre et lui attribue le premier fichier de la queue
 var handle_uploads = function() {
     
-    console.log(uploading);
-    
     $.each(uploading, function(i, uploader) {
         if (uploader === undefined) {
             $.each(queue, function(j, document) {
@@ -311,7 +309,10 @@ var set_li_status = function(li, status) {
             
         case 1:
             li.find(".progressbar").slideUp();
-            li.children("img").fadeIn();
+            li.children("img").fadeIn();    
+            if (Tuto.etape == 1) {
+                Tuto.next();
+            }
             break;
     };
     

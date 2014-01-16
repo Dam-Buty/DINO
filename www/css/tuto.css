@@ -1,0 +1,99 @@
+
+#bucket-tuto {
+    display: none;
+}
+
+#opak-tuto {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    
+    background: rgb(0, 0, 0);
+    background: rgba(0, 0, 0, 0.6); 
+    
+    
+    z-index: 700;
+}
+
+.etape {
+    display: none;
+    
+    position: absolute;
+    z-index: 701;
+    
+    background-color: #8ecb32;
+    
+    border: 2px solid #558011;
+    
+    padding: 20px;
+
+    margin: 10px;
+}
+
+.etape h1 {
+    color: white;
+    
+    padding-left: 50px;
+    background-image: url(../img/dino_40.png);
+    background-position: 5px 50%;
+    background-repeat: no-repeat;
+    
+    height: 50px;
+    
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.etape p {
+    text-align: justify;
+    
+    font-size: 0.9em;
+}
+
+#etape-0 {
+    width: 50%;
+    left: 25%;
+}
+
+#etape-1 {
+    top: 40%;
+    right: 0;
+    width: 40%;
+}
+
+#etape-2 {
+    top: 60%;
+    right: 0;
+    width: 40%;
+}
+
+#etape-3 {
+    top: 60%;
+    left: 0;
+    width: 40%;
+}
+
+#etape-4 {
+    top: 60%;
+    left: 0;
+    width: 40%;
+}
+
+#etape-5 {
+    top: 60%;
+    left: 0;
+    width: 40%;
+}
+
+#next-0 {
+    width: 50%;
+    margin-left: 25%;
+}
+
+#quit-tuto {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}

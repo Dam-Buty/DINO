@@ -27,7 +27,7 @@ var bootstrap = function() {
     })
     .done(function (data) {
         profil = data;
-        console.log(data);
+        //console.log(data);
         
         $(".div_login").hide();
         $("#front").show();
@@ -109,7 +109,15 @@ var bootstrap = function() {
                             $(window).trigger('resize');
                         }
                     }
-                });        
+                });   
+                
+                if (profil.tuto == 1) {
+                    bootstrap_tuto();
+                } 
+                
+                if (profil.help == 1) {
+                    bootstrap_help();
+                }
             });
         });
     });
