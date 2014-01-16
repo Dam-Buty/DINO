@@ -36,10 +36,24 @@ if ($_SESSION["niveau"] >= 20) {
     ]);
     
     if ($result_user["status"]) {
-        dinomail($_POST["mail"], "reset_pass", [], [
+        $retour = dinomail($_POST["mail"], "reset_pass", [], [
             "user" => $_POST["login"],
             "pass" => $pass
         ]);
+        
+                    
+        if ($retour != "") {
+            write_log([
+                "libelle" => "MAIL key user",
+                "admin" => 1,
+                "query" => "",
+                "statut" => 1,
+                "message" => $retour,
+                "erreur" => "",
+                "document" => "",
+                "objet" => $_POST["login"]
+            ]);
+        }
         
         status(200);
         write_log([

@@ -20,18 +20,21 @@ function dinomail($adresse, $mail, $attach = [], $subst = []) {
     }
 
     # Make the call to the client.
-    $result = $mgClient->sendMessage(
-        "$domain", [
-            'from'    => 'DINO <mailgun@dino.mx>',
-            'to'      => $adresse,
-            'subject' => $sujet,
-            'text'    => $text,
-            'html'    => $html
-        ], [
-            'attachment' => $attach
-        ]
-    );
-    
-    var_dump($result);
+    try {
+        $mgClient->sendMessage(
+            "$domain", [
+                'from'    => 'DINO <mailgun@dino.mx>',
+                'to'      => $adresses,
+                'subject' => $sujet,
+                'text'    => $text,
+                'html'    => $html
+            ], [
+                'attachment' => $attach
+            ]
+        );
+        return "";
+    } catch (Exception $e ) {
+        return $e->getMessage();
+    }
 }
 ?>
