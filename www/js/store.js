@@ -141,6 +141,12 @@ var change_type_store = function() {
     li.attr("data-selected", 1);
     
     affiche_details();
+    
+    if (Tuto.etape == 5) {
+        Store.categorie = li.attr("data-categorie");
+        Store.type_doc = document.store.type_doc;
+        Tuto.next();
+    }
 };
 
 var add_value = function(term) {
@@ -478,6 +484,7 @@ var archive_document = function() {
 };
 
 var _archive_document = function(document, store) {
+
     $.ajax({
         url: "do/doStore.php",
         type: "POST",
@@ -514,18 +521,24 @@ var _archive_document = function(document, store) {
                     } else {
                         new_position = position;
                     }
+                    
+                    queue.splice(position, 1);
+                    refresh_liste();
+                    $('#mondes-top li[data-selected="1"]').click();
+                    
+                    if ($("#popup-store").is(":visible")) {
+                        change_document(new_position);
+                    } else {
+                        $("#container-details").detach().appendTo($("#container-store")).hide();
+                        dialogue.close();
+                    }
                 }
                 
-                queue.splice(position, 1);
-                refresh_liste();
-                $('#mondes-top li[data-selected="1"]').click();
-                
-                if ($("#popup-store").is(":visible")) {
-                    change_document(new_position);
-                } else {
-                    $("#container-details").detach().appendTo($("#container-store")).hide();
-                    dialogue.close();
+                if (Tuto.etape == 6) {
+                    Tuto.next();
                 }
+                
+                
             },
             403: function() {
                 window.location.replace("index.php");

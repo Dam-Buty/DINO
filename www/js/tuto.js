@@ -79,18 +79,85 @@ var Tuto = {
                 
                 $(".tuto-valeur").text(valeur);
                 detache_element($("#container-store"));
-                $("#container-classification li.store-categorie").last().tooltipster({
-                    content: 'Eso es una categoria de documentos, y contiene tipos de documentos!',
-                    position: "bottom",
-                    autoClose: false
-                }).tooltipster("show").click(function() {
-                    $(this).tooltipster("destroy");
-                });
-                $("#container-classification li.store-type").first().tooltipster({
-                    content: 'Eso es un tipo de documento!',
-                    position: "left",
-                    autoClose: false
-                }).tooltipster("show");
+                var last_categorie = $("#container-classification li.store-categorie").last();
+                var first_type = $("#container-classification li.store-type").first();
+                
+                if (last_categorie.is(":visible")) {
+                    last_categorie
+                    .addClass("hasTooltip")
+                    .tooltipster({
+                        content: 'Eso es una categoria de documentos, y contiene tipos de documentos!',
+                        position: "bottom",
+                        autoClose: false
+                    })
+                    .tooltipster("show");
+                    $("#container-classification li.store-categorie").click(function() {
+                        $("#container-classification li.store-categorie").last()
+                        .removeClass("hasTooltip")
+                        .tooltipster("destroy");
+                    });
+                }
+                
+                if (first_type.is(":visible")) {
+                    first_type.addClass("hasTooltip").tooltipster({
+                        content: 'Eso es un tipo de documento!',
+                        position: "left",
+                        autoClose: false
+                    }).tooltipster("show");
+                }
+                break;
+            case 6:
+                var monde = profil.mondes[Store.monde];
+                var champ = monde.champs[monde.cascade[0]];
+                var type;
+                
+                if (Store.categorie == 0) {
+                    type = champ.types[Store.type_doc.pk].label;
+                } else {
+                    type = champ.categories[Store.categorie].types[Store.type_doc.pk].label;
+                }
+                
+                $(".tuto-type").text(type);
+                
+                setTimeout(function() {
+                    $("#container-store").css("z-index", "701");
+                    detache_element($("#container-store"));
+                    
+                    $("#champs-details").tooltipster({
+                        content: 'Modifica la fecha o agrega un detalle si necesario ...',
+                        position: "left",
+                        autoClose: false
+                    }).tooltipster("show");
+                    
+                    $("#bouton-store").tooltipster({
+                        content: '... y da click en "Archivar con DINO"!',
+                        position: "bottom",
+                        autoClose: false
+                    }).tooltipster("show");
+                    
+                }, 400);
+                break;
+            case 7:
+                var monde = profil.mondes[Store.monde];
+                var valeur = Store.champs[monde.cascade[0]];
+                
+                $("#menu-queue").click();
+                $("#opak").click();
+                $('#mondes-top li[data-monde="' + Store.monde + '"]').click();
+                setTimeout(function() {
+                    var li = $("#liste ul").find('li[data-type="champ"][data-pk="' + valeur + '"]');
+                    li.click();
+                    setTimeout(function() {
+                        $("#liste").css("z-index", "701");
+                        detache_element($("#liste"));
+                        li.next("ul").tooltipster({
+                            content: 'Da click en tu documento para consultarlo!',
+                            position: "bottom-left",
+                            autoClose: false
+                        }).tooltipster("show");
+                    }, 400);
+                }, 400);
+                
                 break;
         };
     },
@@ -117,6 +184,18 @@ var Tuto = {
             case 4:
                 attache_element($("#container-store"));
                 $('#container-store').tooltipster("destroy");
+                break;
+            case 5:
+                attache_element($("#container-store"));
+                $(".hasTooltip").removeClass("hasTooltip").tooltipster("destroy");
+                break;
+            case 6:
+                attache_element($("#container-store"));
+                $('#container-queue').css("z-index", "");
+                $("#champs-details").tooltipster("destroy");
+                $("#bouton-store").tooltipster("destroy");
+                break;
+            case 7:
                 break;
         };
     },
@@ -160,7 +239,9 @@ var bootstrap_help = function() {
 };
 
 var cancel_tuto = function() {
-    
+    Tuto.clean();
+    $("#bucket-tuto").fadeOut();
+    Tuto.etape = 0;
 };
 
 var detache_element = function(element) {
@@ -183,7 +264,7 @@ var detache_element = function(element) {
         width: width + "px",
         height: height + "px",
         margin: 0
-    })
+    });
 };
 
 var attache_element = function(element) {

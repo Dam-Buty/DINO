@@ -43,6 +43,7 @@ var bootstrap = function() {
         $("#logout").fadeIn().click(logout);
         $("#bouton-pass").fadeIn().click(popup_pass);
         $("#bouton-mail").fadeIn().click(popup_mail);
+        $("#bouton-tuto").fadeIn().click(Tuto.go);
         
         $("#pass-params").focus(tip_pass_params);
         $("#pass-params").keyup(check_pass_params);

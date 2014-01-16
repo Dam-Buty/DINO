@@ -29,6 +29,16 @@
         <p>Ahora sabemos que tu documento pertenece al <b class="tuto-champ"></b> <b class="tuto-valeur"></b>.</p>
         <p>Solo necesitamos identificar el <b>tipo del documento</b> para archivarlo en <b>DINO</b>!</p>
     </div>
+    <div class="etape" id="etape-6">
+        <h1>Clasificacion de documento</h1>
+        <p>Tu <b class="tuto-type"></b> esta casi listo por archivarse!</p>
+        <p>Puedes cambiar su <b>fecha</b>, agregar un <b>detalle</b> si es necesario, y dar click en "<b>ARCHIVAR EN DINO</b>".</p>
+    </div>
+    <div class="etape" id="etape-7">
+        <h1>Listo!</h1>
+        <p>Acabas de archivar tu primer documento! Congratulaciones!</p>
+        <p>La proxima vez que necesitaras tu <b class="tuto-type"></b>, podras encontrarlo en el mundo <b class="tuto-monde"></b>, adentro del <b class="tuto-champ"></b> <b class="tuto-valeur"></b>.</p>
+    </div>
     <div id="opak-tuto">
         <div id="quit-tuto">Dejar el tutorial</div>        
     </div>
