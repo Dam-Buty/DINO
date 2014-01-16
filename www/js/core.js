@@ -214,7 +214,7 @@ var charge_documents = function() {
         data: {
             monde: Core.monde,
             recherche: Core.recherche,
-            champs: profil.mondes[Core.monde].cascade,
+            champ_droits: profil.mondes[Core.monde].cascade[0],
             tri: $("#switch-sort select").val(),
             limit: Core.limit,
             dates: dates,

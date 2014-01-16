@@ -8,6 +8,11 @@ if (isset($_SESSION["niveau"])) {
     
     $liste = [];
     
+    $tri_whitelist = [
+        "ASC" => "ASC",
+        "DESC" => "DESC"
+    ];
+    
     $params = [
         "dvcClient" => $_SESSION["client"],
         "dvcMonde" => $_POST["monde"],
@@ -31,6 +36,10 @@ if (isset($_SESSION["niveau"])) {
         "dvc3Monde" => $_POST["monde"],
         "vc3Client" => $_SESSION["client"],
         "vc3Monde" => $_POST["monde"],
+        "dvc4Client" => $_SESSION["client"],
+        "dvc4Monde" => $_POST["monde"],
+        "vc4Client" => $_SESSION["client"],
+        "vc4Monde" => $_POST["monde"],
         "cdClient" => $_SESSION["client"],
         "cdMonde" => $_POST["monde"]
     ]; 
@@ -140,7 +149,7 @@ if ($_POST["all"] == "false") {
     
     $params["droitsClient"] = $_SESSION["client"];
     $params["droitsMonde"] = $_POST["monde"];
-    $params["droitsChamp"] = $_POST["champs"][0];
+    $params["droitsChamp"] = $_POST["champ_droits"];
                        
     $first_droit = true;
                     
@@ -221,48 +230,27 @@ $query .= "
         # - Par champ n+1 ASC ou DESC
         # - Par nombre de champs ASC ...
         # - Par catégorie ASC, type ASC, détail ASC
-        ORDER BY  "; 
-        
-foreach($_POST["champs"] as $idx => $champ) {
-    $tri_whitelist = [
-        "ASC" => "ASC",
-        "DESC" => "DESC"
-    ];
-    
-    $query .= "(
-            SELECT `label_valeur_champ`
+        ORDER BY ( 
+            SELECT GROUP_CONCAT( 
+                `label_valeur_champ` SEPARATOR '||'
+             )
             FROM 
-                `valeur_champ` AS `vc_champs`,
-                `document_valeur_champ` AS `dvc_champs`
+                `valeur_champ` AS `vc4`,
+                `document_valeur_champ` AS `dvc4`
             WHERE 
-                `dvc_champs`.`fk_client` = :orderDvcClient" . $idx . "
-                AND `dvc_champs`.`fk_monde` = :orderDvcMonde" . $idx . "
-                AND `vc_champs`.`fk_client` = :orderVcClient" . $idx . "
-                AND `vc_champs`.`fk_monde` = :orderVcMonde" . $idx . "
+                `dvc4`.`fk_client` = :dvc4Client
+                AND `dvc4`.`fk_monde` = :dvc4Monde
                 
-                AND `vc_champs`.`fk_champ` = `dvc_champs`.`fk_champ`
-                AND `vc_champs`.`pk_valeur_champ` = `dvc_champs`.`fk_valeur_champ`
+                AND `vc4`.`fk_client` = :vc4Client
+                AND `vc4`.`fk_monde` = :vc4Monde
                 
-                AND `dvc_champs`.`fk_document` = `d`.`filename_document`
+                AND `vc4`.`fk_champ` = `dvc4`.`fk_champ`
+                AND `vc4`.`pk_valeur_champ` = `dvc4`.`fk_valeur_champ`
                 
-                AND `dvc_champs`.`fk_champ` = :orderDvcChamp" . $idx . "
-        ) " . $tri_whitelist[$_POST["tri"]] . ", (
-            SELECT COUNT(*) 
-            FROM `document_valeur_champ` AS `dvc_tri`
-            WHERE
-                `dvc_tri`.`fk_client` = :order2DvcClient" . $idx . "
-                AND `dvc_tri`.`fk_monde` = :order2DvcMonde" . $idx . "
-                AND `dvc_tri`.`fk_document` = `d`.`filename_document`
-        ) ASC, ";
-        
-    $params["orderDvcClient" . $idx] = $_SESSION["client"];
-    $params["orderDvcMonde" . $idx] = $_POST["monde"];
-    $params["orderVcClient" . $idx] = $_SESSION["client"];
-    $params["orderVcMonde" . $idx] = $_POST["monde"];
-    $params["orderDvcChamp" . $idx] = $champ;
-    $params["order2DvcClient" . $idx] = $_SESSION["client"];
-    $params["order2DvcMonde" . $idx] = $_POST["monde"];
-}
+                AND `dvc4`.`fk_document` = `d`.`filename_document`
+            ORDER BY `vc4`.`fk_champ`
+        ) " . $tri_whitelist[$_POST["tri"]] . ", 
+        "; 
 
 $query .= " (
                 SELECT `label_categorie_doc`

@@ -178,8 +178,10 @@ var add_value = function(term) {
                 // On sauvegarde la nouvelle valeur dans le profil
                 profil.mondes[store.monde].champs[champ].liste[retour.pk] = term;
                 
-                if (profil.mondes[store.monde].references[parent].length == 0) {
-                    profil.mondes[store.monde].references[parent] = {};
+                if (profil.mondes[store.monde].references[parent] !== undefined) {
+                    if (profil.mondes[store.monde].references[parent].length == 0) {
+                        profil.mondes[store.monde].references[parent] = {};
+                    }
                 }
                 
                 profil.mondes[store.monde].references[parent][retour.pk] = [];
@@ -514,6 +516,8 @@ var _archive_document = function(document, store) {
                 
                 // Si c'est le seul document de la queue on ferme le store
                 if (queue.length == 1) {
+                    queue.length = 0;
+                    refresh_liste();
                     cancel_store();
                 } else {
                     if (position == queue.length - 1) {
