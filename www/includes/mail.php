@@ -31,5 +31,7 @@ function dinomail($adresse, $mail, $attach = [], $subst = []) {
             'attachment' => $attach
         ]
     );
+    
+    var_dump($result);
 }
 ?>

@@ -217,37 +217,38 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
             } // FIN FOREACH MONDES
             
             if (!$err) {
-                switch($_POST["niveau"]) {
-                    case "0": 
-                        $mail = "creation_visiteur";
-                        break;
-                    case "10":
-                        $mail = "creation_archiviste";
-                        break;
-                    case "20":
-                        $mail = "creation_admin";
-                        break;
-                }
+                if ($_POST["pk"] == "new") {
+                    switch($_POST["niveau"]) {
+                        case "0": 
+                            $mail = "creation_visiteur";
+                            break;
+                        case "10":
+                            $mail = "creation_archiviste";
+                            break;
+                        case "20":
+                            $mail = "creation_admin";
+                            break;
+                    }
 
-                dinomail($_POST["mail"], $mail, [], [
-                    "user" => $_POST["login"],
-                    "client" => $_SESSION["nom_client"],
-                    "pass" => $_POST["pass"]
-                ]);
-                
-                
-                status(200);
-                write_log([
-                    "libelle" => "INSERT user",
-                    "admin" => 1,
-                    "query" => $query,
-                    "statut" => 0,
-                    "message" => "",
-                    "erreur" => "",
-                    "document" => "",
-                    "objet" => $_POST["login"]
-                ]);
+                    dinomail($_POST["mail"], $mail, [], [
+                        "user" => $_POST["login"],
+                        "client" => $_SESSION["nom_client"],
+                        "pass" => $_POST["pass"]
+                    ]);
+                }
             }
+                    
+            status(200);
+            write_log([
+                "libelle" => "INSERT user",
+                "admin" => 1,
+                "query" => $query,
+                "statut" => 0,
+                "message" => "",
+                "erreur" => "",
+                "document" => "",
+                "objet" => $_POST["login"]
+            ]);
         } else {
             status(500);
             write_log([
