@@ -2,6 +2,7 @@
 var Tuto = {
     etape: 0,
     sibling: undefined,
+    final_li: undefined,
     exit: function(next) {
         if (!next) {
             // signaler qu'il ne veut pas de next time
@@ -146,6 +147,7 @@ var Tuto = {
                 $('#mondes-top li[data-monde="' + Store.monde + '"]').click();
                 setTimeout(function() {
                     var li = $("#liste ul").find('li[data-type="champ"][data-pk="' + valeur + '"]');
+                    Tuto.final_li = li;
                     li.click();
                     setTimeout(function() {
                         $("#liste").css("z-index", "701");
@@ -196,6 +198,9 @@ var Tuto = {
                 $("#bouton-store").tooltipster("destroy");
                 break;
             case 7:
+                attache_element($("#liste"));
+                Tuto.final_li.tooltipster("destroy");
+                $("#liste").css("z-index", "");
                 break;
         };
     },

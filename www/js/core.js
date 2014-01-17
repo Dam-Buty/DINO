@@ -108,6 +108,10 @@ var change_monde = function() {
     Core.champs.length = 0;
     Core.recherche.length = 0;
     
+    charge_dates();
+};
+
+var charge_dates = function() {
     $.ajax({
         url: "json/dates.php",
         type: "POST",
@@ -162,7 +166,7 @@ var change_monde = function() {
             }
         }
     });
-};
+}
 
 var change_dates = function() {    
     var bornes = $("#slider-date").slider("values");
@@ -267,6 +271,10 @@ var affiche_document = function() {
     $("#opak")
     .fadeIn()
     .unbind().click(cancel_view);
+    
+    if (Tuto.etape == 7) {
+        Tuto.next();
+    }
 };
 
 var affiche_revisions = function() {

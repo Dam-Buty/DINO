@@ -182,6 +182,8 @@ var add_value = function(term) {
                     if (profil.mondes[store.monde].references[parent].length == 0) {
                         profil.mondes[store.monde].references[parent] = {};
                     }
+                } else {
+                    profil.mondes[store.monde].references[parent] = {};
                 }
                 
                 profil.mondes[store.monde].references[parent][retour.pk] = [];
@@ -428,7 +430,7 @@ var cancel_store = function() {
     $("#files-list li").attr("data-editing", "0");
     $("#popup-store").attr("data-document", "");
     
-    charge_documents();
+    charge_dates();
 };
 
 var archive_document = function() {

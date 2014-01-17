@@ -8,17 +8,18 @@ if ($_SESSION["niveau"] >= 10) {
     
     $path = "../cache/" . $_SESSION["client"] . "/" . $_POST["filename"] . ".css";
     
-    if (unlink($path)) {
-        $query = "
-            DELETE FROM `document` 
-            WHERE `filename_document` = :filename
-        ;";
+    $query = "
+        DELETE FROM `document` 
+        WHERE `filename_document` = :filename
+    ;";
+
+    $result = dino_query($query,[
+        "filename" => $_POST["filename"]
+    ]);
     
-        $result = dino_query($query,[
-            "filename" => $_POST["document"]
-        ]);
+    if ($result["status"]) {
         
-        if ($result["status"]) {
+        if (unlink($path)) {
             status(204);
             write_log([
                 "libelle" => "DELETE document de la queue",
@@ -31,25 +32,24 @@ if ($_SESSION["niveau"] >= 10) {
                 "objet" => $_POST["filename"]
             ]);
         } else {
-            status(500);
+            status(204);
             write_log([
-                "libelle" => "DELETE document de la queue",
+                "libelle" => "UNLINK document de la queue",
                 "admin" => 0,
-                "query" => $query,
+                "query" => "unlink " . $path,
                 "statut" => 1,
-                "message" => $result_update["errinfo"][2],
-                "erreur" => $result_update["errno"],
+                "message" => "",
+                "erreur" => "",
                 "document" => $_POST["filename"],
                 "objet" => $_POST["filename"]
             ]);
         }
     } else {
         status(500);
-        $json = '{ "error": "unknown" }';
         write_log([
-            "libelle" => "UNLINK document de la queue",
+            "libelle" => "DELETE document de la queue",
             "admin" => 0,
-            "query" => "unlink " . $path,
+            "query" => $query,
             "statut" => 1,
             "message" => $result_update["errinfo"][2],
             "erreur" => $result_update["errno"],

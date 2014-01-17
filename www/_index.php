@@ -8,7 +8,7 @@ if (isset($_SESSION)) {
         "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es">
 <head>
-<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=ISO-8859-1" />
 <title>DINO</title>
 <meta content="2013-02-28" name="date" />
 <meta content="Damien BUTY" name="author" />
