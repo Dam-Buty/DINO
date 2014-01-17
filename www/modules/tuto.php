@@ -39,6 +39,18 @@
         <p>Acabas de archivar tu primer documento! Congratulaciones!</p>
         <p>La proxima vez que necesitaras tu <b class="tuto-type"></b>, podras encontrarlo en el mundo <b class="tuto-monde"></b>, adentro del <b class="tuto-champ"></b> <b class="tuto-valeur"></b>.</p>
     </div>
+    <div class="etape" id="etape-8">
+        <h1>Tu primer documento</h1>
+        <p>Muy bien, ahora sabes como archivar y consultar documentos en <b>DINO</b>!</p>
+        <p>Te voy a ensenar las tecnicas avanzadas de busqueda, y luego seras un verdadero <b>Experto Documental</b> :)</p>
+        <div class="boutons" id="next-8">Busqueda avanzada</div>
+    </div>
+    <div class="etape" id="etape-8">
+        <h1>Tu primer documento</h1>
+        <p>Muy bien, ahora sabes como archivar y consultar documentos en <b>DINO</b>!</p>
+        <p>Te voy a ensenar las tecnicas avanzadas de busqueda, y luego seras un verdadero <b>Experto Documental</b> :)</p>
+        <div class="boutons" id="next-8">Busqueda avanzada</div>
+    </div>
     <div id="opak-tuto">
         <div id="quit-tuto">Dejar el tutorial</div>        
     </div>

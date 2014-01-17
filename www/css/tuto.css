@@ -99,7 +99,17 @@
     width: 40%;
 }
 
+#etape-8 {
+    width: 50%;
+    left: 25%;
+}
+
 #next-0 {
+    width: 50%;
+    margin-left: 25%;
+}
+
+#next-8 {
     width: 50%;
     margin-left: 25%;
 }

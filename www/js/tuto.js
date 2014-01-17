@@ -2,7 +2,7 @@
 var Tuto = {
     etape: 0,
     sibling: undefined,
-    final_li: undefined,
+    final_ul: undefined,
     exit: function(next) {
         if (!next) {
             // signaler qu'il ne veut pas de next time
@@ -147,7 +147,7 @@ var Tuto = {
                 $('#mondes-top li[data-monde="' + Store.monde + '"]').click();
                 setTimeout(function() {
                     var li = $("#liste ul").find('li[data-type="champ"][data-pk="' + valeur + '"]');
-                    Tuto.final_li = li;
+                    Tuto.final_ul = li.next("ul");
                     li.click();
                     setTimeout(function() {
                         $("#liste").css("z-index", "701");
@@ -160,6 +160,40 @@ var Tuto = {
                     }, 400);
                 }, 400);
                 
+                break;
+            case 8:
+                $("#next-8").unbind().click(Tuto.next);
+                break;
+            case 9:
+                $("#opak").click();
+                detache_element($("#top-front"));
+                $("#mondes-top li").first().tooltipster({
+                    content: 'Aqui puedes navegar entre tus diferentes mundos documentales' ,
+                    position: "bottom-left",
+                    autoClose: false
+                }).tooltipster("show");
+                
+                $("#toggle-date").click()
+                setTimeout(function() {
+                    $("#container-dates").tooltipster({
+                        content: 'Aqui puedes buscar tus documentos por rango de fecha, o cambiar el orden alfabetico',
+                        position: "left",
+                        autoClose: false
+                    }).tooltipster("show");
+                }, 400);
+                break;
+            case 10:
+                var monde = profil.mondes[Core.monde];
+                var champ = profil.champs[profil.cascade[0]].label;
+                
+                $("#search-field input").focus();
+                setTimeout(function() {
+                    $("#container-dates").tooltipster({
+                        content: 'Aqui puedes buscar tus documentos por ' + champ,
+                        position: "left",
+                        autoClose: false
+                    }).tooltipster("show");
+                }, 400);
                 break;
         };
     },
@@ -199,7 +233,7 @@ var Tuto = {
                 break;
             case 7:
                 attache_element($("#liste"));
-                Tuto.final_li.tooltipster("destroy");
+                Tuto.final_ul.tooltipster("destroy");
                 $("#liste").css("z-index", "");
                 break;
         };
