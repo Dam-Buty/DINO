@@ -2,7 +2,9 @@
 var Tuto = {
     etape: 0,
     sibling: undefined,
+    parent: undefined,
     final_ul: undefined,
+    etapes: 12,
     exit: function(next) {
         if (!next) {
             // signaler qu'il ne veut pas de next time
@@ -17,29 +19,25 @@ var Tuto = {
                     autoClose: false
                 }).tooltipster("show");
                 $('#bouton-tuto').tooltipster({
-                    content: '... y aqui para regresar mas tarde!',
+                    content: '... y aqui para retomarlo mas tarde!',
                     autoClose: false
                 }).tooltipster("show");
-                $("#next-0").unbind().click(Tuto.next);
                 break;
             case 1:
                 $("#menu-queue").click();
                 $("#container-queue").css("z-index", "701");
-                
-                setTimeout(function(){
-                    $("#zone-dnd").tooltipster({
-                        content: 'Deposita un archivo aqui ...',
-                        autoClose: false
-                    }).tooltipster("show");
-                    
+                // TODO : jitter sur l'input file'
+                setTimeout(function(){                            
+                    $("#container-files-handler").css("border", "2px solid #558011");
                     $("#container-files-handler").tooltipster({
-                        content: '... o selecciona lo en tu disco duro!',
+                        content: 'Carga un documento en DINO!',
                         position: "right",
                         autoClose: false
                     }).tooltipster("show");
                 }, 400);
                 break;
-            case 2:                
+            case 2:              
+                $("#files-list li").first().find(".bouton-edit-li").css("border", "2px solid #558011");
                 $("#files-list li").first().find(".bouton-edit-li").tooltipster({
                     content: 'Da click aqui para clasificar tu documento',
                     position: "right",
@@ -69,7 +67,7 @@ var Tuto = {
                 $("#container-store").css("z-index", "701");
                 detache_element($("#container-store"));
                 $("#container-store").tooltipster({
-                    content: $('<span><p>Da click aqui, y empeza a teclar el nombre de tu primer <b>' + champ + '</b> para agregarle a DINO.</p><p>Cuando terminaste, da click en "<b>Agregar ' + champ + '</b>" para guardarlo.</p></span>'),
+                    content: $('<span><p>Da click, tecla el nombre de tu primer <b>' + champ + '</b>, y agregalo en DINO.</p></span>'),
                     autoClose: false
                 }).tooltipster("show");
                 break;
@@ -77,11 +75,13 @@ var Tuto = {
                 var monde = profil.mondes[Store.monde];
                 var champ = monde.champs[monde.cascade[0]].label;
                 var valeur = monde.champs[monde.cascade[0]].liste[Store.champs[monde.cascade[0]]];
+                var next = monde.champs[monde.cascade[1]].label;
                 
                 $(".tuto-valeur").text(valeur);
+                $(".tuto-next").text(next);
+                
                 detache_element($("#container-store"));
                 var last_categorie = $("#container-classification li.store-categorie").last();
-                var first_type = $("#container-classification li.store-type").first();
                 
                 if (last_categorie.is(":visible")) {
                     last_categorie
@@ -99,13 +99,10 @@ var Tuto = {
                     });
                 }
                 
-                if (first_type.is(":visible")) {
-                    first_type.addClass("hasTooltip").tooltipster({
-                        content: 'Eso es un tipo de documento!',
-                        position: "left",
-                        autoClose: false
-                    }).tooltipster("show");
-                }
+                $("#container-classification li.store-type").tooltipster({
+                    content: 'Eso es un tipo de documento!',
+                    position: "top"
+                });
                 break;
             case 6:
                 var monde = profil.mondes[Store.monde];
@@ -157,43 +154,60 @@ var Tuto = {
                             position: "bottom-left",
                             autoClose: false
                         }).tooltipster("show");
+                        $(".tooltipster-base").css({
+                            backgroundColor: "#56d4eb",
+                            borderColor: "#48afc2"
+                        });
                     }, 400);
                 }, 400);
                 
                 break;
-            case 8:
-                $("#next-8").unbind().click(Tuto.next);
-                break;
             case 9:
                 $("#opak").click();
-                detache_element($("#top-front"));
+                $("#mondes-top").css("z-index", "701");
+                detache_element($("#mondes-top"));
                 $("#mondes-top li").first().tooltipster({
-                    content: 'Aqui puedes navegar entre tus diferentes mundos documentales' ,
+                    content: 'Aqui estan tus diferentes mundos documentales' ,
                     position: "bottom-left",
                     autoClose: false
                 }).tooltipster("show");
-                
-                $("#toggle-date").click()
+                break;
+            case 10:                
+                $("#toggle-date").click();
                 setTimeout(function() {
+                    $("#top-front").css("z-index", "701");
+                    detache_element($("#top-front"));
                     $("#container-dates").tooltipster({
-                        content: 'Aqui puedes buscar tus documentos por rango de fecha, o cambiar el orden alfabetico',
+                        content: 'Aqui puedes buscar tus documentos por rango de fecha...',
                         position: "left",
+                        autoClose: false
+                    }).tooltipster("show");
+                    $("#switch-sort").tooltipster({
+                        content: '... o cambiar el orden!',
+                        position: "right",
                         autoClose: false
                     }).tooltipster("show");
                 }, 400);
                 break;
-            case 10:
+            case 11:
                 var monde = profil.mondes[Core.monde];
-                var champ = profil.champs[profil.cascade[0]].label;
+                var champ = monde.champs[monde.cascade[0]].label;
                 
                 $("#search-field input").focus();
                 setTimeout(function() {
-                    $("#container-dates").tooltipster({
-                        content: 'Aqui puedes buscar tus documentos por ' + champ,
+                    $("#search_chosen").css("z-index", "701");
+                    detache_element($("#search_chosen"));
+                    $("#search_chosen").tooltipster({
+                        content: 'Tecla el nombre del ' + champ + " para encontrarlo.",
                         position: "left",
                         autoClose: false
                     }).tooltipster("show");
+                    $("#top-front").css("margin-right", "30%");
                 }, 400);
+                break;
+            case 12:
+                $(".barre-bottom").css("z-index", "701");
+                detache_element($(".barre-bottom"));
                 break;
         };
     },
@@ -205,12 +219,13 @@ var Tuto = {
                 $('#quit-tuto').tooltipster("destroy");
                 break;
             case 1:
-                $('#zone-dnd').css("z-index", "").tooltipster("destroy");
-                $('#container-files-handler').tooltipster("destroy");
+                $('#container-files-handler').css("z-index", "").tooltipster("destroy");
+                $("#container-files-handler").css("border", "");
                 break;
             case 2:
                 $('#container-queue').css("z-index", "");
                 $("#files-list li").first().find(".bouton-edit-li").tooltipster("destroy");
+                $("#files-list li").first().find(".bouton-edit-li").css("border", "");
                 break;
             case 3:
                 attache_element($("#mondes-store"));
@@ -223,7 +238,8 @@ var Tuto = {
                 break;
             case 5:
                 attache_element($("#container-store"));
-                $(".hasTooltip").removeClass("hasTooltip").tooltipster("destroy");
+                $("#container-classification li.tooltipstered")
+                .tooltipster("destroy");
                 break;
             case 6:
                 attache_element($("#container-store"));
@@ -236,12 +252,38 @@ var Tuto = {
                 Tuto.final_ul.tooltipster("destroy");
                 $("#liste").css("z-index", "");
                 break;
+            case 9:
+                $("#mondes-top").css("z-index", "");
+                attache_element($("#mondes-top"));
+                $("#mondes-top li").first().tooltipster("destroy");
+                break;
+            case 10:
+                $("#toggle-date").click();
+                $("#top-front").css("z-index", "");
+                attache_element($("#top-front"));
+                $("#container-dates").tooltipster("destroy");
+                $("#switch-sort").tooltipster("destroy");
+                break;
+            case 11:
+                $("#search_chosen").css("z-index", "");
+                attache_element($("#search_chosen"));
+                $("#search_chosen").tooltipster("destroy");
+                $("#top-front").css("margin-right", "");
+                break;
+            case 12:
+                $(".barre-bottom").css("z-index", "");
+                attache_element($(".barre-bottom"));
+                $("#bucket-tuto").fadeOut();
+                Tuto.etape = 0;
+                break;
         };
     },
     next: function() {
         Tuto.clean();
-        Tuto.etape = Tuto.etape + 1;
-        Tuto.go();
+        if (Tuto.etape < Tuto.etapes) {
+            Tuto.etape = Tuto.etape + 1;
+            Tuto.go();
+        }
     },
     prev: function() {
         Tuto.clean();
@@ -266,7 +308,7 @@ var bootstrap_tuto = function() {
                 $("body").append(tuto);
                 $("#bucket-tuto").fadeIn();
                 $("#quit-tuto").click(cancel_tuto);
-                $("#opak-tuto").click(cancel_tuto);
+                $(".next").unbind().click(Tuto.next);
                 Tuto.go();
             }
         }
@@ -291,8 +333,13 @@ var detache_element = function(element) {
     var width = element.outerWidth();
     var height = element.outerHeight();
     
-    // on garde le sibling pour pouvoir replacer l'élément après
-    Tuto.sibling = element.prev();
+    // Pour pouvoir replacer l'élément par la suite, on repère son parent et son sibling
+    Tuto.parent = element.parent();
+    if (element.prev().length == 0) {
+        Tuto.sibling = false;
+    } else {
+        Tuto.sibling = element.prev();
+    }
 
     element.detach();
     $("body").append(element);
@@ -307,7 +354,12 @@ var detache_element = function(element) {
 };
 
 var attache_element = function(element) {
-    Tuto.sibling.after(element);
+    if (Tuto.sibling === false) {
+        Tuto.parent.append(element);
+    } else {
+        Tuto.sibling.after(element);
+    }
+    
     element.css({
         position: "",
         top: "",

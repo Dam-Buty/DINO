@@ -70,25 +70,25 @@
 }
 
 #etape-3 {
-    top: 60%;
+    top: 0;
     left: 0;
     width: 40%;
 }
 
 #etape-4 {
-    top: 60%;
+    top: 10%;
     left: 0;
     width: 40%;
 }
 
 #etape-5 {
-    top: 60%;
+    top: 20%;
     left: 0;
     width: 40%;
 }
 
 #etape-6 {
-    top: 20%;
+    top: 30%;
     left: 0;
     width: 40%;
 }
@@ -97,6 +97,9 @@
     top: 60%;
     right: 0;
     width: 40%;
+    
+    background-color: #56d4eb;
+    z-index: 705;
 }
 
 #etape-8 {
@@ -104,18 +107,34 @@
     left: 25%;
 }
 
-#next-0 {
+#etape-9 {
     width: 50%;
-    margin-left: 25%;
+    left: 25%;
+    top: 25%;
 }
 
-#next-8 {
+#etape-10 {
+    width: 50%;
+    left: 25%;
+    top: 25%;
+}
+
+#etape-11 {
+    width: 50%;
+    left: 25%;
+    top: 25%;
+}
+
+.next {
     width: 50%;
     margin-left: 25%;
 }
 
 #quit-tuto {
     position: absolute;
-    bottom: 0;
-    left: 0;
+    bottom: 10px;
+    left: 10px;
+    background-color: #56d4eb;
+    
+    z-index: 705;
 }
