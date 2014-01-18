@@ -232,7 +232,19 @@ $query .= "
         # - Par catégorie ASC, type ASC, détail ASC
         ORDER BY ( 
             SELECT GROUP_CONCAT( 
-                `label_valeur_champ` SEPARATOR '||'
+                CONCAT_WS (
+                    '%%', 
+                    `label_valeur_champ`, 
+                    (
+                    ";
+                    
+        if ($_POST["tri"] == "DESC") {
+            $query .= "100 - ";
+        }
+                    
+         $query .= "COUNT(`label_valeur_champ`))
+                )
+                SEPARATOR '||'
              )
             FROM 
                 `valeur_champ` AS `vc4`,
@@ -249,10 +261,7 @@ $query .= "
                 
                 AND `dvc4`.`fk_document` = `d`.`filename_document`
             ORDER BY `vc4`.`fk_champ`
-        ) " . $tri_whitelist[$_POST["tri"]] . ", 
-        "; 
-
-$query .= " (
+        ) " . $tri_whitelist[$_POST["tri"]] . ", (
                 SELECT `label_categorie_doc`
                 FROM `categorie_doc` AS `cd`
                 WHERE 
