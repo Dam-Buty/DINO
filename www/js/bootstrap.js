@@ -43,7 +43,7 @@ var bootstrap = function() {
         $("#logout").fadeIn().click(logout);
         $("#bouton-pass").fadeIn().click(popup_pass);
         $("#bouton-mail").fadeIn().click(popup_mail);
-        $("#bouton-tuto").fadeIn().click(Tuto.go);
+        $("#bouton-tuto").fadeIn().click(Tuto.start);
         
         $("#pass-params").focus(tip_pass_params);
         $("#pass-params").keyup(check_pass_params);
@@ -152,9 +152,11 @@ var toggle_dates = function() {
     if (container.is(":visible")) {
         container.fadeOut();
     } else {
-        container.css({
-            left: (toggle.offset().left + 20 - (container.outerWidth() / 2) - $("#laterale-front") . outerWidth()) + "px"
-        }).fadeIn();
+        setTimeout(function() {
+            container.css({
+                left: (toggle.offset().left + 20 - (container.outerWidth() / 2) - $("#laterale-front") . outerWidth()) + "px"
+            }).fadeIn();
+        }, 105);
     }
 };
 
@@ -187,9 +189,7 @@ $( window ).resize(function() {
 
 $( document ).keyup(function(e) {
     var code = e.keyCode ? e.keyCode : e.which;
-    
-    console.log(code);
-    
+        
     if (code == 27) {
         $("#opak").click();
         $("#opak-tuto").click();

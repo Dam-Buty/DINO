@@ -55,6 +55,7 @@ var remove_champ_store = function() {
                 post = 1;
             } else {
                 document.store.last_champ = champ_cascade;
+                Store.last_champ = champ_cascade;
             }
         }
     });
@@ -76,8 +77,15 @@ var change_champ_store = function() {
     if (valeur != 0) {
         document.store.champs[champ] = valeur;
         document.store.last_champ = champ;
+        Store.last_champ = champ;
     }
     $("#container-details").slideUp();
+                
+    if (Tuto.etape == 4) {
+        Store.champs[champ] = valeur;
+        Tuto.next();
+    }
+    
     reload_champs();
 };
 
@@ -190,12 +198,13 @@ var add_value = function(term) {
                 
                 document.store.champs[champ] = retour.pk;
                 document.store.last_champ = champ;
+                Store.champs[champ] = retour.pk;
+                Store.last_champ = champ;
                 
                 $("#container-details").hide();
                 reload_champs();
                 
                 if (Tuto.etape == 4) {
-                    Store.champs[champ] = retour.pk;
                     Tuto.next();
                 }
             },
@@ -271,8 +280,6 @@ var reload_champs = function() {
                 if (event.which == 13) {
                     $("#container-champs").find("select").next("div").find("li.create-option").click();
                 }
-                
-                console.log(event.which);
             })
             
             
@@ -541,6 +548,7 @@ var _archive_document = function(document, store) {
                 }
                 
                 if (Tuto.etape == 6) {
+                    Tuto.store = store;
                     Tuto.next();
                 }
                 

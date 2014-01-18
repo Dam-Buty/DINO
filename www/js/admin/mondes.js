@@ -230,7 +230,7 @@ var del_valeur = function() {
                 var titre = "";
                 
                 if (documents > 0) {
-                    message = "<b>" + documents + "</b> documentos estan asociados al " + monde.champs[champ].label + " <b>" + monde.champs[champ].liste[pk] + "</b>.<br/>Si usted pica 'Confirmar', el " + monde.champs[champ].label + " <b>" + monde.champs[champ].liste[pk] + "</b> sera borrado, estos documentos seran declasificados y regresaran en la fila de espera."; // LOCALISATION
+                    message = "<b>" + documents + "</b> documentos estan asociados al " + monde.champs[champ].label + " <b>" + monde.champs[champ].liste[pk] + "</b>.<br/>Si <b>confirmas</b>, el " + monde.champs[champ].label + " <b>" + monde.champs[champ].liste[pk] + "</b> sera borrado, los documentos relacionados seran declasificados y regresaran en tu fila de espera."; // LOCALISATION
                     bouton = 'Confirmar <i>(Declasificar <b>' + documents + '</b> documentos)</i>';
                     titre = 'Ojo, documentos orphanos!';
                 } else {

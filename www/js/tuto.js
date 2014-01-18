@@ -3,83 +3,105 @@ var Tuto = {
     etape: 0,
     sibling: undefined,
     parent: undefined,
-    final_ul: undefined,
-    etapes: 12,
-    exit: function(next) {
-        if (!next) {
-            // signaler qu'il ne veut pas de next time
+    final_li: undefined,
+    store: undefined,
+    etapes: [{ ////////////////////// 0
+        go: function() {
+            $('#quit-tuto').tooltipster({
+                content: 'Aqui para dejar el tutorial...',
+                autoClose: false
+            }).tooltipster("show");
+            $('#bouton-tuto').tooltipster({
+                content: '... y aqui para retomarlo mas tarde!',
+                autoClose: false
+            }).tooltipster("show");
+        },
+        clean: function() {
+            $('#bouton-tuto').tooltipster("destroy");
+            $('#quit-tuto').tooltipster("destroy");
         }
-    },
-    go: function() {
-        $("#etape-" + Tuto.etape).fadeIn();
-        switch(Tuto.etape) {
-            case 0:
-                $('#quit-tuto').tooltipster({
-                    content: 'Aqui para dejar el tutorial...',
-                    autoClose: false
-                }).tooltipster("show");
-                $('#bouton-tuto').tooltipster({
-                    content: '... y aqui para retomarlo mas tarde!',
-                    autoClose: false
-                }).tooltipster("show");
-                break;
-            case 1:
-                $("#menu-queue").click();
-                $("#container-queue").css("z-index", "701");
-                // TODO : jitter sur l'input file'
-                setTimeout(function(){                            
-                    $("#container-files-handler").css("border", "2px solid #558011");
-                    $("#container-files-handler").tooltipster({
-                        content: 'Carga un documento en DINO!',
-                        position: "right",
-                        autoClose: false
-                    }).tooltipster("show");
-                }, 400);
-                break;
-            case 2:              
-                $("#files-list li").first().find(".bouton-edit-li").css("border", "2px solid #558011");
-                $("#files-list li").first().find(".bouton-edit-li").tooltipster({
-                    content: 'Da click aqui para clasificar tu documento',
+    }, { ////////////////////// 1
+        go: function() {
+            $("#menu-queue").click();
+            $("#container-queue").css("z-index", "701");
+            // TODO : jitter sur l'input file'
+            setTimeout(function(){                            
+                $("#container-files-handler").css("border", "2px solid #558011");
+                $("#container-files-handler").tooltipster({
+                    content: 'Carga un documento en DINO!',
                     position: "right",
                     autoClose: false
                 }).tooltipster("show");
-                break;
-            case 3:
-                $("#mondes-store").css("z-index", "701");
-                setTimeout(function() {
-                    detache_element($("#mondes-store"));
-                    $("#mondes-store").tooltipster({
-                        content: 'Selecciona uno de esos mundos',
-                        autoClose: false
-                    }).tooltipster("show");
-                }, 400);
-                break;
-            case 4:
-                var monde = profil.mondes[Store.monde];
-                var label = monde.label;
-                var champ = monde.champs[monde.cascade[0]].label;
-                var pluriel = monde.champs[monde.cascade[0]].pluriel;
-                
-                $(".tuto-monde").text(label);
-                $(".tuto-pluriel").text(pluriel);
-                $(".tuto-champ").text(champ);
-                
-                $("#container-store").css("z-index", "701");
-                detache_element($("#container-store"));
-                $("#container-store").tooltipster({
-                    content: $('<span><p>Da click, tecla el nombre de tu primer <b>' + champ + '</b>, y agregalo en DINO.</p></span>'),
+            }, 400);
+        },
+        clean: function() {
+            $('#container-queue').css("z-index", "");
+            $("#container-files-handler").css("border", "").tooltipster("destroy");
+        }
+    }, { ////////////////////// 2
+        go: function() {
+            $('#container-queue').css("z-index", "701");
+            $("#files-list li").first().find(".bouton-edit-li").css("border", "2px solid #558011");
+            $("#files-list li").first().find(".bouton-edit-li").tooltipster({
+                content: 'Da click aqui para clasificar tu documento',
+                position: "right",
+                autoClose: false
+            }).tooltipster("show");
+        },
+        clean: function() {
+            $('#container-queue').css("z-index", "");
+            $("#files-list li").first().find(".bouton-edit-li").tooltipster("destroy");
+            $("#files-list li").first().find(".bouton-edit-li").css("border", "");
+        }
+    }, { //////////////////////3
+        go: function() {
+            $("#mondes-store").css("z-index", "701");
+            setTimeout(function() {
+                detache_element($("#mondes-store"));
+                $("#mondes-store").tooltipster({
+                    content: 'Selecciona uno de esos mundos',
                     autoClose: false
                 }).tooltipster("show");
-                break;
-            case 5:
-                var monde = profil.mondes[Store.monde];
-                var champ = monde.champs[monde.cascade[0]].label;
-                var valeur = monde.champs[monde.cascade[0]].liste[Store.champs[monde.cascade[0]]];
-                var next = monde.champs[monde.cascade[1]].label;
-                
-                $(".tuto-valeur").text(valeur);
-                $(".tuto-next").text(next);
-                
+            }, 400);
+        },
+        clean: function() {
+            attache_element($("#mondes-store"));
+            $('#mondes-store').tooltipster("destroy");
+            $("#mondes-store").css("z-index", "");
+        }
+    }, { ////////////////////// 4
+        go: function() {
+            var monde = profil.mondes[Store.monde];
+            var label = monde.label;
+            var champ = monde.champs[monde.cascade[0]].label;
+            var pluriel = monde.champs[monde.cascade[0]].pluriel;
+            
+            $(".tuto-monde").text(label);
+            $(".tuto-pluriel").text(pluriel);
+            $(".tuto-champ").text(champ);
+            
+            $("#container-store").css("z-index", "701");
+            detache_element($("#container-store"));
+            $("#container-store").tooltipster({
+                content: $('<span><p>Tecla el nombre de un nuevo <b>' + champ + '</b>, y agregalo en DINO.</p></span>'),
+                autoClose: false
+            }).tooltipster("show");
+        },
+        clean: function() {
+            attache_element($("#container-store"));
+            $('#container-store').tooltipster("destroy");
+        }
+    }, { ////////////////////// 5
+        go: function() {
+            var monde = profil.mondes[Store.monde];
+            var champ = monde.champs[monde.cascade[0]].label;
+            var valeur = monde.champs[monde.cascade[0]].liste[Store.champs[monde.cascade[0]]];
+            var next = monde.champs[monde.cascade[1]].label;
+            
+            $(".tuto-valeur").text(valeur);
+            $(".tuto-next").text(next);
+            
+            setTimeout(function() {
                 detache_element($("#container-store"));
                 var last_categorie = $("#container-classification li.store-categorie").last();
                 
@@ -101,188 +123,199 @@ var Tuto = {
                 
                 $("#container-classification li.store-type").tooltipster({
                     content: 'Eso es un tipo de documento!',
+                    delay: 50,
                     position: "top"
                 });
-                break;
-            case 6:
-                var monde = profil.mondes[Store.monde];
-                var champ = monde.champs[monde.cascade[0]];
-                var type;
+            }, 400);
+        },
+        clean: function() {
+            attache_element($("#container-store"));
+            $("#container-classification li.tooltipstered")
+            .tooltipster("destroy");
+        }
+    }, { ////////////////////// 6
+        go: function() {
+            var monde = profil.mondes[Store.monde];
+            var champ = monde.champs[Store.last_champ];
+            var type;
+            
+            if (Store.categorie == 0) {
+                type = champ.types[Store.type_doc.pk].label;
+            } else {
+                type = champ.categories[Store.categorie].types[Store.type_doc.pk].label;
+            }
+            
+            $(".tuto-type").text(type);
+            
+            setTimeout(function() {
+                $("#container-store").css("z-index", "701");
+                detache_element($("#container-store"));
                 
-                if (Store.categorie == 0) {
-                    type = champ.types[Store.type_doc.pk].label;
-                } else {
-                    type = champ.categories[Store.categorie].types[Store.type_doc.pk].label;
-                }
-                
-                $(".tuto-type").text(type);
-                
-                setTimeout(function() {
-                    $("#container-store").css("z-index", "701");
-                    detache_element($("#container-store"));
-                    
-                    $("#champs-details").tooltipster({
-                        content: 'Modifica la fecha o agrega un detalle si necesario ...',
-                        position: "left",
-                        autoClose: false
-                    }).tooltipster("show");
-                    
-                    $("#bouton-store").tooltipster({
-                        content: '... y da click en "Archivar con DINO"!',
-                        position: "bottom",
-                        autoClose: false
-                    }).tooltipster("show");
-                    
-                }, 400);
-                break;
-            case 7:
-                var monde = profil.mondes[Store.monde];
-                var valeur = Store.champs[monde.cascade[0]];
-                
-                $("#menu-queue").click();
-                $("#opak").click();
-                $('#mondes-top li[data-monde="' + Store.monde + '"]').click();
-                setTimeout(function() {
-                    var li = $("#liste ul").find('li[data-type="champ"][data-pk="' + valeur + '"]');
-                    Tuto.final_ul = li.next("ul");
-                    li.click();
-                    setTimeout(function() {
-                        $("#liste").css("z-index", "701");
-                        detache_element($("#liste"));
-                        li.next("ul").tooltipster({
-                            content: 'Da click en tu documento para consultarlo!',
-                            position: "bottom-left",
-                            autoClose: false
-                        }).tooltipster("show");
-                        $(".tooltipster-base").css({
-                            backgroundColor: "#56d4eb",
-                            borderColor: "#48afc2"
-                        });
-                    }, 400);
-                }, 400);
-                
-                break;
-            case 9:
-                $("#opak").click();
-                $("#mondes-top").css("z-index", "701");
-                detache_element($("#mondes-top"));
-                $("#mondes-top li").first().tooltipster({
-                    content: 'Aqui estan tus diferentes mundos documentales' ,
-                    position: "bottom-left",
+                $("#champs-details").tooltipster({
+                    content: 'Modifica la fecha o agrega un detalle si necesario ...',
+                    position: "left",
                     autoClose: false
                 }).tooltipster("show");
-                break;
-            case 10:                
-                $("#toggle-date").click();
-                setTimeout(function() {
-                    $("#top-front").css("z-index", "701");
-                    detache_element($("#top-front"));
-                    $("#container-dates").tooltipster({
-                        content: 'Aqui puedes buscar tus documentos por rango de fecha...',
-                        position: "left",
-                        autoClose: false
-                    }).tooltipster("show");
-                    $("#switch-sort").tooltipster({
-                        content: '... o cambiar el orden!',
-                        position: "right",
-                        autoClose: false
-                    }).tooltipster("show");
-                }, 400);
-                break;
-            case 11:
-                var monde = profil.mondes[Core.monde];
-                var champ = monde.champs[monde.cascade[0]].label;
                 
-                $("#search-field input").focus();
+                $("#bouton-store").tooltipster({
+                    content: '... y da click en "Archivar con DINO"!',
+                    position: "bottom",
+                    autoClose: false
+                }).tooltipster("show");
+                
+            }, 400);
+        },
+        clean: function() {
+            attache_element($("#container-store"));
+            $('#container-queue').css("z-index", "");
+            $("#champs-details").tooltipster("destroy");
+            $("#bouton-store").tooltipster("destroy");
+        }
+    }, { ////////////////////// 7
+        go: function() {
+            var monde = profil.mondes[Store.monde];
+            var valeur = Store.champs[monde.cascade[0]];
+            
+            $("#menu-queue").click();
+            $("#opak").click();
+            $('#mondes-top li[data-monde="' + Store.monde + '"]').click();
+            setTimeout(function() {
+                var clicks = 0;
+                $.each(profil.mondes[Tuto.store.monde].cascade, function(i, champ) {
+                    var li;
+                    
+                    if (Tuto.store.champs[champ] !== undefined) {
+                        li = $("#liste ul").find('li[data-type="champ"][data-pk="' + Tuto.store.champs[champ] + '"]');
+                        li.click();
+                        clicks = clicks + 1;
+                    } else {
+                        if (Tuto.store.categorie != 0) {
+                            li = $("#liste ul").find('li[data-type="categorie"][data-pk="' + Tuto.store.categorie + '"]');
+                            li.click();
+                            clicks = clicks + 1;
+                        }
+                        
+                        li = li.next("ul").find('li[data-type-doc="' + Tuto.store.type_doc.pk + '"]')[0];
+                        
+                        return false;   
+                    }                    
+                });
+                
+                Tuto.final_li = li;
+                
                 setTimeout(function() {
-                    $("#search_chosen").css("z-index", "701");
-                    detache_element($("#search_chosen"));
-                    $("#search_chosen").tooltipster({
-                        content: 'Tecla el nombre del ' + champ + " para encontrarlo.",
-                        position: "left",
+                    $("#liste").css("z-index", "701");
+                    detache_element($("#liste"));
+                    li.tooltipster({
+                        content: 'Da click en tu documento para consultarlo!',
+                        position: "bottom-left",
                         autoClose: false
                     }).tooltipster("show");
-                    $("#top-front").css("margin-right", "30%");
-                }, 400);
-                break;
-            case 12:
-                $(".barre-bottom").css("z-index", "701");
-                detache_element($(".barre-bottom"));
-                break;
-        };
+                    $(".tooltipster-base").css({
+                        backgroundColor: "#56d4eb",
+                        borderColor: "#48afc2"
+                    });
+                }, clicks * 200);
+            }, 400);
+        },
+        clean: function() {
+            attache_element($("#liste"));
+            Tuto.final_li.tooltipster("destroy");
+            $("#liste").css("z-index", "");
+        }
+    }, { ////////////////////// 8
+        go: function() {},
+        clean: function() {}
+    }, {////////////////////// 9
+        go: function() {
+            $("#opak").click();
+            $("#mondes-top").css("z-index", "701");
+            detache_element($("#mondes-top"));
+            $("#mondes-top li").first().tooltipster({
+                content: 'Aqui estan tus diferentes mundos documentales' ,
+                position: "bottom-left",
+                autoClose: false
+            }).tooltipster("show");
+        },
+        clean: function() {
+            $("#mondes-top").css("z-index", "");
+            attache_element($("#mondes-top"));
+            $("#mondes-top li").first().tooltipster("destroy");
+        }
+    }, { ////////////////////// 10
+        go: function() {        
+            $("#toggle-date").click();
+            setTimeout(function() {
+                $("#top-front").css("z-index", "701");
+                detache_element($("#top-front"));
+                $("#container-dates").tooltipster({
+                    content: 'Aqui puedes buscar tus documentos por rango de fecha...',
+                    position: "left",
+                    autoClose: false
+                }).tooltipster("show");
+                $("#switch-sort").tooltipster({
+                    content: '... o cambiar el orden!',
+                    position: "right",
+                    autoClose: false
+                }).tooltipster("show");
+            }, 400);
+        },
+        clean: function() {
+            $("#toggle-date").click();
+            $("#top-front").css("z-index", "");
+            attache_element($("#top-front"));
+            $("#container-dates").tooltipster("destroy");
+            $("#switch-sort").tooltipster("destroy");
+        }
+    }, { ////////////////////// 11
+        go: function() {
+            var monde = profil.mondes[Core.monde];
+            var champ = monde.champs[monde.cascade[0]].label;
+            
+            $("#search-field input").focus();
+            setTimeout(function() {
+                $("#search_chosen").css("z-index", "701");
+                detache_element($("#search_chosen"));
+                $("#search_chosen").tooltipster({
+                    content: 'Tecla el nombre del ' + champ + " para encontrarlo.",
+                    position: "left",
+                    autoClose: false
+                }).tooltipster("show");
+                $("#top-front").css("margin-right", "30%");
+            }, 400);
+        },
+        clean: function() {
+            $("#search_chosen").css("z-index", "");
+            attache_element($("#search_chosen"));
+            $("#search_chosen").tooltipster("destroy");
+            $("#top-front").css("margin-right", "");
+        }
+    }, { ////////////////////// 12
+        go: function() {
+            $(".barre-bottom").css("z-index", "701");
+            detache_element($(".barre-bottom"));
+        },
+        clean: function() {
+            $(".barre-bottom").css("z-index", "");
+            attache_element($(".barre-bottom"));
+            $("#bucket-tuto").fadeOut();
+        }
+    }],
+    go: function() {
+        $("#etape-" + Tuto.etape).fadeIn();
+        Tuto.etapes[Tuto.etape].go();
     },
     clean: function() {
         $(".etape").fadeOut();
-        switch(Tuto.etape) {
-            case 0:
-                $('#bouton-tuto').tooltipster("destroy");
-                $('#quit-tuto').tooltipster("destroy");
-                break;
-            case 1:
-                $('#container-files-handler').css("z-index", "").tooltipster("destroy");
-                $("#container-files-handler").css("border", "");
-                break;
-            case 2:
-                $('#container-queue').css("z-index", "");
-                $("#files-list li").first().find(".bouton-edit-li").tooltipster("destroy");
-                $("#files-list li").first().find(".bouton-edit-li").css("border", "");
-                break;
-            case 3:
-                attache_element($("#mondes-store"));
-                $('#mondes-store').tooltipster("destroy");
-                $("#mondes-store").css("z-index", "");
-                break;
-            case 4:
-                attache_element($("#container-store"));
-                $('#container-store').tooltipster("destroy");
-                break;
-            case 5:
-                attache_element($("#container-store"));
-                $("#container-classification li.tooltipstered")
-                .tooltipster("destroy");
-                break;
-            case 6:
-                attache_element($("#container-store"));
-                $('#container-queue').css("z-index", "");
-                $("#champs-details").tooltipster("destroy");
-                $("#bouton-store").tooltipster("destroy");
-                break;
-            case 7:
-                attache_element($("#liste"));
-                Tuto.final_ul.tooltipster("destroy");
-                $("#liste").css("z-index", "");
-                break;
-            case 9:
-                $("#mondes-top").css("z-index", "");
-                attache_element($("#mondes-top"));
-                $("#mondes-top li").first().tooltipster("destroy");
-                break;
-            case 10:
-                $("#toggle-date").click();
-                $("#top-front").css("z-index", "");
-                attache_element($("#top-front"));
-                $("#container-dates").tooltipster("destroy");
-                $("#switch-sort").tooltipster("destroy");
-                break;
-            case 11:
-                $("#search_chosen").css("z-index", "");
-                attache_element($("#search_chosen"));
-                $("#search_chosen").tooltipster("destroy");
-                $("#top-front").css("margin-right", "");
-                break;
-            case 12:
-                $(".barre-bottom").css("z-index", "");
-                attache_element($(".barre-bottom"));
-                $("#bucket-tuto").fadeOut();
-                Tuto.etape = 0;
-                break;
-        };
+        Tuto.etapes[Tuto.etape].clean();
     },
     next: function() {
         Tuto.clean();
-        if (Tuto.etape < Tuto.etapes) {
+        if (Tuto.etape < Tuto.etapes.length) {
             Tuto.etape = Tuto.etape + 1;
             Tuto.go();
+        } else {
+            Tuto.etape = 0;
         }
     },
     prev: function() {
@@ -290,12 +323,11 @@ var Tuto = {
         Tuto.etape = Tuto.etape - 1;
         Tuto.go();
     },
-    center: function() {
-        var div = $("#etape-" + Tuto.etape);
-        div.css({
-            top: ($(window).height()/2) - (div.height()/2),
-            left: ($(window).width()/2) - (div.width()/2)
-        })
+    start: function() {
+        $("#bucket-tuto").fadeIn();
+        $("#quit-tuto").click(cancel_tuto);
+        $(".next").unbind().click(Tuto.next);
+        Tuto.go();
     }
 };
 
@@ -306,10 +338,7 @@ var bootstrap_tuto = function() {
         statusCode: {
             200: function(tuto) {
                 $("body").append(tuto);
-                $("#bucket-tuto").fadeIn();
-                $("#quit-tuto").click(cancel_tuto);
-                $(".next").unbind().click(Tuto.next);
-                Tuto.go();
+                Tuto.start();
             }
         }
     })

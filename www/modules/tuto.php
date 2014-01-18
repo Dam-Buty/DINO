@@ -22,7 +22,7 @@
     <div class="etape" id="etape-4">
         <h1>Clasificacion de documento</h1>
         <p>En el mundo <b class="tuto-monde"></b>, los documentos estan clasificados por <b class="tuto-pluriel"></b>.</p>
-        <p>Si es tu primera vez en <b>DINO</b>, vas a tener que agregar tu primer <b class="tuto-champ"></b>.</p>
+        <p>Si es tu primera vez en <b>DINO</b>, tienes que agregar tu primer <b class="tuto-champ"></b>.</p>
     </div>
     <div class="etape" id="etape-5">
         <h1>Clasificacion de documento</h1>
@@ -41,7 +41,7 @@
     <div class="etape" id="etape-8">
         <h1>Tu primer documento</h1>
         <p>Muy bien, ahora sabes como archivar y consultar documentos en <b>DINO</b>!</p>
-        <p>Te voy a ensenar las tecnicas avanzadas de busqueda, y luego seras un verdadero <b>Experto Documental</b> :)</p>
+        <p>Te voy a ensenar las tecnicas avanzadas de busqueda, para convertirte en un verdadero <b>Experto Documental</b> :)</p>
         <div class="boutons next">Busqueda avanzada</div>
     </div>
     <div class="etape" id="etape-9">
@@ -66,7 +66,7 @@
     <div class="etape" id="etape-12">
         <h1>Utilidades</h1>
         <p>Ya sabes todo lo que necesitas para archivar, organizar y consultar los <b>documentos</b> de tu empresa en tu <b>archivero digital</b>!</p>
-        <p>Algunas opciones mas, y te dejo con <b>DINO</b> :</p>
+        <p>Algunos tips mas, y te dejo con <b>DINO</b> :</p>
         <p><img src="img/tuto_20.png"/> : para retomar el tutorial</p>
         <p><img src="img/printer_20.png"/> : para configurar tu impresora virtual (opcional)</p>
         <p><img src="img/mail_20.png"/> : para cambiar tu direccion de correo electronico</p>
@@ -75,6 +75,6 @@
         <div class="boutons next">Hasta luego!</div>
     </div>
     <div id="opak-tuto">
-        <div class="boutons" id="quit-tuto">Dejar el tutorial</div>        
+        <div class="boutons" id="quit-tuto"><img src="img/exit_50.png"/></div>        
     </div>
 </div>

@@ -71,12 +71,20 @@ var large_search = function() {
     var search = select.next("div");
     var espace;
     
+    if ($("#container-dates").is(":visible")) {
+        $("#toggle-date").click();
+    }
+    
     if (select.attr("data-state") == "closed") {
         espace = $("#toggle-date").offset().left - ($('#mondes-top li:last-child').offset().left + $('#mondes-top li:last-child').outerWidth()) - 10;
         
         search.animate({
             width: search.outerWidth() + espace 
+        }, {
+            duration: 100
         });
+        
+
         
         select.attr("data-state", "open");
     }
@@ -87,9 +95,15 @@ var small_search = function() {
     var select = $("#search");
     var search = select.next("div");
     
+    if ($("#container-dates").is(":visible")) {
+        $("#toggle-date").click();
+    }
+    
     if (select.val() == null && select.attr("data-state") == "open") {
         search.animate({
             width: "30%" 
+        }, {
+            duration: 100
         })
         select.attr("data-state", "closed");
     }
@@ -524,7 +538,7 @@ var del_document = function() {
     var li = img.closest("li");
     var filename = li.attr("data-filename");
 
-    var message = "Este documento esta a punto de ser declasificado.<br/><b>No sera borrado del sistema!</b><br/>Lo encontraras en tu <b>fila de entrada</b>, donde podras borrarlo definitivamente o clasificarlo otra vez.<br/>Si existe una revision mas antigua de este documento, esta version sera restaurada.";
+    var message = "Este documento esta a punto de ser declasificado.<br/><b>No sera borrado del sistema!</b><br/>Lo encontraras en tu <b>fila de espera</b>, donde podras borrarlo definitivamente o clasificarlo otra vez.<br/>Si existe una revision mas antigua de este documento, esta version sera restaurada.";
     
     var title = "Declasificacion de documento";
     

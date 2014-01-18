@@ -515,18 +515,18 @@ var toggle_new_user = function() {
     // Affecte les évènements des champs
     $("#new-login").unbind();
     $("#new-login").focus(tip_login);
-    $("#new-login").keyup(check_login);
+    $("#new-login").keyup(check_login).change(check_login);
     
     $("#new-pass").unbind();
     $("#new-pass").focus(tip_pass);
-    $("#new-pass").keyup(check_pass);
+    $("#new-pass").keyup(check_pass).change(check_pass);
     
     $("#new-pass2").unbind();
-    $("#new-pass2").keyup(check_pass2);
+    $("#new-pass2").keyup(check_pass2).change(check_pass2);
     
     $("#new-mail").unbind();
     $("#new-mail").focus(tip_mail);
-    $("#new-mail").keyup(check_mail);
+    $("#new-mail").keyup(check_mail).change(check_mail);
     
     if ($("#container-new-user").is(":visible")) {
         $("#container-new-user").slideUp();

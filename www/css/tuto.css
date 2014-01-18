@@ -136,5 +136,8 @@
     left: 10px;
     background-color: #56d4eb;
     
+    width: 70px;
+    height: 70px;
+    
     z-index: 705;
 }
