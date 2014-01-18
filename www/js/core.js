@@ -540,7 +540,7 @@ var del_document = function() {
 
     var message = "Este documento esta a punto de ser declasificado.<br/><b>No sera borrado del sistema!</b><br/>Lo encontraras en tu <b>fila de espera</b>, donde podras borrarlo definitivamente o clasificarlo otra vez.<br/>Si existe una revision mas antigua de este documento, esta version sera restaurada.";
     
-    var title = "Declasificacion de documento";
+    var title = "Declasificacion de documento"; 
     
     var bouton = "Confirmar (<i>Declasificar documento</i>)";
 
