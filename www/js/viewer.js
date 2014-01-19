@@ -5,15 +5,13 @@ var Image = {
     r: 0  
 };
 
-$(".document-img").ready(function() {
-    setTimeout(function(){
-        var img = $(".document-img");    
-        Image.x = img.width();
-        Image.y = img.height();
-        Image.r = Image.x / Image.y;
-        
-        resize_img();
-    }, 400);
+$(".document-img").load(function() {
+    var img = $(".document-img")[0];    
+    Image.x = img.naturalWidth;
+    Image.y = img.naturalHeight;
+    Image.r = Image.x / Image.y;
+    
+    resize_img();
 }); 
 
 $(window).resize(function() {

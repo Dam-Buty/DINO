@@ -7,6 +7,7 @@
         <div id="container-files-handler">
             <input type="file" id="files-handler" name="files-handler" multiple="multiple">
         </div>
+        <div id="del-all">Borrar todo</div>
         <div id="div-list"><ul id="files-list"></ul></div>
     </div>
 </div>
@@ -14,6 +15,7 @@
 <div id="popup-store" data-document="">
     <div id="container-nav">
         <div id="prev-store" class="nav-store"></div>
+        <img id="del-doc-store" src="img/del_back_30.png" title="Borrar documento"/>
         <div id="next-store" class="nav-store"></div>
     </div>
     <div id="nom-doc-store"></div>

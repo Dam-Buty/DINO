@@ -17,7 +17,7 @@ if (isset($_SESSION["niveau"])) {
         WHERE 
             `fk_client` = :client
             AND `niveau_document` IS NULL
-        ORDER BY `display_document` ASC;
+        ORDER BY `display_document` ASC
             ;";
             
     $params = [

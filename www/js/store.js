@@ -358,7 +358,6 @@ var reload_champs = function() {
             
             // Types
             $.each(categorie.types, function(k, type) {
-                console.log(type.label + " : " + type.detail);
                 if (type.detail == 1) {
                     asterisk = " *";
                 } else {
@@ -456,8 +455,10 @@ var change_document = function(document) {
     }
     
     $("#container-details").slideUp();
+    $("#detail-store").val("");
     
-    reload_champs();
+    $('li.store-type[data-selected="1"]').attr("data-selected", 0);
+    // reload_champs();
 };
 
 var cancel_store = function() {
@@ -475,12 +476,25 @@ var cancel_store = function() {
 var archive_document = function() {
     var document = queue[$("#popup-store").attr("data-document")];
     var store = document.store;
+    var monde = profil.mondes[store.monde];
+    var champ = monde.champs[store.last_champ];
+    var type;
     
     // On stocke la date et le détail
     store.date = $("#date-store").val();
     store.type_doc.detail = $("#detail-store").val();
     $("#detail-store").val("");
     
+    // on ajoute le détail au profil s'il n'y est pas encore
+    if (store.categorie == 0 || store.categorie == "") {
+        type = champ.types[store.type_doc.pk];
+    } else {
+        type = champ.categories[store.categorie].types[store.type_doc.pk];
+    }
+    
+    if (type.details.indexOf(store.type_doc.detail) == -1) {
+        type.details.push(store.type_doc.detail);
+    }
     
     $.ajax({
         url: "do/doCheckRevision.php",
@@ -495,16 +509,7 @@ var archive_document = function() {
             maxchamp: store.last_champ
         },
         statusCode: {
-            200: function() {
-                var champ = profil.mondes[store.monde].champs[store.last_champ];
-                var type;
-                
-                if (store.categorie == 0 || store.categorie == "") {
-                    type = champ.types[store.type_doc.pk];
-                } else {
-                    type = champ.categories[store.categorie].types[store.type_doc.pk];
-                }
-                
+            200: function() {                
                 message = "Ya existe un <b>" + type.label + " " + store.type_doc.detail + "</b> por el <b>" + champ.label + " <u>" + champ.liste[store.champs[store.last_champ]] + "</u></b>. Si picas <i>Confirmar</i>, se creara una nueva <b>revision</b> de este documento.";
                 
                 var callback = function() {
@@ -549,42 +554,19 @@ var _archive_document = function(document, store) {
                 Store.champs = store.champs;
                 Store.last_champ = store.last_champ;
                 
-                var new_position;
-                
                 // une fois terminé, on élimine de la queue
                 // et on envoie le prochain document dans la queue
                 var position = $("#popup-store").attr("data-document");
                 
-                // Si c'est le seul document de la queue on ferme le store
-                if (queue.length == 1) {
-                    queue.length = 0;
-                    refresh_liste();
-                    cancel_store();
-                } else {
-                    if (position == queue.length - 1) {
-                        new_position = queue.length - 2;
-                    } else {
-                        new_position = position;
-                    }
-                    
-                    queue.splice(position, 1);
-                    refresh_liste();
-                    $('#mondes-top li[data-selected="1"]').click();
-                    
-                    if ($("#popup-store").is(":visible")) {
-                        change_document(new_position);
-                    } else {
-                        $("#container-details").detach().appendTo($("#container-store")).hide();
-                        dialogue.close();
-                    }
-                }
+                avance_store(position);
                 
                 if (Tuto.etape == 6) {
                     Tuto.store = store;
+                    if ($("#popup-store").is(":visible")) {
+                        cancel_store();
+                    }
                     Tuto.next();
-                }
-                
-                
+                }                
             },
             403: function() {
                 window.location.replace("index.php");
@@ -595,6 +577,34 @@ var _archive_document = function(document, store) {
         }
     });
 }
+
+var avance_store = function(position) {
+    var new_position;
+    
+    // Si c'est le seul document de la queue on ferme le store
+    if (queue.length == 1) {
+        queue.length = 0;
+        refresh_liste();
+        cancel_store();
+    } else {
+        if (position == queue.length - 1) {
+            new_position = queue.length - 2;
+        } else {
+            new_position = position;
+        }
+        
+        queue.splice(position, 1);
+        refresh_liste();
+        $('#mondes-top li[data-selected="1"]').click();
+        
+        if ($("#popup-store").is(":visible")) {
+            change_document(new_position);
+        } else {
+            $("#container-details").detach().appendTo($("#container-store")).hide();
+            dialogue.close();
+        }
+    }
+};
 
 var _store_document = function(position) {
     var li = queue[position].li;

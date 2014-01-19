@@ -279,19 +279,15 @@ var affiche_document = function() {
     var li = span.closest("li");
     var filename = li.attr("data-filename");
     var display = li.attr("data-display");
-    var extension = filename.split(".").pop();
-    var download = "";
+    var extension = filename.split(".").pop().toLowerCase();
+    var download = "&download";
     
-    if (extension in doc_extensions) {
-        download = "&download";
+    if (extension in img_extensions) {
+        download = "";
     }
     
-    if (extension in vid_extensions) {
-        download = "&download";
-    }
-    
-    if (!extension in img_extensions && !extension in pdf_extensions) {
-        download = "&download";
+    if (extension in pdf_extensions) {
+        download = "";
     }
     
     $("#viewer-global").attr({
@@ -488,7 +484,7 @@ var construit_table = function() {
                     current_ul = stack_ul[stack_ul.length - 1]; 
                     var champ_parent = monde.champs[cascade[stack_champs.length - 1]];
                     var type, img_revisions, img_del;
-                    var extension = ligne.filename.split(".").pop();
+                    var extension = ligne.filename.split(".").pop().toLowerCase();
                     
                     if (categorie == 0) {
                         type = champ_parent.types[ligne.type].label;

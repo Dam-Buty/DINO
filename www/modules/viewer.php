@@ -32,12 +32,12 @@ if (isset($_SESSION["user"])) {
         $lien = "../do/doUnpack.php?document=" . $filename . "&display=" . $display . "&download";
         
         $img_extensions =  [
-            "jpg" => 1,
-            "png" => 1,
-            "gif" => 1,
-            "jpeg" => 1,
-            "psd" => 1,
-            "ai" => 1
+            "jpg",
+            "png",
+            "gif",
+            "jpeg",
+            "psd",
+            "ai"
         ];
 
         if (in_array($extension, $img_extensions)) {

@@ -197,7 +197,7 @@ var anime_queue = function() {
 }
 
 var refresh_liste = function() {
-    queue.sort(compare);
+    // queue.sort(compare);
     
     $("#files-list li").detach();
     
@@ -308,11 +308,34 @@ var handle_uploads = function() {
             });
         }
     });
-}
+};
 
 var remove_document = function() {
     var position = $(this).closest("li").attr("data-position");
+    
+    confirm_remove_document(position);    
+};
+
+var remove_document_store = function() {
+    var position = $("#popup-store").attr("data-document");
+    
+    confirm_remove_document(position);    
+};
+
+var confirm_remove_document = function(position) {
     var list_element = queue[position];
+    
+    var titre = "Supresion de documento";
+    var message = "Estas seguro de querer borrar definitivamente el documento? Es una accion <b>irreversible</b>!";
+    var bouton = "Confirmar (<i>borrar el documento</i>)";
+    
+    popup_confirmation(message, titre, bouton, function() {
+        _remove_document(position);
+    });
+};
+
+var _remove_document = function(position, callback) {
+    list_element = queue[position];
     
     $.ajax({
         url: "do/doRemoveFromQueue.php",
@@ -322,8 +345,16 @@ var remove_document = function() {
         },
         statusCode: {
             204: function() {
-                queue.splice(position, 1);
-                refresh_liste();
+                if ($("#popup-store").is(":visible")) {
+                    avance_store(position);
+                } else {
+                    queue.splice(position, 1);
+                    refresh_liste();
+                    
+                    if (typeof callback === "function") {
+                        callback();
+                    }
+                }
             },
             403: function() {
                 window.location.replace("index.php");
@@ -333,6 +364,23 @@ var remove_document = function() {
             }
         }
     });
+};
+
+var remove_all_documents = function() {
+    var titre = "Supresion de " + queue.length + " documentos";
+    var message = "<p>Estas a punto de borrar definitivamente los " + queue.length + " documentos de la fila de espera.</p><p>Te recuerdo que esta operacion es <b>irreversible</b>.</p>";
+    var bouton = "Confirmar (<i>borrar " + queue.length + " documento</i>)";
+    
+    popup_confirmation(message, titre, bouton, function() {
+        $("#files-list img").hide();
+        _remove_all_documents();
+    });
+};
+
+var _remove_all_documents = function() {
+    if (queue.length > 0) {
+        _remove_document(0, _remove_all_documents);
+    }
 }
 
 var set_li_status = function(li, status) {
@@ -369,7 +417,7 @@ var set_li_status = function(li, status) {
 var create_li = function(name, size, user, date) {
     var li = $("#modele-li-queue").clone();
     var taille;
-    var extension = name.split(".").pop();
+    var extension = name.split(".").pop().toLowerCase();
     var type = "";
     
     if (extension in pdf_extensions) {
@@ -434,7 +482,7 @@ var handle_files = function(files) {
     
     $.each(files, function() {
         var file_tab = this.name.split(".");
-        var extension = file_tab[file_tab.length - 1];
+        var extension = file_tab[file_tab.length - 1].toLowerCase();
         
         // Si l'extension est légale, on pousse le fichier dans la queue
 //        if (extension.toLowerCase() in allowed_extensions) {

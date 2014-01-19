@@ -74,7 +74,19 @@ var bootstrap = function() {
                 $("#date-store").datepicker({dateFormat: "dd/mm/yy"});
                 $("#date-store").datepicker('setDate', new Date());
                 
+                $("#container-details input").keydown(function(e) {
+                    var code = e.keyCode ? e.keyCode : e.which;
+                        
+                    if (code == 13) {
+                        archive_document();
+                    }
+                });
+                
                 $("#container-viewer-global").draggable({ handle: "div" }).resizable();
+        
+                $("#del-doc-store").click(remove_document_store);
+                
+                $("#del-all").click(remove_all_documents);
                 
                 // On installe le drag'n'drop
                 $("#zone-dnd").on("dragenter", dragenter_files);

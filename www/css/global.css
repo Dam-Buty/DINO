@@ -897,6 +897,24 @@ html, body {
     background-color: #9b9b9b;
 }
 
+#del-all {
+    border-top: 5px solid #FFF;
+    
+    background-color: #9B9B9B;
+    color: white;
+    
+    text-transform: uppercase;
+    text-align: right;
+    font-size: 0.8em;
+    font-weight: bold;
+    
+    cursor: pointer;
+}
+
+#del-all:hover {
+    color: #646462;
+}
+
 /*#####################################
 #
 #        Popup classification
@@ -929,6 +947,8 @@ html, body {
     position: relative;
     width: 46%;
     margin-top: -40px;
+    
+    text-align: center;
 }
 
 .nav-store {
@@ -957,6 +977,15 @@ html, body {
 
 #next-store:hover {
     background-image: url(../img/next_hover_30.png);
+}
+
+#del-doc-store {
+    position: absolute;
+    top: 0;
+    left: 48%;
+    width: 4%;
+    
+    cursor: pointer;
 }
 
 #viewer-store {
