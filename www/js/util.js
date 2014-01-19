@@ -99,3 +99,62 @@ var tip_champ = function(field, tip, ignore_KO) {
         }, delay);
     }
 };
+
+var debug_liste = function() {
+    var stack = [];
+    var monde = profil.mondes[Core.monde];
+    var categorie = 0;
+    var label_categorie = "";
+    var niveau = 0;
+    var label;
+    
+    $.each(Core.liste, function(i, ligne) {
+        switch(ligne.type) {
+            case "champ":
+                label = monde.champs[monde.cascade[ligne.niveau]].liste[ligne.pk];
+                categorie = 0;
+                label_categorie = "";
+                
+                niveau = ligne.niveau;
+                if (ligne.niveau + 1 == stack.length) {
+                    stack[ligne.niveau] = label;
+                } else {
+                    if (ligne.niveau + 1 > stack.length) {
+                        stack.push(label);
+                    } else {
+                        stack.length = ligne.niveau + 1;
+                        stack[ligne.niveau] = label;
+                    }
+                }
+                break;
+            case "categorie":
+                categorie = ligne.pk;
+                label_categorie = monde.champs[monde.cascade[ligne.niveau - 1]].categories[ligne.pk].label;
+                break;
+            default:
+                var type, retour;
+                
+                if (categorie == 0) {
+                    type = monde.champs[monde.cascade[niveau]].types[ligne.type];
+                } else {
+                    type = monde.champs[monde.cascade[niveau]].categories[categorie].types[ligne.type];
+                }
+                
+                label = type.label;
+                
+                retour = "";
+                
+                $.each(stack, function(i, champ) {
+                   retour += "__" + champ;
+                });
+                
+                if (categorie != 0) {
+                    retour += "__" + label_categorie;
+                }
+                
+                retour += "__" + label;
+                retour = stack.length + " : " + retour;
+                console.log(retour);
+        }
+    })  
+};

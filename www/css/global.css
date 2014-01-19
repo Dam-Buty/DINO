@@ -285,12 +285,6 @@ html, body {
     margin-right: 1%;
 }
 
-#switch-sort {
-    float: right;
-    padding-right: 1%;
-    padding-top: 16px;
-}
-
 .switchy-bar[data-tri="ASC"] {
     background-image: url(../img/az.png);
 }
@@ -712,9 +706,25 @@ html, body {
 #liste li[data-type="document"] {
     background-color: #cecece;
     color: #5b5b5b;
-    background-image: url(../img/document_20.png);
+    background-image: url(../img/queue_xxx_20.png);
     height: 25px;
     font-size: 0.8em;   
+}
+
+#liste li[data-filetype="doc"] {
+    background-image: url(../img/queue_doc_20.png);
+}
+
+#liste li[data-filetype="img"] {
+    background-image: url(../img/queue_img_20.png);
+}
+
+#liste li[data-filetype="pdf"] {
+    background-image: url(../img/queue_pdf_20.png);
+}
+
+#liste li[data-filetype="vid"] {
+    background-image: url(../img/queue_vid_20.png);
 }
 
 #liste li[data-type="document"] span {
@@ -838,7 +848,7 @@ html, body {
 }
 
 #tiroir-queue .filename {
-    background-image: url(../img/document_queue_20.png);
+    background-image: url(../img/queue_xxx_20.png);
     background-repeat: no-repeat;
     
     padding-left: 25px;
@@ -848,6 +858,22 @@ html, body {
     
     white-space: nowrap;
     overflow: hidden;
+}
+
+#tiroir-queue li[data-filetype="doc"] .filename {
+    background-image: url(../img/queue_doc_20.png);
+}
+
+#tiroir-queue li[data-filetype="img"] .filename {
+    background-image: url(../img/queue_img_20.png);
+}
+
+#tiroir-queue li[data-filetype="pdf"] .filename {
+    background-image: url(../img/queue_pdf_20.png);
+}
+
+#tiroir-queue li[data-filetype="vid"] .filename {
+    background-image: url(../img/queue_vid_20.png);
 }
 
 #tiroir-queue .progressbar {

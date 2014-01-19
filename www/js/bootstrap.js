@@ -70,10 +70,7 @@ var bootstrap = function() {
             .done(function(queue) {
                 $("#front").append(queue);
                 
-                // On style les éléments
-                $("#switch-sort select").switchy().change(toggle_tri);
-                $("#switch-sort").find(".switchy-bar").attr("data-tri", "ASC");
-                
+                // On style les éléments                
                 $("#date-store").datepicker({dateFormat: "dd/mm/yy"});
                 $("#date-store").datepicker('setDate', new Date());
                 

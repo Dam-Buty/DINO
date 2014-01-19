@@ -47,6 +47,7 @@ if (isset($_SESSION["niveau"])) {
     $query = "
         SELECT 
             `d`.`filename_document` AS `filename`, 
+            `d`.`display_document` AS `display`,
             DATE_FORMAT(`d`.`date_document`, '%d/%m/%Y') AS `date`,
             `td`.`fk_categorie_doc` AS `categorie`,
             `td`.`pk_type_doc` AS `type`,
@@ -232,19 +233,7 @@ $query .= "
         # - Par catégorie ASC, type ASC, détail ASC
         ORDER BY ( 
             SELECT GROUP_CONCAT( 
-                CONCAT_WS (
-                    '%%', 
-                    `label_valeur_champ`, 
-                    (
-                    ";
-                    
-        if ($_POST["tri"] == "DESC") {
-            $query .= "100 - ";
-        }
-                    
-         $query .= "COUNT(`label_valeur_champ`))
-                )
-                SEPARATOR '||'
+                `label_valeur_champ` SEPARATOR '||'
              )
             FROM 
                 `valeur_champ` AS `vc4`,
@@ -261,7 +250,7 @@ $query .= "
                 
                 AND `dvc4`.`fk_document` = `d`.`filename_document`
             ORDER BY `vc4`.`fk_champ`
-        ) " . $tri_whitelist[$_POST["tri"]] . ", (
+        ) ASC, (
                 SELECT `label_categorie_doc`
                 FROM `categorie_doc` AS `cd`
                 WHERE 
@@ -316,6 +305,7 @@ $query .= "
             $document = [
                 "type" => $row["type"],
                 "filename" => $row["filename"],
+                "display" => $row["display"],
                 "date" => $row["date"],
                 "detail" => $row["detail"],
                 "revision" => $row["revision"]

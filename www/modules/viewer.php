@@ -3,10 +3,13 @@ session_start();
 
 if (isset($_SESSION["user"])) {
     $filename = $_GET["document"];
+    $display = $_GET["display"];
     $extension = pathinfo($filename, PATHINFO_EXTENSION);
     
     if ($extension == "pdf") {
-        header("Location: ../pdfjs/viewer/viewer.html?file=" . urlencode("../../do/doUnpack.php?document=" . $filename));
+#        echo $display;
+#        echo urlencode("../../do/doUnpack.php?document=" . $filename . "&display=" . $display);
+        header("Location: ../pdfjs/viewer/viewer.html?file=" . urlencode("../../do/doUnpack.php?document=" . $filename . "&display=" . $display));
     } else {
     ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
@@ -26,10 +29,10 @@ if (isset($_SESSION["user"])) {
 </head>
 <body>
     <?php
-        $lien = "../do/doUnpack.php?document=" . $filename . "&download";
+        $lien = "../do/doUnpack.php?document=" . $filename . "&display=" . $display . "&download";
         
         if ($extension == "jpg" || $extension == "gif" || $extension == "png") {
-            $image = "../do/doUnpack.php?document=" . $filename;
+            $image = "../do/doUnpack.php?document=" . $filename . "&display=" . $display;
         ?>
                 <a href="<?php echo $lien; ?>">
                     <img class="document-img" src="<?php echo $image; ?>"/>
@@ -43,7 +46,7 @@ if (isset($_SESSION["user"])) {
                     <img class="nopreview" src="<?php echo $image; ?>"/>
                     <p>
                         No hay previsualisacion por los archivos de tipo <b><?php echo $extension; ?></b>.<br/><br/>
-                        Puedes descargar el archivo <pre><b><?php echo $filename; ?></b></pre> dando click en el DINO.
+                        Puedes descargar el archivo <pre><b><?php echo $display; ?></b></pre> dando click en el DINO.
                     </p>
                 </a>
     

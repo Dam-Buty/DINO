@@ -53,7 +53,6 @@
     <div class="etape" id="etape-10">
         <h1>Busqueda por fecha y clasificacion alfabetica</h1>
         <p>Si necesitas documentos de una fecha especifica, puedes utilizar el slider para seleccionar un <b>rango de fecha</b>.</p>
-        <p>El boton "<b>a-z</b>" te permite aplicar el orden alfabetico ascendiente o descendiente.</p>
         <div class="boutons next">Siguiente...</div>
     </div>
     <div class="etape" id="etape-11">

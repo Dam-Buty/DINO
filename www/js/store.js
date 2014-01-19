@@ -311,6 +311,8 @@ var reload_champs = function() {
         $.each(profil.mondes[monde].champs[cascade[last_i]].types, function(j, type) {
             if (type.detail == 1) {
                 asterisk = " *";
+            } else {
+                asterisk = "";
             }
             
             $("#container-classification").append(
@@ -329,8 +331,11 @@ var reload_champs = function() {
             
             // Types
             $.each(categorie.types, function(k, type) {
+                console.log(type.label + " : " + type.detail);
                 if (type.detail == 1) {
                     asterisk = " *";
+                } else {
+                    asterisk = "";
                 }
                 ul.append(
                     $("<li></li>")
@@ -397,7 +402,7 @@ var change_document = function(document) {
     
     $("#viewer-store").attr({
         "data-document": queue[document].li.attr("data-position"),
-        src: "modules/viewer.php?document=" + queue[document].filename
+        src: "modules/viewer.php?document=" + queue[document].filename + "&display=" + queue[document].displayname
     });
        
     // On met le nom du fichier
@@ -611,7 +616,7 @@ var _store_document = function(position) {
     
     $("#viewer-store").attr({
         "data-document": li.attr("data-position"),
-        src: "modules/viewer.php?document=" + queue[li.attr("data-position")].filename
+        src: "modules/viewer.php?document=" + queue[li.attr("data-position")].filename + "&display=" + queue[li.attr("data-position")].displayname
     });
     
     // On met le nom du fichier

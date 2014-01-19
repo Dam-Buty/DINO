@@ -16,10 +16,56 @@ var allowed_extensions = {
     "mobi": 1
 }
 
+var pdf_extensions =  {
+    "pdf": 1,
+    "ps": 1,
+    "eps": 1
+};
+
 var img_extensions =  {
     "jpg": 1,
     "png": 1,
-    "gif": 1
+    "gif": 1,
+    "jpeg": 1,
+    "psd": 1,
+    "ai": 1
+};
+
+var doc_extensions = {
+    "doc": 1,
+    "dot": 1,
+    "odt": 1,
+    "ott": 1,
+    "sxw": 1,
+    "stw": 1,
+    "docx": 1,
+    "dotx": 1,
+    "xls": 1,
+    "xlt": 1,
+    "ods": 1,
+    "ots": 1,
+    "sxc": 1,
+    "stc": 1,
+    "xlsx": 1,
+    "xltx": 1,
+    "csv": 1,
+    "odp": 1,
+    "otp": 1,
+    "sxi": 1,
+    "sti": 1,
+    "pps": 1,
+    "ppt": 1,
+    "ppsx": 1,
+    "pptx": 1
+};
+
+var vid_extensions = {
+    "mp4": 1,
+    "avi": 1,
+    "wmv": 1,
+    "mov": 1,
+    "divx": 1,
+    "mkv": 1
 };
 
 var queue = [];
@@ -323,6 +369,28 @@ var set_li_status = function(li, status) {
 var create_li = function(name, size, user, date) {
     var li = $("#modele-li-queue").clone();
     var taille;
+    var extension = name.split(".").pop();
+    var type = "";
+    
+    if (extension in pdf_extensions) {
+        type = "pdf";
+    }
+    
+    if (extension in doc_extensions) {
+        type = "doc";
+    }
+    
+    if (extension in img_extensions) {
+        type = "img";
+    }
+    
+    if (extension in vid_extensions) {
+        type = "vid";
+    }
+    
+    if (type == "") {
+        type ="xxx";
+    }
     
     li.find(".filename").text(name);
     
@@ -348,7 +416,8 @@ var create_li = function(name, size, user, date) {
     
     li.attr({
         "data-position": queue.length,
-        id: ""
+        id: "",
+        "data-filetype": type
     })
     .on("dragstart", dragstart)
     .on("dragend", dragend);
@@ -368,10 +437,35 @@ var handle_files = function(files) {
         var extension = file_tab[file_tab.length - 1];
         
         // Si l'extension est légale, on pousse le fichier dans la queue
-        if (extension.toLowerCase() in allowed_extensions) {
-            var document_li = set_li_status(create_li(this.name, this.size, "usted", "hoy"), -1);
-            queue.push({ document: this, status: -1, size: this.size, li: document_li, filename: "", displayname: this.name, user: "usted", date: "hoy", store: { date: "", monde: "", last_champ: "", champs: { } , categorie: "", type_doc: { } } });
-        }
+//        if (extension.toLowerCase() in allowed_extensions) {
+        var document_li = set_li_status(
+            create_li(
+                this.name, 
+                this.size, 
+                "usted", 
+                "hoy"
+            ), -1
+        );
+        
+        queue.push({ 
+            document: this, 
+            status: -1, 
+            size: this.size, 
+            li: document_li, 
+            filename: "", 
+            displayname: this.name, 
+            user: "usted", 
+            date: "hoy", 
+            store: { 
+                date: "", 
+                monde: "", 
+                last_champ: "", 
+                champs: { } , 
+                categorie: "", 
+                type_doc: { } 
+            } 
+        });
+//        }
     });
     
     refresh_liste();

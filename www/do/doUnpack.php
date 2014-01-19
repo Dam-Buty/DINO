@@ -8,6 +8,7 @@ if (isset($_SESSION["niveau"])) {
     
     $client = $_SESSION["client"];
     $document = $_GET["document"];
+    $display = $_GET["display"];
     $extension = pathinfo($document, PATHINFO_EXTENSION);
     $clef = $_SESSION["clef"];
     
@@ -52,21 +53,21 @@ if (isset($_SESSION["niveau"])) {
             switch ($extension) {
                 case "pdf":
                     header("Content-type: application/pdf");
-                    header("Content-Disposition: inline; filename=" . $document);
+                    header("Content-Disposition: inline; filename=" . $display);
                     break;
                 case "jpg":
                 case "png":
                 case "gif":
                     header("Content-type: image/jpg");
                     if (isset($_GET["download"])) {
-                        header("Content-Disposition: attachment; filename=" . $document);
+                        header("Content-Disposition: attachment; filename=" . $display);
                     }else {
-                        header("Content-Disposition: inline; filename=" . $document);
+                        header("Content-Disposition: inline; filename=" . $display);
                     }
                     break;
                 default:
                     header("Content-type: application/octet-stream");
-                    header("Content-Disposition: attachment; filename=" . $document);
+                    header("Content-Disposition: attachment; filename=" . $display);
                     break;
             }
             

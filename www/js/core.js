@@ -233,7 +233,6 @@ var charge_documents = function() {
             monde: Core.monde,
             recherche: Core.recherche,
             champ_droits: profil.mondes[Core.monde].cascade[0],
-            tri: $("#switch-sort select").val(),
             limit: Core.limit,
             dates: dates,
             all: profil.mondes[Core.monde].all,
@@ -274,10 +273,11 @@ var affiche_document = function() {
     var span = $(this);
     var li = span.closest("li");
     var filename = li.attr("data-filename");
+    var display = li.attr("data-display");
     
     $("#viewer-global").attr({
         "data-document": li.attr("data-position"),
-        src: "modules/viewer.php?document=" + filename
+        src: "modules/viewer.php?document=" + filename + "&display=" + display
     });
     
     $("#container-viewer-global").fadeIn();
@@ -466,6 +466,7 @@ var construit_table = function() {
                     current_ul = stack_ul[stack_ul.length - 1]; 
                     var champ_parent = monde.champs[cascade[stack_champs.length - 1]];
                     var type, img_revisions, img_del;
+                    var extension = ligne.filename.split(".").pop();
                     
                     if (categorie == 0) {
                         type = champ_parent.types[ligne.type].label;
@@ -500,11 +501,35 @@ var construit_table = function() {
                         img_del = "";
                     }
                     
+                    var filetype = "";
+    
+                    if (extension in pdf_extensions) {
+                        filetype = "pdf";
+                    }
+                    
+                    if (extension in doc_extensions) {
+                        filetype = "doc";
+                    }
+                    
+                    if (extension in img_extensions) {
+                        filetype = "img";
+                    }
+                    
+                    if (extension in vid_extensions) {
+                        filetype = "vid";
+                    }
+                    
+                    if (type == "") {
+                        filetype ="xxx";
+                    }                    
+                    
                     li = $("<li></li>")
                     .attr({
                         "data-type": "document",
                         "data-stack": stack_champs,
                         "data-filename": ligne.filename,
+                        "data-filetype": filetype,
+                        "data-display": ligne.display,
                         "data-categorie": categorie,
                         "data-type-doc": ligne.type,
                         "data-detail": ligne.detail,

@@ -66,12 +66,6 @@ if (isset($_SESSION)) {
 
     <div id="top-front" class="barre-top">
         <select class="busquedor" type="text" id="search" multiple="multiple" data-placeholder="Buscar en este mundo..." data-state="closed"></select>
-        <div id="switch-sort">
-            <select> <!-- list-sort -->
-                <option value="ASC">A-Z</option>
-                <option value="DESC">Z-A</option>
-            </select>
-        </div>
         <div id="toggle-date"></div>
         <ul class="list-mondes" id="mondes-top"></ul>
         <div id="container-dates">

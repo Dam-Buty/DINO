@@ -253,11 +253,6 @@ var Tuto = {
                     position: "left",
                     autoClose: false
                 }).tooltipster("show");
-                $("#switch-sort").tooltipster({
-                    content: '... o cambiar el orden!',
-                    position: "right",
-                    autoClose: false
-                }).tooltipster("show");
             }, 400);
         },
         clean: function() {
@@ -265,7 +260,6 @@ var Tuto = {
             $("#top-front").css("z-index", "");
             attache_element($("#top-front"));
             $("#container-dates").tooltipster("destroy");
-            $("#switch-sort").tooltipster("destroy");
         }
     }, { ////////////////////// 11
         go: function() {
