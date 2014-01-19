@@ -267,6 +267,11 @@ function arraysEqual(arr1, arr2) {
 var cancel_view = function() {
     $("#opak").fadeOut();
     $("#container-viewer-global").fadeOut();
+    
+    $("#viewer-global").attr({
+        "data-document": "none",
+        src: ""
+    });
 };
 
 var affiche_document = function() {
@@ -274,17 +279,33 @@ var affiche_document = function() {
     var li = span.closest("li");
     var filename = li.attr("data-filename");
     var display = li.attr("data-display");
+    var extension = filename.split(".").pop();
+    var download = "";
+    
+    if (extension in doc_extensions) {
+        download = "&download";
+    }
+    
+    if (extension in vid_extensions) {
+        download = "&download";
+    }
+    
+    if (!extension in img_extensions && !extension in pdf_extensions) {
+        download = "&download";
+    }
     
     $("#viewer-global").attr({
         "data-document": li.attr("data-position"),
-        src: "modules/viewer.php?document=" + filename + "&display=" + display
+        src: "modules/viewer.php?document=" + filename + "&display=" + display + download
     });
     
-    $("#container-viewer-global").fadeIn();
-    
-    $("#opak")
-    .fadeIn()
-    .unbind().click(cancel_view);
+    if (download == "") {
+        $("#container-viewer-global").fadeIn();
+        
+        $("#opak")
+        .fadeIn()
+        .unbind().click(cancel_view);
+    }
     
     if (Tuto.etape == 7) {
         Tuto.next();
@@ -319,6 +340,7 @@ var affiche_revisions = function() {
                         var new_li = $("<li></li>")
                                     .attr({
                                         "data-filename": revision.filename,
+                                        "data-display": revision.display,
                                         "data-type": "revision"
                                     })
                                     .css("margin-left", li.css("margin-left"))

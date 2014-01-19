@@ -249,12 +249,39 @@ var reload_champs = function() {
                 .append("<option></option>")
             ;
             
+            // On va trier les options
+            var tri = [];
+            
+            var trie_options = function(a, b) {
+                var a_ = a.label;
+                var b_ = b.label;
+                
+                if (a_ < b_) {
+                    return -1;
+                } else {
+                    if (a_ > b_) {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            };
+            
             if (profil.mondes[monde].references[parent] !== undefined) {
                 $.each(profil.mondes[monde].references[parent], function(j, valeur) {
+                    tri.push({
+                        pk: j,
+                        label: profil.mondes[monde].champs[cascade[i]].liste[j]
+                    })
+                });
+                
+                tri.sort(trie_options);
+                
+                $.each(tri, function(j, option) {
                     select.append(
                         $("<option></option>")
-                        .attr("value", j)
-                        .text(profil.mondes[monde].champs[cascade[i]].liste[j])
+                        .attr("value", option.pk)
+                        .text(option.label)
                     );
                 });
             }

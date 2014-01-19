@@ -9,7 +9,8 @@ if (isset($_SESSION["niveau"])) {
     
     $query = "
             SELECT `fk_document`, `revision_type_doc`, 
-                DATE_FORMAT(`d`.`date_document`, '%d/%m/%Y') AS `date`
+                DATE_FORMAT(`d`.`date_document`, '%d/%m/%Y') AS `date`,
+                `d`.`display_document` AS `display`
             FROM `type_doc_document` AS `tdd`, `document` AS `d`
             WHERE 
                 # Jointure
@@ -24,7 +25,7 @@ if (isset($_SESSION["niveau"])) {
                 AND `tdd`.`fk_type_doc` = :type
                 AND `tdd`.`detail_type_doc` = :detail
                 
-                # Elimination du document qu'on recherche
+                # Elimination du document quon recherche
                 AND `tdd`.`fk_document` != :filename
                 
                 # Selection des documents ayant les memes champs
@@ -99,6 +100,7 @@ if (isset($_SESSION["niveau"])) {
         foreach($result["result"] as $row) {
             array_push($revisions, [
                 "filename" => $row["fk_document"],
+                "display" => $row["display"],
                 "revision" => $row["revision_type_doc"],
                 "date" => $row["date"]
             ]);

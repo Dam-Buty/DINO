@@ -4,7 +4,7 @@ session_start();
 if (isset($_SESSION["user"])) {
     $filename = $_GET["document"];
     $display = $_GET["display"];
-    $extension = pathinfo($filename, PATHINFO_EXTENSION);
+    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
     
     if ($extension == "pdf") {
 #        echo $display;
@@ -31,7 +31,16 @@ if (isset($_SESSION["user"])) {
     <?php
         $lien = "../do/doUnpack.php?document=" . $filename . "&display=" . $display . "&download";
         
-        if ($extension == "jpg" || $extension == "gif" || $extension == "png") {
+        $img_extensions =  [
+            "jpg" => 1,
+            "png" => 1,
+            "gif" => 1,
+            "jpeg" => 1,
+            "psd" => 1,
+            "ai" => 1
+        ];
+
+        if (in_array($extension, $img_extensions)) {
             $image = "../do/doUnpack.php?document=" . $filename . "&display=" . $display;
         ?>
                 <a href="<?php echo $lien; ?>">
@@ -39,9 +48,12 @@ if (isset($_SESSION["user"])) {
                 </a>
         <?php
         } else {
-            $image = "../img/dino_head.png";
-        ?>
-                
+            if (isset($_GET["download"])) {
+                header("Location: ../do/doUnpack.php?document=" . $filename . "&display=" . $display . "&download");
+            } else {
+                $image = "../img/dino_head.png";
+            ?>
+                    
                 <a href="<?php echo $lien; ?>">
                     <img class="nopreview" src="<?php echo $image; ?>"/>
                     <p>
@@ -49,8 +61,9 @@ if (isset($_SESSION["user"])) {
                         Puedes descargar el archivo <pre><b><?php echo $display; ?></b></pre> dando click en el DINO.
                     </p>
                 </a>
-    
-        <?php
+        
+            <?php
+            }        
         }
         ?>
      <a>

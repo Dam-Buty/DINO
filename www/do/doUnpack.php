@@ -67,7 +67,11 @@ if (isset($_SESSION["niveau"])) {
                     break;
                 default:
                     header("Content-type: application/octet-stream");
-                    header("Content-Disposition: attachment; filename=" . $display);
+                    if (isset($_GET["download"])) {
+                        header("Content-Disposition: attachment; filename=" . $display);
+                    }else {
+                        header("Content-Disposition: inline; filename=" . $display);
+                    }
                     break;
             }
             
