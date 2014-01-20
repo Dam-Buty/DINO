@@ -370,6 +370,10 @@ img.bouton-save-back:hover {
     display: none;
 }
 
+#tip-niveau {
+    width: 50%;
+    left: 40%;
+}
 /*#####################################
 #
 #        Edition des mondes
