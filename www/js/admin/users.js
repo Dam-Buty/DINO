@@ -181,6 +181,12 @@ var bootstrap_users = function() {
                     $("#save-new-user").unbind().click(save_user);
                     $("#new-niveau").unbind().change(toggle_niveau);
                     $(".edit-niveau").unbind().change(toggle_niveau);
+    
+                    $(".edit-niveau").on("chosen:showing_dropdown", tip_niveau);
+                    $(".edit-niveau").on("chosen:hiding_dropdown", kill_tip_niveau);
+                    $(".edit-niveau").change(kill_tip_niveau);
+                    
+                    
                     
                     bootstrap_regles();
             },
@@ -232,7 +238,7 @@ var bootstrap_regles = function() {
         
         var select = $("<select></select>").attr({
             multiple: "multiple",
-            "data-placeholder": "Usted puede limitar el acceso a ciertos " + champ.pluriel + " seleccionandolos aqui.",
+            "data-placeholder": "Limita sus accesos a ciertos " + champ.pluriel + ".",
             "data-monde": li.attr("data-monde"),
             "data-champ": monde.cascade[0]
         })
@@ -290,6 +296,15 @@ var reset_tips = function() {
     
     $("#tip-mail").html(
         "DINO would never, ever do anything to harm an innocent mailbox."
+    );
+    
+    $("#tip-niveau").html(
+        "El nivel de usuario determine las acciones disponibles para el usuario :<br/>" + 
+            "<ul>" +
+                "<li>Un <b>Visitor</b> solo puede <b>consultar</b> documentos.</li>" +
+                "<li>Un <b>Archivista</b> puede <b>consultar</b> y <b>cargar</b> documentos.</li>" +
+                "<li>Un <b>Administrator</b> puede <b>consultar</b> y <b>cargar</b> documentos, <b>crear usuarios</b> y <b>administrar</b> los datos documentales.</li>" +
+            "</ul>"
     );
     
     $("#error-new-user").html(
@@ -365,7 +380,7 @@ var toggle_monde = function() {
     
     if ($(this).val() == 'OK') {
         bgColor = '#B8DCB3';
-        li.find("span").empty().append("Mundo <b>" + monde.label + "</b> : el usuario tiene <b>acceso</b>");
+        li.find("span").empty().append("Mundo <b>" + monde.label + "</b> :<br/> - El usuario tiene <b>acceso</b>");
         
         if (newli.find("select").val() != null) {
             li.find("span").append(
@@ -380,7 +395,7 @@ var toggle_monde = function() {
         newli.show();
     } else if ($(this).val() == 'KO'){
         bgColor = '#DCB3B3';
-        li.find("span").empty().append("Mundo <b>" + monde.label + "</b> : el usuario <b>no tiene</b> acceso" );
+        li.find("span").empty().append("Mundo <b>" + monde.label + "</b> :<br/> - El usuario <b>no tiene</b> acceso" );
         newli.hide();
     }
 
@@ -528,6 +543,10 @@ var toggle_new_user = function() {
     $("#new-mail").focus(tip_mail);
     $("#new-mail").keyup(check_mail).change(check_mail);
     
+    $("#new-niveau").on("chosen:showing_dropdown", tip_niveau);
+    $("#new-niveau").on("chosen:hiding_dropdown", kill_tip_niveau);
+    $("#new-niveau").change(kill_tip_niveau);
+    
     if ($("#container-new-user").is(":visible")) {
         $("#container-new-user").slideUp();
         $("#container-new-user").slideUp();
@@ -549,6 +568,20 @@ var toggle_new_user = function() {
             $("#save-new-user").fadeIn();
         }
     }
+};
+
+var tip_niveau = function() {
+    var select = $(this);
+    var field = select.next("div");
+    var tip = $("#tip-niveau");
+    
+    tip_champ(field, tip);
+};
+
+var kill_tip_niveau = function() {
+    var tip = $("#tip-niveau");
+    
+    tip.fadeOut();
 };
 
 var tip_login = function() {

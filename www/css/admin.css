@@ -136,6 +136,7 @@ img.bouton-save-back:hover {
 .liste-regles .switchy-container {
     margin: 0;
     margin-bottom: 5px;
+    float: right;
 }
 
 .edit-user .liste-regles>li {

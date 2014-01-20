@@ -98,6 +98,18 @@ var tip_champ = function(field, tip, ignore_KO) {
             tip.fadeOut();
         }, delay);
     }
+    
+    if (field.hasClass("edit-niveau")) {
+        tip.css({
+            "z-index": 200,
+            "left": "120%"
+        });
+    } else {
+        tip.css({
+            "z-index": "",
+            "left": ""
+        });
+    }
 };
 
 var debug_liste = function() {

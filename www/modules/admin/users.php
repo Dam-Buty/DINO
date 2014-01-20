@@ -37,6 +37,8 @@ session_start();
                 </div>
                 <div id="tip-mail" class="container-arrow OK">
                 </div>
+                <div id="tip-niveau" class="container-arrow OK">
+                </div>
                 <div id="error-new-user" class="container-arrow KO">
                 </div>
             </div>
