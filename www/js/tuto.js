@@ -175,46 +175,44 @@ var Tuto = {
         go: function() {
             var monde = profil.mondes[Store.monde];
             var valeur = Store.champs[monde.cascade[0]];
+            var stack = [];
             
             $("#menu-queue").click();
             $("#opak").click();
             $('#mondes-top li[data-monde="' + Store.monde + '"]').click();
             setTimeout(function() {
                 var clicks = 0;
+                var li;
                 $.each(profil.mondes[Tuto.store.monde].cascade, function(i, champ) {
-                    var li;
                     
                     if (Tuto.store.champs[champ] !== undefined) {
                         li = $("#liste ul").find('li[data-type="champ"][data-pk="' + Tuto.store.champs[champ] + '"]');
                         li.click();
                         clicks = clicks + 1;
+                        stack.push(Tuto.store.champs[champ]); 
                     } else {
-                        if (Tuto.store.categorie != 0) {
-                            li = $("#liste ul").find('li[data-type="categorie"][data-pk="' + Tuto.store.categorie + '"]');
-                            li.click();
-                            clicks = clicks + 1;
-                        }
-                        
-                        li = li.next("ul").find('li[data-type-doc="' + Tuto.store.type_doc.pk + '"]')[0];
-                        
                         return false;   
                     }                    
                 });
                 
-                Tuto.final_li = li;
+                if (Tuto.store.categorie != 0) {
+                    li = $("#liste ul").find('li[data-type="categorie"][data-pk="' + Tuto.store.categorie + '"][data-stack="' + stack.join(",") + '"]');
+                    li.click();
+                    clicks = clicks + 1;
+                }
+                
+                li = li.next("ul").find('li[data-type-doc="' + Tuto.store.type_doc.pk + '"]')[0];
+                
+                Tuto.final_li = $(li);
                 
                 setTimeout(function() {
                     $("#liste").css("z-index", "701");
                     detache_element($("#liste"));
-                    li.tooltipster({
+                    $(li).tooltipster({
                         content: 'Da click en tu documento para consultarlo!',
                         position: "bottom-left",
                         autoClose: false
                     }).tooltipster("show");
-                    $(".tooltipster-base").css({
-                        backgroundColor: "#56d4eb",
-                        borderColor: "#48afc2"
-                    });
                 }, clicks * 200);
             }, 400);
         },
@@ -290,9 +288,7 @@ var Tuto = {
             detache_element($(".barre-bottom"));
         },
         clean: function() {
-            $(".barre-bottom").css("z-index", "");
-            attache_element($(".barre-bottom"));
-            $("#bucket-tuto").fadeOut();
+            window.location.replace("do/doEndTuto.php");      
         }
     }],
     go: function() {

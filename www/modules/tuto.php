@@ -51,7 +51,7 @@
         <div class="boutons next">Siguiente...</div>
     </div>
     <div class="etape" id="etape-10">
-        <h1>Busqueda por fecha y clasificacion alfabetica</h1>
+        <h1>Busqueda por fecha</h1>
         <p>Si necesitas documentos de una fecha especifica, puedes utilizar el slider para seleccionar un <b>rango de fecha</b>.</p>
         <div class="boutons next">Siguiente...</div>
     </div>
@@ -63,7 +63,7 @@
         <div class="boutons next">Siguiente...</div>
     </div>
     <div class="etape" id="etape-12">
-        <h1>Utilidades</h1>
+        <h1>Tips</h1>
         <p>Ya sabes todo lo que necesitas para archivar, organizar y consultar los <b>documentos</b> de tu empresa en tu <b>archivero digital</b>!</p>
         <p>Algunos tips mas, y te dejo con <b>DINO</b> :</p>
         <p><img src="img/tuto_20.png"/> : para retomar el tutorial</p>
