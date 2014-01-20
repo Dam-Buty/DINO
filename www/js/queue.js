@@ -73,21 +73,25 @@ var queue = [];
 var uploading = [undefined, undefined, undefined];
 
 var bootstrap_queue = function() {
-    $.ajax({
-        url: "do/doCheckCave.php",
-        type: "POST",
-        statusCode : {
-            201: function() {
-                get_queue();
-            },
-            403: function() {
-                window.location.replace("index.php");
-            },
-            500: function() {
-                popup("Error! Gracias por intentar otra vez...", "error");
+    if (profil.printer != "") {
+        $.ajax({
+            url: "do/doCheckCave.php",
+            type: "POST",
+            statusCode : {
+                201: function() {
+                    get_queue();
+                },
+                403: function() {
+                    window.location.replace("index.php");
+                },
+                500: function() {
+                    popup("Error! Gracias por intentar otra vez...", "error");
+                }
             }
-        }
-    });
+        });
+    } else {
+        get_queue(); 
+    }
 }
 
 var get_queue = function() {
