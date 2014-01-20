@@ -367,6 +367,7 @@ var cancel_tuto = function() {
     Tuto.clean();
     $("#bucket-tuto").fadeOut();
     Tuto.etape = 0;
+    chat();
 };
 
 var detache_element = function(element) {
