@@ -125,6 +125,10 @@ var bootstrap = function() {
                 
                 bootstrap_tuto();
                 
+                if (profil.tuto != 1) {
+                    chat();
+                }
+                
                 if (profil.help == 1) {
                     bootstrap_help();
                 }
