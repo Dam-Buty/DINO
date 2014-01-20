@@ -495,7 +495,7 @@ var handle_files = function(files) {
             ), -1
         );
         
-        queue.push({ 
+        queue.unshift({ 
             document: this, 
             status: -1, 
             size: this.size, 

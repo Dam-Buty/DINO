@@ -22,10 +22,12 @@ var Tuto = {
         }
     }, { ////////////////////// 1
         go: function() {
-            $("#menu-queue").click();
-            $("#container-queue").css("z-index", "701");
-            // TODO : jitter sur l'input file'
-            setTimeout(function(){                            
+            if ($("#container-queue").attr("data-state") == "closed") {
+                $("#menu-queue").click();
+            }
+            
+            setTimeout(function(){           
+                $("#container-queue").css("z-index", "701");                 
                 $("#container-files-handler").css("border", "2px solid #558011");
                 $("#container-files-handler").tooltipster({
                     content: 'Carga un documento en DINO!',
@@ -176,29 +178,42 @@ var Tuto = {
             var monde = profil.mondes[Store.monde];
             var valeur = Store.champs[monde.cascade[0]];
             var stack = [];
+            var li;
+            var cascade = profil.mondes[Tuto.store.monde].cascade;
             
-            $("#menu-queue").click();
-            $("#opak").click();
-            $('#mondes-top li[data-monde="' + Store.monde + '"]').click();
-            setTimeout(function() {
-                var clicks = 0;
-                var li;
-                $.each(profil.mondes[Tuto.store.monde].cascade, function(i, champ) {
+            var do_click = function(i) {
+                var last_click = false;
+                
+                if (Tuto.store.champs[cascade[i]] !== undefined) {
+                    li = $("#liste ul").find('li[data-type="champ"][data-pk="' + Tuto.store.champs[cascade[i]] + '"]');
+                    li.click();
+                    stack.push(Tuto.store.champs[cascade[i]]);
                     
-                    if (Tuto.store.champs[champ] !== undefined) {
-                        li = $("#liste ul").find('li[data-type="champ"][data-pk="' + Tuto.store.champs[champ] + '"]');
-                        li.click();
-                        clicks = clicks + 1;
-                        stack.push(Tuto.store.champs[champ]); 
+                    if (i < cascade.length - 1) {
+                        setTimeout(function() {
+                            do_click(i + 1);
+                        }, 200);
                     } else {
-                        return false;   
-                    }                    
-                });
+                        last_click = true;
+                    }
+                } else {
+                    last_click = true;
+                }
+                
+                if (last_click) {
+                    setTimeout(function() {
+                        end_click();
+                    }, 200);
+                }
+            };
+            
+            var end_click = function() {
+                var delay = 0;
                 
                 if (Tuto.store.categorie != 0) {
                     li = $("#liste ul").find('li[data-type="categorie"][data-pk="' + Tuto.store.categorie + '"][data-stack="' + stack.join(",") + '"]');
                     li.click();
-                    clicks = clicks + 1;
+                    delay = 200;
                 }
                 
                 li = li.next("ul").find('li[data-type-doc="' + Tuto.store.type_doc.pk + '"]')[0];
@@ -206,14 +221,21 @@ var Tuto = {
                 Tuto.final_li = $(li);
                 
                 setTimeout(function() {
-                    $("#liste").css("z-index", "701");
-                    detache_element($("#liste"));
                     $(li).tooltipster({
                         content: 'Da click en tu documento para consultarlo!',
                         position: "bottom-left",
                         autoClose: false
                     }).tooltipster("show");
-                }, clicks * 200);
+                }, delay);
+            };
+            
+            $("#menu-queue").click();
+            
+            setTimeout(function() {
+                $("#liste").css("z-index", "701");
+                detache_element($("#liste"));
+                
+                do_click(0);
             }, 400);
         },
         clean: function() {
@@ -328,7 +350,10 @@ var bootstrap_tuto = function() {
         statusCode: {
             200: function(tuto) {
                 $("body").append(tuto);
-                Tuto.start();
+                
+                if (profil.tuto == 1) {
+                    Tuto.start();
+                } 
             }
         }
     })

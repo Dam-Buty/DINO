@@ -1,15 +1,15 @@
 <?php
 function dino_query($query, $params = []) {
-#    $hostname = "127.0.0.1";
-#    $username = "dino_baby_root";
-#    $dbname = "dino_baby";
-#    $password = "C4dillac5"; 
+    $hostname = "127.0.0.1";
+    $username = "dino_baby_root";
+    $dbname = "dino_baby";
+    $password = "C4dillac5"; 
 #header("Content-Type: text/html; charset=UTF-8");
 
-    $hostname = "localhost";
-    $username = "root";
-    $dbname = "dino_baby";
-    $password = "C4dillac5";
+#    $hostname = "localhost";
+#    $username = "root";
+#    $dbname = "dino_baby";
+#    $password = "C4dillac5";
     
 #    echo $query;
 #    var_dump($params);

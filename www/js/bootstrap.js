@@ -123,9 +123,7 @@ var bootstrap = function() {
                     }
                 });   
                 
-                if (profil.tuto == 1) {
-                    bootstrap_tuto();
-                } 
+                bootstrap_tuto();
                 
                 if (profil.help == 1) {
                     bootstrap_help();

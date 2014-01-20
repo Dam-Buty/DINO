@@ -170,7 +170,6 @@ var charge_dates = function() {
                 change_dates();
     
                 load_search();
-                charge_documents();
             },
             403: function() {
                 window.location.replace("index.php");

@@ -1,9 +1,11 @@
+
 *.pdf
 *.log
 *.tar.gz
 *.bak
 test_session.php
-www/cache/*/*.css
+www/cache/*/*.*
+www/cache/*/*/*.*
 key.php
 2014*.jpg
 

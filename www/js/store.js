@@ -470,7 +470,7 @@ var cancel_store = function() {
     $("#files-list li").attr("data-editing", "0");
     $("#popup-store").attr("data-document", "");
     
-    charge_dates();
+    // charge_dates();
 };
 
 var archive_document = function() {
@@ -562,9 +562,6 @@ var _archive_document = function(document, store) {
                 
                 if (Tuto.etape == 6) {
                     Tuto.store = store;
-                    if ($("#popup-store").is(":visible")) {
-                        cancel_store();
-                    }
                     Tuto.next();
                 }                
             },
@@ -582,9 +579,12 @@ var avance_store = function(position) {
     var new_position;
     
     // Si c'est le seul document de la queue on ferme le store
-    if (queue.length == 1) {
-        queue.length = 0;
+    if (queue.length == 1 || Tuto.etape == 6) {
+        if (queue.length == 1) {
+            queue.length = 0;
+        }
         refresh_liste();
+        $('#mondes-top li[data-monde="' + Store.monde + '"]').click(); 
         cancel_store();
     } else {
         if (position == queue.length - 1) {
@@ -595,7 +595,7 @@ var avance_store = function(position) {
         
         queue.splice(position, 1);
         refresh_liste();
-        $('#mondes-top li[data-selected="1"]').click();
+        $('#mondes-top li[data-monde="' + Store.monde + '"]').click();
         
         if ($("#popup-store").is(":visible")) {
             change_document(new_position);
@@ -662,7 +662,7 @@ var _store_document = function(position) {
     // On affiche le fond opaque et le store
     $("#opak")
     .fadeIn()
-    .unbind().click(cancel_store);
+    .unbind().click(cancel_store); 
     $("#popup-store").fadeIn();
     
     // on déclenche le redimensionnement de la fenêtre

@@ -25,7 +25,7 @@ function convertBytes( $value ) {
     }
 }
 
-function recupere_types($monde, $champ, $categorie, $mysqli) {
+function recupere_types($monde, $champ, $categorie) {
     $types = [];
     
     $query_types = "
@@ -120,7 +120,7 @@ function recupere_types($monde, $champ, $categorie, $mysqli) {
     }
 }
 
-function recupere_categories($monde, $champ, $mysqli) {    
+function recupere_categories($monde, $champ) {    
     $categories = [];
     
     $query_categories = "
@@ -151,7 +151,7 @@ function recupere_categories($monde, $champ, $mysqli) {
                 "types" => []
             ];
             
-            $categories[$row_categories["pk_categorie_doc"]]["types"] = recupere_types($monde, $champ, $row_categories["pk_categorie_doc"], $mysqli);
+            $categories[$row_categories["pk_categorie_doc"]]["types"] = recupere_types($monde, $champ, $row_categories["pk_categorie_doc"]);
         } // FIN WHILE CATEGORIES
         
         return $categories;
@@ -346,12 +346,12 @@ if (isset($_SESSION["user"])) {
                             }
                             
                             // Récupération des types de document en racine
-                            $types = recupere_types($row_mondes["pk_monde"], $row_champs["pk_champ"], 0, $mysqli);
+                            $types = recupere_types($row_mondes["pk_monde"], $row_champs["pk_champ"], 0);
                             
                             $profil["mondes"][$row_mondes["pk_monde"]]["champs"][$row_champs["pk_champ"]]["types"] = $types;
                             
                             // Récupération des catégories/typedoc en racine
-                            $categories = recupere_categories($row_mondes["pk_monde"], $row_champs["pk_champ"], $mysqli);
+                            $categories = recupere_categories($row_mondes["pk_monde"], $row_champs["pk_champ"]);
                             $profil["mondes"][$row_mondes["pk_monde"]]["champs"][$row_champs["pk_champ"]]["categories"] = $categories;
                             
                         } // FIN WHILE CHAMPS
