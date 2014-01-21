@@ -13,10 +13,13 @@ if (isset($_SESSION)) {
 <meta content="2013-02-28" name="date" />
 <meta content="Damien BUTY" name="author" />
 <meta content="La revolucion documental!" name="description" />
-<link href='css/Oswald-Bold.ttf' rel='stylesheet' type='text/css'>
+
 <link rel="stylesheet" href="css/global.css?v=3" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/arrows.css?v=3" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/tuto.css?v=3" media="screen" type="text/css"/>
+
+<link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
+
 <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 
 <?php
@@ -30,9 +33,9 @@ if (isset($_SESSION)) {
 <link rel="stylesheet" href="css/boutons.css?v=3" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/inputs.css?v=3" media="screen" type="text/css"/>
 
-<link rel="stylesheet" href="vendor/chosen.css?v=1" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/zebra_dialog_custom.css?v=1" media="screen" type="text/css"/>
-<link rel="stylesheet" href="vendor/switchy.css?v=1" media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/chosen.css" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/zebra_dialog_custom.css" media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/switchy.css" media="screen" type="text/css"/>
 <link rel="stylesheet" href="vendor/jquery-ui-1.10.3.custom.css" media="screen" type="text/css"/>
 <link rel="stylesheet" href="vendor/tooltipster.css" media="screen" type="text/css"/>
 
@@ -179,31 +182,34 @@ if ($_SESSION["niveau"] >= 30) {
     <iframe id="viewer-global"></iframe>
 </div>
 
-<script src="vendor/jquery-1.10.2.js"></script>
-<script src="vendor/jquery-ui.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
-<script src="vendor/zebra_dialog.js?v=1"></script>
-<script src="vendor/chosen.jquery.js?v=1"></script>
-<script src="vendor/switchy.js?v=1"></script>
-<script src="vendor/jquery.tooltipster.js?v=1"></script>
 
-<script src="js/bootstrap.js?v=1"></script>
-<script src="js/util.js?v=1"></script>
-<script src="js/core.js?v=1"></script>
-<script src="js/queue.js?v=1"></script>
-<script src="js/dragdrop.js?v=1"></script>
-<script src="js/store.js?v=1"></script>
-<script src="js/dialogues.js?v=1"></script>
-<script src="js/params.js?v=1"></script>
-<script src="js/tuto.js?v=1"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/chosen/1.0/chosen.jquery.min.js"></script>
+
+<script src="vendor/chosen.jquery.min.js"></script>
+<script src="vendor/zebra_dialog.js"></script>
+<script src="vendor/switchy.js"></script>
+<script src="vendor/jquery.tooltipster.js"></script>
+
+<script src="js/bootstrap.js"></script>
+<script src="js/util.js"></script>
+<script src="js/core.js"></script>
+<script src="js/queue.js"></script>
+<script src="js/dragdrop.js"></script>
+<script src="js/store.js"></script>
+<script src="js/dialogues.js"></script>
+<script src="js/params.js"></script>
+<script src="js/tuto.js"></script>
 
 <?php
     if ($_SESSION["niveau"] >= 20) {
     ?>
-<script src="js/admin.js?v=1"></script>
-<script src="js/admin/users.js?v=1"></script>
-<script src="js/admin/mondes.js?v=1"></script>
-<script src="js/admin/profil.js?v=1"></script>
+<script src="js/admin.js"></script>
+<script src="js/admin/users.js"></script>
+<script src="js/admin/mondes.js"></script>
+<script src="js/admin/profil.js"></script>
     <?php
     }
 ?>

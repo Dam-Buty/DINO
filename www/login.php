@@ -30,7 +30,7 @@
 </div>
 
 
-<script src="vendor/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 
 <script src="js/login.js"></script>
 <script>

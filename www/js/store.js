@@ -46,10 +46,12 @@ var remove_champ_store = function() {
     var post = 0;
     
     document.store.last_champ = "";
+    Store.last_champ = "";
     
     $.each(cascade, function(i, champ_cascade) {
         if (post) {
             document.store.champs[champ_cascade] = "";
+            Store.champs[champ_cascade] = "";
         } else {
             if (champ_cascade == champ) {
                 post = 1;
@@ -78,11 +80,12 @@ var change_champ_store = function() {
         document.store.champs[champ] = valeur;
         document.store.last_champ = champ;
         Store.last_champ = champ;
+        Store.champs[champ] = valeur;
     }
+    
     $("#container-details").slideUp();
                 
     if (Tuto.etape == 4) {
-        Store.champs[champ] = valeur;
         Tuto.next();
     }
     
@@ -443,15 +446,20 @@ var change_document = function(document) {
     
     if (queue[document].store.monde === "") {
         queue[document].store.monde = Store.monde;
+        console.log(queue[document].store.monde + " : " + Store.monde);
     }
     
     $("#mondes-store li").attr("data-selected", "0");
     
-    $('#mondes-store li[data-monde="' + queue[document].store.monde + '"').attr("data-selected", "1");
+    $('#mondes-store li[data-monde="' + queue[document].store.monde + '"]').attr("data-selected", "1");
     
     if (queue[document].store.last_champ === "") { 
         queue[document].store.last_champ = Store.last_champ;
         queue[document].store.champs = Store.champs;
+        console.log(queue[document].store.last_champ);
+        console.log(Store.last_champ);
+        console.log(queue[document].store.champs);
+        console.log(Store.champs);
     }
     
     $("#container-details").slideUp();

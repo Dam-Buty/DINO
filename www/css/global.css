@@ -1207,6 +1207,7 @@ html, body {
     float: right;
     margin-top: 1px;
     line-height: 2em;
+    width: 45%;
 }
 
 .error {

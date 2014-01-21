@@ -21,7 +21,7 @@ if (isset($_SESSION["user"])) {
 <meta content="2013-02-28" name="date" />
 <meta content="Damien BUTY" name="author" />
 <meta content="La revolucion documental!" name="description" />
-<link href='css/Oswald-Bold.ttf' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="../css/viewer.css?v=3" media="screen" type="text/css"/>
 <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 
@@ -68,7 +68,7 @@ if (isset($_SESSION["user"])) {
         ?>
      <a>
 
-<script src="../vendor/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="../js/viewer.js"></script>
 </body>
 </html>
