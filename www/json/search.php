@@ -23,7 +23,9 @@ if (isset($_SESSION["niveau"])) {
         "tddClient" => $_SESSION["client"],
         "tddMonde" => $_POST["monde"],
         "dClient" => $_SESSION["client"],
-        "niveau" => $_SESSION["niveau"],
+        "niveauDoc" => $_SESSION["niveau"],
+        "niveauType" => $_SESSION["niveau"],
+        "niveauCategorie" => $_SESSION["niveau"],
         "mini" => $_POST["dates"]["mini"],
         "maxi" => $_POST["dates"]["maxi"],
         "tdd2Client" => $_SESSION["client"],
@@ -88,7 +90,17 @@ if (isset($_SESSION["niveau"])) {
             AND `tdd`.`fk_document` = `d`.`filename_document`
             
             # Verification du niveau
-            AND `niveau_document` <= :niveau
+            AND `niveau_document` <= :niveauDoc
+            AND `td`.`niveau_type_doc` <= :niveauType
+            AND (
+                SELECT `niveau_categorie_doc`
+                FROM `categorie_doc` AS `cdNiveau`
+                WHERE
+                    `cdNiveau`.`fk_client` = `td`.`fk_client`
+                    AND `cdNiveau`.`fk_monde` = `td`.`fk_monde`
+                    AND `cdNiveau`.`fk_champ` = `td`.`fk_champ`
+                    AND `cdNiveau`.`pk_categorie_doc` = `td`.`fk_categorie_doc`
+            ) <= :niveauCategorie
             
             # Filtre par dates
             AND `date_document` BETWEEN FROM_UNIXTIME(:mini) AND FROM_UNIXTIME(:maxi)
