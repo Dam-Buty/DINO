@@ -92,7 +92,7 @@ if (isset($_SESSION["niveau"])) {
             # Verification du niveau
             AND `niveau_document` <= :niveauDoc
             AND `td`.`niveau_type_doc` <= :niveauType
-            AND (
+            AND ( (
                 SELECT `niveau_categorie_doc`
                 FROM `categorie_doc` AS `cdNiveau`
                 WHERE
@@ -100,7 +100,15 @@ if (isset($_SESSION["niveau"])) {
                     AND `cdNiveau`.`fk_monde` = `td`.`fk_monde`
                     AND `cdNiveau`.`fk_champ` = `td`.`fk_champ`
                     AND `cdNiveau`.`pk_categorie_doc` = `td`.`fk_categorie_doc`
-            ) <= :niveauCategorie
+            ) <= :niveauCategorie OR (
+                SELECT COUNT(`niveau_categorie_doc`)
+                FROM `categorie_doc` AS `cdNiveau2`
+                WHERE
+                    `cdNiveau2`.`fk_client` = `td`.`fk_client`
+                    AND `cdNiveau2`.`fk_monde` = `td`.`fk_monde`
+                    AND `cdNiveau2`.`fk_champ` = `td`.`fk_champ`
+                    AND `cdNiveau2`.`pk_categorie_doc` = `td`.`fk_categorie_doc`
+            ) = 0 )
             
             # Filtre par dates
             AND `date_document` BETWEEN FROM_UNIXTIME(:mini) AND FROM_UNIXTIME(:maxi)
