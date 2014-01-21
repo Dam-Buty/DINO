@@ -485,6 +485,11 @@ var handle_files = function(files) {
         if (files instanceof FileList === false) {
             files = $("#files-handler").prop("files");
         }
+    } else { // shim for ie9
+        files = [
+            name: this.value,
+            size: 23
+        ];
     }
     
     $.each(files, function() {
