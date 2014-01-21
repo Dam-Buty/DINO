@@ -486,10 +486,10 @@ var handle_files = function(files) {
             files = $("#files-handler").prop("files");
         }
     } else { // shim for ie9
-        files = [
+        files = {
             name: this.value,
             size: 23
-        ];
+        };
     }
     
     $.each(files, function() {
