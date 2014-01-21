@@ -291,7 +291,7 @@ var affiche_document = function() {
     
     $("#viewer-global").attr({
         "data-document": li.attr("data-position"),
-        src: "modules/viewer.php?document=" + filename + "&display=" + display + download
+        src: "modules/viewer.php?document=" + filename + "&display=" + escape(display) + download
     });
     
     if (download == "") {

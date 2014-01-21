@@ -428,7 +428,7 @@ var change_document = function(document) {
     
     $("#viewer-store").attr({
         "data-document": queue[document].li.attr("data-position"),
-        src: "modules/viewer.php?document=" + queue[document].filename + "&display=" + queue[document].displayname
+        src: "modules/viewer.php?document=" + queue[document].filename + "&display=" + escape(queue[document].displayname)
     });
        
     // On met le nom du fichier
@@ -653,7 +653,7 @@ var _store_document = function(position) {
     
     $("#viewer-store").attr({
         "data-document": li.attr("data-position"),
-        src: "modules/viewer.php?document=" + queue[li.attr("data-position")].filename + "&display=" + queue[li.attr("data-position")].displayname
+        src: "modules/viewer.php?document=" + queue[li.attr("data-position")].filename + "&display=" + escape(queue[li.attr("data-position")].displayname)
     });
     
     // On met le nom du fichier
