@@ -480,8 +480,11 @@ var create_li = function(name, size, user, date) {
 ////////////////////////////
 // Gestion des fichiers entrés dans l'input
 var handle_files = function(files) {
-    if (files instanceof FileList === false) {
-        files = $("#files-handler").prop("files");
+
+    if(typeof FileList !== 'undefined') {
+        if (files instanceof FileList === false) {
+            files = $("#files-handler").prop("files");
+        }
     }
     
     $.each(files, function() {

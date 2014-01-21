@@ -1206,7 +1206,7 @@ html, body {
 #champs-details input {
     float: right;
     margin-top: 1px;
-    line-height: 2em;
+    height: 2em;
     width: 45%;
 }
 

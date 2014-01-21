@@ -530,7 +530,7 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
 
 #liste-profil li input {
     margin-top: 0px;
-    line-height: 1em;
+    height: 1.1em;
     font-size: 0.9em;
 }
 
@@ -614,7 +614,8 @@ li.add-profil-type {
 
 .edit-niveau-profil {
     width: 25%;
-    margin-top: -5px;
+    margin-top: -0.6em;
+    height: 1.1em;
 }
 
 .valeur-save {
