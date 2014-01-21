@@ -2,7 +2,7 @@
     <div class="etape" id="etape-0">
         <h1>Bienvenido en DINO!</h1>
         <p>Hola, soy Dam, el arquitecto de <b>DINO</b>. Antes que todo, te quiero agradecer por ser parte de nuestra comunidad de usuarios. Vas a ver que <b>DINO</b> esta diseñado para facilitar tu vida documental!</p>
-        <p>Me gustaria enseñarte algunas cosas para que puedas approvechar de todas las funcionalidades que te ofrece <b>DINO</b>. Si dejas este tutorial, puedes retomarlo cuando tengas mas tiempo, dando click en el icono <img src="img/tuto_20.png"/> de la barra de abajo.</p>
+        <p>Me gustaria enseñarte algunas cosas para que puedas aprovechar de todas las funcionalidades que te ofrece <b>DINO</b>. Si dejas este tutorial, puedes retomarlo cuando tengas mas tiempo, dando click en el icono <img src="img/tuto_20.png"/> de la barra de abajo.</p>
         <p>Si estas listo para entrar en el mundo <b>DINO</b>, da click aqui :</p>
         <div class="boutons next">Enseñame DINO!</div>
     </div>

@@ -28,7 +28,7 @@ var Tuto = {
             
             setTimeout(function(){           
                 $("#container-queue").css("z-index", "701");                 
-                $("#container-files-handler").css("border", "2px solid #558011");
+                $("#container-files-handler").css("border", "2px solid #DB7F1A");
                 $("#container-files-handler").tooltipster({
                     content: 'Carga un documento en DINO!',
                     position: "right",
@@ -43,7 +43,7 @@ var Tuto = {
     }, { ////////////////////// 2
         go: function() {
             $('#container-queue').css("z-index", "701");
-            $("#files-list li").first().find(".bouton-edit-li").css("border", "2px solid #558011");
+            $("#files-list li").first().find(".bouton-edit-li").css("border", "2px solid #DB7F1A");
             $("#files-list li").first().find(".bouton-edit-li").tooltipster({
                 content: 'Da click aqui para clasificar tu documento',
                 position: "right",
@@ -60,7 +60,7 @@ var Tuto = {
             $("#mondes-store").css("z-index", "701");
             setTimeout(function() {
                 detache_element($("#mondes-store"));
-                $("#mondes-store").tooltipster({
+                $("#mondes-store li").first().tooltipster({
                     content: 'Selecciona uno de esos mundos',
                     autoClose: false
                 }).tooltipster("show");
@@ -68,7 +68,7 @@ var Tuto = {
         },
         clean: function() {
             attache_element($("#mondes-store"));
-            $('#mondes-store').tooltipster("destroy");
+            $('#mondes-store li').first().tooltipster("destroy");
             $("#mondes-store").css("z-index", "");
         }
     }, { ////////////////////// 4
@@ -85,7 +85,7 @@ var Tuto = {
             $("#container-store").css("z-index", "701");
             detache_element($("#container-store"));
             $("#container-store").tooltipster({
-                content: $('<span><p>Tecla el nombre de un nuevo <b>' + champ + '</b>, y agregalo en DINO.</p></span>'),
+                content: $('<span><p>Teclea el nombre de un nuevo <b>' + champ + '</b>, y agregalo en DINO.</p></span>'),
                 autoClose: false
             }).tooltipster("show");
         },
@@ -291,7 +291,7 @@ var Tuto = {
                 $("#search_chosen").css("z-index", "701");
                 detache_element($("#search_chosen"));
                 $("#search_chosen").tooltipster({
-                    content: 'Tecla el nombre del ' + champ + " para encontrarlo.",
+                    content: 'Teclea el nombre del ' + champ + " para encontrarlo.",
                     position: "left",
                     autoClose: false
                 }).tooltipster("show");
@@ -351,7 +351,7 @@ var bootstrap_tuto = function() {
             200: function(tuto) {
                 $("body").append(tuto);
                 
-                if (profil.tuto == 1) {
+                if (profil.tuto == 1 && profil.niveau >= 10) {
                     Tuto.start();
                 } 
             }

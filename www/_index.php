@@ -125,7 +125,12 @@ if ($_SESSION["niveau"] >= 30) {
     <img id="bouton-pass" src="img/pass_20.png">
     <img id="bouton-mail" src="img/mail_20.png">
     <img id="help-printer" src="img/printer_20.png">
-    <img id="bouton-tuto" src="img/tuto_20.png">
+    <?php if ($_SESSION["niveau"] >= 10) {
+    ?>
+    <img id="bouton-tuto" src="img/tuto_20.png"/>
+    <?php
+    }
+    ?>
 </div>
 
 <div id="container-change-pass">
@@ -169,7 +174,7 @@ if ($_SESSION["niveau"] >= 30) {
         <li><div id="change-mail" class="boutons boutons-param">Guardar email</div></li>
     </ul>
     <div id="tip-mail-params" class="container-arrow OK arrow-params">
-        DINO would never, ever do anything to harm an innocent mailbox.
+        DINO nunca haria nada para lastimar un buzon inocente!
     </div>
 </div>
 

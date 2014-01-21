@@ -656,6 +656,9 @@ var _store_document = function(position) {
     
     $('#mondes-store li[data-monde="' + queue[position].store.monde + '"]').attr("data-selected", "1");
     Store.monde = Core.monde;  
+    
+    // on cache les champs détails
+    $("#container-details").hide();
           
     // On installe le viewer dans l'iframe
     

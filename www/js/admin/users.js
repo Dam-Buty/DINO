@@ -295,7 +295,7 @@ var reset_tips = function() {
     );
     
     $("#tip-mail").html(
-        "DINO would never, ever do anything to harm an innocent mailbox."
+        "DINO nunca haria nada para lastimar un buzon inocente!"
     );
     
     $("#tip-niveau").html(
