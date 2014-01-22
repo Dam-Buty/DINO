@@ -925,11 +925,11 @@ html, body {
     position: absolute;
     box-sizing: border-box;
     
-    height: 80%;
-    width: 80%;
+    height: 94%;
+    width: 94%;
     
-    top: 10%;
-    left: 10%;
+    top: 3%;
+    left: 3%;
     
     padding: 25px;
     padding-top: 50px;
@@ -1008,6 +1008,15 @@ html, body {
     margin-top: -65px;
 }
 
+.entete-store {
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 5px;
+    
+    font-size: 0.9em;
+    text-align: center;
+}
+
 #container-champs {
     text-align: center;
 }
@@ -1049,51 +1058,10 @@ html, body {
         Chosen popup
 #############################*/
 
-#container-champs .select-champ {
-    width: 90%;
-}
-
-#container-champs .select-champ>a {
-    border-radius: 0;
-    color: white;
-    border: 0;
-    text-transform: uppercase;
-    box-shadow: none;
-}
-
-/* Fond champ */
-#container-champs .champ-store:nth-child(odd) .select-champ>a {
-    background: #8ecb32;
-}
-
-#container-champs .champ-store:nth-child(even) .select-champ>a {
-    background: #56d4eb;
-}
-
-/* valeur sélectionnée */
-#container-champs .champ-store:nth-child(odd) .highlighted {
-    background: #75a32d;
-}
-
-#container-champs .champ-store:nth-child(even) .highlighted {
-    background: #48afc2;
-}
-
-/* Fond drop */
-#container-champs .champ-store:nth-child(odd) .chosen-drop {
-    background: #8ecb32;
-}
-
-#container-champs .champ-store:nth-child(even) .chosen-drop {
-    background: #56d4eb;
-}
-
-/*###########################
-        Champ renseigné (tag-like)
-#############################*/
-
-#container-champs .tag-champ {
+#container-store .select-champ {
     position: relative;
+    width: 90%;
+    text-align: center;
     padding: 5px;
     
     margin-left: 5%;
@@ -1103,6 +1071,33 @@ html, body {
     
     cursor: pointer;
 }
+
+#container-store .select-champ>a {
+    border-radius: 0;
+    color: white;
+    border: 0;
+    text-transform: uppercase;
+    box-shadow: none;
+}
+
+/* Fond champ */
+#container-store .select-champ>a {
+    background: #8ecb32;
+}
+    
+/* valeur sélectionnée */
+#container-store .select-champ .highlighted {
+    background: #75a32d;
+}
+
+/* Fond drop */
+#container-store .select-champ .chosen-drop {
+    background: #8ecb32;
+}
+
+/*###########################
+        Champ renseigné (tag-like)
+#############################*/
 
 #container-champs .champ-store:nth-child(odd) .tag-champ {
     background-color: #8ecb32;
@@ -1131,13 +1126,12 @@ html, body {
         Classification de document
 #############################*/
 
-#container-classification {
-    margin-top: 0;
+#list-classification {
     padding-left: 0;
     font-size: 0.8em;
 }
 
-#container-classification li {
+#list-classification li {
     padding-left: 0;
     list-style-type: none;
     
@@ -1148,14 +1142,14 @@ html, body {
     color: #888888;
 }
 
-#container-classification li.store-type {
+#list-classification li.store-type {
     background-color: white;
     cursor: pointer;
 
     border: 1px dotted white;
 }
 
-#container-classification li.store-type[data-selected="1"] {
+#list-classification li.store-type[data-selected="1"] {
     background-color: #d6dcea;
     color: black;
     border: 2px solid #8ecb32;
@@ -1165,25 +1159,25 @@ html, body {
     background-repeat: no-repeat;
 }
 
-#container-classification li.store-type:hover {
+#list-classification li.store-type:hover {
     background-color: #d6dcea;
     color: black;
     border: 1px dotted #575757;
 }
 
-#container-classification ul {
+#list-classification ul {
     display: none;
     padding-left: 5%;
 }
 
-#container-classification li.store-categorie {
+#list-classification li.store-categorie {
     background-color: #484848;
     cursor: pointer;
 
     border: 1px dotted #484848;
 }
 
-#container-classification li.store-categorie:hover {
+#list-classification li.store-categorie:hover {
     background-color: #575757;
 
     border: 1px dotted #575757;

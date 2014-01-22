@@ -50,7 +50,7 @@ if (isset($_SESSION)) {
     if ($_SESSION["niveau"] >= 10) {
         ?>
             <li id="menu-queue">
-                <h1>SUBIR DOCUMENTOS</h1>
+                <h1>CARGAR DOCUMENTOS</h1>
             </li>
         <?php
     }

@@ -137,7 +137,7 @@ var remove_type_store = function() {
 
 var change_type_store = function() {
     var li = $(this);
-    var ul = $("#container-classification");
+    var ul = $("#list-classification");
     var document = queue[$("#popup-store").attr("data-document")];
     
     ul.find("li").attr("data-selected", 0);
@@ -164,7 +164,7 @@ var add_value = function(term) {
     var document = queue[$("#popup-store").attr("data-document")];
     var store = document.store;
     var chosen = this;
-    var select = $("#container-champs select");
+    var select = $("#container-nouveau-champ select");
     var champ = select.closest("div").attr("data-champ");
     var parent;
     
@@ -225,30 +225,91 @@ var reload_champs = function() {
     var document = queue[$("#popup-store").attr("data-document")];
     var monde = document.store.monde;
     var cascade = profil.mondes[monde].cascade;
-    var last_i = undefined;
+    var last_pk = undefined;
+    var champ;
     
-    $("#container-champs").empty();
-    $("#container-classification").empty();
+    $("#list-champs").empty();
+    $("#list-classification").empty();
     
-    //////////////////////////////////
-    // Affichage des champs déjà renseignés et du champ à renseigner
-    $.each(cascade, function (i, champ) {
-        if (document.store.champs[champ] === undefined || document.store.champs[champ] === "") {
-            var parent = 0;
+    $.each(cascade, function(i, pk) {
+        
+        if (document.store.champs[pk] !== undefined && document.store.champs[pk] !== "") {
+            champ = profil.mondes[monde].champs[pk];
+            var li_tag = $("<li></li>")
+                .addClass("tag-champ")
+                .attr("data-champ", pk)
+                .text(champ.label + " : " + champ.liste[document.store.champs[champ]])
+                .click(remove_champ_store)
+                ;
             
-            if (i != 0) {
-                parent = document.store.champs[cascade[i - 1]];
+            $("#list-champs").append(li_tag);
+        } else {
+            if (i > 0) {
+                champ = profil.mondes[monde].champs[cascade[i - 1]];
+                
+                $("#container-classification").show();
+                
+                // Types en racine
+                $.each(champ.types, function(j, type) {
+                    if (type.detail == 1) {
+                        asterisk = " *";
+                    } else {
+                        asterisk = "";
+                    }
+                    
+                    $("#list-classification").append(
+                        $("<li></li>")
+                        .attr("data-type", j)
+                        .attr("data-categorie", 0)
+                        .addClass("store-type")
+                        .text(type.label + asterisk)
+                        .click(change_type_store)
+                    );
+                });
+                
+                // Catégories
+                $.each(champ.categories, function(j, categorie) {
+                    var ul = $("<ul></ul>");
+                    
+                    // Types
+                    $.each(categorie.types, function(k, type) {
+                        if (type.detail == 1) {
+                            asterisk = " *";
+                        } else {
+                            asterisk = "";
+                        }
+                        ul.append(
+                            $("<li></li>")
+                            .attr("data-type", k)
+                            .attr("data-categorie", j)
+                            .addClass("store-type")
+                            .text(type.label + asterisk)
+                            .click(change_type_store)
+                        );
+                    });
+                    
+                    // On ajoute la catégorie à la liste
+                    $("#list-classification").append(
+                        $("<li></li>")
+                        .attr({
+                            "data-categorie": j,
+                            "data-state": "closed"
+                        })
+                        .addClass("store-categorie")
+                        .text(categorie.label)
+                        .click(toggle_categorie)      
+                    ).append(ul); // Ainsi que ses types  
+                });
+            } else {
+                $("#container-classification").hide();
             }
             
-            var div = $("<div></div>")
-                .addClass("champ-store")
-                .attr("data-champ", champ)
-            ;
+            champ = profil.mondes[monde].champs[pk];
             
             var select = $("<select></select>")
                 .addClass("select-champ")
                 .change(change_champ_store)
-                .attr("data-placeholder", profil.mondes[monde].champs[champ].label) // LOCALISATION
+                .attr("data-placeholder", champ.label) // LOCALISATION
                 .append("<option></option>")
             ;
             
@@ -269,7 +330,7 @@ var reload_champs = function() {
                     }
                 }
             };
-            
+                        
             if (profil.mondes[monde].references[parent] !== undefined) {
                 $.each(profil.mondes[monde].references[parent], function(j, valeur) {
                     tri.push({
@@ -289,20 +350,32 @@ var reload_champs = function() {
                 });
             }
             
-            $("#container-champs").append(div.append(select));
+            $("#container-nouveau-champ").empty()
+            .append(
+                $("<div></div>")
+                .addClass("entete-store")
+                .html("Clasificar con el <b>" + champ.label + "</b> siguiente :")
+            ).append(select);
             
-            $("#container-champs")
+            $("#container-nouveau-champ")
             .find("select")
             .chosen({
-                no_results_text:'Empeza a teclar para agregar un ' + profil.mondes[monde].champs[champ].label,
-                create_option_text:'Agregar ' + profil.mondes[monde].champs[champ].label + " ", // LOCALISATION
+                create_option_text:'Agregar ' + champ.label + " ", // LOCALISATION
                 create_option: add_value,
                 inherit_select_classes: true,
                 skip_no_results: true
             });
             
-            
-            $("#container-champs")
+            $("#container-nouveau-champ")
+            .find("select")
+            .on("chosen:showing_dropdown", function() {
+                $("div.select-champ input").tooltipster({
+                    content: 'Empeza a teclear para agregar un nuevo ' + champ.label,
+                    position: "left"
+                }).tooltipster("show");
+            });
+                        
+            $("#container-nouveau-champ")
             .find("select")
             .next("div")
             .find("input")
@@ -310,25 +383,31 @@ var reload_champs = function() {
                 if (event.which == 13) {
                     $("#container-champs").find("select").next("div").find("li.create-option").click();
                 }
-            })
+            });
+            
+            return false;
+        }
+    });
+    
+    //////////////////////////////////
+    // Affichage des champs déjà renseignés et du champ à renseigner
+    $.each(cascade, function (i, champ) {
+        if (document.store.champs[champ] === undefined || document.store.champs[champ] === "") {
+            var parent = 0;
+            
+            if (i != 0) {
+                parent = document.store.champs[cascade[i - 1]];
+            }
+            
+            var div = $("<div></div>")
+                .addClass("champ-store")
+                .attr("data-champ", champ)
+            ;
+            
             
             
             return false;    // On quitte la boucle pour ignorer les champs suivants      
         } else {
-            var div = $("<div></div>")
-                    .addClass("champ-store")
-                    .attr("data-champ", champ)
-                    ;
-                    
-            last_i = i;
-            $("#container-champs").append(
-                div.append(
-                    $("<div></div>")
-                    .addClass("tag-champ")
-                    .text(profil.mondes[monde].champs[champ].label + " : " + profil.mondes[monde].champs[champ].liste[document.store.champs[champ]])
-                    .click(remove_champ_store)
-                )
-            );
         } 
     });
     
@@ -336,59 +415,6 @@ var reload_champs = function() {
     // Affichage de l'arborescence des catégories et types
     var asterisk = "";
     
-    if (last_i !== undefined) {
-        // Types en racine
-        $.each(profil.mondes[monde].champs[cascade[last_i]].types, function(j, type) {
-            if (type.detail == 1) {
-                asterisk = " *";
-            } else {
-                asterisk = "";
-            }
-            
-            $("#container-classification").append(
-                $("<li></li>")
-                .attr("data-type", j)
-                .attr("data-categorie", 0)
-                .addClass("store-type")
-                .text(type.label + asterisk)
-                .click(change_type_store)
-            );
-        });
-        
-        // Catégories
-        $.each(profil.mondes[monde].champs[cascade[last_i]].categories, function(j, categorie) {
-            var ul = $("<ul></ul>");
-            
-            // Types
-            $.each(categorie.types, function(k, type) {
-                if (type.detail == 1) {
-                    asterisk = " *";
-                } else {
-                    asterisk = "";
-                }
-                ul.append(
-                    $("<li></li>")
-                    .attr("data-type", k)
-                    .attr("data-categorie", j)
-                    .addClass("store-type")
-                    .text(type.label + asterisk)
-                    .click(change_type_store)
-                );
-            });
-            
-            // On ajoute la catégorie à la liste
-            $("#container-classification").append(
-                $("<li></li>")
-                .attr({
-                    "data-categorie": j,
-                    "data-state": "closed"
-                })
-                .addClass("store-categorie")
-                .text(categorie.label)
-                .click(toggle_categorie)      
-            ).append(ul); // Ainsi que ses types  
-        });
-    }
 };
 
 var toggle_categorie = function() {
