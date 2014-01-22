@@ -991,7 +991,7 @@ html, body {
 #viewer-store {
     float: left;
     width: 45%;
-    height: 90%;
+    height: 80%;
 }
 
 #container-store {
@@ -1011,6 +1011,8 @@ html, body {
 .entete-store {
     margin-left: 5%;
     margin-right: 5%;
+    margin-bottom: 5px;
+    
     padding: 5px;
     
     font-size: 0.9em;
@@ -1062,7 +1064,6 @@ html, body {
     position: relative;
     width: 90%;
     text-align: center;
-    padding: 5px;
     
     margin-left: 5%;
     margin-right: 5%;
@@ -1109,17 +1110,15 @@ html, body {
     border: 1px solid #48afc2;
 }
 
-#container-champs .remove-tag-champ {
-    position: absolute;
-    top: 0;
-    right: 0;
-    
-    padding-right: 5px;
+#container-champs .tag-champ {
+    text-align: left;
     
     font-family: "Courier New", Courier, monospace;
-    font-size: 0.8em;
+    font-size: 0.9em;
     
     cursor: pointer;
+    
+    text-transform: uppercase;
 }
 
 /*###########################

@@ -27,10 +27,8 @@
             <ul id="list-champs"></ul>
         </div>
         <div id="container-classification">
-            <div class="entete-store"></div>
+            <div class="entete-store">Es uno de esos documentos :</div>
             <ul id="list-classification"></ul>
-        </div>
-        <div id="container-nouveau-champ">
         </div>
         <div id="container-details">
             <div id="champs-details"><input type="text" id="date-store"/>Fecha del documento : 
@@ -38,10 +36,12 @@
                     <input type="text" id="detail-store"/>Detalle : 
                 </div> <?php // LOCALISATION ?>
             </div>
-            <div class="boutons" id="bouton-store">Archivar en DINO</div>
         </div>
+        <div id="entete-new-champ" class="entete-store">... O ...</div>
+        <div id="container-nouveau-champ"></div>
     </div>
     <div style="clear: both;"></div> 
+    <div class="boutons" id="bouton-store">Archivar en DINO</div>
 </div>
 
 <div id="bucket-queue" class="bucket">
