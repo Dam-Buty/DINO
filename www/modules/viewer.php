@@ -9,7 +9,7 @@ if (isset($_SESSION["user"])) {
     if ($extension == "pdf") {
 #        echo $display;
 #        echo urlencode("../../do/doUnpack.php?document=" . $filename . "&display=" . $display);
-        header("Location: ../pdfjs/web/viewer.html?file=" . urlencode("../../do/doUnpack.php?document=" . $filename . "&display=" . $display));
+        header("Location: ../pdfjs/web/viewer.html?file=" . urlencode("../../do/doUnpack.php?document=" . $filename . "&display=" . $display . "&v=1"));
     } else {
     ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
