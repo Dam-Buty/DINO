@@ -24,6 +24,7 @@ var change_monde_store = function() {
     li.attr("data-selected", "1");
     
     $("#container-details").slideUp();
+    $("#bouton-store").fadeOut();
     
     if (Tuto.etape == 3) {
         Tuto.next();
@@ -36,8 +37,8 @@ var remove_champ_store = function() {
     var document = queue[$("#popup-store").attr("data-document")];
     var monde = document.store.monde;
     var cascade = profil.mondes[monde].cascade;
-    var div = $(this);
-    var champ = $(this).closest(".champ-store").attr("data-champ");
+    var li = $(this);
+    var champ = li.attr("data-champ");
     
     document.store.champs[champ] = "";
     document.store.categorie = "";
@@ -63,6 +64,7 @@ var remove_champ_store = function() {
     });
     
     $("#container-details").slideUp();
+    $("#bouton-store").fadeOut();
     
     reload_champs();
 };
@@ -70,8 +72,7 @@ var remove_champ_store = function() {
 var change_champ_store = function() {
     var document = queue[$("#popup-store").attr("data-document")];
     var select = $(this);
-    var div = select.closest("div");
-    var champ = div.attr("data-champ");
+    var champ = select.attr("data-champ");
     var champ_profil = profil.mondes[document.store.monde].champs[champ];
     var valeur = select.val();
     
@@ -84,6 +85,7 @@ var change_champ_store = function() {
     }
     
     $("#container-details").slideUp();
+    $("#bouton-store").fadeOut();
                 
     if (Tuto.etape == 4) {
         Tuto.next();
@@ -110,6 +112,7 @@ var affiche_details = function() {
     }
     
     $("#container-details").slideDown();
+    $("#bouton-store").fadeIn();
     
     if (type.detail == 1) {
         $("#input-detail").slideDown();      
@@ -117,7 +120,7 @@ var affiche_details = function() {
             source: type.details
         });
     } else {
-        $("#input-detail").slideUp()
+        $("#input-detail").hide()
             .find("input").val("");
     }
     
@@ -131,13 +134,14 @@ var remove_type_store = function() {
     document.store.type_doc = {};
     
     $("#container-details").slideUp();
+    $("#bouton-store").fadeOut();
     
     reload_champs();
 };
 
 var change_type_store = function() {
     var li = $(this);
-    var ul = $("#container-classification");
+    var ul = $("#list-classification");
     var document = queue[$("#popup-store").attr("data-document")];
     
     ul.find("li").attr("data-selected", 0);
@@ -164,8 +168,8 @@ var add_value = function(term) {
     var document = queue[$("#popup-store").attr("data-document")];
     var store = document.store;
     var chosen = this;
-    var select = $("#container-champs select");
-    var champ = select.closest("div").attr("data-champ");
+    var select = $("#container-nouveau-champ select");
+    var champ = select.attr("data-champ");
     var parent;
     
     if (store.last_champ !== "") {
@@ -204,7 +208,8 @@ var add_value = function(term) {
                 Store.champs[champ] = retour.pk;
                 Store.last_champ = champ;
                 
-                $("#container-details").hide();
+                $("#container-details").slideUp();
+                $("#bouton-store").fadeOut();
                 reload_champs();
                 
                 if (Tuto.etape == 4) {
@@ -226,126 +231,55 @@ var reload_champs = function() {
     var monde = document.store.monde;
     var cascade = profil.mondes[monde].cascade;
     var last_i = undefined;
+    var champ;
+    var parent;
     
-    $("#container-champs").empty();
-    $("#container-classification").empty();
+    $("#list-champs").empty();
+    $("#list-classification").empty();
     
-    //////////////////////////////////
-    // Affichage des champs déjà renseignés et du champ à renseigner
-    $.each(cascade, function (i, champ) {
-        if (document.store.champs[champ] === undefined || document.store.champs[champ] === "") {
-            var parent = 0;
+    $.each(cascade, function(i, pk) {
+        
+        if (document.store.champs[pk] !== undefined && document.store.champs[pk] !== "") {
+            champ = profil.mondes[monde].champs[pk];
+            var li_tag = $("<li></li>")
+                .addClass("tag-champ")
+                .attr("data-champ", pk)
+                .html("<b>" + champ.label + "</b><br/>" + champ.liste[document.store.champs[pk]])
+                .click(remove_champ_store)
+                ;
             
-            if (i != 0) {
-                parent = document.store.champs[cascade[i - 1]];
-            }
-            
-            var div = $("<div></div>")
-                .addClass("champ-store")
-                .attr("data-champ", champ)
-            ;
-            
-            var select = $("<select></select>")
-                .addClass("select-champ")
-                .change(change_champ_store)
-                .attr("data-placeholder", profil.mondes[monde].champs[champ].label) // LOCALISATION
-                .append("<option></option>")
-            ;
-            
-            // On va trier les options
-            var tri = [];
-            
-            var trie_options = function(a, b) {
-                var a_ = a.label;
-                var b_ = b.label;
-                
-                if (a_ < b_) {
-                    return -1;
-                } else {
-                    if (a_ > b_) {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                }
-            };
-            
-            if (profil.mondes[monde].references[parent] !== undefined) {
-                $.each(profil.mondes[monde].references[parent], function(j, valeur) {
-                    tri.push({
-                        pk: j,
-                        label: profil.mondes[monde].champs[cascade[i]].liste[j]
-                    })
-                });
-                
-                tri.sort(trie_options);
-                
-                $.each(tri, function(j, option) {
-                    select.append(
-                        $("<option></option>")
-                        .attr("value", option.pk)
-                        .text(option.label)
-                    );
-                });
-            }
-            
-            $("#container-champs").append(div.append(select));
-            
-            $("#container-champs")
-            .find("select")
-            .chosen({
-                no_results_text:'Empeza a teclar para agregar un ' + profil.mondes[monde].champs[champ].label,
-                create_option_text:'Agregar ' + profil.mondes[monde].champs[champ].label + " ", // LOCALISATION
-                create_option: add_value,
-                inherit_select_classes: true,
-                skip_no_results: true
-            });
-            
-            
-            $("#container-champs")
-            .find("select")
-            .next("div")
-            .find("input")
-            .keyup(function(event) {
-                if (event.which == 13) {
-                    $("#container-champs").find("select").next("div").find("li.create-option").click();
-                }
-            })
-            
-            
-            return false;    // On quitte la boucle pour ignorer les champs suivants      
+            $("#list-champs").append(li_tag);
         } else {
-            var div = $("<div></div>")
-                    .addClass("champ-store")
-                    .attr("data-champ", champ)
-                    ;
-                    
             last_i = i;
-            $("#container-champs").append(
-                div.append(
-                    $("<div></div>")
-                    .addClass("tag-champ")
-                    .text(profil.mondes[monde].champs[champ].label + " : " + profil.mondes[monde].champs[champ].liste[document.store.champs[champ]])
-                    .click(remove_champ_store)
-                )
-            );
-        } 
+            return false;
+        }
     });
     
-    ////////////////////////////////////////////:
-    // Affichage de l'arborescence des catégories et types
+    if (last_i === undefined) {
+        last_i = cascade.length;
+    }
+    
+    var pk = cascade[last_i];
+    var hasChild = (last_i <= cascade.length - 1);
     var asterisk = "";
     
-    if (last_i !== undefined) {
+    if (last_i > 0) {
+        champ_parent = cascade[last_i - 1];
+        parent = document.store.champs[champ_parent];
+        champ = profil.mondes[monde].champs[champ_parent];
+                        
+        var hasTypes = false;
+        
         // Types en racine
-        $.each(profil.mondes[monde].champs[cascade[last_i]].types, function(j, type) {
+        $.each(champ.types, function(j, type) {
+            hasTypes = true;
             if (type.detail == 1) {
                 asterisk = " *";
             } else {
                 asterisk = "";
             }
             
-            $("#container-classification").append(
+            $("#list-classification").append(
                 $("<li></li>")
                 .attr("data-type", j)
                 .attr("data-categorie", 0)
@@ -356,11 +290,12 @@ var reload_champs = function() {
         });
         
         // Catégories
-        $.each(profil.mondes[monde].champs[cascade[last_i]].categories, function(j, categorie) {
+        $.each(champ.categories, function(j, categorie) {
             var ul = $("<ul></ul>");
             
             // Types
             $.each(categorie.types, function(k, type) {
+                hasTypes = true;
                 if (type.detail == 1) {
                     asterisk = " *";
                 } else {
@@ -377,7 +312,7 @@ var reload_champs = function() {
             });
             
             // On ajoute la catégorie à la liste
-            $("#container-classification").append(
+            $("#list-classification").append(
                 $("<li></li>")
                 .attr({
                     "data-categorie": j,
@@ -388,6 +323,104 @@ var reload_champs = function() {
                 .click(toggle_categorie)      
             ).append(ul); // Ainsi que ses types  
         });
+        
+        if (hasTypes) {
+            $("#entete-classification").html("Documentos del <b>" + champ.label + "</b> : ");
+            $("#container-classification").show();
+        } else {
+            $("#container-classification").hide();
+        }      
+    } else {
+        $("#container-classification").hide();
+        parent = 0;
+    }
+    
+    if (hasChild) {
+        champ = profil.mondes[monde].champs[pk];
+        
+        var select = $("<select></select>")
+            .addClass("select-champ")
+            .change(change_champ_store)
+            .attr("data-champ", pk)
+            .attr("data-placeholder", "Selecciona un " + champ.label)
+            .append("<option></option>")
+        ;
+        
+        if (last_i % 2 == 1) {
+            select.addClass("select-odd");
+        }
+        
+        // On va trier les options
+        var tri = [];
+        
+        var trie_options = function(a, b) {
+            var a_ = a.label;
+            var b_ = b.label;
+            
+            if (a_ < b_) {
+                return -1;
+            } else {
+                if (a_ > b_) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        };
+                    
+        if (profil.mondes[monde].references[parent] !== undefined) {
+            $.each(profil.mondes[monde].references[parent], function(j, valeur) {
+                tri.push({
+                    pk: j,
+                    label: profil.mondes[monde].champs[cascade[last_i]].liste[j]
+                });
+            });
+            
+            tri.sort(trie_options);
+            
+            $.each(tri, function(j, option) {
+                select.append(
+                    $("<option></option>")
+                    .attr("value", option.pk)
+                    .text(option.label)
+                );
+            });
+        }
+        
+        $("#container-nouveau-champ").empty().show()
+        .append(select);
+        
+        $("#container-nouveau-champ")
+        .find("select")
+        .attr("data-champ", pk)
+        .chosen({
+            create_option_text:'Agregar ' + champ.label + " ", // LOCALISATION
+            create_option: add_value,
+            inherit_select_classes: true,
+            skip_no_results: true
+        });
+        
+        $("#container-nouveau-champ")
+        .find("select")
+        .on("chosen:showing_dropdown", function() {
+            $("div.select-champ input").tooltipster({
+                content: 'Empeza a teclear para agregar un nuevo ' + champ.label,
+                position: "left",
+                timer: 400
+            }).tooltipster("show");
+        });
+                    
+        $("#container-nouveau-champ")
+        .find("select")
+        .next("div")
+        .find("input")
+        .keyup(function(event) {
+            if (event.which == 13) {
+                $("#container-champs").find("select").next("div").find("li.create-option").click();
+            }
+        });
+    } else {
+        $("#container-nouveau-champ").hide();
     }
 };
 
@@ -463,6 +496,7 @@ var change_document = function(document) {
     }
     
     $("#container-details").slideUp();
+    $("#bouton-store").fadeOut();
     $("#detail-store").val("");
     
     $('li.store-type[data-selected="1"]').attr("data-selected", 0);
@@ -659,6 +693,7 @@ var _store_document = function(position) {
     
     // on cache les champs détails
     $("#container-details").hide();
+    $("#bouton-store").fadeOut();
           
     // On installe le viewer dans l'iframe
     

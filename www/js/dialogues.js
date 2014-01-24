@@ -26,6 +26,8 @@ var popup_details = function() {
         }
     );
     
+    $("#bouton-store").fadeIn();
+    
     $(".ZebraDialogOverlay").unbind().click(function(){
         var document = queue[$('li[data-editing="1"]').attr("data-position")];
         $("#container-details").detach().appendTo($("#container-store")).hide();

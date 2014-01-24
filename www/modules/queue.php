@@ -13,6 +13,7 @@
 </div>
 
 <div id="popup-store" data-document="">
+    <ul id="list-champs"></ul>
     <div id="container-nav">
         <div id="prev-store" class="nav-store"></div>
         <img id="del-doc-store" src="img/del_back_30.png" title="Borrar documento"/>
@@ -22,18 +23,31 @@
     <iframe id="viewer-store"></iframe>
     <ul id="mondes-store" class="list-mondes"></ul>
     <div id="container-store">
-        <div id="container-champs"></div>
-        <hr/>
-        <ul id="container-classification"></ul>
+        <div id="container-nouveau-champ">
+        </div>
+        <div id="container-classification">
+            <div class="entete-store" id="entete-classification"></div>
+            <ul id="list-classification"></ul>
+        </div>
         <div id="container-details">
-        <hr/>
-            <div id="champs-details"><input type="text" id="date-store"/>Fecha del documento : 
-                <div id="input-detail">
-                    <input type="text" id="detail-store"/>Detalle : 
-                </div> <?php // LOCALISATION ?>
+            <div class="ligne-details">
+                <div class="cell-details">
+                    Fecha del documento : 
+                </div>
+                <div class="cell-details">
+                    <input type="text" id="date-store"/>
+                </div>
+            </div>
+            <div class="ligne-details">
+                <div class="cell-details">
+                    Detalle : 
+                </div>
+                <div class="cell-details">
+                    <input type="text" id="detail-store"/>
+                </div>
             </div>
             <div class="boutons" id="bouton-store">Archivar en DINO</div>
-        </div>
+        </div>  
     </div>
     <div style="clear: both;"></div> 
 </div>

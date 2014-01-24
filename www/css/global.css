@@ -924,15 +924,17 @@ html, body {
 #popup-store {
     position: absolute;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
     
-    height: 80%;
-    width: 80%;
+    height: 94%;
+    width: 94%;
     
-    top: 10%;
-    left: 10%;
+    top: 3%;
+    left: 3%;
     
     padding: 25px;
     padding-top: 50px;
+    padding-bottom: 10px;
     
     background-color: #dbdbdb;
     
@@ -1008,6 +1010,17 @@ html, body {
     margin-top: -65px;
 }
 
+.entete-store {
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 5px;
+    
+    padding: 5px;
+    
+    font-size: 0.9em;
+    text-align: center;
+}
+
 #container-champs {
     text-align: center;
 }
@@ -1045,15 +1058,28 @@ html, body {
 /*    background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); */
 /*}*/
 
+#container-nouveau-champ {
+    padding: 10px;
+    border: 1px solid #000;
+    margin-bottom: 20px;
+}
+
 /*###########################
         Chosen popup
 #############################*/
 
-#container-champs .select-champ {
-    width: 90%;
+#container-store .select-champ {
+    position: relative;
+    width: 100%;
+    
+    text-align: center;
+    
+    font-size: 0.8em;
+    
+    cursor: pointer;
 }
 
-#container-champs .select-champ>a {
+#container-store .select-champ>a {
     border-radius: 0;
     color: white;
     border: 0;
@@ -1062,69 +1088,97 @@ html, body {
 }
 
 /* Fond champ */
-#container-champs .champ-store:nth-child(odd) .select-champ>a {
+#container-store .select-champ>a {
     background: #8ecb32;
 }
-
-#container-champs .champ-store:nth-child(even) .select-champ>a {
-    background: #56d4eb;
-}
-
+    
 /* valeur sélectionnée */
-#container-champs .champ-store:nth-child(odd) .highlighted {
+#container-store .select-champ .highlighted {
     background: #75a32d;
 }
 
-#container-champs .champ-store:nth-child(even) .highlighted {
-    background: #48afc2;
-}
-
 /* Fond drop */
-#container-champs .champ-store:nth-child(odd) .chosen-drop {
+#container-store .select-champ .chosen-drop {
     background: #8ecb32;
 }
 
-#container-champs .champ-store:nth-child(even) .chosen-drop {
-    background: #56d4eb;
+/* Fond champ */
+#container-store .select-odd>a {
+    background: #56D4EB;
+}
+    
+/* valeur sélectionnée */
+#container-store .select-odd .highlighted {
+    background: #48AFC2;
+}
+
+/* Fond drop */
+#container-store .select-odd .chosen-drop {
+    background: #56D4EB;
 }
 
 /*###########################
         Champ renseigné (tag-like)
 #############################*/
 
-#container-champs .tag-champ {
-    position: relative;
-    padding: 5px;
-    
-    margin-left: 5%;
-    margin-right: 5%;
-    
-    font-size: 0.8em;
-    
-    cursor: pointer;
-}
-
-#container-champs .champ-store:nth-child(odd) .tag-champ {
-    background-color: #8ecb32;
-    border: 1px solid #75a32d;
-}
-
-#container-champs .champ-store:nth-child(even) .tag-champ {
-    background-color: #56d4eb;
-    border: 1px solid #48afc2;
-}
-
-#container-champs .remove-tag-champ {
+#list-champs {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 127px;
+    right: 55%;
     
-    padding-right: 5px;
+    padding-left: 0;
+    margin-top: 0;
+    margin-right: -5px;
     
+    list-style-type: none;
+}
+
+.tag-champ {    
+    float: right;
+    
+    padding: 5px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-bottom: 10px;
+    margin-left: 100%;
+    
+    border: 1px solid #75a32d;
+    box-shadow: 0 0 1px 1px #888;
+    
+    background-color: #8ecb32;
+    background-image: url(../img/del_hover_15.png);
+    background-position: right top;
+    background-repeat: no-repeat;
+    
+    text-align: center;
     font-family: "Courier New", Courier, monospace;
-    font-size: 0.8em;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    
+    color: #1B1B1B;
     
     cursor: pointer;
+}
+
+.tag-champ:nth-child(even) {
+    border: 1px solid #48AFC2;
+    background-color: #56D4EB;
+}
+
+.tag-champ:hover {
+    background-image: url(../img/del_15.png);
+}
+
+.new-champ {
+    border: 1px dashed #484848;
+    color: #484848;
+    background-color: #8ecb32;
+    
+    background-image: none;
+}
+
+.new-champ:hover {
+    background-image: none;
 }
 
 /*###########################
@@ -1132,12 +1186,15 @@ html, body {
 #############################*/
 
 #container-classification {
-    margin-top: 0;
+    padding: 10px;
+}
+
+#list-classification {
     padding-left: 0;
     font-size: 0.8em;
 }
 
-#container-classification li {
+#list-classification li {
     padding-left: 0;
     list-style-type: none;
     
@@ -1148,14 +1205,14 @@ html, body {
     color: #888888;
 }
 
-#container-classification li.store-type {
+#list-classification li.store-type {
     background-color: white;
     cursor: pointer;
 
     border: 1px dotted white;
 }
 
-#container-classification li.store-type[data-selected="1"] {
+#list-classification li.store-type[data-selected="1"] {
     background-color: #d6dcea;
     color: black;
     border: 2px solid #8ecb32;
@@ -1165,25 +1222,25 @@ html, body {
     background-repeat: no-repeat;
 }
 
-#container-classification li.store-type:hover {
+#list-classification li.store-type:hover {
     background-color: #d6dcea;
     color: black;
     border: 1px dotted #575757;
 }
 
-#container-classification ul {
+#list-classification ul {
     display: none;
     padding-left: 5%;
 }
 
-#container-classification li.store-categorie {
+#list-classification li.store-categorie {
     background-color: #484848;
     cursor: pointer;
 
     border: 1px dotted #484848;
 }
 
-#container-classification li.store-categorie:hover {
+#list-classification li.store-categorie:hover {
     background-color: #575757;
 
     border: 1px dotted #575757;
@@ -1193,22 +1250,30 @@ html, body {
         Renseignement des détails
 #############################*/
 #container-details {
-    display: none;
+    display: table;
+    
+    width: 90%;
+    
+    padding-top: 10px;
+    margin-right: 5%;
+    margin-left: 5%;
+    
+    border-top: 1px solid #575757;
+    
     font-size: 0.8em;
 }
 
-#champs-details {
-    border: 1px solid black;
-    padding: 5px;
-    line-height: 3.5em;
+.ligne-details {
+    display: table-row;
 }
 
-#champs-details input {
-    float: right;
-    margin-top: 1px;
-    height: 2em;
-    width: 45%;
+.cell-details {
+    display: table-cell;
+    vertical-align: middle;
+    width: 50%;
 }
+
+
 
 .error {
     background-color: red;

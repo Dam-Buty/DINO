@@ -84,14 +84,15 @@ var Tuto = {
             
             $("#container-store").css("z-index", "701");
             detache_element($("#container-store"));
-            $("#container-store").tooltipster({
+            $("#container-nouveau-champ").tooltipster({
                 content: $('<span><p>Teclea el nombre de un nuevo <b>' + champ + '</b>, y agregalo en DINO.</p></span>'),
-                autoClose: false
+                autoClose: false,
+                position: "top"
             }).tooltipster("show");
         },
         clean: function() {
             attache_element($("#container-store"));
-            $('#container-store').tooltipster("destroy");
+            $('#container-nouveau-champ').tooltipster("destroy");
         }
     }, { ////////////////////// 5
         go: function() {
@@ -105,7 +106,7 @@ var Tuto = {
             
             setTimeout(function() {
                 detache_element($("#container-store"));
-                var last_categorie = $("#container-classification li.store-categorie").last();
+                var last_categorie = $("#list-classification li.store-categorie").last();
                 
                 if (last_categorie.is(":visible")) {
                     last_categorie
@@ -116,14 +117,14 @@ var Tuto = {
                         autoClose: false
                     })
                     .tooltipster("show");
-                    $("#container-classification li.store-categorie").click(function() {
-                        $("#container-classification li.store-categorie").last()
+                    $("#list-classification li.store-categorie").click(function() {
+                        $("#list-classification li.store-categorie").last()
                         .removeClass("hasTooltip")
                         .tooltipster("destroy");
                     });
                 }
                 
-                $("#container-classification li.store-type").tooltipster({
+                $("#list-classification li.store-type").tooltipster({
                     content: 'Eso es un tipo de documento!',
                     delay: 50,
                     position: "top"
@@ -132,7 +133,7 @@ var Tuto = {
         },
         clean: function() {
             attache_element($("#container-store"));
-            $("#container-classification li.tooltipstered")
+            $("#list-classification li.tooltipstered")
             .tooltipster("destroy");
         }
     }, { ////////////////////// 6
