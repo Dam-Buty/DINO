@@ -16,15 +16,15 @@
 
 #bouton-store {
     display: none;
-    margin-left: 25%;
+    margin-left: 50%;
     margin-top: 10px;
-    background-color: #eb911f;
-    border-color: #db7f1a;
-    width: 50%;
+    background-color: #56D4EB;
+    border-color: #48AFC2;
+    width: 100%;
 }
 
 #bouton-store:hover {
-    background-color: #db7f1a;
+    background-color: #48AFC2;
 }
 
 .back {

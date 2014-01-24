@@ -933,6 +933,7 @@ html, body {
     
     padding: 25px;
     padding-top: 50px;
+    padding-bottom: 10px;
     
     background-color: #dbdbdb;
     
@@ -991,7 +992,7 @@ html, body {
 #viewer-store {
     float: left;
     width: 45%;
-    height: 80%;
+    height: 90%;
 }
 
 #container-store {
@@ -1056,17 +1057,21 @@ html, body {
 /*    background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0)); */
 /*}*/
 
+#container-nouveau-champ {
+    padding: 10px;
+    border: 1px solid #000;
+    margin-bottom: 20px;
+}
+
 /*###########################
         Chosen popup
 #############################*/
 
 #container-store .select-champ {
     position: relative;
-    width: 90%;
-    text-align: center;
+    width: 100%;
     
-    margin-left: 5%;
-    margin-right: 5%;
+    text-align: center;
     
     font-size: 0.8em;
     
@@ -1100,30 +1105,68 @@ html, body {
         Champ renseigné (tag-like)
 #############################*/
 
-#container-champs .champ-store:nth-child(odd) .tag-champ {
-    background-color: #8ecb32;
-    border: 1px solid #75a32d;
-}
-
-#container-champs .champ-store:nth-child(even) .tag-champ {
-    background-color: #56d4eb;
-    border: 1px solid #48afc2;
-}
-
-#container-champs .tag-champ {
-    text-align: left;
+#list-champs {
+    position: absolute;
+    top: 127px;
+    right: 55%;
     
+    padding-left: 0;
+    margin-top: 0;
+    margin-right: -5px;
+    
+    list-style-type: none;
+}
+
+.tag-champ {    
+    float: right;
+    
+    padding: 5px;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-bottom: 10px;
+    margin-left: 100%;
+    
+    border: 1px solid #75a32d;
+    box-shadow: 0 0 1px 1px #888;
+    
+    background-color: #8ecb32;
+    background-image: url(../img/del_hover_15.png);
+    background-position: right top;
+    background-repeat: no-repeat;
+    
+    text-align: center;
     font-family: "Courier New", Courier, monospace;
     font-size: 0.9em;
+    text-transform: uppercase;
+    
+    color: #1B1B1B;
     
     cursor: pointer;
+}
+
+.tag-champ:hover {
+    background-image: url(../img/del_15.png);
+}
+
+.new-champ {
+    border: 1px dashed #484848;
+    color: #484848;
+    background-color: #8ecb32;
     
-    text-transform: uppercase;
+    background-image: none;
+}
+
+.new-champ:hover {
+    background-image: none;
 }
 
 /*###########################
         Classification de document
 #############################*/
+
+#container-classification {
+    padding: 10px;
+}
 
 #list-classification {
     padding-left: 0;
@@ -1186,22 +1229,30 @@ html, body {
         Renseignement des détails
 #############################*/
 #container-details {
-    display: none;
+    display: table;
+    
+    width: 90%;
+    
+    padding-top: 10px;
+    margin-right: 5%;
+    margin-left: 5%;
+    
+    border-top: 1px solid #575757;
+    
     font-size: 0.8em;
 }
 
-#champs-details {
-    border: 1px solid black;
-    padding: 5px;
-    line-height: 3.5em;
+.ligne-details {
+    display: table-row;
 }
 
-#champs-details input {
-    float: right;
-    margin-top: 1px;
-    height: 2em;
-    width: 45%;
+.cell-details {
+    display: table-cell;
+    vertical-align: middle;
+    width: 50%;
 }
+
+
 
 .error {
     background-color: red;

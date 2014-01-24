@@ -324,22 +324,14 @@ var reload_champs = function() {
             ).append(ul); // Ainsi que ses types  
         });
         
-        // S'il y a des types ou des catégories
-        // On les propose        
         if (hasTypes) {
+            $("#entete-classification").html("Documentos del <b>" + champ.label + "</b> : ");
             $("#container-classification").show();
         } else {
             $("#container-classification").hide();
-        }
-        
-        if (hasChild) {
-            $("#entete-new-champ").show();
-        } else {
-            $("#entete-new-champ").hide();
-        }                    
+        }      
     } else {
         $("#container-classification").hide();
-        $("#entete-new-champ").hide();
         parent = 0;
     }
     
@@ -349,7 +341,8 @@ var reload_champs = function() {
         var select = $("<select></select>")
             .addClass("select-champ")
             .change(change_champ_store)
-            .attr("data-champ", pk) // LOCALISATION
+            .attr("data-champ", pk)
+            .attr("data-placeholder", "Selecciona un " + champ.label)
             .append("<option></option>")
         ;
         
@@ -391,11 +384,7 @@ var reload_champs = function() {
         }
         
         $("#container-nouveau-champ").empty().show()
-        .append(
-            $("<div></div>")
-            .addClass("entete-store")
-            .html("Se clasifica con el <b>" + champ.label + "</b> siguiente :")
-        ).append(select);
+        .append(select);
         
         $("#container-nouveau-champ")
         .find("select")
@@ -412,7 +401,8 @@ var reload_champs = function() {
         .on("chosen:showing_dropdown", function() {
             $("div.select-champ input").tooltipster({
                 content: 'Empeza a teclear para agregar un nuevo ' + champ.label,
-                position: "left"
+                position: "left",
+                timer: 400
             }).tooltipster("show");
         });
                     

@@ -31,7 +31,7 @@ resize_img = function() {
     var y__ = y;
     
     if (x > x_ || y > y_) {
-        x__ = 0.90 * (x_ * Math.min(y_/(y * ( x_ / x) ), 1));
+        x__ = 0.95 * (x_ * Math.min(y_/(y * ( x_ / x) ), 1));
         y__ = x__ / r;
     }
     
