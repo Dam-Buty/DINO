@@ -27,10 +27,12 @@
         </div>
         <div id="container-classification">
             <div class="entete-store" id="entete-classification"></div>
-            <ul id="list-classification"></ul>
+            <ul class="classif" id="list-classification"></ul>
+            <div class="entete-store" id="entete-time"></div>
+            <ul class="classif" id="list-time"></ul>
         </div>
         <div id="container-details">
-            <div class="ligne-details">
+            <div class="ligne-details" id="container-date">
                 <div class="cell-details">
                     Fecha del documento : 
                 </div>
@@ -38,7 +40,7 @@
                     <input type="text" id="date-store"/>
                 </div>
             </div>
-            <div class="ligne-details" id="ligne-detail">
+            <div class="ligne-details" id="container-detail">
                 <div class="cell-details">
                     Detalle : 
                 </div>
