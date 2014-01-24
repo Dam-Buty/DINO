@@ -17,11 +17,17 @@ if (isset($_SESSION["niveau"])) {
         WHERE 
             `fk_client` = :client
             AND `niveau_document` IS NULL
+            AND (
+                `fk_user` = :user
+                OR 20 <= :niveau
+            )
         ORDER BY `display_document` ASC
-            ;";
+        ;";
             
     $params = [
-        "client" => $_SESSION["client"]
+        "client" => $_SESSION["client"],
+        "user" => $_SESSION["user"],
+        "niveau" => $_SESSION["niveau"]
     ];
     
     $result = dino_query($query, $params);

@@ -924,6 +924,7 @@ html, body {
 #popup-store {
     position: absolute;
     box-sizing: border-box;
+    -moz-box-sizing: border-box;
     
     height: 94%;
     width: 94%;
