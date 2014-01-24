@@ -37,7 +37,7 @@ if (isset($_SESSION)) {
 <link rel="stylesheet" href="css/zebra_dialog_custom.css?v=4" media="screen" type="text/css"/>
 <link rel="stylesheet" href="vendor/switchy.css?v=4" media="screen" type="text/css"/>
 <link rel="stylesheet" href="vendor/jquery-ui-1.10.3.custom.css?v=4" media="screen" type="text/css"/>
-<link rel="stylesheet" href="vendor/tooltipster.css?v=4 media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/tooltipster.css?v=4" media="screen" type="text/css"/>
 
 </head>
 <body>
@@ -198,23 +198,23 @@ if ($_SESSION["niveau"] >= 30) {
 <script src="vendor/switchy.js"></script>
 <script src="vendor/jquery.tooltipster.js"></script>
 
-<script src="js/bootstrap.js"></script>
-<script src="js/util.js"></script>
-<script src="js/core.js"></script>
-<script src="js/queue.js"></script>
-<script src="js/dragdrop.js"></script>
-<script src="js/store.js"></script>
-<script src="js/dialogues.js"></script>
-<script src="js/params.js"></script>
-<script src="js/tuto.js"></script>
+<script src="js/bootstrap.js?v=4"></script>
+<script src="js/util.js?v=4"></script>
+<script src="js/core.js?v=4"></script>
+<script src="js/queue.js?v=4"></script>
+<script src="js/dragdrop.js?v=4"></script>
+<script src="js/store.js?v=4"></script>
+<script src="js/dialogues.js?v=4"></script>
+<script src="js/params.js?v=4"></script>
+<script src="js/tuto.js?v=4"></script>
 
 <?php
     if ($_SESSION["niveau"] >= 20) {
     ?>
-<script src="js/admin.js"></script>
-<script src="js/admin/users.js"></script>
-<script src="js/admin/mondes.js"></script>
-<script src="js/admin/profil.js"></script>
+<script src="js/admin.js?v=4"></script>
+<script src="js/admin/users.js?v=4"></script>
+<script src="js/admin/mondes.js?v=4"></script>
+<script src="js/admin/profil.js?v=4"></script>
     <?php
     }
 ?>
