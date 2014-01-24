@@ -1101,6 +1101,21 @@ html, body {
     background: #8ecb32;
 }
 
+/* Fond champ */
+#container-store .select-odd>a {
+    background: #56D4EB;
+}
+    
+/* valeur sélectionnée */
+#container-store .select-odd .highlighted {
+    background: #48AFC2;
+}
+
+/* Fond drop */
+#container-store .select-odd .chosen-drop {
+    background: #56D4EB;
+}
+
 /*###########################
         Champ renseigné (tag-like)
 #############################*/
@@ -1142,6 +1157,11 @@ html, body {
     color: #1B1B1B;
     
     cursor: pointer;
+}
+
+.tag-champ:nth-child(even) {
+    border: 1px solid #48AFC2;
+    background-color: #56D4EB;
 }
 
 .tag-champ:hover {

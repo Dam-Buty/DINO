@@ -346,6 +346,10 @@ var reload_champs = function() {
             .append("<option></option>")
         ;
         
+        if (last_i % 2 == 1) {
+            select.addClass("select-odd");
+        }
+        
         // On va trier les options
         var tri = [];
         
