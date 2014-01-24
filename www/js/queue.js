@@ -203,6 +203,8 @@ var anime_queue = function() {
 var refresh_liste = function() {
     // queue.sort(compare);
     
+    $("#del-all").text("Borrar " + queue.length + " documentos");
+    
     $("#files-list li").detach();
     
     $.each(queue, function(i, document) {
