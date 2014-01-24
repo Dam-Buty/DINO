@@ -14,9 +14,9 @@ if (isset($_SESSION)) {
 <meta content="Damien BUTY" name="author" />
 <meta content="La revolucion documental!" name="description" />
 
-<link rel="stylesheet" href="css/global.css?v=3" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/arrows.css?v=3" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/tuto.css?v=3" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/global.css?v=4" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/arrows.css?v=4" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/tuto.css?v=4" media="screen" type="text/css"/>
 
 <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
 
@@ -25,19 +25,19 @@ if (isset($_SESSION)) {
 <?php
     if ($_SESSION["niveau"] >= 20) {
     ?>
-<link rel="stylesheet" href="css/admin.css?v=3" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/admin.css?v=4" media="screen" type="text/css"/>
     <?php
     }
 ?>
 
-<link rel="stylesheet" href="css/boutons.css?v=3" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/inputs.css?v=3" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/boutons.css?v=4" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/inputs.css?v=4" media="screen" type="text/css"/>
 
-<link rel="stylesheet" href="vendor/chosen.css" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/zebra_dialog_custom.css" media="screen" type="text/css"/>
-<link rel="stylesheet" href="vendor/switchy.css" media="screen" type="text/css"/>
-<link rel="stylesheet" href="vendor/jquery-ui-1.10.3.custom.css" media="screen" type="text/css"/>
-<link rel="stylesheet" href="vendor/tooltipster.css" media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/chosen.css?v=4" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/zebra_dialog_custom.css?v=4" media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/switchy.css?v=4" media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/jquery-ui-1.10.3.custom.css?v=4" media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/tooltipster.css?v=4 media="screen" type="text/css"/>
 
 </head>
 <body>
