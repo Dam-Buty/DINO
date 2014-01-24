@@ -33,7 +33,8 @@ function recupere_types($monde, $champ, $categorie) {
             `pk_type_doc`, 
             `label_type_doc`, 
             `detail_type_doc`, 
-            `niveau_type_doc` 
+            `niveau_type_doc`,
+            `time_type_doc`
         FROM `type_doc` 
         WHERE 
             `fk_client` = :client
@@ -57,6 +58,7 @@ function recupere_types($monde, $champ, $categorie) {
                 "label" => $row_types["label_type_doc"],
                 "detail" => $row_types["detail_type_doc"],
                 "niveau" => $row_types["niveau_type_doc"],
+                "time" => $row_types["time_type_doc"],
                 "details" => []
             ];
             
@@ -127,7 +129,8 @@ function recupere_categories($monde, $champ) {
         SELECT 
             `pk_categorie_doc`, 
             `label_categorie_doc`, 
-            `niveau_categorie_doc` 
+            `niveau_categorie_doc`, 
+            `time_categorie_doc` 
         FROM `categorie_doc` 
         WHERE 
             `fk_client` = :client
@@ -148,6 +151,7 @@ function recupere_categories($monde, $champ) {
             $categories[$row_categories["pk_categorie_doc"]] = [
                 "label" => $row_categories["label_categorie_doc"],
                 "niveau" => $row_categories["niveau_categorie_doc"],
+                "time" => $row_categories["time_categorie_doc"],
                 "types" => []
             ];
             

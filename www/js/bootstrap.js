@@ -84,6 +84,7 @@ var bootstrap = function() {
                 
                 $("#container-viewer-global").draggable({ handle: "div" }).resizable();
         
+                $("#bouton-store").click(archive_document);
                 $("#del-doc-store").click(remove_document_store);
                 
                 $("#del-all").click(remove_all_documents);

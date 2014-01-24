@@ -99,6 +99,7 @@ var affiche_details = function() {
     var monde = document.store.monde;
     var detail = 0;
     var type;
+    var time_categorie = 0;
     
     if (document.store.categorie == 0 || document.store.categorie == "") {
         type = profil.mondes[monde]
@@ -106,25 +107,39 @@ var affiche_details = function() {
                 .types[document.store.type_doc.pk];
     } else {
         type = profil.mondes[monde]
-                .champs[document.store.last_champ]
-                .categories[document.store.categorie]
-                .types[document.store.type_doc.pk]
+            .champs[document.store.last_champ]
+            .categories[document.store.categorie]
+            .types[document.store.type_doc.pk];
+        time_categorie = profil.mondes[monde]
+            .champs[document.store.last_champ]
+            .categories[document.store.categorie]
+            .time;
     }
     
-    $("#container-details").slideDown();
-    $("#bouton-store").fadeIn();
+    if (type.time == 1 || time_categorie == 1) {
+        $("#container-date").show();    
+    } else {
+        $("#container-date").hide();
+    }
     
     if (type.detail == 1) {
-        $("#input-detail").slideDown();      
+        $("#container-detail").show();      
         $("#detail-store").autocomplete({
             source: type.details
         });
     } else {
-        $("#input-detail").hide()
-            .find("input").val("");
+        $("#container-detail").hide();      
+        $("#detail-store").val("");
     }
     
-    $("#bouton-store").unbind().click(archive_document);
+    if (type.time == 1 || time_categorie == 1 || type.detail == 1) {
+        $("#bouton-store").css("width", "200%");
+    } else {
+        $("#bouton-store").css("width", "100%");
+    }
+    
+    $("#container-details").slideDown();
+    $("#bouton-store").fadeIn();
 };
 
 var remove_type_store = function() {
@@ -141,7 +156,7 @@ var remove_type_store = function() {
 
 var change_type_store = function() {
     var li = $(this);
-    var ul = $("#list-classification");
+    var ul = $(".classif");
     var document = queue[$("#popup-store").attr("data-document")];
     
     ul.find("li").attr("data-selected", 0);
@@ -236,10 +251,13 @@ var reload_champs = function() {
     
     $("#list-champs").empty();
     $("#list-classification").empty();
+    $("#list-time").empty();
     
     $.each(cascade, function(i, pk) {
         
         if (document.store.champs[pk] !== undefined && document.store.champs[pk] !== "") {
+            //////////////////////////////////////////
+            /// Création des tags            
             champ = profil.mondes[monde].champs[pk];
             var li_tag = $("<li></li>")
                 .addClass("tag-champ")
@@ -263,12 +281,16 @@ var reload_champs = function() {
     var hasChild = (last_i <= cascade.length - 1);
     var asterisk = "";
     
+    /////////////////////////////////////////
+    // Création des types de documents
     if (last_i > 0) {
         champ_parent = cascade[last_i - 1];
         parent = document.store.champs[champ_parent];
         champ = profil.mondes[monde].champs[champ_parent];
                         
         var hasTypes = false;
+        var hasTime = false;
+        var li_classif;
         
         // Types en racine
         $.each(champ.types, function(j, type) {
@@ -279,7 +301,14 @@ var reload_champs = function() {
                 asterisk = "";
             }
             
-            $("#list-classification").append(
+            if (type.time == "0") {
+                li_classif = $("#list-classification");
+            } else {
+                li_classif = $("#list-time");
+                hasTime = true;
+            }
+            
+            li_classif.append(
                 $("<li></li>")
                 .attr("data-type", j)
                 .attr("data-categorie", 0)
@@ -311,8 +340,15 @@ var reload_champs = function() {
                 );
             });
             
+            if (categorie.time == "0") {
+                li_classif = $("#list-classification");
+            } else {
+                li_classif = $("#list-time");
+                hasTime = true;
+            }
+            
             // On ajoute la catégorie à la liste
-            $("#list-classification").append(
+            li_classif.append(
                 $("<li></li>")
                 .attr({
                     "data-categorie": j,
@@ -325,16 +361,34 @@ var reload_champs = function() {
         });
         
         if (hasTypes) {
-            $("#entete-classification").html("Documentos del <b>" + champ.label + "</b> : ");
+            $("#entete-classification").html("Documentos <b>unicos</b> del <b>" + champ.label + "</b> : ");
             $("#container-classification").show();
         } else {
             $("#container-classification").hide();
+        }
+        
+        if (hasTime) {
+            $("#entete-time").html("Documentos <b>mensuales</b> del <b>" + champ.label + "</b> : ");
+            $("#entete-time").show();
+            $("#list-time").show();
+        } else {
+            $("#entete-time").hide();
+            $("#list-time").hide();
         }      
+        
+        if (hasTypes && hasTime) {
+            $("#entete-time").addClass("time");
+        } else {
+            $("#entete-time").removeClass("time");
+        }
+        
     } else {
         $("#container-classification").hide();
         parent = 0;
     }
     
+    /////////////////////////////////////////
+    // Création du champ à renseigner
     if (hasChild) {
         champ = profil.mondes[monde].champs[pk];
         
@@ -406,7 +460,7 @@ var reload_champs = function() {
             $("div.select-champ input").tooltipster({
                 content: 'Empeza a teclear para agregar un nuevo ' + champ.label,
                 position: "left",
-                timer: 400
+                timer: 1400
             }).tooltipster("show");
         });
                     
