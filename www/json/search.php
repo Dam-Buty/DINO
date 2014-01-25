@@ -38,10 +38,6 @@ if (isset($_SESSION["niveau"])) {
         "dvc3Monde" => $_POST["monde"],
         "vc3Client" => $_SESSION["client"],
         "vc3Monde" => $_POST["monde"],
-        "dvc4Client" => $_SESSION["client"],
-        "dvc4Monde" => $_POST["monde"],
-        "vc4Client" => $_SESSION["client"],
-        "vc4Monde" => $_POST["monde"],
         "cdClient" => $_SESSION["client"],
         "cdMonde" => $_POST["monde"]
     ]; 
@@ -55,22 +51,24 @@ if (isset($_SESSION["niveau"])) {
             `td`.`pk_type_doc` AS `type`,
             `tdd`.`detail_type_doc` AS `detail`,
             `tdd`.`revision_type_doc` AS `revision`,
-            ( SELECT GROUP_CONCAT( `pk_valeur_champ` SEPARATOR '||' )
-            FROM 
-                `valeur_champ` AS `vc`,
-                `document_valeur_champ` AS `dvc`
-            WHERE 
-                `dvc`.`fk_client` = :dvcClient
-                AND `dvc`.`fk_monde` = :dvcMonde
-                AND `vc`.`fk_client` = :vcClient
-                AND `vc`.`fk_monde` = :vcMonde
-                
-                AND `vc`.`fk_champ` = `dvc`.`fk_champ`
-                AND `vc`.`pk_valeur_champ` = `dvc`.`fk_valeur_champ`
-                
-                AND `dvc`.`fk_document` = `d`.`filename_document`
-            ORDER BY `vc`.`fk_champ`
-            ) AS `champs`
+            ( 
+                SELECT GROUP_CONCAT( `pk_valeur_champ` SEPARATOR '||' )
+                FROM 
+                    `valeur_champ` AS `vc`,
+                    `document_valeur_champ` AS `dvc`
+                WHERE 
+                    `dvc`.`fk_client` = :dvcClient
+                    AND `dvc`.`fk_monde` = :dvcMonde
+                    AND `vc`.`fk_client` = :vcClient
+                    AND `vc`.`fk_monde` = :vcMonde
+                    
+                    AND `vc`.`fk_champ` = `dvc`.`fk_champ`
+                    AND `vc`.`pk_valeur_champ` = `dvc`.`fk_valeur_champ`
+                    
+                    AND `dvc`.`fk_document` = `d`.`filename_document`
+                ORDER BY `vc`.`fk_champ`
+            ) AS `champs`,
+            ( `td`.`time_type_doc` * `d`.`date_document`) AS `time`
         FROM 
             `type_doc` AS `td`,
             `type_doc_document` AS `tdd`,
@@ -250,34 +248,15 @@ $query .= "
         # - Par nombre de champs ASC
         # - Par champ n+1 ASC ou DESC
         # - Par nombre de champs ASC ...
-        # - Par catégorie ASC, type ASC, détail ASC
-        ORDER BY ( 
-            SELECT GROUP_CONCAT( 
-                `label_valeur_champ` SEPARATOR '||'
-             )
-            FROM 
-                `valeur_champ` AS `vc4`,
-                `document_valeur_champ` AS `dvc4`
+        # - Par time ASC, time * date DESC, catégorie ASC, type ASC, détail ASC
+        ORDER BY `champs` ASC, `td`.`time_type_doc` ASC, LEFT(`time`, 6) DESC, (
+            SELECT `label_categorie_doc`
+            FROM `categorie_doc` AS `cd`
             WHERE 
-                `dvc4`.`fk_client` = :dvc4Client
-                AND `dvc4`.`fk_monde` = :dvc4Monde
-                
-                AND `vc4`.`fk_client` = :vc4Client
-                AND `vc4`.`fk_monde` = :vc4Monde
-                
-                AND `vc4`.`fk_champ` = `dvc4`.`fk_champ`
-                AND `vc4`.`pk_valeur_champ` = `dvc4`.`fk_valeur_champ`
-                
-                AND `dvc4`.`fk_document` = `d`.`filename_document`
-            ORDER BY `vc4`.`fk_champ`
-        ) ASC, (
-                SELECT `label_categorie_doc`
-                FROM `categorie_doc` AS `cd`
-                WHERE 
-                    `cd`.`fk_client` = :cdClient
-                    AND `cd`.`fk_monde` = :cdMonde
-                    AND `cd`.`pk_categorie_doc` = `td`.`fk_categorie_doc`
-           ) ASC, `td`.`label_type_doc` ASC, `tdd`.`detail_type_doc` ASC
+                `cd`.`fk_client` = :cdClient
+                AND `cd`.`fk_monde` = :cdMonde
+                AND `cd`.`pk_categorie_doc` = `td`.`fk_categorie_doc`
+       ) ASC, `td`.`label_type_doc` ASC, `tdd`.`detail_type_doc` ASC
         
         # Limites    
         LIMIT 0, 100
@@ -288,9 +267,19 @@ $query .= "
     if ($result["status"]) {
         $valeurs_champs = [];
         $categorie = 0;
+        $year = 0;
+        $month = 0;
         
         foreach($result["result"] as $row) {
             $champs_documents = [];
+            $year_document = 0;
+            $month_document = 0;
+            
+            if ($row["time"] != 0) {
+                $year_document = substr($row["time"], 0, 4);
+                $month_document = substr($row["time"], 4, 2);
+            }
+            
             
             // Extraction des valeurs de champs
             foreach(explode("||", $row["champs"]) as $key => $valeur) {
@@ -299,6 +288,8 @@ $query .= "
             
             // Rupture de valeur de champ
             if ($champs_documents != $valeurs_champs) {
+                $year = 0;
+                $month = 0;
                 $categorie = 0;
                 
                 foreach($champs_documents as $niveau => $champ) {
@@ -311,7 +302,25 @@ $query .= "
                     }
                 }
             }
-           
+            
+            // Rupture d'année
+            if ($year_document != $year) {
+                array_push($liste, [
+                    "type" => "an",
+                    "an" => $year_document
+                ]);
+                $mois = 0;
+            }
+            
+            // Rupture de mois
+            if ($month_document != $month) {
+                array_push($liste, [
+                    "type" => "mois",
+                    "mois" => $month_document
+                ]);
+                $categorie = 0;
+            }
+                
             // Rupture de catégorie
             if ($row["categorie"] != $categorie) {
                 array_push($liste, [
@@ -328,6 +337,7 @@ $query .= "
                 "display" => $row["display"],
                 "date" => $row["date"],
                 "detail" => $row["detail"],
+                "time" => $row["time"],
                 "revision" => $row["revision"]
             ];
             
