@@ -115,13 +115,13 @@ var affiche_details = function() {
     $("#bouton-store").fadeIn();
     
     if (type.detail == 1) {
-        $("#input-detail").slideDown();      
+        $("#ligne-detail").slideDown();      
         $("#detail-store").autocomplete({
             source: type.details
         });
     } else {
-        $("#input-detail").hide()
-            .find("input").val("");
+        $("#ligne-detail").hide();
+        $("#detail-store").val("");
     }
     
     $("#bouton-store").unbind().click(archive_document);
@@ -627,7 +627,13 @@ var avance_store = function(position) {
         }
         refresh_liste();
         $('#mondes-top li[data-monde="' + Store.monde + '"]').click(); 
-        cancel_store();
+        
+        if ($("#popup-store").is(":visible")) {
+            cancel_store();
+        } else {
+            $("#container-details").detach().appendTo($("#container-store")).hide();
+            dialogue.close();
+        }
     } else {
         if (position == queue.length - 1) {
             new_position = queue.length - 2;

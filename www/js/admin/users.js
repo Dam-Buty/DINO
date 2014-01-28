@@ -1,29 +1,57 @@
 var bootstrap_users = function() {
-    // Vide les champs de création si on vient de sauvegarder un user
+    // Affecte les évènements des champs
+    $("#new-login").unbind();
+    $("#new-login").focus(tip_login);
+    $("#new-login").keyup(check_login).change(check_login);
     
+    $("#new-pass").unbind();
+    $("#new-pass").focus(tip_pass);
+    $("#new-pass").keyup(check_pass).change(check_pass);
+    
+    $("#new-pass2").unbind();
+    $("#new-pass2").keyup(check_pass2).change(check_pass2);
+    
+    $("#new-mail").unbind();
+    $("#new-mail").focus(tip_mail);
+    $("#new-mail").keyup(check_mail).change(check_mail);
+    
+    // Style le combo
+    $("#new-niveau").chosen({
+        width: $("#new-login").outerWidth(),
+        disable_search_threshold: 10,
+        inherit_select_classes: true,
+        allow_single_deselect: true
+    });
+    
+    $("#new-niveau").on("chosen:showing_dropdown", tip_niveau);
+    $("#new-niveau").on("chosen:hiding_dropdown", kill_tip_niveau);
+    $("#new-niveau").change(kill_tip_niveau);
+    
+    refresh_users();
+};
+
+
+var refresh_users = function() {
     $("#mondes-top-back").empty();
     
     $("#new-user")
     .find("input")
         .removeClass()
+        .val("");
+        
+    $("#new-niveau")
         .val("")
-        .end()
-    .find("select")
-        .val("")
-        .trigger("chosen:updated")
-        .end()
-    ;
+        .trigger("chosen:updated");
     
-    $("#regles-new-user")
-        .find("[multiple]")
-            .val("")
-            .trigger("chosen:updated")
-            .end()
-        .find(".switch-me")
-            .val("KO")
-            .trigger("change")
-            .end()
-    ;
+    $("#liste-regles")
+    .find("[multiple]")
+        .val("")
+        .trigger("chosen:updated");
+        
+    $("#liste-regles")
+    .find(".switch-me")
+        .val("KO")
+        .trigger("change");
     
     $("#toggle-new-user").text("Crear usuario");
     
@@ -198,8 +226,7 @@ var bootstrap_users = function() {
             }
         }   
     });
-    
-};
+}
 
 var bootstrap_regles = function() {
     var ul = $("#bucket-regles").empty();
@@ -445,7 +472,8 @@ var edit_user = function() {
             li.find(".edit")
             .find(".edit-niveau").chosen({
                 inherit_select_classes: true,
-                disable_search_threshold: 10
+                disable_search_threshold: 10,
+                allow_single_deselect: true
             });
         }
         
@@ -527,26 +555,6 @@ var del_user = function() {
 };
 
 var toggle_new_user = function() {
-    // Affecte les évènements des champs
-    $("#new-login").unbind();
-    $("#new-login").focus(tip_login);
-    $("#new-login").keyup(check_login).change(check_login);
-    
-    $("#new-pass").unbind();
-    $("#new-pass").focus(tip_pass);
-    $("#new-pass").keyup(check_pass).change(check_pass);
-    
-    $("#new-pass2").unbind();
-    $("#new-pass2").keyup(check_pass2).change(check_pass2);
-    
-    $("#new-mail").unbind();
-    $("#new-mail").focus(tip_mail);
-    $("#new-mail").keyup(check_mail).change(check_mail);
-    
-    $("#new-niveau").on("chosen:showing_dropdown", tip_niveau);
-    $("#new-niveau").on("chosen:hiding_dropdown", kill_tip_niveau);
-    $("#new-niveau").change(kill_tip_niveau);
-    
     if ($("#container-new-user").is(":visible")) {
         $("#container-new-user").slideUp();
         $("#container-new-user").slideUp();
@@ -554,13 +562,6 @@ var toggle_new_user = function() {
         $("#save-new-user").fadeOut();
     } else {
         $("#container-new-user").slideDown();
-        
-        // Style le combo
-        $("#new-niveau").chosen({
-            width: $("#new-login").outerWidth(),
-            disable_search_threshold: 10,
-            inherit_select_classes: true
-        });
         
         // boutons
         $("#toggle-new-user").text("Cancelar creacion");
@@ -820,7 +821,7 @@ var save_user = function() {
                 200: function() {
                     popup(message, "confirmation");
                     toggle_new_user();
-                    bootstrap_users();
+                    refresh_users();
                 },
                 403: function() {
                     window.location.replace("index.php");

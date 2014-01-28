@@ -189,15 +189,15 @@ var chat = function () {
             done = true; 
             setTimeout(function() {
                 $(".purechat-widget").tooltipster({
-                    content: $("<p>El equipo DINO siempre esta disponible para ayudarte!</p><p>No hesites en venir platicar con nosotros.</p>"),
+                    content: $("<p>El equipo DINO siempre esta disponible para ayudarte!</p><p>No dudes en venir platicar con nosotros.</p>"),
                     timer: 5000,
                     position: "top"
                 }).tooltipster("show");
-            }, 1000);
+            }, 2000);
             
             setTimeout(function() {
                 $(".purechat-widget").tooltipster("destroy");
-            }, 16000);
+            }, 17000);
         } 
     }; 
 };

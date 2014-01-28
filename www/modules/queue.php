@@ -38,7 +38,7 @@
                     <input type="text" id="date-store"/>
                 </div>
             </div>
-            <div class="ligne-details">
+            <div class="ligne-details" id="ligne-detail">
                 <div class="cell-details">
                     Detalle : 
                 </div>
