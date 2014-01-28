@@ -352,7 +352,7 @@ var bootstrap_tuto = function() {
             200: function(tuto) {
                 $("body").append(tuto);
                 
-                if (profil.tuto == 1 && profil.niveau >= 10) {
+                if (profil.tuto == 1 && profil.niveau >= 10 && window.location.search != "?notuto") {
                     Tuto.start();
                 } 
             }

@@ -18,7 +18,7 @@ if (isset($_SESSION["niveau"])) {
     ]);  
     
     if ($result["status"]) {
-        header("Location: ../index.php");
+        header("Location: ../index.php?notuto");
         write_log([
             "libelle" => "UPDATE end tuto",
             "admin" => 1,
