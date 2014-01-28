@@ -185,7 +185,7 @@ if (isset($_SESSION["user"])) {
     ////////////////////////
     // Récupération des informations générales de l'user
     ////////////////////////
-    $query = "SELECT `niveau_user`, `fk_client`, `tuto_user`, `help_user`, `printer_client`, `entreprise_client` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = :login ;";
+    $query = "SELECT `niveau_user`, `fk_client`, `tuto_user`, `permanent_tuto_user`, `help_user`, `printer_client`, `entreprise_client` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = :login ;";
     
     $result = dino_query($query,[
         "login" => $_SESSION["user"]
@@ -203,6 +203,10 @@ if (isset($_SESSION["user"])) {
             $profil["printer"] = $row["printer_client"];
             $profil["tuto"] = $row["tuto_user"];
             $profil["help"] = $row["help_user"];
+            
+            if ($row["permanent_tuto_user"] == 1) {
+                $profil["tuto"] = 1;
+            }
                         
             //////////////////////////
             // Récupération des mondes sur lesquels l'user a des droits
