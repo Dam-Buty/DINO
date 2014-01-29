@@ -1,5 +1,5 @@
 <?php
-include("../includes/mysqli.php");
+include("../includes/PDO.php");
 ?>
 <select id="client">
 <?php

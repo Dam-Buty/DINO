@@ -1,6 +1,6 @@
 <?php
 if (isset($_SESSION["superadmin"])) {
-include("../includes/mysqli.php");
+include("../includes/PDO.php");
 ?>
 <div>
     <form name="leForm" action="do/doInscription.php" method="post">

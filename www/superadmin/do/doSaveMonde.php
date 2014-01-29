@@ -2,7 +2,7 @@
 session_start();
 
 if ($_SESSION["superadmin"]) {
-    include("../../includes/mysqli.php");
+    include("../../includes/PDO.php");
     include("../../includes/status.php");
     
     $params = [

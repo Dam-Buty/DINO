@@ -2,15 +2,27 @@
 session_start();
 
 if ($_SESSION["superadmin"]) {
-    include("../../includes/mysqli.php");
+    include("../../includes/PDO.php");
     include("../../includes/status.php");
     
-    $query = "SELECT `pk_monde`, `label_monde`, `niveau_monde` FROM `monde` WHERE `fk_client` = " . $_POST["client"] . ";";
+    $query = "
+        SELECT 
+            `pk_monde`, 
+            `label_monde`, 
+            `niveau_monde` 
+        FROM `monde` 
+        WHERE `fk_client` = :client
+    ;";
+           
+    $result = dino_query($query,[
+        "client" => $_POST["client"]
+    ]);
     
-    if ($result = $mysqli->query($query)) {
+    if ($result["status"]) {
         status(200);
         $json = "[ ";
-        while ($row = $result->fetch_assoc()) {
+        
+        foreach($result["result"] as $row) {
             if ($json != "[ ") {
                 $json .= ", ";
             }
@@ -21,7 +33,7 @@ if ($_SESSION["superadmin"]) {
         $json .= " ]";
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $result["errinfo"][2] . '" }';
     }
     
     header('Content-Type: application/json');
