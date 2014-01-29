@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (isset($_SESSION["superadmin"])) {
-    include("../../includes/mysqli.php");
+    include("../../includes/PDO.php");
     
     $query = "
         DELETE FROM `user_monde`

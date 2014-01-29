@@ -2,19 +2,30 @@
 session_start();
 
 if ($_SESSION["superadmin"]) {
-    include("../../includes/mysqli.php");
+    include("../../includes/PDO.php");
     include("../../includes/status.php");
     
-    $query = "SELECT `pk_champ`, `label_champ`, `pluriel_champ`               
-            FROM `champ` AS `c` 
-            WHERE `fk_monde` = " . $_POST["monde"] . "
-                AND `fk_client` = " . $_POST["client"] . "
-            ORDER BY `pk_champ` ASC";
+    $query = "
+        SELECT 
+            `pk_champ`, 
+            `label_champ`, 
+            `pluriel_champ`               
+        FROM `champ` 
+        WHERE 
+            `fk_monde` = :monde
+            AND `fk_client` = :client
+        ORDER BY `pk_champ` ASC";
+           
+    $result = dino_query($query,[
+        "client" => $_POST["client"],
+        "monde" => $_POST["monde"]
+    ]);
     
-    if ($result = $mysqli->query($query)) {
+    if ($result["status"]) {
         status(200);
         $json = "[ ";
-        while ($row = $result->fetch_assoc()) {
+        
+        foreach($result["result"] as $row) {
             if ($json != "[ ") {
                 $json .= ", ";
             }
@@ -25,7 +36,7 @@ if ($_SESSION["superadmin"]) {
         $json .= " ]";
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $result["errinfo"][2] . '" }';
     }
     
     header('Content-Type: application/json');
