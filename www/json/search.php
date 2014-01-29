@@ -271,7 +271,7 @@ $query .= "
        ) ASC, `td`.`label_type_doc` ASC, `tdd`.`detail_type_doc` ASC
         
         # Limites    
-        LIMIT 0, 100
+        LIMIT 0, 500
     ;";
     
     $result = dino_query($query, $params);

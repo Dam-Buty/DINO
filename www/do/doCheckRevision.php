@@ -57,7 +57,8 @@ if ($_SESSION["niveau"] >= 10) {
         $query .= "
                 AND LEFT(
                     `d`.`date_document` * 1, 6
-                ) = '" . $_POST["time"] . "'";
+                ) = :time";
+        $params["time"] = $_POST["time"];
     }
     
     $query .= "
