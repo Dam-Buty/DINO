@@ -5,15 +5,41 @@ if ($_SESSION["superadmin"]) {
     include("../../includes/mysqli.php");
     include("../../includes/status.php");
     
-    $query = "DELETE FROM `categorie_doc` WHERE `pk_categorie_doc` = " . $_POST["pk"] . " AND `fk_client` = " . $_POST["client"] . " AND `fk_monde` = " . $_POST["monde"] . " AND `fk_champ` = " . $_POST["champ"] . "; DELETE FROM `type_doc` WHERE `fk_categorie` = " . $_POST["pk"] . " AND `fk_client` = " . $_POST["client"] . " AND `fk_monde` = " . $_POST["monde"] . " AND `fk_champ` = " . $_POST["champ"] . ";";
+    $query = "
+        DELETE FROM `categorie_doc` 
+        WHERE 
+            `pk_categorie_doc` = :pk
+            AND `fk_client` = :client
+            AND `fk_monde` = :monde
+            AND `fk_champ` = :champ
+        ;";
+            
+    $result = dino_query($query,[
+        "client" => $_SESSION["client"],
+        "monde" => $_POST["monde"],
+        "champ" => $_POST["champ"],
+        "pk" => $_POST["pk"]
+    ]);
+            
+    if ($result["status"]) {
     
-    if ($mysqli->multi_query($query)) {
-        $i = 0; 
-        do { 
-            $i++; 
-        } while ($mysqli->next_result()); 
+        $query = "
+            DELETE FROM `type_doc` 
+            WHERE 
+                `fk_categorie` = :pk
+                AND `fk_client` = :client
+                AND `fk_monde` = :monde
+                AND `fk_champ` = :champ
+        ;"; 
         
-        if (!$mysqli->errno) { 
+        $result = dino_query($query,[
+            "client" => $_SESSION["client"],
+            "monde" => $_POST["monde"],
+            "champ" => $_POST["champ"],
+            "pk" => $_POST["pk"]
+        ]);
+        
+        if ($result["status"]) { 
             status(200);
         } else {
             status(500);

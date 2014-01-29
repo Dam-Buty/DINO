@@ -42,6 +42,7 @@ var change_monde_profil = function() {
         var marge_base = marge;
         var champ = monde.champs[pk];
         var new_ul = $("<ul></ul>").css("margin-left", marge + "%").addClass("liste-champ");
+        var hasTime = false;
         
         // On affiche le champ
         ul.append(affiche_ligne("champ", pk, champ.label, marge, {niveau: i}));
@@ -57,30 +58,112 @@ var change_monde_profil = function() {
         // NEW type
         ul.append(affiche_ligne("type", "new", "", marge, { detail: "0", niveau: "0" }));
         
-        // On liste les types en racine
+        // On liste les types *non time* en racine 
         $.each(champ.types, function(j, type) {
-            ul.append(affiche_ligne("type", j, type.label, marge, type));
+            if (type.time == 0) {
+                ul.append(affiche_ligne("type", j, type.label, marge, type));
+            } else {
+                hasTime = true;
+            }
         });
         
-        // On liste les catégories et leurs types
+        // On liste les catégories *non time* et leurs types
         $.each(champ.categories, function(j, categorie) {
-            var ul_categorie = $("<ul></ul>").css("margin-left", marge + "%").addClass("liste-categorie");
+            if (categorie.time == 0) {
+                var ul_categorie = $("<ul></ul>").css("margin-left", marge + "%").addClass("liste-categorie");
+                
+                ul.append(affiche_ligne("categorie", j, categorie.label, marge, categorie));
+                
+                marge += 2;
+                
+                // NEW type
+                ul_categorie.append(affiche_ligne("type", "new", "", marge, { detail: "0", niveau: "0" }));
+                
+                $.each(categorie.types, function(k, type) {
+                    ul_categorie.append(affiche_ligne("type", k, type.label, marge, type));
+                });
+                
+                ul.append(ul_categorie);
+                
+                marge -= 2;
+            } else {
+                hasTime = true;
+            }
+        });
+        
+        // Si on a du time, on ajoute la ligne An et la ligne Mois
+        if (hasTime) {
+            marge += 2;
             
-            ul.append(affiche_ligne("categorie", j, categorie.label, marge, categorie));
+            var li_an = $("<li></li>")
+                        .attr({
+                            "data-type": "champ"
+                        })
+                        .css("margin-left", marge + "%")
+                        .addClass("profil")
+                        .addClass("profil-champ")
+                        .addClass("liste")
+                        .html("A&ntilde;o");
+                        
+            var ul_an = $("<ul></ul>")
+                        .css("margin-left", marge + "%")
+                        .addClass("liste-champ");
+                        
+            var li_mois = $("<li></li>")
+                        .attr({
+                            "data-type": "champ"
+                        })
+                        .css("margin-left", (marge + 2) + "%")
+                        .addClass("profil")
+                        .addClass("profil-champ")
+                        .addClass("liste")
+                        .html("Mes");
+                        
+            var ul_mois = $("<ul></ul>")
+                        .css("margin-left", (marge + 2) + "%")
+                        .addClass("liste-champ");
+            
+            
+            ul.append(
+                li_an
+            ).append(
+                ul_an.append(
+                    li_mois
+                ).append(
+                    ul_mois
+                )
+            );
             
             marge += 2;
             
-            // NEW type
-            ul_categorie.append(affiche_ligne("type", "new", "", marge, { detail: "0", niveau: "0" }));
-            
-            $.each(categorie.types, function(k, type) {
-                ul_categorie.append(affiche_ligne("type", k, type.label, marge, type));
+            // Puis on ajoute les types et catégories time
+            $.each(champ.types, function(j, type) {
+                if (type.time == 1) {
+                    ul_mois.append(affiche_ligne("type", j, type.label, marge, type));
+                }
             });
             
-            ul.append(ul_categorie);
-            
-            marge -= 2;
-        });
+            $.each(champ.categories, function(j, categorie) {
+                if (categorie.time == 1) {
+                    var ul_categorie = $("<ul></ul>").css("margin-left", marge + "%").addClass("liste-categorie");
+                    
+                    ul_mois.append(affiche_ligne("categorie", j, categorie.label, marge, categorie));
+                    
+                    marge += 2;
+                    
+                    // NEW type
+                    ul_categorie.append(affiche_ligne("type", "new", "", marge, { detail: "0", niveau: "0" }));
+                    
+                    $.each(categorie.types, function(k, type) {
+                        ul_categorie.append(affiche_ligne("type", k, type.label, marge, type));
+                    });
+                    
+                    ul_mois.append(ul_categorie);
+                    
+                    marge -= 2;
+                }
+            });
+        }
         
         marge = marge_base + 2;
         niveau++;
