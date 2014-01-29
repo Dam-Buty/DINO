@@ -615,7 +615,13 @@ var archive_document = function() {
         },
         statusCode: {
             200: function() {                
-                message = "Ya existe un <b>" + type.label + " " + store.type_doc.detail + "</b> por el <b>" + champ.label + " <u>" + champ.liste[store.champs[store.last_champ]] + "</u></b>. Si picas <i>Confirmar</i>, se creara una nueva <b>revision</b> de este documento.";
+                var label_doc = type.label + " " + store.type_doc.detail;
+                
+                if (type.time == 1) {
+                    label_doc += "</b> de <b>" + mois[store.date.substring(3, 5)] + " " + store.date.substring(6, 10);
+                }
+                
+                message = "Ya existe un <b>" + label_doc + "</b> por el <b>" + champ.label + " <u>" + champ.liste[store.champs[store.last_champ]] + "</u></b>.<br/>Si picas <i>Confirmar</i>, se creara una nueva <b>revision</b> de este documento.";
                 
                 var callback = function() {
                     _archive_document(document, store);
@@ -637,6 +643,20 @@ var archive_document = function() {
 };
 
 var _archive_document = function(document, store) {
+    var monde = profil.mondes[store.monde];
+    var type, time;
+    
+    if (store.categorie == 0) {
+        type = monde.champs[store.last_champ].types[store.type_doc.pk];
+    } else {
+        type = monde.champs[store.last_champ].categories[store.categorie].types[store.type_doc.pk];
+    }
+    
+    if (type.time == 1) {
+        time = store.date.substring(6, 10) + store.date.substring(3, 5);
+    } else {
+        time = "000000";
+    }
 
     $.ajax({
         url: "do/doStore.php",
@@ -649,6 +669,7 @@ var _archive_document = function(document, store) {
             type: store.type_doc.pk,
             detail: store.type_doc.detail,
             champs: store.champs,
+            time: time,
             maxchamp: store.last_champ
         },
         statusCode: {

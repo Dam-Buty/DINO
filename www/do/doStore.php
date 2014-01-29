@@ -41,6 +41,7 @@ if ($_SESSION["niveau"] >= 10) {
             "client" => $_SESSION["client"],
             "filename" => $_POST["filename"],
             "detail" => $_POST["detail"],
+            "dClient" => $_SESSION["client"],
             "tddClient" => $_SESSION["client"],
             "tddMonde" => $_POST["monde"],
             "tddCategorie" => $_POST["categorie"],
@@ -70,11 +71,18 @@ if ($_SESSION["niveau"] >= 10) {
                     SELECT COALESCE(MAX(`revision_type_doc`) + 1, 1) 
                     FROM (
                         SELECT `revision_type_doc` 
-                        FROM `type_doc_document` AS `tdd`
-                        WHERE `tdd`.`fk_client` = :tddClient
+                        FROM 
+                            `type_doc_document` AS `tdd`,
+                            `document` AS `d`
+                        WHERE 
+                            `d`.`fk_client` = :dClient
+                            AND `d`.`filename_document` = `tdd`.`fk_document`
+                        
+                            AND `tdd`.`fk_client` = :tddClient
                             AND `tdd`.`fk_monde` = :tddMonde
                             AND `tdd`.`fk_categorie_doc` = :tddCategorie
                             AND `tdd`.`fk_type_doc` = :tddType 
+                            
                             AND `tdd`.`detail_type_doc` = :tddDetail
                             
         ";
@@ -95,6 +103,14 @@ if ($_SESSION["niveau"] >= 10) {
             $params_type["monde" . $pk] = $_POST["monde"];
             $params_type["champ" . $pk] = $pk;
             $params_type["valeur" . $pk] = $valeur;
+        }
+    
+        if ($_POST["time"] != "000000") {
+            $query_type .= "
+                            AND LEFT(
+                                `d`.`date_document` * 1, 6
+                            ) = :time";
+            $params_type["time"] = $_POST["time"];
         }
     
         $query_type .= "

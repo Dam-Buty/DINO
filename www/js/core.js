@@ -315,6 +315,7 @@ var affiche_revisions = function() {
     var type = li.attr("data-type-doc");
     var detail = li.attr("data-detail");
     var champ = profil.mondes[Core.monde].cascade[li.attr("data-niveau")];
+    var time = li.attr("data-time");
     
     if (img.attr("data-state") == "closed") {
         $.ajax({
@@ -324,6 +325,7 @@ var affiche_revisions = function() {
                 monde: Core.monde,
                 champ: champ,
                 filename: filename,
+                time: time,
                 categorie: categorie,
                 type: type,
                 detail: detail
@@ -549,12 +551,15 @@ var construit_table = function() {
                     var champ_parent = monde.champs[cascade[stack_champs.length - 1]];
                     var type, img_revisions, img_del;
                     var extension = ligne.filename.split(".").pop().toLowerCase();
+                    var time;
                     
                     if (categorie == 0) {
                         type = champ_parent.types[ligne.type].label;
+                        time = champ_parent.types[ligne.type].time;
                         marge = stack_champs.length * 2;
                     } else {
                         type = champ_parent.categories[categorie].types[ligne.type].label;
+                        time = champ_parent.categories[categorie].types[ligne.type].time;
                         marge = stack_champs.length * 2 + 2;
                     }
                     
@@ -605,11 +610,18 @@ var construit_table = function() {
                         filetype ="xxx";
                     }                    
                     
+                    if (time == 1) {
+                        time = ligne.date.split("/")[2] + ligne.date.split("/")[1];
+                    } else {
+                        time = "000000";
+                    }
+                    
                     li = $("<li></li>")
                     .attr({
                         "data-type": "document",
                         "data-stack": stack_champs,
                         "data-filename": ligne.filename,
+                        "data-time": time,
                         "data-filetype": filetype,
                         "data-display": ligne.display,
                         "data-categorie": categorie,

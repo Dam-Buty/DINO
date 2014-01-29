@@ -5,7 +5,25 @@ include("../includes/log.php");
 
 if (isset($_SESSION["niveau"])) {
     include("../includes/PDO.php");
-    
+       
+    $params = [
+        "client" => $_SESSION["client"],
+        "monde" => $_POST["monde"],
+        "champ" => $_POST["champ"],
+        "categorie" => $_POST["categorie"],
+        "type" => $_POST["type"],
+        "detail" => $_POST["detail"],
+        "filename" => $_POST["filename"],
+        "dvc2Client" => $_SESSION["client"],
+        "dvc2Monde" => $_POST["monde"],
+        "vc2Client" => $_SESSION["client"],
+        "vc2Monde" => $_POST["monde"],
+        "vc2Filename" => $_POST["filename"],
+        "dvc3Client" => $_SESSION["client"],
+        "dvc3Monde" => $_POST["monde"],
+        "vc3Client" => $_SESSION["client"],
+        "vc3Monde" => $_POST["monde"]
+    ];   
     
     $query = "
             SELECT `fk_document`, `revision_type_doc`, 
@@ -31,7 +49,7 @@ if (isset($_SESSION["niveau"])) {
                 # Selection des documents ayant les memes champs
                 AND ( 
                     SELECT GROUP_CONCAT( 
-                        CONCAT_WS('%%', `label_valeur_champ`, `pk_valeur_champ`)
+                        `pk_valeur_champ`
                         SEPARATOR '||'
                     )
                     FROM 
@@ -49,8 +67,8 @@ if (isset($_SESSION["niveau"])) {
                         AND `dvc2`.`fk_document` = :vc2Filename
                     ORDER BY `vc2`.`fk_champ`
                     ) = ( 
-                        SELECT GROUP_CONCAT( 
-                            CONCAT_WS('%%', `label_valeur_champ`, `pk_valeur_champ`)
+                        SELECT GROUP_CONCAT(
+                            `pk_valeur_champ`
                             SEPARATOR '||'
                         )
                         FROM 
@@ -67,30 +85,19 @@ if (isset($_SESSION["niveau"])) {
 
                             AND `dvc3`.`fk_document` = `d`.`filename_document`
                         ORDER BY `vc3`.`fk_champ`
-                    )
-            ORDER BY `revision_type_doc` ASC
+                    )";
+              
+    if ($_POST["time"] != "000000") {
+        $query .= "
+                AND LEFT(
+                    `d`.`date_document` * 1, 6
+                ) = :time";
+        $params["time"] = $_POST["time"];
+    }
+    
+            "ORDER BY `revision_type_doc` ASC
             ;";
-       
-    $params = [
-        "client" => $_SESSION["client"],
-        "monde" => $_POST["monde"],
-        "champ" => $_POST["champ"],
-        "categorie" => $_POST["categorie"],
-        "type" => $_POST["type"],
-        "detail" => $_POST["detail"],
-        "filename" => $_POST["filename"],
-        "dvc2Client" => $_SESSION["client"],
-        "dvc2Monde" => $_POST["monde"],
-        "vc2Client" => $_SESSION["client"],
-        "vc2Monde" => $_POST["monde"],
-        "vc2Filename" => $_POST["filename"],
-        "dvc3Client" => $_SESSION["client"],
-        "dvc3Monde" => $_POST["monde"],
-        "vc3Client" => $_SESSION["client"],
-        "vc3Monde" => $_POST["monde"]
-    ];             
-    
-    
+              
     $result = dino_query($query, $params);
     
     if ($result["status"]) {
