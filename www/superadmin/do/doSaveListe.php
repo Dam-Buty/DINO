@@ -2,28 +2,48 @@
 session_start();
 
 if ($_SESSION["superadmin"]) {
-    include("../../includes/mysqli.php");
+    include("../../includes/PDO.php");
     include("../../includes/status.php");
     
-    $query = "DELETE FROM `valeur_champ` WHERE `fk_champ` = " . $_POST["champ"] . " AND `fk_monde` = " . $_POST["monde"] . " AND `fk_client` = " . $_POST["client"] . ";";
+    $query = "
+        DELETE FROM `valeur_champ` 
+        WHERE 
+            `fk_champ` = :champ
+            AND `fk_monde` = :monde
+            AND `fk_client` = :client
+    ;";
     
-    foreach(explode(PHP_EOL, $_POST["liste"]) as $ligne) {
-        if ($ligne != "") {
-            $query .= "INSERT INTO `valeur_champ` (`label_valeur_champ`, `fk_champ`, `fk_monde`, `fk_client`) VALUES ('" . $ligne . "', " . $_POST["champ"] . ", " . $_POST["monde"] . ", " . $_POST["client"] . ");";
-        }
-    }
+    $result = dino_query($query,[
+        "client" => $_POST["client"],
+        "monde" => $_POST["monde"],
+        "champ" => $_POST["champ"]
+    ]);
     
-    if ($mysqli->multi_query($query)) {
-        $i = 0; 
-        do { 
-            $i++; 
-        } while ($mysqli->next_result()); 
-        
-        if (!$mysqli->errno) { 
-            status(200);
-        } else {
-            status(500);
-            $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+    
+    if ($result["status"]) {
+        foreach(explode(PHP_EOL, $_POST["liste"]) as $ligne) {
+            if ($ligne != "") {
+                $query = "
+                    INSERT INTO `valeur_champ` (
+                        `label_valeur_champ`, 
+                        `fk_champ`, 
+                        `fk_monde`, 
+                        `fk_client`
+                    ) VALUES (
+                        :label, 
+                        :champ, 
+                        :monde, 
+                        :client
+                    )
+                ;";
+                
+                $result = dino_query($query,[
+                    "client" => $_POST["client"],
+                    "monde" => $_POST["monde"],
+                    "champ" => $_POST["champ"],
+                    "label" => $ligne
+                ]);
+            }
         }
     } else {
         status(500);

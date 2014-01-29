@@ -2,7 +2,7 @@
 session_start();
 
 if ($_SESSION["superadmin"]) {
-    include("../../includes/mysqli.php");
+    include("../../includes/PDO.php");
     include("../../includes/status.php");
     
     $query = "
@@ -15,7 +15,7 @@ if ($_SESSION["superadmin"]) {
         ;";
             
     $result = dino_query($query,[
-        "client" => $_SESSION["client"],
+        "client" => $_POST["client"],
         "monde" => $_POST["monde"],
         "champ" => $_POST["champ"],
         "pk" => $_POST["pk"]
@@ -33,7 +33,7 @@ if ($_SESSION["superadmin"]) {
         ;"; 
         
         $result = dino_query($query,[
-            "client" => $_SESSION["client"],
+            "client" => $_POST["client"],
             "monde" => $_POST["monde"],
             "champ" => $_POST["champ"],
             "pk" => $_POST["pk"]
@@ -43,11 +43,11 @@ if ($_SESSION["superadmin"]) {
             status(200);
         } else {
             status(500);
-            $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+            $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $result["errinfo"][2] . '" }';
         }
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $result["errinfo"][2] . '" }';
     }
     
     header('Content-Type: application/json');

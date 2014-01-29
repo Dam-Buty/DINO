@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (isset($_SESSION["superadmin"])) {
-    include("../../includes/mysqli.php");
+    include("../../includes/PDO.php");
     include("../../includes/crypt.php");
     
     // Génération et cryptage de la clef de sécurité avec le login, le mdp et le mail_client
@@ -15,13 +15,60 @@ if (isset($_SESSION["superadmin"])) {
 #    echo "User : " . $clef_user . "<br/>";
 #    echo "Clef : <pre>" . $clef_stockage . "</pre>";
     
-    $query_client = "INSERT INTO `client` (`entreprise_client`, `mail_client`, `nom_contact_client`, `poste_contact_client`, `phone_contact_client`, `bucket_client`, `credit_client`) VALUES ('" . $_POST["entreprise"] . "', '" . $_POST["mail"] . "', '" . $_POST["nom_contact"] . "', '" . $_POST["poste_contact"] . "', '" . $_POST["phone_contact"] . "', '" . $_POST["bucket"] . "', " . $_POST["credit"] . ");";
+    $query_client = "
+        INSERT INTO `client` (
+            `entreprise_client`, 
+            `mail_client`, 
+            `nom_contact_client`, 
+            `poste_contact_client`, 
+            `phone_contact_client`, 
+            `bucket_client`, 
+            `credit_client`
+        ) VALUES (
+            :entreprise, 
+            :mail, 
+            :nom, 
+            :poste, 
+            :phone
+    );";
     
-    if ($mysqli->query($query_client)) {
-        $idclient = $mysqli->insert_id;
-        $query_user = "INSERT INTO `user` (`login_user`, `mdp_user`, `mail_user`, `niveau_user`, `fk_client`, `clef_user`) VALUES ('" . $_POST["login"] . "', '" . $password . "', '" . $_POST["mail"] . "', 30, " . $idclient . ", '" . $clef_cryptee . "');";
+    $result = dino_query($query,[
+        "entreprise" => $_POST["entreprise"],
+        "mail" => $_POST["mail"],
+        "nom" => $_POST["nom_contact"],
+        "poste" => $_POST["poste_contact"],
+        "phone" => $_POST["phone_contact"]
+    ]);
+    
+    if ($result["status"]) {
+        $idclient = $result["result"];
         
-        if ($mysqli->query($query_user)) {
+        $query_user = "
+            INSERT INTO `user` (
+                `login_user`, 
+                `mdp_user`, 
+                `mail_user`, 
+                `niveau_user`, 
+                `fk_client`, 
+                `clef_user`
+            ) VALUES (
+                :login, 
+                :password, 
+                :mail, 
+                30, 
+                :idclient, 
+                :clef
+        );";
+        
+        $result_user = dino_query($query_user,[
+            "login" => $_POST["login"],
+            "password" => $password,
+            "mail" => $_POST["mail"],
+            "idclient" => $idclient,
+            "clef" => $clef_cryptee
+        ]);
+        
+        if ($result_user["status"]) {
             chdir("../../cache/");
             mkdir($idclient);
             chdir($idclient);
@@ -29,11 +76,11 @@ if (isset($_SESSION["superadmin"])) {
             header("Location: ../index.php");
         } else {
             echo $query_user . "<br/>";
-            echo $mysqli->error;
+            echo $result_user["errinfo"][2];
         }
     } else {
         echo $query_client . "<br/>";
-        echo $mysqli->error;
+        echo $result["errinfo"][2];
     }
 }
 ?>

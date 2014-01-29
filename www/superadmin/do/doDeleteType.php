@@ -2,16 +2,31 @@
 session_start();
 
 if ($_SESSION["superadmin"]) {
-    include("../../includes/mysqli.php");
+    include("../../includes/PDO.php");
     include("../../includes/status.php");
     
-    $query = "DELETE FROM `type_doc` WHERE `pk_type_doc` = " . $_POST["pk"] . " AND `fk_client` = " . $_POST["client"] . " AND `fk_monde` = " . $_POST["monde"] . " AND `fk_champ` = " . $_POST["champ"] . " AND `fk_categorie_doc` = " . $_POST["categorie"] . ";";
+    $query = "
+        DELETE FROM `type_doc` 
+        WHERE 
+            `pk_type_doc` = :pk
+            AND `fk_client` = :client
+            AND `fk_monde` = :monde
+            AND `fk_champ` = :champ
+            AND `fk_categorie_doc` = :categorie ;";
+      
+    $result = dino_query($query,[
+        "client" => $_POST["client"],
+        "monde" => $_POST["monde"],
+        "champ" => $_POST["champ"],
+        "categorie" => $_POST["categorie"],
+        "pk" => $_POST["pk"]
+    ]);
     
-    if ($mysqli->query($query)) {
+    if ($result["status"]) {
         status(200);
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $result["errinfo"][2] . '" }';
     }
     
     header('Content-Type: application/json');

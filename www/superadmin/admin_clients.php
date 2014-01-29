@@ -19,13 +19,6 @@ include("../includes/mysqli.php");
         <label for="phone_contact">Téléphone du contact : </label>
             <input type="text" name="phone_contact"/>
             <br/>
-        <label for="bucket">Bucket : </label>
-            <input type="text" name="bucket"/>
-            <br/>
-        <label for="credit">Credits : </label>
-            <input type="text" name="credit"/>
-            <br/>
-            <br/>
             <br/>
         <label for="credit">Nom d'utilisateur gestionnaire : </label>
             <input type="text" name="login" id="login"/>

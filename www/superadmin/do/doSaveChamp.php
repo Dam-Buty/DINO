@@ -5,17 +5,48 @@ if ($_SESSION["superadmin"]) {
     include("../../includes/mysqli.php");
     include("../../includes/status.php");
     
+    $params = [
+        "label" => $_POST["label"],
+        "pluriel" => $_POST["pluriel"],
+        "monde" => $_POST["monde"],
+        "client" => $_POST["client"]
+    ];
+    
     if ($_POST["pk"] == "new") {
-        $query = "INSERT INTO `champ` (`fk_monde`, `fk_client`, `label_champ`, `pluriel_champ`) VALUES (" . $_POST["monde"] . ", " . $_POST["client"] . ", '" . $_POST["label"] . "', '" . $_POST["pluriel"]. "');";
+        $query = "
+            INSERT INTO `champ` (
+                `fk_monde`, 
+                `fk_client`, 
+                `label_champ`, 
+                `pluriel_champ`
+            ) VALUES (
+                :monde, 
+                :client, 
+                :label, 
+                :pluriel
+            );";
     } else {
-        $query = "UPDATE `champ` SET `label_champ` = '" . $_POST["label"] . "', `pluriel_champ` = '" . $_POST["pluriel"] . "' WHERE `pk_champ` = " . $_POST["pk"] . " AND `fk_monde` = " . $_POST["monde"] . " AND `fk_client` = " . $_POST["client"] . ";";
+        $query = "
+            UPDATE `champ` 
+            SET 
+                `label_champ` = :label, 
+                `pluriel_champ` = :pluriel 
+            WHERE 
+                `pk_champ` = :pk
+                AND `fk_monde` = :monde
+                AND `fk_client` = :client
+        ;";
+        
+        $params["pk"] = $_POST["pk"];
     }
     
-    if ($mysqli->query($query)) {
+    $result = dino_query($query, $params);
+    
+    if ($result["status"]) {
             status(200);        
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $result["errinfo"][2] . '" }';
     }
     
     header('Content-Type: application/json');

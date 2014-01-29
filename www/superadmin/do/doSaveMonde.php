@@ -5,17 +5,44 @@ if ($_SESSION["superadmin"]) {
     include("../../includes/mysqli.php");
     include("../../includes/status.php");
     
+    $params = [
+        "label" => $_POST["label"],
+        "niveau" => $_POST["niveau"],
+        "client" => $_POST["client"]
+    ];
+    
     if ($_POST["pk"] == "new") {
-        $query = "INSERT INTO `monde` (`label_monde`, `niveau_monde`, `fk_client`) VALUES ('" . $_POST["label"] . "', '" . $_POST["niveau"] . "', '" . $_POST["client"] . "');";
+        $query = "
+            INSERT INTO `monde` (
+                `label_monde`, 
+                `niveau_monde`, 
+                `fk_client`
+            ) VALUES (
+                :label, 
+                :niveau, 
+                :client
+            )
+        ;";
     } else {
-        $query = "UPDATE `monde` SET `label_monde` = '" . $_POST["label"] . "', `niveau_monde` = '" . $_POST["niveau"] . "' WHERE `pk_monde` = " . $_POST["pk"] . " AND `fk_client` = " . $_POST["client"] . ";";
+        $query = "
+            UPDATE `monde` SET 
+                `label_monde` = :label, 
+                `niveau_monde` = : niveau
+            WHERE 
+                `pk_monde` = :pk
+                AND `fk_client` = :client
+        ;";
+        
+        $params["pk"] = $_POST["pk"];
     }
     
-    if ($mysqli->query($query)) {
+    $result = dino_query($query, $params);
+    
+    if ($result["status"]) {
         status(200);
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $result["errinfo"][2] . '" }';
     }
     
     header('Content-Type: application/json');
