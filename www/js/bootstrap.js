@@ -16,6 +16,21 @@ var m_strLowerCase = "abcdefghijklmnopqrstuvwxyz";
 var m_strNumber = "0123456789";
 var m_strCharacters = "!@#$%^&*?_~";
 
+var mois = {
+    "01": "Enero",
+    "02": "Febrero",
+    "03": "Marzo",
+    "04": "April",
+    "05": "Mayo",
+    "06": "Junio",
+    "07": "Julio",
+    "08": "Agosto",
+    "09": "Septiembre",
+    "10": "Octubre",
+    "11": "Noviembre",
+    "12": "Diciembre",
+};
+
 var bootstrap = function() {
     $.ajax({ 
         url: "do/doGetProfile.php",

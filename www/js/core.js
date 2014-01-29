@@ -462,9 +462,7 @@ var construit_table = function() {
                         $("<span></span>")
                         .addClass("categorie")
                         .text(champ_parent.categories[ligne.pk].label)
-                    )
-                    
-                ;
+                    );
                 ul_categorie = $("<ul></ul>")
                             .attr({
                                 "data-stack": stack_champs,
@@ -479,6 +477,73 @@ var construit_table = function() {
                 current_level = ligne.niveau;
                 break;
                 
+            case "an":
+                current_ul = stack_ul[stack_champs.length];
+                var ul_an = $("<ul></ul>")
+                            .attr({
+                                "data-stack": stack_champs,
+                                "data-niveau": stack_champs.length,
+                                "data-type": "an"
+                            });
+                
+                marge = (stack_champs.length) * 2;
+                            
+                li = $("<li></li>")
+                    .attr({
+                        "data-type": "champ",
+                        "data-an": ligne.an,
+                        "data-stack": stack_champs,
+                        "data-niveau": stack_champs.length,
+                        "data-state": "closed"
+                    })
+                    .click(toggle_line)
+                    .append(
+                        $("<span></span>")
+                        .addClass("champ")
+                        .text(ligne.an)
+                    );
+                    
+                current_ul.append(li.css("margin-left", marge + "%"));
+                current_ul.append(ul_an.css("margin-left", marge + "%"));
+                
+                stack_ul[stack_champs.length + 1] = ul_an;
+                categorie = 0;
+                break;
+                
+            case "mois":
+                current_ul = stack_ul[stack_champs.length + 1];
+                var ul_mois = $("<ul></ul>")
+                            .attr({
+                                "data-stack": stack_champs,
+                                "data-niveau": stack_champs.length + 1,
+                                "data-type": "mois"
+                            });
+                
+                marge = (stack_champs.length + 1) * 2;
+                            
+                li = $("<li></li>")
+                    .attr({
+                        "data-type": "champ",
+                        "data-mois": ligne.mois,
+                        "data-stack": stack_champs,
+                        "data-niveau": stack_champs.length + 1,
+                        "data-state": "closed"
+                    })
+                    .click(toggle_line)
+                    .append(
+                        $("<span></span>")
+                        .addClass("champ")
+                        .text(ligne.mois + " - " + mois[ligne.mois])
+                    );
+                    
+                current_ul.append(li.css("margin-left", marge + "%"));
+                current_ul.append(ul_mois.css("margin-left", marge + "%"));
+                
+                stack_ul[stack_champs.length + 2] = ul_mois;
+                stack_ul.length = stack_champs.length + 3;
+                categorie = 0;
+                break;
+                    
             default: // C'est donc un document
                     current_ul = stack_ul[stack_ul.length - 1]; 
                     var champ_parent = monde.champs[cascade[stack_champs.length - 1]];

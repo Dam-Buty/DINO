@@ -9,10 +9,18 @@ if ($_SESSION["niveau"] >= 10) {
     include("../includes/PDO.php");
     
     $query = "
-        SELECT `revision_type_doc` 
-        FROM `type_doc_document` AS `tdd`
+        SELECT `revision_type_doc`, LEFT(
+            `d`.`date_document`, 6
+        ) AS `time`
+        FROM 
+            `type_doc_document` AS `tdd`,
+            `document` AS `d`
         WHERE `tdd`.`fk_client` = :client 
             AND `tdd`.`fk_monde` = :monde
+            
+            AND `tdd`.`fk_client` = `d`.`fk_client`
+            AND `tdd`.`fk_document` = `d`.`filename_document`
+            
             AND `tdd`.`fk_categorie_doc` = :categorie
             AND `tdd`.`fk_type_doc` = :type 
             AND `tdd`.`detail_type_doc` = :detail
@@ -43,8 +51,15 @@ if ($_SESSION["niveau"] >= 10) {
                 $params["monde" . $pk] = $_POST["monde"];
                 $params["pk" . $pk] = $pk;
                 $params["valeur" . $pk] = $valeur;
-                
             }
+    
+    if ($_POST["time"] != "000000") {
+        $query .= "
+                AND LEFT(
+                    `d`.`date_document` * 1, 6
+                ) = '" . $_POST["time"] . "'";
+    }
+    
     $query .= "
         ;";      
     

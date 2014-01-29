@@ -28,6 +28,7 @@ if (isset($_SESSION["niveau"])) {
         "niveauCategorie" => $_SESSION["niveau"],
         "mini" => $_POST["dates"]["mini"],
         "maxi" => $_POST["dates"]["maxi"],
+        "d2Client" => $_SESSION["client"],
         "tdd2Client" => $_SESSION["client"],
         "tdd2Monde" => $_POST["monde"],
         "dvc2Client" => $_SESSION["client"],
@@ -195,17 +196,23 @@ if ($_POST["all"] == "false") {
 $query .= "
             # On ne prend que les dernieres revisions
             AND `tdd`.`revision_type_doc` = (
-                SELECT MAX(`revision_type_doc`)
-                FROM `type_doc_document` AS `tdd2`
+                SELECT 
+                    MAX(`revision_type_doc`)
+                FROM 
+                    `type_doc_document` AS `tdd2`,
+                    `document` AS `d2`
                 WHERE 
-                    `tdd2`.`fk_client` = :tdd2Client
+                    `tdd2`.`fk_document` = `d2`.`filename_document`
+                    AND `d2`.`fk_client` = :d2Client
+                    
+                    AND `tdd2`.`fk_client` = :tdd2Client
                     AND `tdd2`.`fk_monde` = :tdd2Monde
+                    
                     AND `tdd2`.`fk_categorie_doc` = `tdd`.`fk_categorie_doc`
                     AND `tdd2`.`fk_type_doc` = `tdd`.`fk_type_doc`
                     AND `tdd2`.`detail_type_doc` = `tdd`.`detail_type_doc`
                     AND ( SELECT GROUP_CONCAT( 
-                            CONCAT_WS('%%', `label_valeur_champ`, `pk_valeur_champ`)
-                            SEPARATOR '||'
+                            `pk_valeur_champ` SEPARATOR '||'
                          )
                         FROM 
                             `valeur_champ` AS `vc_revisions`,
@@ -223,7 +230,7 @@ $query .= "
                             AND `dvc_revisions`.`fk_document` = `tdd2`.`fk_document`
                         ORDER BY `vc_revisions`.`fk_champ`
                     ) = ( SELECT GROUP_CONCAT( 
-                            CONCAT_WS('%%', `label_valeur_champ`, `pk_valeur_champ`)
+                            `pk_valeur_champ`
                             SEPARATOR '||'
                          )
                         FROM 
@@ -241,6 +248,11 @@ $query .= "
                             
                             AND `dvc3`.`fk_document` = `d`.`filename_document`
                         ORDER BY `vc3`.`fk_champ`
+                    )
+                    AND LEFT (
+                        (`td`.`time_type_doc` * `d2`.`date_document`) , 6
+                    ) = LEFT (
+                        (`td`.`time_type_doc` * `d`.`date_document`) , 6
                     )
             )
         # Tris
@@ -263,6 +275,8 @@ $query .= "
     ;";
     
     $result = dino_query($query, $params);
+    
+    $decal_categorie = 0;    
     
     if ($result["status"]) {
         $valeurs_champs = [];
@@ -288,6 +302,7 @@ $query .= "
             
             // Rupture de valeur de champ
             if ($champs_documents != $valeurs_champs) {
+#                array_push($liste, [ "test" => "test" ]);
                 $year = 0;
                 $month = 0;
                 $categorie = 0;
@@ -309,7 +324,8 @@ $query .= "
                     "type" => "an",
                     "an" => $year_document
                 ]);
-                $mois = 0;
+                $year = $year_document;
+                $month = 0;
             }
             
             // Rupture de mois
@@ -318,14 +334,20 @@ $query .= "
                     "type" => "mois",
                     "mois" => $month_document
                 ]);
+                $decal_categorie = 2;
+                $month = $month_document;
                 $categorie = 0;
             }
+            
+#            array_push($liste, [
+#                "dbg" => $decal_categorie
+#            ]);        
                 
             // Rupture de catégorie
             if ($row["categorie"] != $categorie) {
                 array_push($liste, [
                     "type" => "categorie",
-                    "niveau" => count($champs_documents),
+                    "niveau" => count($champs_documents) + $decal_categorie,
                     "pk" => $row["categorie"]
                 ]);
             }
