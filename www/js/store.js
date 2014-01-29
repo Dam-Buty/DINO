@@ -126,7 +126,7 @@ var affiche_details = function() {
         $("#container-detail").show();      
         $("#detail-store").autocomplete({
             source: type.details
-        });
+        }).focus();
     } else {
         $("#container-detail").hide();      
         $("#detail-store").val("");
@@ -575,9 +575,11 @@ var archive_document = function() {
     var monde = profil.mondes[store.monde];
     var champ = monde.champs[store.last_champ];
     var type;
+    var time = "000000";
     
     // On stocke la date et le détail
     store.date = $("#date-store").val();
+    
     store.type_doc.detail = $("#detail-store").val();
     $("#detail-store").val("");
     
@@ -591,6 +593,12 @@ var archive_document = function() {
     if (type.details.indexOf(store.type_doc.detail) == -1) {
         type.details.push(store.type_doc.detail);
     }
+    // 0123456789
+    //"10/04/2013"
+    
+    if (type.time == 1) {
+        time = store.date.substring(6, 10) + store.date.substring(3, 5);  
+    }
     
     $.ajax({
         url: "do/doCheckRevision.php",
@@ -602,6 +610,7 @@ var archive_document = function() {
             type: store.type_doc.pk,
             detail: store.type_doc.detail,
             champs: store.champs,
+            time: time,
             maxchamp: store.last_champ
         },
         statusCode: {
