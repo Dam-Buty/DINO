@@ -1,14 +1,25 @@
 <?php
-include("../../includes/mysqli.php");
+include("../../includes/PDO.php");
 include("../../includes/log.php");
 
-$username = addslashes($_POST["username"]);
+$username = $_POST["username"];
 $password = $_POST["password"];
 
-$result = $mysqli->query("SELECT `mdp_user`, `niveau_user`, `mail_user` FROM `user` WHERE `login_user` = '" . $username . "' AND `niveau_user` = 999;");
+$result = dino_query("
+    SELECT 
+        `mdp_user`, 
+        `niveau_user`, 
+        `mail_user` 
+    FROM `user` 
+    WHERE 
+        `login_user` = :username
+        AND `niveau_user` = 999
+;", [
+    "username" => $username
+]);
 
-if ($result->num_rows != 0) {
-    $row = $result->fetch_assoc();
+if ($result["status"]) {
+    $row = $result["result"][0];
     if (sha1($password) == $row["mdp_user"]) {
         if ($row["niveau_user"] == 999) {        
             session_start();

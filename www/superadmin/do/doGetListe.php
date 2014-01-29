@@ -2,19 +2,26 @@
 session_start();
 
 if ($_SESSION["superadmin"]) {
-    include("../../includes/mysqli.php");
+    include("../../includes/PDO.php");
     include("../../includes/status.php");
     
     $query = "SELECT 
                 `label_valeur_champ`
                 FROM `valeur_champ` 
-                WHERE `fk_champ` = " . $_POST["champ"] . "
-                    AND  `fk_client` = " . $_POST["client"] . " 
-                    AND `fk_monde` = " . $_POST["monde"] . ";";
+                WHERE `fk_champ` = :champ
+                    AND  `fk_client` = :client
+                    AND `fk_monde` = :monde ;";   
+                     
+    $result = dino_query($query,[
+        "client" => $_POST["client"],
+        "monde" => $_POST["monde"],
+        "champ" => $_POST["champ"]
+    ]);
     
-    if ($result = $mysqli->query($query)) {
+    if ($result["status"]) {
         $text = "";
-        while ($row = $result->fetch_assoc()) {
+        
+        foreach($result["result"] as $row) {
             $text .= $row["label_valeur_champ"] . "\n";
         }
         
@@ -23,7 +30,7 @@ if ($_SESSION["superadmin"]) {
         echo $text;
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $result["errinfo"][2] . '" }';
         header('Content-Type: application/json');
         echo $json;
     }

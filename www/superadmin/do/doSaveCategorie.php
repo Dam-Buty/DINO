@@ -2,20 +2,55 @@
 session_start();
 
 if ($_SESSION["superadmin"]) {
-    include("../../includes/mysqli.php");
+    include("../../includes/PDO.php");
     include("../../includes/status.php");
     
+    $params = [
+        "label" => $_POST["label"],
+        "niveau" => $_POST["niveau"],
+        "monde" => $_POST["monde"],
+        "client" => $_POST["client"],
+        "champ" => $_POST["champ"]
+    ];
+    
     if ($_POST["pk"] == "new") {
-        $query = "INSERT INTO `categorie_doc` (`label_categorie_doc`, `niveau_categorie_doc`, `fk_monde`, `fk_client`, `fk_champ`) VALUES ('" . $_POST["label"] . "', " . $_POST["niveau"]. ", " . $_POST["monde"] . ", " . $_POST["client"] . ", " . $_POST["champ"] . ");";
+        $query = "
+            INSERT INTO `categorie_doc` (
+                `label_categorie_doc`, 
+                `niveau_categorie_doc`, 
+                `fk_monde`, 
+                `fk_client`, 
+                `fk_champ`
+            ) VALUES (
+                :label, 
+                :niveau, 
+                :monde, 
+                :client, 
+                :champ
+            );";
     } else {
-        $query = "UPDATE `categorie_doc` SET `label_categorie_doc` = '" . $_POST["label"] . "', `niveau_categorie_doc` = " . $_POST["niveau"] . " WHERE `fk_monde` = " . $_POST["monde"] . " AND `fk_client` = " . $_POST["client"] . " AND `fk_champ` = " . $_POST["champ"] . " AND `pk_categorie_doc` = " . $_POST["pk"] . ";";
+        $query = "
+            UPDATE `categorie_doc` 
+            SET 
+                `label_categorie_doc` = :label, 
+                `niveau_categorie_doc` = :niveau 
+            WHERE 
+                `fk_monde` = :monde
+                AND `fk_client` = :client
+                AND `fk_champ` = :champ
+                AND `pk_categorie_doc` = :pk
+        ;";
+        
+        $params["pk"] = $_POST["pk"];
     }
     
-    if ($mysqli->query($query)) {
+    $result = dino_query($query, $params);
+    
+    if ($result["status"]) {
         status(200);
     } else {
         status(500);
-        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $mysqli->error . '" }';
+        $json = '{ "error": "mysqli", "query": "' . $query . '", "message": "' . $result["errinfo"][2] . '" }';
         header('Content-Type: application/json');
         echo $json;
     }

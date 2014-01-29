@@ -6,42 +6,47 @@ if (isset($_SESSION["superadmin"])) {
     $query = "
         DELETE FROM `user_monde`
         WHERE 
-            `fk_client` = " . $_POST["client"] . "
+            `fk_client` = :umClient
             AND `fk_user` = (
                 SELECT `login_user`
                 FROM `user`
                 WHERE 
-                    `fk_client` = " . $_POST["client"] . "
+                    `fk_client` = :uClient
                     AND `niveau_user` = 30
             )
         ;
         ";
     
-    foreach($_POST["mondes"] as $i => $monde) {
-        $query .= "
-        INSERT INTO `user_monde` (
-            `fk_client`,
-            `fk_monde`,
-            `fk_user`
-        ) VALUES (
-            " . $_POST["client"] . ",
-            " . $monde . ",
-            (
-                SELECT `login_user`
-                FROM `user`
-                WHERE 
-                    `fk_client` = " . $_POST["client"] . "
-                    AND `niveau_user` = 30
-            )
-        );";
-    }
+    $result = dino_query($query,[
+        "umClient" => $_POST["client"],
+        "uClient" => $_POST["client"]
+    ]);
     
-    if ($mysqli->multi_query($query)) {
-        $i = 0; 
-        do { 
-            $i++; 
-        } while ($mysqli->next_result()); 
-        
+    if ($result["status"]) { 
+        foreach($_POST["mondes"] as $i => $monde) {
+            $query = "
+            INSERT INTO `user_monde` (
+                `fk_client`,
+                `fk_monde`,
+                `fk_user`
+            ) VALUES (
+                :umClient,
+                :umMonde,
+                (
+                    SELECT `login_user`
+                    FROM `user`
+                    WHERE 
+                        `fk_client` = :uClient
+                        AND `niveau_user` = 30
+                )
+            );";
+            
+            $result = dino_query($query,[
+                "umClient" => $_POST["client"],
+                "umMonde" => $monde,
+                "uClient" => $_POST["client"]
+            ]);
+        }
     }
 }
 ?>
