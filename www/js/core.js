@@ -84,8 +84,6 @@ var large_search = function() {
             duration: 100
         });
         
-
-        
         select.attr("data-state", "open");
     }
         
@@ -113,7 +111,6 @@ var change_monde = function() {
     var ul = $(this).closest("ul");
     var li = $(this).closest("li");
     
-    $("#liste").slideDown();
     $("#profil").fadeOut();
     $("#mondes").fadeOut();
     
@@ -127,6 +124,9 @@ var change_monde = function() {
     Core.recherche.length = 0;
     
     $("#bouton-admin-liste").attr("title", "Lista de los " + profil.mondes[Core.monde].champs[profil.mondes[Core.monde].cascade[0]].pluriel);
+    
+    $("#bouton-admin-liste").attr("data-selected", 0);
+    $("#bouton-admin-profil").attr("data-selected", 0);
     
     charge_dates();
 };
@@ -247,6 +247,7 @@ var charge_documents = function() {
             200: function(liste) {
                 Core.liste = liste;
                 construit_table();
+                $("#liste").slideDown();
             },
             403: function() {
                 window.location.replace("index.php");

@@ -314,6 +314,22 @@ html, body {
     cursor: pointer;
 }
 
+#bouton-admin-liste:hover {
+    content: url(../img/liste_hover_30.png);
+}
+
+#bouton-admin-liste[data-selected="1"] {
+    content: url(../img/liste_active_30.png);
+}
+
+#bouton-admin-profil:hover {
+    content: url(../img/profil_hover_30.png);
+}
+
+#bouton-admin-profil[data-selected="1"] {
+    content: url(../img/profil_active_30.png);
+}
+
 /*###########################
         Date
 #############################*/

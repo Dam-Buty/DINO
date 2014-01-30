@@ -8,6 +8,8 @@ var bootstrap_profil = function() {
     $("#liste").slideUp();
     $("#mondes").slideUp();
     $("#profil").fadeIn();
+    $("#bouton-admin-liste").attr("data-selected", 0);
+    $("#bouton-admin-profil").attr("data-selected", 1);
     
     // On met le monde en statut sélectionné
     li.closest("ul").find("li").attr("data-selected", "0");

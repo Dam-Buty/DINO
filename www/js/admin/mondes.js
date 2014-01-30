@@ -10,6 +10,8 @@ var bootstrap_monde = function() {
     $("#liste").slideUp();
     $("#profil").slideUp();
     $("#mondes").fadeIn();
+    $("#bouton-admin-liste").attr("data-selected", 1);
+    $("#bouton-admin-profil").attr("data-selected", 0);
     
     // On met le monde dans liste-valeurs
     $("#liste-valeurs").attr("data-monde", Core.monde);
