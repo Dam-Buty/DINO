@@ -71,7 +71,6 @@ var bootstrap_profil = function() {
         
         // Si on a du time, on ajoute la ligne An et la ligne Mois
         if (hasTime) {
-            marge += 2;
             
             var li_an = $("<li></li>")
                         .attr({
@@ -86,21 +85,39 @@ var bootstrap_profil = function() {
             var ul_an = $("<ul></ul>")
                         .css("margin-left", marge + "%")
                         .addClass("liste-champ");
+            
+            marge += 2;
                         
             var li_mois = $("<li></li>")
                         .attr({
                             "data-type": "champ"
                         })
-                        .css("margin-left", (marge + 2) + "%")
+                        .css("margin-left", marge + "%")
                         .addClass("profil")
                         .addClass("profil-champ")
                         .addClass("liste")
-                        .html("Mes");
+                        .html("Mes")
+                        .append(
+                            $("<img/>")
+                            .attr("src", "img/categorie_20.png")
+                            .addClass("profil-toggle-categorie")
+                            .click(toggle_categorie_profil)
+                        ).append(
+                            $("<img/>")
+                            .attr("src", "img/document_20.png")
+                            .addClass("profil-toggle-type")
+                            .click(toggle_type_profil)
+                        );
                         
             var ul_mois = $("<ul></ul>")
-                        .css("margin-left", (marge + 2) + "%")
+                        .css("margin-left", marge + "%")
                         .addClass("liste-champ");
+                        
+            // NEW categorie
+            ul_mois.append(affiche_ligne("categorie", "new", "", marge, { niveau: "0" }));
             
+            // NEW type
+            ul_mois.append(affiche_ligne("type", "new", "", marge, { detail: "0", niveau: "0" }));
             
             ul.append(
                 li_an
@@ -111,8 +128,6 @@ var bootstrap_profil = function() {
                     ul_mois
                 )
             );
-            
-            marge += 2;
             
             // Puis on ajoute les types et catégories time
             $.each(champ.types, function(j, type) {
@@ -348,6 +363,7 @@ var save_profil = function() {
     var label = li.find("input").eq(0).val();
     var niveau = li.find("select").val();
     var champ, categorie, detail;
+    var time = 0;
        
     switch(type) {
         case "champ":
@@ -377,6 +393,11 @@ var save_profil = function() {
             // On recupere le champ
             champ = li.closest("ul").prev("li").attr("data-pk");
             
+            if (champ === undefined) {
+                time = 1;
+                champ = li.closest("ul").parent("ul").parent("ul").prev("li").attr("data-pk");
+            }
+            
             $.ajax({
                 url: "do/doSaveCategorie.php",
                 type: "POST",
@@ -385,7 +406,8 @@ var save_profil = function() {
                     champ: champ,
                     pk: pk,
                     label: label,
-                    niveau: niveau
+                    niveau: niveau,
+                    time: time
                 },
                 statusCode : {
                     200: function() {
@@ -408,9 +430,19 @@ var save_profil = function() {
             if (li_parent.attr("data-type") == "categorie") {
                 categorie = li_parent.attr("data-pk");
                 champ = li_parent.closest("ul").prev("li").attr("data-pk");
+                
+                if (champ === undefined) {
+                    time = 1;
+                    champ = li_parent.closest("ul").parent("ul").parent("ul").prev("li").attr("data-pk");
+                }
             } else {
                 categorie = 0;
                 champ = li_parent.attr("data-pk");
+                
+                if (champ === undefined) {
+                    time = 1;
+                    champ = li_parent.parent("ul").parent("ul").prev("li").attr("data-pk");
+                }
             }
             
             if (li.find("input").eq(1).prop("checked")) {
@@ -429,7 +461,8 @@ var save_profil = function() {
                     pk: pk,
                     label: label,
                     niveau: niveau,
-                    detail: detail
+                    detail: detail,
+                    time: time
                 },
                 statusCode : {
                     200: function() {

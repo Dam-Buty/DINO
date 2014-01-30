@@ -21,6 +21,7 @@ if ($_SESSION["niveau"] >= 20) {
                 `label_type_doc`, 
                 `niveau_type_doc`,
                 `detail_type_doc`,
+                `time_type_doc`,
                 `fk_categorie_doc`,
                 `fk_champ`, 
                 `fk_monde`, 
@@ -29,12 +30,15 @@ if ($_SESSION["niveau"] >= 20) {
                 :label,
                 :niveau,
                 :detail,
+                :time,
                 :categorie,
                 :champ,
                 :monde,
                 :client
             )
         ;";
+        
+        $params["time"] = $_POST["time"];
     } else {
         $query = "
             UPDATE `type_doc`
