@@ -123,7 +123,7 @@ var affiche_details = function() {
     }
     
     if (type.detail == 1) {
-        $("#container-detail").show();  
+        $("#container-detail").show();      
         $("#detail-store").autocomplete({
             source: type.details
         }).focus();
