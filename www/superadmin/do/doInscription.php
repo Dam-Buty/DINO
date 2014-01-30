@@ -21,9 +21,7 @@ if (isset($_SESSION["superadmin"])) {
             `mail_client`, 
             `nom_contact_client`, 
             `poste_contact_client`, 
-            `phone_contact_client`, 
-            `bucket_client`, 
-            `credit_client`
+            `phone_contact_client`
         ) VALUES (
             :entreprise, 
             :mail, 
@@ -32,7 +30,7 @@ if (isset($_SESSION["superadmin"])) {
             :phone
     );";
     
-    $result = dino_query($query,[
+    $result_client = dino_query($query_client,[
         "entreprise" => $_POST["entreprise"],
         "mail" => $_POST["mail"],
         "nom" => $_POST["nom_contact"],
@@ -40,8 +38,8 @@ if (isset($_SESSION["superadmin"])) {
         "phone" => $_POST["phone_contact"]
     ]);
     
-    if ($result["status"]) {
-        $idclient = $result["result"];
+    if ($result_client["status"]) {
+        $idclient = $result_client["result"];
         
         $query_user = "
             INSERT INTO `user` (
@@ -80,7 +78,7 @@ if (isset($_SESSION["superadmin"])) {
         }
     } else {
         echo $query_client . "<br/>";
-        echo $result["errinfo"][2];
+        echo $result_client["errinfo"][2];
     }
 }
 ?>
