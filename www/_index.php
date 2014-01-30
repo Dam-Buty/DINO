@@ -14,9 +14,9 @@ if (isset($_SESSION)) {
 <meta content="Damien BUTY" name="author" />
 <meta content="La revolucion documental!" name="description" />
 
-<link rel="stylesheet" href="css/global.css?v=6" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/arrows.css?v=6" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/tuto.css?v=6" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/global.css?v=7" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/arrows.css?v=7" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/tuto.css?v=7" media="screen" type="text/css"/>
 
 <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
 
@@ -25,19 +25,19 @@ if (isset($_SESSION)) {
 <?php
     if ($_SESSION["niveau"] >= 20) {
     ?>
-<link rel="stylesheet" href="css/admin.css?v=6" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/admin.css?v=7" media="screen" type="text/css"/>
     <?php
     }
 ?>
 
-<link rel="stylesheet" href="css/boutons.css?v=6" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/inputs.css?v=6" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/boutons.css?v=7" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/inputs.css?v=7" media="screen" type="text/css"/>
 
-<link rel="stylesheet" href="vendor/chosen.css?v=6" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/zebra_dialog_custom.css?v=6" media="screen" type="text/css"/>
-<link rel="stylesheet" href="vendor/switchy.css?v=6" media="screen" type="text/css"/>
-<link rel="stylesheet" href="vendor/jquery-ui-1.10.3.custom.css?v=6" media="screen" type="text/css"/>
-<link rel="stylesheet" href="vendor/tooltipster.css?v=6" media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/chosen.css?v=7" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/zebra_dialog_custom.css?v=7" media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/switchy.css?v=7" media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/jquery-ui-1.10.3.custom.css?v=7" media="screen" type="text/css"/>
+<link rel="stylesheet" href="vendor/tooltipster.css?v=7" media="screen" type="text/css"/>
 
 </head>
 <body>
@@ -201,23 +201,23 @@ if ($_SESSION["niveau"] >= 20) {
 <script src="vendor/switchy.js"></script>
 <script src="vendor/jquery.tooltipster.js"></script>
 
-<script src="js/bootstrap.js?v=6"></script>
-<script src="js/util.js?v=6"></script>
-<script src="js/core.js?v=6"></script>
-<script src="js/queue.js?v=6"></script>
-<script src="js/dragdrop.js?v=6"></script>
-<script src="js/store.js?v=6"></script>
-<script src="js/dialogues.js?v=6"></script>
-<script src="js/params.js?v=6"></script>
-<script src="js/tuto.js?v=6"></script>
+<script src="js/bootstrap.js?v=7"></script>
+<script src="js/util.js?v=7"></script>
+<script src="js/core.js?v=7"></script>
+<script src="js/queue.js?v=7"></script>
+<script src="js/dragdrop.js?v=7"></script>
+<script src="js/store.js?v=7"></script>
+<script src="js/dialogues.js?v=7"></script>
+<script src="js/params.js?v=7"></script>
+<script src="js/tuto.js?v=7"></script>
 
 <?php
     if ($_SESSION["niveau"] >= 20) {
     ?>
-<script src="js/admin.js?v=6"></script>
-<script src="js/admin/users.js?v=6"></script>
-<script src="js/admin/mondes.js?v=6"></script>
-<script src="js/admin/profil.js?v=6"></script>
+<script src="js/admin.js?v=7"></script>
+<script src="js/admin/users.js?v=7"></script>
+<script src="js/admin/mondes.js?v=7"></script>
+<script src="js/admin/profil.js?v=7"></script>
     <?php
     }
 ?>
