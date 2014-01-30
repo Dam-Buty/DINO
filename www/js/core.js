@@ -113,6 +113,10 @@ var change_monde = function() {
     var ul = $(this).closest("ul");
     var li = $(this).closest("li");
     
+    $("#liste").slideDown();
+    $("#profil").fadeOut();
+    $("#mondes").fadeOut();
+    
     ul.find("li").attr("data-selected", "0");
     
     li.attr("data-selected", "1");
@@ -121,6 +125,8 @@ var change_monde = function() {
     
     Core.champs.length = 0;
     Core.recherche.length = 0;
+    
+    $("#bouton-admin-liste").attr("title", "Lista de los " + profil.mondes[Core.monde].champs[profil.mondes[Core.monde].cascade[0]].pluriel);
     
     charge_dates();
 };
@@ -650,6 +656,10 @@ var construit_table = function() {
     .on("dragover", dragover)
     .on("dragleave", dragleave)
     .on("drop", drop);
+    
+    $("#container-icones-admin").animate({
+        left: $('#mondes-top li[data-monde="' + Core.monde + '"]').offset().left + "px"
+    });
 };
 
 var del_document = function() {

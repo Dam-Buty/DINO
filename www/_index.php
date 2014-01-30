@@ -90,21 +90,6 @@ if ($_SESSION["niveau"] >= 20) {
             <li id="menu-retour">
                 <h1>Mis documentos</h1>
             </li>
-            <li id="menu-users">
-                <h1>Usuarios</h1>
-            </li>
-            <li id="menu-listes">
-                <h1>Listas</h1>
-            </li>
-<?php
-if ($_SESSION["niveau"] >= 30) {
-?>
-            <li id="menu-profil">
-                <h1>Perfil<br/>documental</h1>
-            </li>
-<?php
-}
-?>
         </ul>
     </div>
     
@@ -186,6 +171,24 @@ if ($_SESSION["niveau"] >= 30) {
     </div>
     <iframe id="viewer-global"></iframe>
 </div>
+
+<?php
+if ($_SESSION["niveau"] >= 20) {
+?>
+<div id="container-icones-admin">
+    <img src="img/liste_30.png" id="bouton-admin-liste"/>
+    <?php
+    if ($_SESSION["niveau"] >= 30) {
+    ?>
+    <img src="img/profil_30.png" id="bouton-admin-profil" title="Perfil documental"/>
+    <?php
+    }
+    ?>
+</div>
+
+<?php
+}
+?>
 
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>

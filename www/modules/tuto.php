@@ -27,7 +27,7 @@
     <div class="etape" id="etape-5">
         <h1>Clasificacion de documento</h1>
         <p>Ahora sabemos que tu documento pertenece al <b class="tuto-champ"></b> <b class="tuto-valeur"></b>.</p>
-        <p>Identifica el <b>tipo del documento</b> o sigue clasificandolo en un <b class="tuto-next"></b> especifico.</p>
+        <p>Identifica el <b>tipo del documento</b><b class="tuto-next"></b>.</p>
     </div>
     <div class="etape" id="etape-6">
         <h1>Casi listo!</h1>

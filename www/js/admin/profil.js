@@ -1,37 +1,13 @@
 
 var bootstrap_profil = function() {
-    var monde;
-
-    if ($("#mondes-top-back li").length > 0) {
-        monde = $('#mondes-top-back li[data-selected="1"]').index();
-    } else {
-        monde = 0;
-    }
-    
-    $("#mondes-top-back").empty();
-    
-    $.each(profil.mondes, function(i, monde) {
-        $("#mondes-top-back").append(
-            $("<li></li>")
-            .attr({
-                "data-monde": i,
-                "data-selected": 0
-            })
-            .text(monde.label)
-            .click(change_monde_profil)
-        );
-    });
-    
-    $("#profil").fadeIn();
-    $("#mondes-top-back").find("li").eq(monde).click();
-};
-
-var change_monde_profil = function() {
-    var li = $(this);
-    var monde = profil.mondes[li.attr("data-monde")];
+    var monde = profil.mondes[Core.monde];
     var ul = $("#liste-profil").empty();
     var marge = 0;
     var niveau = 0;
+    
+    $("#liste").slideUp();
+    $("#mondes").slideUp();
+    $("#profil").fadeIn();
     
     // On met le monde en statut sélectionné
     li.closest("ul").find("li").attr("data-selected", "0");
@@ -176,6 +152,7 @@ var change_monde_profil = function() {
     
     collapse_liste($("#liste-profil"), "open");
 }
+
 var affiche_ligne = function(type, pk, label, marge, obj) {
     var message = "";
     var select, input, pre_input;
@@ -361,7 +338,7 @@ var toggle_type_profil = function() {
 };
 
 var save_profil = function() {
-    var monde = $('#mondes-top-back li[data-selected="1"]').attr("data-monde");
+    var monde = Core.monde;
     var click = $(this);
     var li = click.closest("li");
     var type = li.attr("data-type");

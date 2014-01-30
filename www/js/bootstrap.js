@@ -122,12 +122,12 @@ var bootstrap = function() {
                             
                             $.ajax({ url: "modules/admin/monde.php" })
                             .done(function(monde) {
-                                $("#backoffice").append(monde);  
+                                $("#core").append(monde);  
                             });
                             
                             $.ajax({ url: "modules/admin/profil.php" })
                             .done(function(profil) {
-                                $("#backoffice").append(profil);  
+                                $("#core").append(profil);  
                             });
                             
                             bootstrap_admin();

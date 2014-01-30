@@ -43,11 +43,21 @@ html, body {
 #core {
     position: fixed;
     left: 10%;
-    top: 61px;
+    top: 71px;
     width: 90%;
     background-color: #e7e9f0;
     
     overflow-y: scroll;
+}
+
+#core ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#core h1 {
+    font-size: 1.1em;
 }
 
 #back {
@@ -57,7 +67,7 @@ html, body {
 #backoffice {
     position: fixed;
     left: 15%;
-    top: 61px;
+    top: 71px;
     width: 85%;
     background-color: #e7e9f0;
     
@@ -258,7 +268,7 @@ html, body {
 .barre-top {
     position: fixed;
     top: 0;
-    height: 60px;
+    height: 70px;
     
     background-color: #d6dcea;
     
@@ -291,6 +301,17 @@ html, body {
 
 .switchy-bar[data-tri="DESC"] {
     background-image: url(../img/za.png);
+}
+
+#container-icones-admin {
+    position: absolute;
+    top: 48px;
+    z-index: 101;
+}
+
+#container-icones-admin img {
+    width: 20px;
+    cursor: pointer;
 }
 
 /*###########################

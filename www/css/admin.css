@@ -102,15 +102,6 @@ img.bouton-save-back:hover {
     background-image: url(../img/user_40.png);
 }
 
-#menu-listes {
-    background-image: url(../img/list_40.png);
-}
-
-#menu-profil {
-    background-image: url(../img/profil_40.png);
-    border-bottom: 1px dotted #3A335E;
-}
-
 /*#####################################
 #
 #        Gestion users
@@ -381,7 +372,10 @@ img.bouton-save-back:hover {
 #######################################*/
 
 #mondes {
+    display: none;
     margin: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 #mondes ul {
@@ -509,7 +503,10 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
 #######################################*/
 
 #profil {
+    display: none;
     margin: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 #profil ul {

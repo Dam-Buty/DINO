@@ -2,8 +2,8 @@
 session_start();
 ?>
 <!--LOCALISATION-->
-<h1>Administracion de mundos</h1>
 <div id="mondes">
+    <h1>Administracion de mundos</h1>
     <ul id="liste-valeurs">
         <li id="new-valeur" class="add-valeur">
             <input type="text" placeholder="Agregar un " class="input-new-valeur"/>

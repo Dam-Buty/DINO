@@ -1,46 +1,18 @@
 
 
 var bootstrap_monde = function() {
-    var monde;
-
-    if ($("#mondes-top-back li").length > 0) {
-        monde = $('#mondes-top-back li[data-selected="1"]').index();
-    } else {
-        monde = 0;
-    }
-    
-    $("#mondes-top-back").empty();
-    
-    $.each(profil.mondes, function(i, monde) {
-        $("#mondes-top-back").append(
-            $("<li></li>")
-            .attr({
-                "data-monde": i,
-                "data-selected": 0
-            })
-            .text(monde.label)
-            .click(change_monde_liste)
-        );
-    });
-
-    $("#mondes-top-back").find("li").eq(monde).click();
-    $("#mondes").fadeIn();
-};
-
-var change_monde_liste = function() {
-    var li = $(this);    
-    var monde = profil.mondes[li.attr("data-monde")];
+    var monde = profil.mondes[Core.monde];
     var champ = monde.champs[monde.cascade[0]];
     var label = champ.label;
     var pluriel = champ.pluriel;
     var ul = $("#liste-valeurs");
     
-    // On met le monde en statut sélectionné
-    li.closest("ul").find("li").attr("data-selected", "0");
-    li.attr("data-selected", "1");
+    $("#liste").slideUp();
+    $("#profil").slideUp();
+    $("#mondes").fadeIn();
     
     // On met le monde dans liste-valeurs
-    $("#liste-valeurs").attr("data-monde", li.attr("data-monde"));
+    $("#liste-valeurs").attr("data-monde", Core.monde);
     
     $("#mondes h1").text("Administracion de " + pluriel);
     $(".input-new-valeur").attr("placeholder", "Agregar un " + label).keyup(toggle_new_valeur); 

@@ -4,9 +4,8 @@ var bootstrap_admin = function() {
     $("#menu-admin").unbind().click(toggle_admin);
     $("#menu-retour").unbind().click(toggle_admin);
     $("#menu-users").unbind().click(change_admin);
-    $("#menu-listes").unbind().click(change_admin);
-    $("#menu-profil").unbind().click(change_admin);
-    
+    $("#bouton-admin-liste").unbind().click(bootstrap_monde);
+    $("#bouton-admin-profil").unbind().click(bootstrap_profil);
 };
 
 var change_admin = function() {
@@ -19,19 +18,13 @@ var change_admin = function() {
     $("#backoffice>h1").fadeOut();
     $("#backoffice>div").fadeOut();
     
-    switch(div.attr("id")) {
-        case "menu-users":
-            bootstrap_users();
-            break;
-            
-        case "menu-listes":
-            bootstrap_monde();
-            break;
-            
-        case "menu-profil":
-            bootstrap_profil();
-            break;
-    }
+    bootstrap_users();
+    
+//    switch(div.attr("id")) {
+//        case "menu-users":
+//            bootstrap_users();
+//            break;
+//    }
 };
 
 var toggle_admin = function() {
@@ -44,6 +37,7 @@ var toggle_admin = function() {
                     left: "10%",
                     width: "90%"
                 }).fadeIn();
+                $("#container-icones-admin").fadeIn();
             }
         });
         Core.admin = false;
@@ -58,7 +52,8 @@ var toggle_admin = function() {
                 }).fadeIn();
             }
         });
+        $("#container-icones-admin").fadeOut();
         Core.admin = true;
-        $("#menu-users").click();
+        change_admin();
     }      
 };

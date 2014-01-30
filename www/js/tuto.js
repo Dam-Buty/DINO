@@ -99,7 +99,11 @@ var Tuto = {
             var monde = profil.mondes[Store.monde];
             var champ = monde.champs[monde.cascade[0]].label;
             var valeur = monde.champs[monde.cascade[0]].liste[Store.champs[monde.cascade[0]]];
-            var next = monde.champs[monde.cascade[1]].label;
+            var next;
+            
+            if (monde.cascade.length > 1) {
+                next = " o sigue clasificandolo en un <b>" + monde.champs[monde.cascade[1]].label + "</b> especifico"
+            }
             
             $(".tuto-valeur").text(valeur);
             $(".tuto-next").text(next);
