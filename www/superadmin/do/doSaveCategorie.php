@@ -8,6 +8,7 @@ if ($_SESSION["superadmin"]) {
     $params = [
         "label" => $_POST["label"],
         "niveau" => $_POST["niveau"],
+        "time" => $_POST["time"],
         "monde" => $_POST["monde"],
         "client" => $_POST["client"],
         "champ" => $_POST["champ"]
@@ -18,12 +19,14 @@ if ($_SESSION["superadmin"]) {
             INSERT INTO `categorie_doc` (
                 `label_categorie_doc`, 
                 `niveau_categorie_doc`, 
+                `time_categorie_doc`, 
                 `fk_monde`, 
                 `fk_client`, 
                 `fk_champ`
             ) VALUES (
                 :label, 
                 :niveau, 
+                :time, 
                 :monde, 
                 :client, 
                 :champ
@@ -33,7 +36,8 @@ if ($_SESSION["superadmin"]) {
             UPDATE `categorie_doc` 
             SET 
                 `label_categorie_doc` = :label, 
-                `niveau_categorie_doc` = :niveau 
+                `niveau_categorie_doc` = :niveau , 
+                `time_categorie_doc` = :time 
             WHERE 
                 `fk_monde` = :monde
                 AND `fk_client` = :client

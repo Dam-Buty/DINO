@@ -10,6 +10,7 @@ if ($_SESSION["superadmin"]) {
             `pk_type_doc`, 
             `label_type_doc`, 
             `detail_type_doc`, 
+            `time_type_doc`, 
             `niveau_type_doc` 
             FROM `type_doc` 
         WHERE 
@@ -34,7 +35,7 @@ if ($_SESSION["superadmin"]) {
                 $json .= ", ";
             }
             
-            $json .= '{ "pk": "' . $row["pk_type_doc"] . '", "label": "' . $row["label_type_doc"] . '", "detail": "' . $row["detail_type_doc"] . '", "niveau": "' . $row["niveau_type_doc"] . '" }';
+            $json .= '{ "pk": "' . $row["pk_type_doc"] . '", "label": "' . $row["label_type_doc"] . '", "detail": "' . $row["detail_type_doc"] . '", "niveau": "' . $row["niveau_type_doc"] . '", "time": "' . $row["time_type_doc"] . '" }';
         }
         
         $json .= " ]";

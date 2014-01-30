@@ -69,6 +69,7 @@ include("../includes/PDO.php");
             <th>Sel.</th>
             <th>Label</th>
             <th>Niveau</th>
+            <th>Time</th>
             <th>X</th>
         </tr>
     </thead>
@@ -77,6 +78,7 @@ include("../includes/PDO.php");
             <td></td>
             <td><input type="text" class="label_categorie"/></td>
             <td><input type="text" class="niveau_categorie"/></td>
+            <td><input type="checkbox" class="time_categorie"/></td>
             <td><span class="save_categorie">Save</span> - <span class="delete_categorie">Delete</span></td>
         </tr>
     </tbody>
@@ -90,6 +92,7 @@ include("../includes/PDO.php");
             <th>Label</th>
             <th>Détail</th>
             <th>Niveau</th>
+            <th>Time</th>
             <th>X</th>
         </tr>
     </thead>
@@ -98,6 +101,7 @@ include("../includes/PDO.php");
             <td><input type="text" class="label_type"/></td>
             <td><input type="checkbox" class="detail_type"/></td>
             <td><input type="text" class="niveau_type"/></td>
+            <td><input type="checkbox" class="time_type"/></td>
             <td><span class="save_type">Save</span> - <span class="delete_type">Delete</span></td>
         </tr>
     </tbody>

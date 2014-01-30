@@ -9,7 +9,8 @@ if ($_SESSION["superadmin"]) {
         SELECT 
             `pk_categorie_doc`, 
             `label_categorie_doc`, 
-            `niveau_categorie_doc` 
+            `niveau_categorie_doc`,
+            `time_categorie_doc`
         FROM `categorie_doc` 
         WHERE 
             `fk_client` = :client
@@ -32,7 +33,7 @@ if ($_SESSION["superadmin"]) {
                 $json .= ", ";
             }
             
-            $json .= '{ "pk": "' . $row["pk_categorie_doc"] . '", "label": "' . $row["label_categorie_doc"] . '", "niveau": "' . $row["niveau_categorie_doc"] . '" }';
+            $json .= '{ "pk": "' . $row["pk_categorie_doc"] . '", "label": "' . $row["label_categorie_doc"] . '", "niveau": "' . $row["niveau_categorie_doc"] . '", "time": "' . $row["time_categorie_doc"] . '" }';
         }
         
         $json .= " ]";
