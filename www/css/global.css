@@ -648,6 +648,14 @@ html, body {
     background-color: #48afc2;
 }
 
+#liste li[data-type="champ"][data-an] {
+    background-image: url(../img/date_20.png);
+}
+
+#liste li[data-type="champ"][data-mois] {
+    background-image: url(../img/date_20.png);
+}
+
 /*###########################
         Champ UL
 #############################*/

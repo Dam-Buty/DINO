@@ -558,6 +558,10 @@ li.profil-champ {
     background-color: #8ecb32;
 }
 
+li[data-type="champ"]:not([data-pk]) {
+    background-image: url(../img/date_20.png);
+}
+
 li.profil-categorie {
     background-color: #9b9b9b;
     background-image: url(../img/folder_20.png);
