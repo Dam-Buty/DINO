@@ -9,6 +9,7 @@ if ($_SESSION["superadmin"]) {
         "label" => $_POST["label"],
         "detail" => $_POST["detail"],
         "niveau" => $_POST["niveau"],
+        "time" => $_POST["time"],
         "client" => $_POST["client"],
         "monde" => $_POST["monde"],
         "champ" => $_POST["champ"],
@@ -21,6 +22,7 @@ if ($_SESSION["superadmin"]) {
                 `label_type_doc`, 
                 `detail_type_doc`, 
                 `niveau_type_doc`, 
+                `time_type_doc`, 
                 `fk_client`, 
                 `fk_monde`, 
                 `fk_champ`, 
@@ -29,6 +31,7 @@ if ($_SESSION["superadmin"]) {
                 :label, 
                 :detail, 
                 :niveau, 
+                :time,
                 :client, 
                 :monde, 
                 :champ, 
@@ -40,7 +43,8 @@ if ($_SESSION["superadmin"]) {
             UPDATE `type_doc` SET 
                 `label_type_doc` = :label, 
                 `detail_type_doc` = :detail, 
-                `niveau_type_doc` = :niveau
+                `niveau_type_doc` = :niveau, 
+                `time_type_doc` = :time
             WHERE 
                 `pk_type_doc` = :pk
                 AND `fk_client` = :client

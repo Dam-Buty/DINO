@@ -224,6 +224,12 @@ var save_liste = function() {
 var save_categorie = function() {
     var tr = $(this).closest("tr");
     
+    if (tr.find("input").eq(2).prop("checked") == true) {
+        time = 1;
+    } else {
+        time = 0;
+    }
+    
     $.ajax({
         url: "do/doSaveCategorie.php",
         type: "POST",
@@ -233,7 +239,8 @@ var save_categorie = function() {
             client: $("#client").val(),
             champ: $("#champs").attr("data-selected"),
             label: tr.find("input").eq(0).val(),
-            niveau: tr.find("input").eq(1).val()
+            niveau: tr.find("input").eq(1).val(),
+            time: time
         },
         statusCode: {
             200: function() {
@@ -289,6 +296,14 @@ var charge_categories = function() {
                 $(".new_categorie").detach().appendTo($("#categories tbody").empty());
                 $.each(categories, function() {
                     
+                    var check_time;
+                    
+                    if (this.time == 1) {
+                        check_time = true;
+                    } else {
+                        check_time = false;
+                    }
+                    
                     $(".new_categorie")
                     .clone()
                     .removeClass()
@@ -299,6 +314,9 @@ var charge_categories = function() {
                             .end()
                         .eq(1)
                             .val(this.niveau)
+                            .end()
+                        .eq(2)
+                            .prop("checked", check_time)
                             .end()
                         .end()
                     .find("td")
@@ -331,6 +349,12 @@ var save_type = function() {
         detail = 0;
     }
     
+    if (tr.find("input").eq(3).prop("checked") == true) {
+        time = 1;
+    } else {
+        time = 0;
+    }
+    
     $.ajax({
         url: "do/doSaveType.php",
         type: "POST",
@@ -342,6 +366,7 @@ var save_type = function() {
             categorie: $("#categories").attr("data-selected"),
             label: tr.find("input").eq(0).val(),
             detail: detail,
+            time: time,
             niveau: tr.find("input").eq(2).val()
         },
         statusCode: {
@@ -389,12 +414,18 @@ var charge_types = function() {
             200: function(types) {
                 $(".new_type").detach().appendTo($("#types tbody").empty());
                 $.each(types, function() {
-                    var check_detail;
+                    var check_detail, check_time;
                     
                     if (this.detail == 1) {
                         check_detail = true;
                     } else {
                         check_detail = false;
+                    }
+                    
+                    if (this.time == 1) {
+                        check_time = true;
+                    } else {
+                        check_time = false;
                     }
                     
                     $(".new_type")
@@ -410,6 +441,9 @@ var charge_types = function() {
                             .end()
                         .eq(2)
                             .val(this.niveau)
+                            .end()
+                        .eq(3)
+                            .prop("checked", check_time)
                             .end()
                         .end()
                     .appendTo($("#types tbody"))
