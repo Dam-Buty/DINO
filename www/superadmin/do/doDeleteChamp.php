@@ -9,7 +9,7 @@ if ($_SESSION["superadmin"]) {
         DELETE FROM `champ` 
         WHERE `pk_champ` = :pk
             AND  `fk_client` = :client 
-            AND `fk_monde` = :monde; "
+            AND `fk_monde` = :monde; ";
             
     $result = dino_query($query,[
         "client" => $_POST["client"],

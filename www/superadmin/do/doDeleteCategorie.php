@@ -26,7 +26,7 @@ if ($_SESSION["superadmin"]) {
         $query = "
             DELETE FROM `type_doc` 
             WHERE 
-                `fk_categorie` = :pk
+                `fk_categorie_doc` = :pk
                 AND `fk_client` = :client
                 AND `fk_monde` = :monde
                 AND `fk_champ` = :champ

@@ -3,10 +3,12 @@ include("../includes/PDO.php");
 ?>
 <select id="client">
 <?php
-    $query = "SELECT `pk_client`, `entreprise_client` FROM `client` ORDER BY `entreprise_client`;";
+    $query_client = "SELECT `pk_client`, `entreprise_client` FROM `client` ORDER BY `entreprise_client`;";
     
-    if ($result = $mysqli->query($query)) {
-        while($row = $result->fetch_assoc()) {
+    $result_client = dino_query($query_client, []);
+    
+    if ($result_client["status"]) {
+        foreach($result_client["result"] as $row) {
             echo "<option value='" . $row["pk_client"] . "'>" . $row["entreprise_client"] . "</option>";
         }
     }

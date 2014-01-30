@@ -21,17 +21,15 @@ if ($_SESSION["superadmin"]) {
                 :label, 
                 :niveau, 
                 :client
-            )
-        ;";
+            );";
     } else {
         $query = "
             UPDATE `monde` SET 
                 `label_monde` = :label, 
-                `niveau_monde` = : niveau
+                `niveau_monde` = :niveau
             WHERE 
                 `pk_monde` = :pk
-                AND `fk_client` = :client
-        ;";
+                AND `fk_client` = :client ;";
         
         $params["pk"] = $_POST["pk"];
     }
