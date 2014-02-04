@@ -356,6 +356,12 @@ var dragenter = function(e) {
                                 $(categorie).next("ul").remove();
                             });
                             
+                            var an, mois;
+                            
+                            mois = li.attr("data-mois");
+                            an = li.closest("ul").prev("li").attr("data-an");
+                            time = an + mois;
+                            
                             //////////////////////////////////////////
                             // On ghoste les lignes qui n'existent pas, on repose les autres
                             // - Types
@@ -366,7 +372,8 @@ var dragenter = function(e) {
                                             pk: i,
                                             label: type.label,
                                             categorie: 0,
-                                            stack: li.attr("data-stack")
+                                            stack: li.attr("data-stack"),
+                                            time: time
                                         });
                                     } else {
                                         new_li = $(types_mois[i]);
@@ -407,7 +414,8 @@ var dragenter = function(e) {
                                                 pk: j,
                                                 label: type.label,
                                                 categorie: i,
-                                                stack: li.attr("data-stack")
+                                                stack: li.attr("data-stack"),
+                                                time: time
                                             });
                                         } else {
                                             li_type = $(categories_mois[i].types[j]);
@@ -459,6 +467,7 @@ var drop = function(e) {
         var document = queue[position];
         var store = document.store;
         var li = $(this);
+        var an, mois;
         
         var stack = li.attr("data-stack").split(",");
         
@@ -478,7 +487,7 @@ var drop = function(e) {
         }
         
         if (li.attr("data-mois") !== undefined) {
-            var an = li.closest("ul").prev("li").attr("data-an");
+            an = li.closest("ul").prev("li").attr("data-an");
             $("#date-store").datepicker('setDate', "01/" + li.attr("data-mois") + "/" + an);
         }
         
@@ -505,6 +514,12 @@ var drop = function(e) {
                 $("#detail-store").val(store.detail);
             } else {
                 $("#input-detail").hide();
+            }
+            
+            if (type.time == 1) {
+                an = li.attr("data-time").substring(0, 4);
+                mois = li.attr("data-time").substring(4, 6);
+                $("#date-store").datepicker('setDate', "01/" + mois + "/" + an);
             }
             
             $("#popup-store").attr("data-document", position);
@@ -549,6 +564,14 @@ var ghost_champ = function(params) {
 
 
 var ghost_type = function(params) {
+    var time;
+    
+    if (params.time === undefined) {
+        time = "000000";
+    } else {
+        time = params.time;
+    }
+    
     return $("<li></li>")
         .addClass("ghost-type")
         .addClass("ghost")
@@ -556,7 +579,8 @@ var ghost_type = function(params) {
             "data-type": "document",
             "data-type-doc": params.pk,
             "data-categorie": params.categorie,
-            "data-stack": params.stack
+            "data-stack": params.stack,
+            "data-time": time
         })
         .append(
             $("<span></span>")

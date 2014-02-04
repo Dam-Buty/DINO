@@ -800,15 +800,18 @@ html, body {
 }
 
 #popup-details {
-    font-size: 1.1em;
+    font-size: 1.3em;
 }
 
 #popup-details p,#popup-details ul{
     margin-right: 5%;
     margin-left: 5%;
+    font-size: 0.8em;
 }
 
-
+#popup-details .boutons {
+    margin-left: 50%;
+}
 
 /*#####################################
 #
