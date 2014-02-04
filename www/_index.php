@@ -183,7 +183,7 @@ if ($_SESSION["niveau"] >= 20) {
         <div class="boutons" id="bouton-cabinet">Enviar solicitud</div>
     </div>
     <div id="container-merci">
-        <p>Tu solicitud ha sido enviada, y la estamos estudiando. Te mandaremos un mail cuando tu nuevo mundo esta listo.</p>
+        <p>Tu solicitud ha sido enviada, y la estamos estudiando. Te mandaremos un mail cuando tu nuevo mundo estara listo.</p>
         <p><div class="boutons" id="bouton-merci">Gracias!</div></p>
     </div>
 </div>

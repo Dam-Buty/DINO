@@ -510,16 +510,19 @@ var drop = function(e) {
             }
             
             if (type.detail == 1) {
-                $("#input-detail").show();
+                $("#container-detail").show();
                 $("#detail-store").val(store.detail);
             } else {
-                $("#input-detail").hide();
+                $("#container-detail").hide();
             }
             
             if (type.time == 1) {
                 an = li.attr("data-time").substring(0, 4);
                 mois = li.attr("data-time").substring(4, 6);
                 $("#date-store").datepicker('setDate', "01/" + mois + "/" + an);
+                $("#container-date").show();
+            } else {
+                $("#container-date").hide();
             }
             
             $("#popup-store").attr("data-document", position);
