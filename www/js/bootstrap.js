@@ -50,6 +50,24 @@ var bootstrap = function() {
         // On binde les events
         $("#toggle-date").click(toggle_dates);
         $("#menu-queue").click(anime_queue);
+        $("#menu-cabinet").click(popup_cabinet);
+        $("#bouton-cabinet").click(request_monde);
+        $("#documents-new-monde").focus(function() {
+            $(this).select();    
+            
+            // Work around Chrome's little problem
+            $(this).mouseup(function() {
+                // Prevent further mouseup intervention
+                $(this).unbind("mouseup");
+                return false;
+            });
+        });
+        
+        $("#bouton-merci").click(function() {
+            $(".ZebraDialogOverlay").click();
+            $("#container-questions").show();
+            $("#container-merci").hide();
+        });
         
         if (profil.printer != "") {
             $("#help-printer").fadeIn().click(help_printer);

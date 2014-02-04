@@ -64,6 +64,9 @@ if (isset($_SESSION)) {
         <?php
     }
     ?>
+            <li id="menu-cabinet">
+                <h1>NUEVO MUNDO</h1>
+            </li>
         </ul>
     </div>
 
@@ -160,6 +163,28 @@ if ($_SESSION["niveau"] >= 20) {
     </ul>
     <div id="tip-mail-params" class="container-arrow OK arrow-params">
         DINO nunca haria nada para lastimar un buzon inocente!
+    </div>
+</div>
+
+<div id="container-cabinet">
+    <div id="container-questions">
+        <h2>Para crear un nuevo mundo, gracias por contestar las preguntas siguientes :</h2>
+        <p>Como se llama el mundo?</p>
+        <p><input type="text" id="nom-new-monde" placeholder="Por ejemplo: Ventas, Proveedores..."/></p>
+        <p>Como se clasifican los documentos adentro de este mundo?</p>
+        <p><input type="text" id="critere-new-monde" placeholder="Por ejemplo: por Cliente, por proyecto..."/></p>
+        <p>Que tipo de documentos se van a clasificar en este mundo?</p>
+        <p><textarea id="documents-new-monde">Por ejemplo :
+- Contrato anual (uno por cliente)
+- Contrato (por proyecto)
+- Factura (por proyecto)
+- Cuenta de gastos (mensual)
+...</textarea></p>
+        <div class="boutons" id="bouton-cabinet">Enviar solicitud</div>
+    </div>
+    <div id="container-merci">
+        Tu solicitud a sido enviada, y la estamos estudiando. Te mandaremos un mail cuando tu nuevo mundo esta listo.
+        <div class="boutons" id="bouton-merci">Gracias!</div>
     </div>
 </div>
 

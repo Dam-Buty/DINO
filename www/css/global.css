@@ -259,6 +259,10 @@ html, body {
     background-image: url(../img/admin_100.png);
 }
 
+#menu-cabinet {
+    background-image: url(../img/cabinet_100.png);
+}
+
 /*#####################################
 #
 #        Barre top général
@@ -1403,3 +1407,23 @@ ul.ui-autocomplete {
     display: none;
 }
 
+#container-cabinet {
+    display: none;
+}
+
+#container-cabinet input {
+    width: 90%;
+}
+
+#container-cabinet textarea {
+    width: 90%;
+    height: 7em;
+}
+
+#container-cabinet .boutons {
+    background-color: #8ecb32;
+}
+
+#container-merci {
+    display: none;
+}

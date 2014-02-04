@@ -9,3 +9,14 @@ type_doc:
 - time_type_doc (BOOL)
 
 OK sur baby
+
+Cabinet
+=======
+
+demande:
+- pk_demande
+- monde_demande
+- critere_demande
+- documents_demande
+- fk_user
+- fk_client

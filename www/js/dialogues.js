@@ -124,3 +124,45 @@ var popup_confirmation = function(message, titre, bouton, callback) {
     });
 }
 
+var popup_cabinet = function() {
+    dialogue = new $.Zebra_Dialog(
+        "", {
+            buttons: false,
+            type: false,
+            source: {
+                inline: $("#container-cabinet").show()
+            },
+            overlay_close: false
+        }
+    );
+    
+    $(".ZebraDialogOverlay").unbind().click(function(){
+        $("#container-cabinet").appendTo($("body")).hide();
+        dialogue.close();
+    });
+};
+
+var request_monde = function() {
+    $.ajax({
+        url: "do/doRequestMonde.php",
+        type: "POST",
+        data: {
+            monde: $("#nom-new-monde").val(),
+            critere: $("#critere-new-monde").val(),
+            documents: $("#documents-new-monde").val()
+        },
+        statusCode: {
+            200: function() {
+                $("#container-questions").slideUp();
+                $("#container-merci").slideDown();
+            },
+            403: function() {
+                window.location.replace("index.php");
+            },
+            500: function() {
+                popup("Error! Gracias por intentar otra vez.", "error");
+            }
+        }
+    });
+};
+
