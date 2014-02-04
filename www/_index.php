@@ -49,7 +49,7 @@ if (isset($_SESSION)) {
     <?php
     if ($_SESSION["niveau"] >= 10) {
         ?>
-            <li id="menu-queue">
+            <li id="menu-queue" class="element-menu-front">
                 <h1>CARGAR DOCUMENTOS</h1>
             </li>
         <?php
@@ -58,15 +58,15 @@ if (isset($_SESSION)) {
     <?php
     if ($_SESSION["niveau"] >= 20) {
         ?>
-            <li id="menu-admin">
+            <li id="menu-admin" class="element-menu-front">
                 <h1>ADMIN</h1>
+            </li>
+            <li id="menu-cabinet" class="element-menu-front">
+                <h1>NUEVO MUNDO</h1>
             </li>
         <?php
     }
     ?>
-            <li id="menu-cabinet">
-                <h1>NUEVO MUNDO</h1>
-            </li>
         </ul>
     </div>
 
@@ -183,8 +183,8 @@ if ($_SESSION["niveau"] >= 20) {
         <div class="boutons" id="bouton-cabinet">Enviar solicitud</div>
     </div>
     <div id="container-merci">
-        Tu solicitud a sido enviada, y la estamos estudiando. Te mandaremos un mail cuando tu nuevo mundo esta listo.
-        <div class="boutons" id="bouton-merci">Gracias!</div>
+        <p>Tu solicitud ha sido enviada, y la estamos estudiando. Te mandaremos un mail cuando tu nuevo mundo esta listo.</p>
+        <p><div class="boutons" id="bouton-merci">Gracias!</div></p>
     </div>
 </div>
 

@@ -218,11 +218,7 @@ html, body {
 
 .menu-lateral {
     padding-left: 0;
-}
-
-.menu-lateral li {
     list-style-type: none;
-    cursor: pointer;
 }
 
 .menu-lateral h1 {
@@ -235,7 +231,7 @@ html, body {
         Menu front
 #############################*/
 
-#menu-front li {
+.element-menu-front {
     padding-top: 75px;
     padding-bottom: 7px;
     background-color: #83bc2f;
@@ -244,10 +240,19 @@ html, body {
     
     background-repeat: no-repeat;
     background-position: top center;
+    
+    list-style-type: none;
+    cursor: pointer;
 }
 
-#menu-front li:hover {
+.element-menu-front:hover {
     background-color: #75a32d;
+}
+
+.element-menu-front h1 {
+    font-size: 0.9em;
+    color: white;
+    margin: 0;
 }
 
 #menu-queue {

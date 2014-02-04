@@ -125,6 +125,10 @@ var popup_confirmation = function(message, titre, bouton, callback) {
 }
 
 var popup_cabinet = function() {
+    if (Tuto.etape == 13) {
+        cancel_tuto();
+    }
+    
     dialogue = new $.Zebra_Dialog(
         "", {
             buttons: false,
@@ -142,7 +146,7 @@ var popup_cabinet = function() {
     });
 };
 
-var request_monde = function() {
+var request_monde = function() {    
     $.ajax({
         url: "do/doRequestMonde.php",
         type: "POST",

@@ -159,11 +159,11 @@ var bootstrap = function() {
                             $(window).trigger('resize');
                         }
                     }
-                });   
+                });
                 
                 bootstrap_tuto();
                 
-                if (profil.tuto != 1) {
+                if (profil.tuto != 1 && profil.mondes.length > 0) {
                     chat();
                 }
                 

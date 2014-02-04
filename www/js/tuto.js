@@ -315,7 +315,16 @@ var Tuto = {
             detache_element($(".barre-bottom"));
         },
         clean: function() {
-            window.location.replace("do/doEndTuto.php");      
+            window.location.replace("do/doEndTuto.php");
+        }
+    }, {////////////////////// 13
+        go: function() {
+            $("#menu-cabinet").css("z-index", "701");
+            detache_element($("#menu-cabinet"));
+        },
+        clean: function() {
+            $("#menu-cabinet").css("z-index", "");
+            attache_element($("#menu-cabinet"));
         }
     }],
     go: function() {
@@ -328,7 +337,7 @@ var Tuto = {
     },
     next: function() {
         Tuto.clean();
-        if (Tuto.etape < Tuto.etapes.length) {
+        if (Tuto.etape < Tuto.etapes.length - 1) {
             Tuto.etape = Tuto.etape + 1;
             Tuto.go();
         } else {
@@ -356,9 +365,14 @@ var bootstrap_tuto = function() {
             200: function(tuto) {
                 $("body").append(tuto);
                 
-                if (profil.tuto == 1 && profil.niveau >= 10 && window.location.search != "?notuto") {
+                if (profil.mondes.length == 0) {
+                    Tuto.etape = 13;
                     Tuto.start();
-                } 
+                } else {
+                    if (profil.tuto == 1 && profil.niveau >= 10 && window.location.search != "?notuto") {
+                        Tuto.start();
+                    } 
+                }
             }
         }
     })
