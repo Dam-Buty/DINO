@@ -107,73 +107,74 @@ var dragenter = function(e) {
         Drag.timeout = setTimeout( function() {
             
             // Selon l'élément sur lequel on dragge
-            switch(li.attr("data-type")) {
-                case "champ":
-                    // On ferme tous les autres champs
-                    li.closest("ul").children("li").find('div[data-state="open"]').not(li.find("div")).click();
+            if (li.attr("data-type") == "champ") {
+                // On ferme tous les autres champs
+                li.closest("ul").children("li").find('div[data-state="open"]').not(li.find("div")).click();
+                
+                ul.children("li").find('div[data-state="open"]').click();
+                
+                li.attr("data-state", "open");
+                
+                var new_li;
+                var new_ul;
+                
+                if (li.hasClass("ghost")) {
+                    var niveau = parseInt(li.attr("data-niveau"));
                     
-                    ul.children("li").find('div[data-state="open"]').click();
+                    champ = monde.champs[monde.cascade[niveau + 1]];
                     
-                    li.attr("data-state", "open");
-                    
-                    var new_li;
-                    var new_ul;
-                    
-                    if (li.hasClass("ghost")) {
-                        var niveau = parseInt(li.attr("data-niveau"));
-                        
-                        champ = monde.champs[monde.cascade[niveau + 1]];
-                        
-                        // On cache les bonnes lignes (c'est compliqué...)
-                        if (li.hasClass("ghost-first")) {
-                            $(".ghost").not(".ghost-first").remove();
-                            $(".ghost-word").remove();
-                            $("ul[data-ghost]").removeAttr("data-ghost");
-                            parent = 0;
-                        } else {
-                            parent = li.attr("data-pk");
-                            $(".ghost").not(".ghost-first").filter(function(){
-                                return  parseInt($(this).attr("data-niveau")) > niveau;
-                            }).slideUp({
-                                complete: function() { this.remove(); }
-                            });
-                            $('.ghost[data-niveau="' + niveau + '"]').find("div").attr("data-state", "closed");
-                        }
-                        
-                        ul = li.closest("ul");
-                        
-                        if (monde.references[parent] !== undefined) {
-                            li.find("div").attr("data-state", "open");
-                        }
-                        
-                        // On ghoste toutes les valeurs de champs non représentées
-                        $.each(monde.references[parent] || [], function(i, valeur) {
-                            if ($('li[data-type="champ"][data-pk="' + i + '"]').length == 0) {
-                                var new_li = ghost_champ({
-                                    champ: monde.cascade[niveau + 1], 
-                                    pk: i, 
-                                    niveau: niveau + 1, 
-                                    stack: li.attr("data-stack"), 
-                                    label: champ.liste[i],
-                                    label_champ: monde.champs[monde.cascade[niveau + 1]].label
-                                });
-                                
-                                marge = (niveau + 2) * 2;
-                                li.after(new_li.css({ "margin-left": marge + "%" }));
-                            }
-                        });
-                        
-                    } else {
-                        champ = monde.champs[monde.cascade[li.attr("data-niveau")]];
-                        
-                        // On ferme les enfants ouverts
-                        li.next("ul").children('ul').slideUp();
-                        // les siblings ouverts
-                        li.siblings("li").next("ul").slideUp();
-                        // les lignes ghost
+                    // On cache les bonnes lignes (c'est compliqué...)
+                    if (li.hasClass("ghost-first")) {
                         $(".ghost").not(".ghost-first").remove();
                         $(".ghost-word").remove();
-                        $("ul[data-ghost]").remove();
+                        $("ul[data-ghost]").removeAttr("data-ghost");
+                        parent = 0;
+                    } else {
+                        parent = li.attr("data-pk");
+                        $(".ghost").not(".ghost-first").filter(function(){
+                            return  parseInt($(this).attr("data-niveau")) > niveau;
+                        }).slideUp({
+                            complete: function() { this.remove(); }
+                        });
+                        $('.ghost[data-niveau="' + niveau + '"]').find("div").attr("data-state", "closed");
+                    }
+                    
+                    ul = li.closest("ul");
+                    
+                    if (monde.references[parent] !== undefined) {
+                        li.find("div").attr("data-state", "open");
+                    }
+                    
+                    // On ghoste toutes les valeurs de champs non représentées
+                    $.each(monde.references[parent] || [], function(i, valeur) {
+                        if ($('li[data-type="champ"][data-pk="' + i + '"]').length == 0) {
+                            var new_li = ghost_champ({
+                                champ: monde.cascade[niveau + 1], 
+                                pk: i, 
+                                niveau: niveau + 1, 
+                                stack: li.attr("data-stack"), 
+                                label: champ.liste[i],
+                                label_champ: monde.champs[monde.cascade[niveau + 1]].label
+                            });
+                            
+                            marge = (niveau + 2) * 2;
+                            li.after(new_li.css({ "margin-left": marge + "%" }));
+                        }
+                    });
+                    
+                } else {
+                    champ = monde.champs[monde.cascade[li.attr("data-stack").split(",").length - 1]];
+                    
+                    // On ferme les enfants ouverts
+                    li.next("ul").children('ul').slideUp();
+                    // les siblings ouverts
+                    li.siblings("li").next("ul").slideUp();
+                    // les lignes ghost
+                    $(".ghost").not(".ghost-first").remove();
+                    $(".ghost-word").remove();
+                    $("ul[data-ghost]").remove();
+                        
+                    if (li.attr("data-mois") === undefined && li.attr("data-an") === undefined) {
                         
                         
                         /////////////////////////
@@ -181,7 +182,7 @@ var dragenter = function(e) {
                         // - Champs
                         var champs = {};
                         
-                        $.each(ul.children('li[data-type="champ"]'), function(i, champ) {
+                        $.each(ul.children('li[data-type="champ"][data-pk]'), function(i, champ) {
                             champs[$(champ).attr("data-pk")] = {
                                 li: champ,
                                 ul: $(champ).next("ul")
@@ -190,6 +191,17 @@ var dragenter = function(e) {
                             $(champ).next("ul").detach();
                         });
                         
+                        var ans = {};
+                        
+                        $.each(ul.children('li[data-type="champ"][data-an]'), function(i, an) {
+                            ans[$(an).attr("data-an")] = {
+                                li: an,
+                                ul: $(an).next("ul")
+                            };
+                            $(an).detach();
+                            $(an).next("ul").detach();
+                        });
+                                                
                         // - Types
                         var types = {};
                         $.each(ul.children('li[data-type="document"]'), function(i, document) {
@@ -212,71 +224,81 @@ var dragenter = function(e) {
                             $(categorie).next("ul").remove();
                         });
                         
+                        var hastime;
+                        
                         //////////////////////////////////////////
                         // On ghoste les lignes qui n'existent pas, on repose les autres
                         // - Types
                         $.each(champ.types, function(i, type) {
-                            if (types[i] === undefined) {
-                                new_li = ghost_type({
-                                    pk: i,
-                                    label: type.label,
-                                    categorie: 0,
-                                    stack: li.attr("data-stack")
-                                });
+                            if (type.time == 0) {
+                                if (types[i] === undefined) {
+                                    new_li = ghost_type({
+                                        pk: i,
+                                        label: type.label,
+                                        categorie: 0,
+                                        stack: li.attr("data-stack")
+                                    });
+                                } else {
+                                    new_li = $(types[i]);
+                                    new_li.find("span").prepend(
+                                        $("<b></b>")
+                                        .addClass("ghost-word")
+                                        .text("Replazar ") // LOCALISATION
+                                    )
+                                }
+                                marge = li.attr("data-stack").split(",").length * 2;
+                                ul.append(new_li.css({ "margin-left": marge + "%" }).show());
                             } else {
-                                new_li = $(types[i]);
-                                new_li.find("span").prepend(
-                                    $("<b></b>")
-                                    .addClass("ghost-word")
-                                    .text("Replazar ") // LOCALISATION
-                                )
+                                hasTime = 1;
                             }
-                            marge = li.attr("data-stack").split(",").length * 2;
-                            ul.append(new_li.css({ "margin-left": marge + "%" }).show());
                         }); // FIN EACH TYPE
                         
                         // - Catégories + types
                         $.each(champ.categories, function(i, categorie) {
-                            if (categories[i] === undefined) {
-                                new_li = ghost_categorie({
-                                    pk: i, 
-                                    label: categorie.label
-                                });
-                            } else {
-                                new_li = $(categories[i].categorie).attr("data-state", "open");
-                                new_li.find("div").attr("data-state", "open");
-                            }
-                            
-                            new_ul = $("<ul></ul>")
-                                .attr("data-stack", li.attr("data-stack"))
-                                .attr("data-ghost", 1);
-                              
-                            // Les types de cette catégorie
-                            $.each(categorie.types, function(j, type) {
-                                var li_type;
-                                
-                                if (categories[i] === undefined || categories[i].types[j] === undefined) {
-                                    li_type = ghost_type({
-                                        pk: j,
-                                        label: type.label,
-                                        categorie: i,
-                                        stack: li.attr("data-stack")
+                            if (categorie.time == 0) {
+                                if (categories[i] === undefined) {
+                                    new_li = ghost_categorie({
+                                        pk: i, 
+                                        label: categorie.label
                                     });
                                 } else {
-                                    li_type = $(categories[i].types[j]);
-                                    li_type.find("span").prepend(
-                                        $("<b></b>")
-                                        .addClass("ghost-word")
-                                        .text("Replazar ") // LOCALISATION
-                                    );
+                                    new_li = $(categories[i].categorie).attr("data-state", "open");
+                                    new_li.find("div").attr("data-state", "open");
                                 }
-                                marge = li.attr("data-stack").split(",").length * 2 + 4;
-                                new_ul.append(li_type.css({ "margin-left": marge + "%" }));
-                            });
-                            
-                            marge = li.attr("data-stack").split(",").length * 2;
-                            ul.append(new_li.css({ "margin-left": marge + "%" }));
-                            ul.append(new_ul);
+                                
+                                new_ul = $("<ul></ul>")
+                                    .attr("data-stack", li.attr("data-stack"))
+                                    .attr("data-ghost", 1);
+                                  
+                                // Les types de cette catégorie
+                                $.each(categorie.types, function(j, type) {
+                                    var li_type;
+                                    
+                                    if (categories[i] === undefined || categories[i].types[j] === undefined) {
+                                        li_type = ghost_type({
+                                            pk: j,
+                                            label: type.label,
+                                            categorie: i,
+                                            stack: li.attr("data-stack")
+                                        });
+                                    } else {
+                                        li_type = $(categories[i].types[j]);
+                                        li_type.find("span").prepend(
+                                            $("<b></b>")
+                                            .addClass("ghost-word")
+                                            .text("Replazar ") // LOCALISATION
+                                        );
+                                    }
+                                    marge = li.attr("data-stack").split(",").length * 2 + 4;
+                                    new_ul.append(li_type.css({ "margin-left": marge + "%" }));
+                                });
+                                
+                                marge = li.attr("data-stack").split(",").length * 2;
+                                ul.append(new_li.css({ "margin-left": marge + "%" }));
+                                ul.append(new_ul);
+                            } else {
+                                hasTime = 1;
+                            }
                         }); // FIN EACH CATEGORIE
                         
                         // - Champs présents
@@ -303,13 +325,118 @@ var dragenter = function(e) {
                             }
                             ul.append(new_li);
                         });
-                }
                         
+                        // Si on est sur du time, on repose les années
+                        $.each(ans, function(i, ligne) {
+                            ul.append(ligne.li);
+                            ul.append(ligne.ul);
+                        });
+                    } else {
+                        // Si c'est un mois on détache tous ses types de documents
+                        if (li.attr("data-an") === undefined) {
+                            // - Types
+                            var types_mois = {};
+                            $.each(ul.children('li[data-type="document"]'), function(i, document) {
+                                types_mois[$(document).attr("data-type-doc")] = document;
+                                $(document).detach();
+                            });
+                            
+                            // - Catégories
+                            var categories_mois = {};
+                            $.each(ul.children('li[data-type="categorie"]'), function(i, categorie) {
+                                categories_mois[$(categorie).attr("data-pk")] = {
+                                    categorie: categorie,
+                                    types: {}
+                                };
+                                $.each($(categorie).next("ul").find("li"), function(j, type) {
+                                    categories_mois[$(categorie).attr("data-pk")].types[$(type).attr("data-type-doc")] = type;
+                                    $(type).detach();
+                                });
+                                $(categorie).detach();
+                                $(categorie).next("ul").remove();
+                            });
+                            
+                            //////////////////////////////////////////
+                            // On ghoste les lignes qui n'existent pas, on repose les autres
+                            // - Types
+                            $.each(champ.types, function(i, type) {
+                                if (type.time == 1) {
+                                    if (types_mois[i] === undefined) {
+                                        new_li = ghost_type({
+                                            pk: i,
+                                            label: type.label,
+                                            categorie: 0,
+                                            stack: li.attr("data-stack")
+                                        });
+                                    } else {
+                                        new_li = $(types_mois[i]);
+                                        new_li.find("span").prepend(
+                                            $("<b></b>")
+                                            .addClass("ghost-word")
+                                            .text("Replazar ") // LOCALISATION
+                                        )
+                                    }
+                                    marge = li.attr("data-stack").split(",").length * 2;
+                                    ul.append(new_li.css({ "margin-left": marge + "%" }).show());
+                                }
+                            }); // FIN EACH TYPE
+                            
+                            // - Catégories + types
+                            $.each(champ.categories, function(i, categorie) {
+                                if (categorie.time == 1) {
+                                    if (categories_mois[i] === undefined) {
+                                        new_li = ghost_categorie({
+                                            pk: i, 
+                                            label: categorie.label
+                                        });
+                                    } else {
+                                        new_li = $(categories_mois[i].categorie).attr("data-state", "open");
+                                        new_li.find("div").attr("data-state", "open");
+                                    }
+                                    
+                                    new_ul = $("<ul></ul>")
+                                        .attr("data-stack", li.attr("data-stack"))
+                                        .attr("data-ghost", 1);
+                                      
+                                    // Les types de cette catégorie
+                                    $.each(categorie.types, function(j, type) {
+                                        var li_type;
+                                        
+                                        if (categories_mois[i] === undefined || categories_mois[i].types[j] === undefined) {
+                                            li_type = ghost_type({
+                                                pk: j,
+                                                label: type.label,
+                                                categorie: i,
+                                                stack: li.attr("data-stack")
+                                            });
+                                        } else {
+                                            li_type = $(categories_mois[i].types[j]);
+                                            li_type.find("span").prepend(
+                                                $("<b></b>")
+                                                .addClass("ghost-word")
+                                                .text("Replazar ") // LOCALISATION
+                                            );
+                                        }
+                                        marge = li.attr("data-stack").split(",").length * 2 + 4;
+                                        new_ul.append(li_type.css({ "margin-left": marge + "%" }));
+                                    });
+                                    
+                                    marge = li.attr("data-stack").split(",").length * 2;
+                                    ul.append(new_li.css({ "margin-left": marge + "%" }));
+                                    ul.append(new_ul);
+                                }
+                            }); // FIN EACH CATEGORIE
+                        
+                        } else {
+                            li.click();
+                        }
+                    }
+                }
+                    
                 ul.slideDown();
                 
                 ul.find('ul[data-ghost]').find("li").slideDown();
-                break;
-            };
+            }
         }, Drag.delay);
     }
     return false;
@@ -345,6 +472,16 @@ var drop = function(e) {
             store.last_champ = monde.cascade[i];
         });
         
+        // Si on a droppé sur un mois ou une année on ajuste le champ date en conséquence
+        if (li.attr("data-an") !== undefined) {
+            $("#date-store").datepicker('setDate', "01/01/" + li.attr("data-an"));
+        }
+        
+        if (li.attr("data-mois") !== undefined) {
+            var an = li.closest("ul").prev("li").attr("data-an");
+            $("#date-store").datepicker('setDate', "01/" + li.attr("data-mois") + "/" + an);
+        }
+        
         // Si on a droppé directement sur un document
         // on affiche les champs date et détail    
         if (li.attr("data-type") == "document") {
@@ -373,7 +510,7 @@ var drop = function(e) {
             $("#popup-store").attr("data-document", position);
             $("#bouton-store").unbind().click(archive_document);
             
-            popup_details();
+            popup_details(position);
         } else {
             _store_document(position);
         }
@@ -433,12 +570,11 @@ var ghost_type = function(params) {
 
 var ghost_categorie = function(params) {
     return $("<li></li>")
-        .addClass("ghost-categorie")
-        .addClass("ghost")
         .attr({
             "data-type": "categorie",
             "data-categorie": params.pk
         })
+        .addClass("ghost")
         .append(
             $("<span></span>")
             .append(params.label)

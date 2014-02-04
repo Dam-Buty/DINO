@@ -86,7 +86,11 @@ var bootstrap = function() {
                 $("#front").append(queue);
                 
                 // On style les éléments                
-                $("#date-store").datepicker({dateFormat: "dd/mm/yy"});
+                $("#date-store").datepicker({
+                    dateFormat: "dd/mm/yy",
+                    changeMonth: true,
+                    changeYear: true
+                });
                 $("#date-store").datepicker('setDate', new Date());
                 
                 $("#container-details input").keydown(function(e) {

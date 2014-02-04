@@ -811,3 +811,7 @@ var store_document = function() {
     var li = $(this).closest("li");
     _store_document(li.attr("data-position"));
 };
+
+var switch_to_store = function() {
+    
+};

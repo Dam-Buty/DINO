@@ -14,13 +14,51 @@ var popup = function(message, type) {
 
 var dialogue;
 
-var popup_details = function() {
+var popup_details = function(position) {
+    var div = $("<div></div>");
+    var ul = $("<ul></ul>")
+    var document = queue[position];
+    var store = document.store;
+    var monde = profil.mondes[store.monde];
+    var type;
+    
+    div
+    .attr("id", "popup-details")
+    .append(
+        $("<p></p>")
+        .html("Clasificacion del documento <b>" + document.displayname + "</b> :")
+    );
+    
+    if (store.categorie == 0) {
+        type = monde.champs[store.last_champ].types[store.type_doc.pk];
+    } else {
+        type = monde.champs[store.last_champ].categories[store.categorie].types[store.type_doc.pk];
+    }
+    
+    ul.append(
+        $("<li></li>")
+        .html("Es un <b>" + type.label + "</b>")
+    );
+    
+    $.each(store.champs, function(champ, valeur) {
+        ul.append(
+            $("<li></li>")
+            .html("Del " + monde.champs[champ].label + " <b>" + monde.champs[champ].liste[valeur] + "</b>")
+        );
+    });
+    
+    div.append(ul);
+    
+    div.find("b").click(switch_to_store);
+    
+    div.append($("#container-details").show());
+
     dialogue = new $.Zebra_Dialog(
         "", {
             buttons: false, 
             type: false,
             source: {
-                inline: $("#container-details").show()
+                inline: div
             },
             overlay_close: false
         }
