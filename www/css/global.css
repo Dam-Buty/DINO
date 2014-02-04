@@ -221,6 +221,10 @@ html, body {
     list-style-type: none;
 }
 
+.menu-lateral {
+    cursor: pointer;
+}
+
 .menu-lateral h1 {
     font-size: 0.9em;
     color: white;
