@@ -8,7 +8,7 @@ categorie_doc:
 type_doc:
 - time_type_doc (BOOL)
 
-OK sur baby
+OK sur baby, OK sur my
 
 Cabinet
 =======
@@ -21,4 +21,4 @@ demande:
 - fk_user
 - fk_client
 
-OK sur baby
+OK sur baby, OK sur my
