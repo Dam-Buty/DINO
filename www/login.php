@@ -23,9 +23,12 @@
         <input type="text" name="login" id="login" placeholder="Nombre de usuario"/>
     </div>
     <div class="champ-login">
-        <input type="password" name="pass" id="pass" placeholder="Contrasena"/>
+        <input type="password" name="pass" id="pass" placeholder="Contraseña"/>
     </div>
     <input type="submit" value="Ingresar"/>
+    <div class="phrase-login">
+        Todavia no tienes tu acceso DINO? <a href="http://signup.dino.mx/">Pidelo aqui!</a>
+    </div>
 </form>
 </div>
 

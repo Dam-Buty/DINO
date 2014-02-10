@@ -51,3 +51,8 @@ body {
     
     border: none;
 }
+
+.phrase-login {
+    text-align: center;
+    padding-top: 20px;
+}
