@@ -143,10 +143,10 @@ var check_mail_params = function() {
     
     if (re.test(mail)) {
         field.removeClass("KO").addClass("OK");
-        tip_mail();
+        tip_mail_params();
     } else {
         field.removeClass("OK").addClass("KO");
-        tip_mail();
+        tip_mail_params();
     }
 };
 

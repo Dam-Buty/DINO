@@ -318,7 +318,7 @@ var reset_tips = function() {
             "<li>un numero</li>" + 
             "<li>y uno de esos caracteres especiales : !@#$%^&*?_~</li>" + 
             "</ul>" +
-            "Por ejemplo : <b>Bacon_2013</b> es una deliciosa contrasena."
+        "Por ejemplo : <b>Bacon_2013</b> es una deliciosa contrasena."
     );
     
     $("#tip-mail").html(
@@ -592,60 +592,6 @@ var tip_login = function() {
     tip_champ(field, tip);
 };
 
-var check_login = function() {
-    var field = $("#new-login");
-    var login = field.val();
-    var tip = $("#tip-login");
-    
-    if (login.length == 0) {
-        if (field.hasClass("OK")) {
-            field.removeClass("OK").addClass("KO");
-            tip_login();
-        }
-    } else {
-        if (login.length < 8) {
-            field.removeClass("OK").addClass("KO");
-            tip.html("Su nombre de usuario debe ser un poco mas largo... (<b>8 caracteres minimum</b>)");
-            tip_login();
-        } else {
-            if (login.length > 32) {
-                field.removeClass("OK").addClass("KO");
-                tip.html("No tenemos lugar por tanto nombre de usuario! (<b>32 caracteres maximum</b>)");
-                tip_login();
-            } else {
-                $.ajax({
-                    url: "do/doCheckUser.php",
-                    type: "GET",
-                    data: {
-                        login: login
-                    },
-                    statusCode: {
-                        200: function() {
-                            field.removeClass("OK").addClass("KO");
-                            tip.html("<b>" + login + "</b> es un excelente nombre, pero no esta disponible :(");
-                            tip_login();
-                        },
-                        404: function() {
-                            field.removeClass("KO").addClass("OK");
-                            tip.html("<b>" + login + "</b> es un excelente nombre!")
-                           
-                            tip_login();
-                        },
-                        403: function() {
-                            window.location.replace("index.php");
-                        },
-                        500: function() {
-                            field.removeClass("OK").addClass("KO");
-                            tip.html('Error de verificacion. Gracias por intentar otra vez'); // LOCALISATION
-                            tip_login();
-                        }
-                    }
-                });
-            }
-        }
-    }
-};
-
 var tip_pass = function() {
     var field = $("#new-pass");
     var tip = $("#tip-pass");
@@ -653,103 +599,11 @@ var tip_pass = function() {
     tip_champ(field, tip);
 };
 
-var check_pass = function() {
-    var field = $("#new-pass");
-    var pass = field.val();
-    var tip = $("#tip-pass");
-    
-    if (pass.length == 0) {
-        if (field.hasClass("OK")) {
-            field.removeClass("OK").addClass("KO");
-        }
-        tip_pass();
-    } else {
-        if (pass.length < 8) {
-            field.removeClass("OK").addClass("KO");
-            tip.html("Su contrasena debe ser un poco mas larga... (<b>8 caracteres minimum</b>)");
-            tip_pass();
-        } else {
-            if (pass.length > 32) {
-                field.removeClass("OK").addClass("KO");
-                tip.html("No tenemos lugar por tanta contrasena! (<b>32 caracteres maximum</b>)");
-                tip_pass();
-            } else {
-                if (countContain(pass, m_strUpperCase) == 0) {
-                    field.removeClass("OK").addClass("KO");
-                    tip.html("Su contrasena debe contener a lo menos una mayuscula!");
-                    tip_pass();
-                } else {
-                    if (countContain(pass, m_strLowerCase) == 0) {
-                        field.removeClass("OK").addClass("KO");
-                        tip.html("Su contrasena debe contener a lo menos una minuscula!");
-                        tip_pass();
-                    } else {
-                        if (countContain(pass, m_strNumber) == 0) {
-                            field.removeClass("OK").addClass("KO");
-                            tip.html("Su contrasena debe contener a lo menos un numero!");
-                            tip_pass();
-                        } else {
-                            if (countContain(pass, m_strCharacters) == 0) {
-                                field.removeClass("OK").addClass("KO");
-                                tip.html("Su contrasena debe contener a lo menos un caracter especial!");
-                                tip_pass();
-                            } else {
-                                field.removeClass("KO").addClass("OK");
-                                tip.html("$*#} es una excelente contrasena!");
-                                tip_pass();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    } 
-};
-
-var check_pass2 = function() {
-    var field = $("#new-pass2");
-    
-    var pass = $("#new-pass").val();
-    var pass2 = $("#new-pass2").val();
-    
-    if (pass.length == 0) {
-        field.removeClass("OK").removeClass("KO");
-    } else {
-        if (pass2 != pass.substring(0, pass2.length)) {
-            field.removeClass("OK").addClass("KO");
-        } else {
-            if (pass == pass2) {
-                field.removeClass("KO").addClass("OK");
-            } else {
-                field.removeClass("OK").removeClass("KO");
-            }
-        }
-    }
-};
-
-var tip_mail = function() {
+var tip_mail = function(field, tip) {
     var field = $("#new-mail");
     var tip = $("#tip-mail");
-    
     tip_champ(field, tip, true);
 }
-
-var check_mail = function() {
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    var field = $(this);
-    var tip = $("#tip-mail");
-    var mail = field.val();
-    
-    if (re.test(mail)) {
-        tip.html("El nombre de usuario y la contrasena seran enviados a esta direccion.");
-        field.removeClass("KO").addClass("OK");
-        tip_mail();
-    } else {
-        tip.html("DINO would never, ever do anything to harm an innocent mailbox.");
-        field.removeClass("OK").addClass("KO");
-        tip_mail();
-    }
-};
 
 var save_user = function() {
     var div = $(this);

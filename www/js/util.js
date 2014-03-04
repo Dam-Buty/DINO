@@ -1,4 +1,8 @@
 
+var m_strUpperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+var m_strLowerCase = "abcdefghijklmnopqrstuvwxyz";
+var m_strNumber = "0123456789";
+var m_strCharacters = "!@#$%^&*?_~";
 
 // Checks a string for a list of characters
 function countContain(string, reference)
@@ -63,7 +67,7 @@ var collapse_liste = function(liste, default_state) {
 };
 
 var tip_champ = function(field, tip, ignore_KO) {
-    var delay = 800;
+    var delay = 1200;
     
     if (ignore_KO === undefined) {
         ignore_KO = false;
@@ -94,9 +98,11 @@ var tip_champ = function(field, tip, ignore_KO) {
         
         // Et on le passe en vert
         tip.removeClass("KO").addClass("OK");
-        setTimeout(function() {
-            tip.fadeOut();
-        }, delay);
+        if (tip.attr("id") != "container-tips") {
+            setTimeout(function() {
+                tip.fadeOut();
+            }, delay);
+        }
     }
     
     if (field.hasClass("edit-niveau")) {
@@ -114,6 +120,193 @@ var tip_champ = function(field, tip, ignore_KO) {
     }
 };
 
+var check_mail = function() {
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    var field = $(this);
+    var mail = field.val();
+    var tip;
+    
+    if (field.attr("id") == "new-mail") {
+        tip = $("#tip-mail");
+    } else {
+        tip = $("#container-tips");
+    }
+    
+    if (re.test(mail)) {
+        tip.html("El nombre de usuario y la contrasena seran enviados a esta direccion.");
+        field.removeClass("KO").addClass("OK");
+        tip_champ(field, tip, true); 
+        if (tip.attr("id") == "container-tips") {
+            check_signup();
+        }
+    } else {
+        tip.html("DINO nunca haria nada para lastimar un buzon inocente!");
+        field.removeClass("OK").addClass("KO");
+        tip_champ(field, tip, true);
+    }
+};
+
+var check_login = function() {
+    var field = $(this);
+    var login = field.val();
+    var tip;
+    
+    if (field.attr("id") == "new-login") {
+        tip = $("#tip-login");
+    } else {
+        tip = $("#container-tips");
+    }
+    
+    if (login.length == 0) {
+        if (field.hasClass("OK")) {
+            field.removeClass("OK").addClass("KO");
+            tip_champ(field, tip);
+        }
+    } else {
+        if (login.length < 8) {
+            field.removeClass("OK").addClass("KO");
+            tip.html("Su nombre de usuario debe ser un poco mas largo... (<b>8 caracteres minimum</b>)");
+            tip_champ(field, tip);
+        } else {
+            if (login.length > 32) {
+                field.removeClass("OK").addClass("KO");
+                tip.html("No tenemos lugar por tanto nombre de usuario! (<b>32 caracteres maximum</b>)");
+                tip_champ(field, tip);
+            } else {
+                $.ajax({
+                    url: "do/doCheckUser.php",
+                    type: "GET",
+                    data: {
+                        login: login
+                    },
+                    statusCode: {
+                        200: function() {
+                            field.removeClass("OK").addClass("KO");
+                            tip.html("<b>" + login + "</b> es un excelente nombre, pero no esta disponible :(");
+                            tip_champ(field, tip);
+                        },
+                        404: function() {
+                            field.removeClass("KO").addClass("OK");
+                            tip.html("<b>" + login + "</b> es un excelente nombre!");
+                                                       
+                            tip_champ(field, tip); 
+                            if (tip.attr("id") == "container-tips") {
+                                check_signup();
+                            }
+                        },
+                        403: function() {
+                            window.location.replace("index.php");
+                        },
+                        500: function() {
+                            field.removeClass("OK").addClass("KO");
+                            tip.html('Error de verificacion. Gracias por intentar otra vez'); // LOCALISATION
+                            tip_champ(field, tip);
+                        }
+                    }
+                });
+            }
+        }
+    }
+};
+
+var check_pass = function() {
+    var field = $(this);
+    var pass = field.val();
+    var tip;
+    
+    if (field.attr("id") == "new-pass") {
+        tip = $("#tip-pass");
+    } else {
+        tip = $("#container-tips");
+    }
+    
+    if (pass.length == 0) {
+        if (field.hasClass("OK")) {
+            field.removeClass("OK").addClass("KO");
+        }
+    
+        tip_pass();
+    } else {
+        if (pass.length < 8) {
+            field.removeClass("OK").addClass("KO");
+            tip.html("Su contrasena debe ser un poco mas larga... (<b>8 caracteres minimum</b>)");
+            tip_champ(field, tip);
+        } else {
+            if (pass.length > 32) {
+                field.removeClass("OK").addClass("KO");
+                tip.html("No tenemos lugar por tanta contrasena! (<b>32 caracteres maximum</b>)");
+                tip_champ(field, tip);
+            } else {
+                if (countContain(pass, m_strUpperCase) == 0) {
+                    field.removeClass("OK").addClass("KO");
+                    tip.html("Su contrasena debe contener a lo menos una mayuscula!");
+                    tip_champ(field, tip);
+                } else {
+                    if (countContain(pass, m_strLowerCase) == 0) {
+                        field.removeClass("OK").addClass("KO");
+                        tip.html("Su contrasena debe contener a lo menos una minuscula!");
+                        tip_champ(field, tip);
+                    } else {
+                        if (countContain(pass, m_strNumber) == 0) {
+                            field.removeClass("OK").addClass("KO");
+                            tip.html("Su contrasena debe contener a lo menos un numero!");
+                            tip_champ(field, tip);
+                        } else {
+                            if (countContain(pass, m_strCharacters) == 0) {
+                                field.removeClass("OK").addClass("KO");
+                                tip.html("Su contrasena debe contener a lo menos un caracter especial!");
+                                tip_champ(field, tip);
+                            } else {
+                                field.removeClass("KO").addClass("OK");
+                                tip.html("$*#} es una excelente contrasena!");
+                                tip_champ(field, tip); 
+                                if (tip.attr("id") == "container-tips") {
+                                    check_signup();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    } 
+};
+
+var check_pass2 = function() {
+    var field = $(this);
+    var pass, pass2;
+    
+    if (field.attr("id") == "new-pass2") {
+        tip = $("#tip-pass");
+        pass = $("#new-pass").val();
+        pass2 = $("#new-pass2").val();
+    } else {
+        tip = $("#container-tips");
+        pass = $("#pass").val();
+        pass2 = $("#pass2").val();
+    }
+    
+    if (pass.length == 0) {
+        field.removeClass("OK").removeClass("KO");
+    } else {
+        if (pass2 != pass.substring(0, pass2.length)) {
+            field.removeClass("OK").addClass("KO");
+        } else {
+            if (pass == pass2) {
+                field.removeClass("KO").addClass("OK");    
+                if (tip.attr("id") == "container-tips") {
+                    check_signup();
+                }
+            } else {
+                field.removeClass("OK").removeClass("KO");
+            }
+        }
+    }
+};
+
+    
+    
+    
 var debug_liste = function() {
     var stack = [];
     var monde = profil.mondes[Core.monde];

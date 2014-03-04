@@ -168,7 +168,7 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
                             if (!$result_insert_vc["status"]) {
                                 status(500);
                                 write_log([
-                                    "libelle" => "UPDATE document a cleaner",
+                                    "libelle" => "INSERT valeurs de champs",
                                     "admin" => 0,
                                     "query" => $query_insert_vc,
                                     "statut" => 1,
@@ -187,7 +187,7 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
                     } else {
                         status(500);
                         write_log([
-                            "libelle" => "UPDATE document a cleaner",
+                            "libelle" => "DELETE valeurs de champs",
                             "admin" => 0,
                             "query" => $query_del_vc,
                             "statut" => 1,
@@ -202,7 +202,7 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
                 } else {
                     status(500);
                     write_log([
-                        "libelle" => "UPDATE document a cleaner",
+                        "libelle" => "INSERT DROITS USER",
                         "admin" => 0,
                         "query" => $query_insert_droits,
                         "statut" => 1,
@@ -265,7 +265,7 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
     } else {
         status(500);
         write_log([
-            "libelle" => "UPDATE document a cleaner",
+            "libelle" => "INSERT user",
             "admin" => 0,
             "query" => $query_user,
             "statut" => 1,
