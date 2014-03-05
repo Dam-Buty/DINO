@@ -24,26 +24,76 @@
     </div>
     <div id="container-champs">
         <div id="page-1">
-            <form name="form-signup" id="form-signup">
-                <div class="champ-signup">
-                    <input type="text" name="mail" id="mail" placeholder="Correo electronico"/>
-                </div>
-                <div class="champ-signup">
-                    <input type="text" name="login" id="login" placeholder="Nombre de usuario"/>
-                </div>
-                <div class="champ-signup">
-                    <input type="password" name="pass" id="pass" placeholder="Contrasena"/>
-                </div>
-                <div class="champ-signup">
-                    <input type="password" name="pass2" id="pass2" placeholder="Confirmar contrasena"/>
-                </div>
-                <input type="submit" class="submit-signup" id="submit-page-1" value="Ingresar"/>
-            </form>
+            <div class="champ-signup">
+                <input type="text" name="mail" id="mail" placeholder="Correo electronico"/>
+            </div>
+            <div class="champ-signup">
+                <input type="text" name="login" id="login" placeholder="Nombre de usuario"/>
+            </div>
+            <div class="champ-signup">
+                <input type="password" name="pass" id="pass" placeholder="Contrasena"/>
+            </div>
+            <div class="champ-signup">
+                <input type="password" name="pass2" id="pass2" placeholder="Confirmar contrasena"/>
+            </div>
+            <input type="submit" class="submit-signup" id="submit-page-1" value="Continuar"/>
+        </div>
+        <div id="page-2">
+            <div class="champ-signup">
+                <input type="text" name="entreprise" id="entreprise" placeholder="Nombre de tu empresa"/>
+            </div>
+            <div class="champ-signup">
+                <input type="text" name="secteur" id="secteur" placeholder="El sector de tu empresa"/>
+            </div>
+            <div class="champ-signup">
+                <input type="text" name="poste" id="poste" placeholder="Tu puesto en la empresa"/>
+            </div>
+            <div class="champ-signup">
+                <input type="text" name="tel" id="tel" placeholder="Tu numero telefonico"/>
+            </div>
+            <input type="submit" class="submit-signup" id="submit-page-2" value="Elegir un plan"/>
         </div>
     </div>
     <div style="clear: both;">
 </div>
 
+<div id="container-plan">
+    <h1>Elige tu plan de tarifa</h1>
+    <div class="plan" id="plan-1">
+        <h2>Starter</h2>
+        <h3>FREE</h3>
+        <ul>
+            <li>1 usuario</li>
+            <li>2Gb de espacio</li>
+            <li>Soporte en linea 9/18</li>
+            <li>2 Mundos documentales</li>
+        </ul>
+        <input type="submit" class="submit-signup" id="submit-page-2" value="Elegir un plan"/>
+    </div>
+    <div class="plan" id="plan-2">
+        <h2>Starter</h2>
+        <h3>FREE</h3>
+        <ul>
+            <li>1 usuario</li>
+            <li>2Gb de espacio</li>
+            <li>Soporte en linea 9/18</li>
+            <li>2 Mundos documentales</li>
+        </ul>
+    </div>
+    <div class="plan" id="plan-3">
+        <h2>PRO</h2>
+        <h3>49$ USD/mes</h3>
+        <ul>
+            <li>1-5 usuarios incluidos</li>
+            <li>10 Gb de espacio incluido</li>
+            <li>Soporte telefónico 9/18</li>
+            <li>Usuarios "Visitor" ilimitados</li>
+            <li>Mundos documentales ilimitados</li>
+            <li>(4.99$/mes el usuario adicional)</li>
+            <li>(A partir de 0.49$/mes el Gb adicional)</li>
+        </ul>
+    </div>
+</div>
 
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 

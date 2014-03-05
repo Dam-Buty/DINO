@@ -243,7 +243,7 @@ var dragenter = function(e) {
                                     new_li.find("span").prepend(
                                         $("<b></b>")
                                         .addClass("ghost-word")
-                                        .text("Replazar ") // LOCALISATION
+                                        .text("Remplazar ") // LOCALISATION
                                     )
                                 }
                                 marge = li.attr("data-stack").split(",").length * 2;
@@ -286,7 +286,7 @@ var dragenter = function(e) {
                                         li_type.find("span").prepend(
                                             $("<b></b>")
                                             .addClass("ghost-word")
-                                            .text("Replazar ") // LOCALISATION
+                                            .text("Remplazar ") // LOCALISATION
                                         );
                                     }
                                     marge = li.attr("data-stack").split(",").length * 2 + 4;
@@ -380,7 +380,7 @@ var dragenter = function(e) {
                                         new_li.find("span").prepend(
                                             $("<b></b>")
                                             .addClass("ghost-word")
-                                            .text("Replazar ") // LOCALISATION
+                                            .text("Remplazar ") // LOCALISATION
                                         )
                                     }
                                     marge = li.attr("data-stack").split(",").length * 2;
@@ -422,7 +422,7 @@ var dragenter = function(e) {
                                             li_type.find("span").prepend(
                                                 $("<b></b>")
                                                 .addClass("ghost-word")
-                                                .text("Replazar ") // LOCALISATION
+                                                .text("Remplazar ") // LOCALISATION
                                             );
                                         }
                                         marge = li.attr("data-stack").split(",").length * 2 + 4;

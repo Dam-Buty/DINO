@@ -1,3 +1,4 @@
+var pk_client = 0;
 
 var bootstrap_signup = function() {
     $("#mail").unbind();
@@ -49,34 +50,75 @@ var check_signup = function() {
         $('#container-signup input[type="submit"]').show();
         $("#container-tips").html(
             "<h1>Todo bueno !</h1>" +
-                "<p>Da click en 'Ingresar' para continuar tu inscripcion</p>"
+                "<p>Da click en 'Continuar' para continuar tu inscripcion</p>"
         );
     } else {
         $('#container-signup input[type="submit"]').hide();
     }
 };
 
+var tip_page = function(page) {
+    switch(page) {
+        case 2:
+            $("#container-tips").html(
+                "<h1>Casi listo !</h1>" +
+                "<p>Por favor dinos un poco mas sobre tu y tu empresa antes de <b>elegir tu plan</b>.</p>" +
+                "<p>Estos datos <b>no son obligatorios</b>, pero nos permiten proporcionarte el servicio mas adecuado con tus necesidades.</p>"
+            );
+            break;
+        case 3:
+            $("#container-tips").html(
+                "<h1>TEST !</h1>" +
+                "<p>Lorem ipsum sit <b>dolor amet</b>.</p>"
+            );
+            break;
+    };
+    $("#container-tips").css("top", "");
+};
+
 var save_page = function() {
     var submit = $(this);
+    var page = parseInt(submit.attr("id").split("-")[2]);
     var data;
     
-    switch(submit.attr("id").split("-")[2]) {
+    switch(page) {
         case 1:
             data = {
-                page: 1,
+                page: page,
                 mail: $("#mail").val(),
-                login: $("#mail").val(),
-                pass: $("#mail").val()
-            }
+                login: $("#login").val(),
+                pass: $("#pass").val()
+            };
             break;    
+        case 2:
+            data = {
+                page: page,
+                pk: pk_client,
+                entreprise: $("#entreprise").val(),
+                secteur: $("#secteur").val(),
+                poste: $("#poste").val(),
+                tel: $("#tel").val()
+            };
+            break;   
     };
     
     $.ajax({
         url: "do/doSignup.php",
         type: "POST",
+        data: data,
         statusCode : {
-            200: function() {
-            
+            200: function(pk) {
+                pk_client = pk;
+                
+                $("#page-" + page).fadeOut();
+                page += 1;
+                if (page == 2) {
+                    $("#page-" + page).fadeIn();
+                } else {
+                    
+                }
+                
+                tip_page(page);
             },
             403: function() {
                 window.location.replace("index.php");

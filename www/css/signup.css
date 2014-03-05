@@ -79,3 +79,11 @@ body {
     float: right;
     width: 45%;
 }
+
+#page-2 {
+    display: none;
+}
+
+#page-3 {
+    display: none;
+}

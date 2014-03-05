@@ -22,3 +22,10 @@ demande:
 - fk_client
 
 OK sur baby, OK sur my
+
+
+SIGNUP
+======
+
+client:
+- secteur_client
