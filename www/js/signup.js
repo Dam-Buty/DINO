@@ -17,6 +17,12 @@ var bootstrap_signup = function() {
     $("#pass2").keyup(check_pass2).change(check_pass2);
     
     $(".submit-signup").unbind().click(save_page);
+    
+    $(".plan").mouseover(function() {
+        $(this).css("box-shadow", "0 0 1px 2px #5B8020");
+    }).mouseout(function() {
+        $(this).css("box-shadow", "");
+    }).click(save_plan);
 };
 
 var tip_mail = function() {
@@ -47,13 +53,13 @@ var tip_pass = function() {
 
 var check_signup = function() {
     if ($("#login").hasClass("OK") && $("#pass").hasClass("OK") && $("#pass2").hasClass("OK") && $("#mail").hasClass("OK")) {
-        $('#container-signup input[type="submit"]').show();
+        $('#submit-page-1').show();
         $("#container-tips").html(
             "<h1>Todo bueno !</h1>" +
                 "<p>Da click en 'Continuar' para continuar tu inscripcion</p>"
         );
     } else {
-        $('#container-signup input[type="submit"]').hide();
+        $('#submit-page-1').hide();
     }
 };
 
@@ -65,12 +71,18 @@ var tip_page = function(page) {
                 "<p>Por favor dinos un poco mas sobre tu y tu empresa antes de <b>elegir tu plan</b>.</p>" +
                 "<p>Estos datos <b>no son obligatorios</b>, pero nos permiten proporcionarte el servicio mas adecuado con tus necesidades.</p>"
             );
+            $("#submit-page-2").fadeIn();
             break;
         case 3:
-            $("#container-tips").html(
-                "<h1>TEST !</h1>" +
-                "<p>Lorem ipsum sit <b>dolor amet</b>.</p>"
-            );
+            $("#container-tips").hide();
+            $("#container-signup").animate({
+                width: "90%",
+                "margin-left": "5%"
+            });
+            $("body").animate({
+                "padding-top": "0"
+            });
+            $("#submit-page-3").fadeIn();
             break;
     };
     $("#container-tips").css("top", "");
@@ -79,7 +91,7 @@ var tip_page = function(page) {
 var save_page = function() {
     var submit = $(this);
     var page = parseInt(submit.attr("id").split("-")[2]);
-    var data;
+    var data, current, next;
     
     switch(page) {
         case 1:
@@ -89,6 +101,8 @@ var save_page = function() {
                 login: $("#login").val(),
                 pass: $("#pass").val()
             };
+            current = $("#page-1");
+            next = $("#page-2");
             break;    
         case 2:
             data = {
@@ -99,6 +113,8 @@ var save_page = function() {
                 poste: $("#poste").val(),
                 tel: $("#tel").val()
             };
+            current = $("#container-champs");
+            next = $("#container-plan");
             break;   
     };
     
@@ -110,15 +126,11 @@ var save_page = function() {
             200: function(pk) {
                 pk_client = pk;
                 
-                $("#page-" + page).fadeOut();
-                page += 1;
-                if (page == 2) {
-                    $("#page-" + page).fadeIn();
-                } else {
-                    
-                }
+                current.fadeOut(function() {
+                    next.fadeIn();
+                    tip_page(page + 1);
+                });
                 
-                tip_page(page);
             },
             403: function() {
                 window.location.replace("index.php");
@@ -128,4 +140,8 @@ var save_page = function() {
             }
         }
     })
+};
+
+var save_plan = function() {
+    
 };
