@@ -61,9 +61,6 @@ if (isset($_SESSION)) {
             <li id="menu-admin" class="element-menu-front">
                 <h1>ADMIN</h1>
             </li>
-            <li id="menu-cabinet" class="element-menu-front">
-                <h1>NUEVO MUNDO</h1>
-            </li>
         <?php
     }
     ?>
@@ -72,7 +69,13 @@ if (isset($_SESSION)) {
 
     <div id="top-front" class="barre-top">
         <select class="busquedor" type="text" id="search" multiple="multiple" data-placeholder="Buscar en este mundo..." data-state="closed"></select>
-        <div id="toggle-date"></div>
+        <div id="toggle-date"></div><?php
+    if ($_SESSION["niveau"] > 20) {
+        ?>
+        <div id="new-monde"></div>
+        <?php
+    }
+    ?>
         <ul class="list-mondes" id="mondes-top"></ul>
         <div id="container-dates">
             <div id="slider-date"></div>
@@ -163,28 +166,6 @@ if ($_SESSION["niveau"] >= 20) {
     </ul>
     <div id="tip-mail-params" class="container-arrow OK arrow-params">
         DINO nunca haria nada para lastimar un buzon inocente!
-    </div>
-</div>
-
-<div id="container-cabinet">
-    <div id="container-questions">
-        <h2>Para crear un nuevo mundo, gracias por contestar las preguntas siguientes :</h2>
-        <p>Como se llama el mundo?</p>
-        <p><input type="text" id="nom-new-monde" placeholder="Por ejemplo: Ventas, Proveedores..."/></p>
-        <p>Como se clasifican los documentos adentro de este mundo?</p>
-        <p><input type="text" id="critere-new-monde" placeholder="Por ejemplo: por Cliente, por proyecto..."/></p>
-        <p>Que tipo de documentos se van a clasificar en este mundo?</p>
-        <p><textarea id="documents-new-monde">Por ejemplo :
-- Contrato anual (uno por cliente)
-- Contrato (por proyecto)
-- Factura (por proyecto)
-- Cuenta de gastos (mensual)
-...</textarea></p>
-        <div class="boutons" id="bouton-cabinet">Enviar solicitud</div>
-    </div>
-    <div id="container-merci">
-        <p>Tu solicitud ha sido enviada, y la estamos estudiando. Te mandaremos un mail cuando tu nuevo mundo estara listo.</p>
-        <p><div class="boutons" id="bouton-merci">Gracias!</div></p>
     </div>
 </div>
 

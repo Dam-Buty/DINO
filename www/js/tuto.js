@@ -1,26 +1,28 @@
-
-var Tuto = {
-    etape: 0,
-    sibling: undefined,
-    parent: undefined,
-    final_li: undefined,
-    store: undefined,
-    etapes: [{ ////////////////////// 0
-        go: function() {
-            $('#quit-tuto').tooltipster({
+var Scenarios = [ { ////////////////////// SCENARIO 0
+    id: 0,
+    titre: "Première visite archiviste",
+    description: "Es un muy bueno tutorial!",
+    etapes: [{////////////////////// 0
+        id: 0,
+        raises_flag: false,
+        tooltips: [{
+            selector: $('#quit-tuto'),
+            options: {
                 content: 'Aqui para dejar el tutorial...',
                 autoClose: false
-            }).tooltipster("show");
-            $('#bouton-tuto').tooltipster({
+            }
+        }, {
+            selector: $('#bouton-tuto'),
+            options: {
                 content: '... y aqui para retomarlo mas tarde!',
                 autoClose: false
-            }).tooltipster("show");
-        },
-        clean: function() {
-            $('#bouton-tuto').tooltipster("destroy");
-            $('#quit-tuto').tooltipster("destroy");
-        }
+            }
+        }]
+        go: function() { },
+        clean: function() { }
     }, { ////////////////////// 1
+        id: 1,
+        raises_flag: false,
         go: function() {
             if ($("#container-queue").attr("data-state") == "closed") {
                 $("#menu-queue").click();
@@ -41,6 +43,8 @@ var Tuto = {
             $("#container-files-handler").css("border", "").tooltipster("destroy");
         }
     }, { ////////////////////// 2
+        id: 2,
+        raises_flag: false,
         go: function() {
             $('#container-queue').css("z-index", "701");
             $("#files-list li").first().find(".bouton-edit-li").css("border", "2px solid #DB7F1A");
@@ -56,6 +60,8 @@ var Tuto = {
             $("#files-list li").first().find(".bouton-edit-li").css("border", "");
         }
     }, { //////////////////////3
+        id: 3,
+        raises_flag: false,
         go: function() {
             $("#mondes-store").css("z-index", "701");
             setTimeout(function() {
@@ -72,6 +78,8 @@ var Tuto = {
             $("#mondes-store").css("z-index", "");
         }
     }, { ////////////////////// 4
+        id: 4,
+        raises_flag: false,
         go: function() {
             var monde = profil.mondes[Store.monde];
             var label = monde.label;
@@ -95,6 +103,8 @@ var Tuto = {
             $('#container-nouveau-champ').tooltipster("destroy");
         }
     }, { ////////////////////// 5
+        id: 5,
+        raises_flag: false,
         go: function() {
             var monde = profil.mondes[Store.monde];
             var champ = monde.champs[monde.cascade[0]].label;
@@ -141,6 +151,8 @@ var Tuto = {
             .tooltipster("destroy");
         }
     }, { ////////////////////// 6
+        id: 6,
+        raises_flag: false,
         go: function() {
             var monde = profil.mondes[Store.monde];
             var champ = monde.champs[Store.last_champ];
@@ -179,20 +191,22 @@ var Tuto = {
             $("#bouton-store").tooltipster("destroy");
         }
     }, { ////////////////////// 7
+        id: 7,
+        raises_flag: false,
         go: function() {
             var monde = profil.mondes[Store.monde];
             var valeur = Store.champs[monde.cascade[0]];
             var stack = [];
             var li;
-            var cascade = profil.mondes[Tuto.store.monde].cascade;
+            var cascade = profil.mondes[Tuto.data["store"].monde].cascade;
             
             var do_click = function(i) {
                 var last_click = false;
                 
-                if (Tuto.store.champs[cascade[i]] !== undefined) {
-                    li = $("#liste ul").find('li[data-type="champ"][data-pk="' + Tuto.store.champs[cascade[i]] + '"]');
+                if (Tuto.data["store"].champs[cascade[i]] !== undefined) {
+                    li = $("#liste ul").find('li[data-type="champ"][data-pk="' + Tuto.data["store"].champs[cascade[i]] + '"]');
                     li.click();
-                    stack.push(Tuto.store.champs[cascade[i]]);
+                    stack.push(Tuto.data["store"].champs[cascade[i]]);
                     
                     if (i < cascade.length - 1) {
                         setTimeout(function() {
@@ -215,15 +229,15 @@ var Tuto = {
             var end_click = function() {
                 var delay = 0;
                 
-                if (Tuto.store.categorie != 0) {
-                    li = $("#liste ul").find('li[data-type="categorie"][data-pk="' + Tuto.store.categorie + '"][data-stack="' + stack.join(",") + '"]');
+                if (Tuto.data["store"].categorie != 0) {
+                    li = $("#liste ul").find('li[data-type="categorie"][data-pk="' + Tuto.data["store"].categorie + '"][data-stack="' + stack.join(",") + '"]');
                     li.click();
                     delay = 200;
                 }
                 
-                li = li.next("ul").find('li[data-type-doc="' + Tuto.store.type_doc.pk + '"]')[0];
+                li = li.next("ul").find('li[data-type-doc="' + Tuto.data["store"].type_doc.pk + '"]')[0];
                 
-                Tuto.final_li = $(li);
+                Tuto.data["final_li"] = $(li);
                 
                 setTimeout(function() {
                     $(li).tooltipster({
@@ -245,13 +259,17 @@ var Tuto = {
         },
         clean: function() {
             attache_element($("#liste"));
-            Tuto.final_li.tooltipster("destroy");
+            Tuto.data["final_li"].tooltipster("destroy");
             $("#liste").css("z-index", "");
         }
     }, { ////////////////////// 8
+        id: 8,
+        raises_flag: false,
         go: function() {},
         clean: function() {}
     }, {////////////////////// 9
+        id: 9,
+        raises_flag: false,
         go: function() {
             $("#opak").click();
             $("#mondes-top").css("z-index", "701");
@@ -268,6 +286,8 @@ var Tuto = {
             $("#mondes-top li").first().tooltipster("destroy");
         }
     }, { ////////////////////// 10
+        id: 10,
+        raises_flag: false,
         go: function() {        
             $("#toggle-date").click();
             setTimeout(function() {
@@ -287,6 +307,8 @@ var Tuto = {
             $("#container-dates").tooltipster("destroy");
         }
     }, { ////////////////////// 11
+        id: 11,
+        raises_flag: false,
         go: function() {
             var monde = profil.mondes[Core.monde];
             var champ = monde.champs[monde.cascade[0]].label;
@@ -310,6 +332,8 @@ var Tuto = {
             $("#top-front").css("margin-right", "");
         }
     }, { ////////////////////// 12
+        id: 12,
+        raises_flag: false,
         go: function() {
             $(".barre-bottom").css("z-index", "701");
             detache_element($(".barre-bottom"));
@@ -318,42 +342,134 @@ var Tuto = {
             window.location.replace("do/doEndTuto.php");
         }
     }, {////////////////////// 13
+        id: 13,
+        raises_flag: false,
         go: function() {
-            $("#menu-cabinet").css("z-index", "701");
-            detache_element($("#menu-cabinet"));
+            $("#new-monde").css("z-index", "701");
+            detache_element($("#new-monde"));
+            $("#new-monde").tooltipster({
+                content: "Da click aqui para crear tu primer mundo.",
+                position: "bottom",
+                autoClose: false
+            }).tooltipster("show");
         },
         clean: function() {
-            $("#menu-cabinet").css("z-index", "");
-            attache_element($("#menu-cabinet"));
+            $("#new-monde").css("z-index", "");
+            attache_element($("#new-monde"));
+            $("#new-monde").tooltipster("destroy");
         }
-    }],
-    go: function() {
-        $("#etape-" + Tuto.etape).fadeIn();
-        Tuto.etapes[Tuto.etape].go();
+    }]
+}, { ////////////////////// SCENARIO 999
+    id: 999,
+    titre: "Template",
+    description: "Es un muy bueno tutorial!",
+    etapes: [{////////////////////// 0
+        id: 0,
+        raises_flag: false,
+        tooltips: [{
+            selector: ,
+            options: {
+                
+            } 
+        }]
+        go: function() {},
+        clean: function() {}
+    }]
+} ];
+
+var Tuto = {
+    // Config CSS et selecteurs
+    stages_container: $("#bucket-tuto"),
+    css_prefix: "etape",
+    button_quit: $("#quit-tuto"),
+    button_next: $(".next"),
+    
+    // Données persistentes entre les étapes
+    data: {},
+    flag_value: undefined,
+    
+    // Variables de navigation
+    scenario: 0,
+    etape: 0,
+    
+    // Exécute un scénario
+    run: function(scenario){
+        this.scenario = scenario;
+        this.etape = 0;
+        this.flag_value = undefined;
+        this.data = {};
+        
+        css_container.fadeIn();
+        button_quit.unbind().click(cancel_tuto);
+        button_next.unbind().click(this.next);
+        this._show();
     },
-    clean: function() {
-        $(".etape").fadeOut();
-        Tuto.etapes[Tuto.etape].clean();
+    
+    // Affichage et clean des étapes
+    _show: function() {
+        var current = Scenarios[this.scenario].etapes[this.etape];
+        $("#" + css_prefix + "-" + this.etape).fadeIn();
+        if (current.raises_flag) {
+            this.flag("raise");
+        }
+        this._tooltips("show", current.tooltips);
+        
+        current.go();
     },
-    next: function() {
-        Tuto.clean();
-        if (Tuto.etape < Tuto.etapes.length - 1) {
-            Tuto.etape = Tuto.etape + 1;
-            Tuto.go();
+    _clean: function() {
+        var current = Scenarios[this.scenario].etapes[this.etape];
+        $("." + css_prefix).fadeOut();
+        current.clean();
+    },
+    
+    // Navigation
+    _next: function() {
+        this._clean();
+        if (this.etape < Scenarios[this.scenario].etapes.length - 1) {
+            this.etape = this.etape + 1;
+            this._show();
         } else {
-            Tuto.etape = 0;
+            this.etape = 0;
         }
     },
-    prev: function() {
-        Tuto.clean();
-        Tuto.etape = Tuto.etape - 1;
-        Tuto.go();
+    _prev: function() {
+        this._clean();
+        this.etape = this.etape - 1;
+        this._show();
     },
-    start: function() {
-        $("#bucket-tuto").fadeIn();
-        $("#quit-tuto").click(cancel_tuto);
-        $(".next").unbind().click(Tuto.next);
-        Tuto.go();
+    
+    // Gestion du flag
+    flag: function(action) {
+        switch(action) {
+            case "raise":
+                this.flag_value = this.etape;
+                break;
+            case "drop":
+                this.flag_value = undefined;
+                break;
+            default:
+                if (this.flag_value === this.etape) {
+                    this.flag("drop");
+                    this._next();
+                }
+        }
+        return this.flag_value;
+    },
+    
+    // Gestion des tooltips
+    _tooltips: function(action, list) {
+        $.each(list, function(i, tooltip) {
+            switch(action) {
+                case "show":
+                    tooltip.selector
+                    .tooltipster(tooltip.options)
+                    .tooltipster("show");
+                    break;
+                case "destroy":
+                    tooltip.selector.tooltipster("destroy");
+                    break
+            }
+        });
     }
 };
 
@@ -398,11 +514,11 @@ var detache_element = function(element) {
     var height = element.outerHeight();
     
     // Pour pouvoir replacer l'élément par la suite, on repère son parent et son sibling
-    Tuto.parent = element.parent();
+    Tuto.data["parent"] = element.parent();
     if (element.prev().length == 0) {
-        Tuto.sibling = false;
+        Tuto.data["sibling"] = false;
     } else {
-        Tuto.sibling = element.prev();
+        Tuto.data["sibling"] = element.prev();
     }
 
     element.detach();
@@ -418,10 +534,10 @@ var detache_element = function(element) {
 };
 
 var attache_element = function(element) {
-    if (Tuto.sibling === false) {
-        Tuto.parent.append(element);
+    if (Tuto.data["sibling"] === false) {
+        Tuto.data["parent"].append(element);
     } else {
-        Tuto.sibling.after(element);
+        Tuto.data["sibling"].after(element);
     }
     
     element.css({

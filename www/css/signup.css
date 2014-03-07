@@ -84,64 +84,64 @@ body {
     display: none;
 }
 
-#page-3 {
-    display: none;
-}
+/*#page-3 {*/
+/*    display: none;*/
+/*}*/
 
-#container-plan {
-    display: none;
-}
+/*#container-plan {*/
+/*    display: none;*/
+/*}*/
 
-#container-plan {
-    text-align: center;
-}
+/*#container-plan {*/
+/*    text-align: center;*/
+/*}*/
 
-.plan {
-    width: 30%;
-    margin-left: 3%;
-    float: left;
-    
-    font-size: 0.9em;
-    
-    cursor: pointer;
-    
-    -moz-transition: box-shadow 400ms ease;
-    -webkit-transition: box-shadow 400ms ease;
-    transition: box-shadow 400ms ease;
-}
+/*.plan {*/
+/*    width: 30%;*/
+/*    margin-left: 3%;*/
+/*    float: left;*/
+/*    */
+/*    font-size: 0.9em;*/
+/*    */
+/*    cursor: pointer;*/
+/*    */
+/*    -moz-transition: box-shadow 400ms ease;*/
+/*    -webkit-transition: box-shadow 400ms ease;*/
+/*    transition: box-shadow 400ms ease;*/
+/*}*/
 
-.plan h2, .plan h3 {
-    text-align: center;
-    font-weight: bold;
-    background-color: #3C464C;
-    margin: 0;
-    padding: 5px;
-}
+/*.plan h2, .plan h3 {*/
+/*    text-align: center;*/
+/*    font-weight: bold;*/
+/*    background-color: #3C464C;*/
+/*    margin: 0;*/
+/*    padding: 5px;*/
+/*}*/
 
-.plan:nth-of-type(2) h2, .plan:nth-of-type(2) h3 {
-    background-color: #56D4EB;
-}
+/*.plan:nth-of-type(2) h2, .plan:nth-of-type(2) h3 {*/
+/*    background-color: #56D4EB;*/
+/*}*/
 
-.plan ul {
-    background-color: #F6F6F6;
-    color: #3D3F42;
-    
-    margin: 0;
-    padding: 5px;
-    padding-top: 25px;
-    
-    list-style-type: none;
-}
+/*.plan ul {*/
+/*    background-color: #F6F6F6;*/
+/*    color: #3D3F42;*/
+/*    */
+/*    margin: 0;*/
+/*    padding: 5px;*/
+/*    padding-top: 25px;*/
+/*    */
+/*    list-style-type: none;*/
+/*}*/
 
-.plan li {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    
-    border-top: 1px solid #D6DCE0;
-    
-    text-align: center;
-}
+/*.plan li {*/
+/*    padding-top: 10px;*/
+/*    padding-bottom: 10px;*/
+/*    */
+/*    border-top: 1px solid #D6DCE0;*/
+/*    */
+/*    text-align: center;*/
+/*}*/
 
-.plan li:first-child {
-    border-top: none;
-}
+/*.plan li:first-child {*/
+/*    border-top: none;*/
+/*}*/

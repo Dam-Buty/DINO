@@ -10,15 +10,6 @@ include("../includes/PDO.php");
         <label for="mail">Mail : </label>
             <input type="text" name="mail" id="mail"/>
             <br/>
-        <label for="nom_contact">Nom du contact : </label>
-            <input type="text" name="nom_contact"/>
-            <br/>
-        <label for="poste_contact">Poste du contact : </label>
-            <input type="text" name="poste_contact"/>
-            <br/>
-        <label for="phone_contact">Téléphone du contact : </label>
-            <input type="text" name="phone_contact"/>
-            <br/>
             <br/>
         <label for="credit">Nom d'utilisateur gestionnaire : </label>
             <input type="text" name="login" id="login"/>

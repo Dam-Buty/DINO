@@ -18,24 +18,15 @@ if (isset($_SESSION["superadmin"])) {
     $query_client = "
         INSERT INTO `client` (
             `entreprise_client`, 
-            `mail_client`, 
-            `nom_contact_client`, 
-            `poste_contact_client`, 
-            `phone_contact_client`
+            `mail_client`
         ) VALUES (
             :entreprise, 
-            :mail, 
-            :nom, 
-            :poste, 
-            :phone
+            :mail
     );";
     
     $result_client = dino_query($query_client,[
         "entreprise" => $_POST["entreprise"],
-        "mail" => $_POST["mail"],
-        "nom" => $_POST["nom_contact"],
-        "poste" => $_POST["poste_contact"],
-        "phone" => $_POST["phone_contact"]
+        "mail" => $_POST["mail"]
     ]);
     
     if ($result_client["status"]) {

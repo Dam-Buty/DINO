@@ -66,7 +66,12 @@ switch($_POST["page"]) {
                 mkdir($idclient);
                 chdir($idclient);
                 mkdir("temp");
-                        
+                
+                $_SESSION["user"] = $_POST["login"];
+                $_SESSION["niveau"] = 30;
+                $_SESSION["clef"] = $clef_stockage;
+                $_SESSION["client"] = $idclient;
+                
                 status(200);
                 echo $idclient;
                 write_log([
@@ -111,9 +116,7 @@ switch($_POST["page"]) {
             UPDATE `client`
             SET
                 `entreprise_client` = :entreprise,
-                `secteur_client` = :secteur,
-                `poste_contact_client` = :poste,
-                `phone_contact_client` = :tel
+                `secteur_client` = :secteur
             WHERE
                 `pk_client` = :pk
         ;";
@@ -121,8 +124,6 @@ switch($_POST["page"]) {
         $result_client = dino_query($query_client,[
             "entreprise" => $_POST["entreprise"],
             "secteur" => $_POST["secteur"],
-            "poste" => $_POST["poste"],
-            "tel" => $_POST["tel"],
             "pk" => $_POST["pk"]
         ]);
 

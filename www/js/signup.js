@@ -18,11 +18,11 @@ var bootstrap_signup = function() {
     
     $(".submit-signup").unbind().click(save_page);
     
-    $(".plan").mouseover(function() {
-        $(this).css("box-shadow", "0 0 1px 2px #5B8020");
-    }).mouseout(function() {
-        $(this).css("box-shadow", "");
-    }).click(save_plan);
+//    $(".plan").mouseover(function() {
+//        $(this).css("box-shadow", "0 0 1px 2px #5B8020");
+//    }).mouseout(function() {
+//        $(this).css("box-shadow", "");
+//    }).click(save_plan);
 };
 
 var tip_mail = function() {
@@ -73,17 +73,17 @@ var tip_page = function(page) {
             );
             $("#submit-page-2").fadeIn();
             break;
-        case 3:
-            $("#container-tips").hide();
-            $("#container-signup").animate({
-                width: "90%",
-                "margin-left": "5%"
-            });
-            $("body").animate({
-                "padding-top": "0"
-            });
-            $("#submit-page-3").fadeIn();
-            break;
+//        case 3:
+//            $("#container-tips").hide();
+//            $("#container-signup").animate({
+//                width: "90%",
+//                "margin-left": "5%"
+//            });
+//            $("body").animate({
+//                "padding-top": "0"
+//            });
+//            $("#submit-page-3").fadeIn();
+//            break;
     };
     $("#container-tips").css("top", "");
 };
@@ -109,12 +109,10 @@ var save_page = function() {
                 page: page,
                 pk: pk_client,
                 entreprise: $("#entreprise").val(),
-                secteur: $("#secteur").val(),
-                poste: $("#poste").val(),
-                tel: $("#tel").val()
+                secteur: $("#secteur").val()
             };
             current = $("#container-champs");
-            next = $("#container-plan");
+            next = "end";
             break;   
     };
     
@@ -126,10 +124,14 @@ var save_page = function() {
             200: function(pk) {
                 pk_client = pk;
                 
-                current.fadeOut(function() {
-                    next.fadeIn();
-                    tip_page(page + 1);
-                });
+                if (next === "end") {
+                    window.location.replace("index.php");
+                } else {
+                    current.fadeOut(function() {
+                        next.fadeIn();
+                        tip_page(page + 1);
+                    });                
+                }
                 
             },
             403: function() {

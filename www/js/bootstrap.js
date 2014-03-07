@@ -45,8 +45,9 @@ var bootstrap = function() {
         // On binde les events
         $("#toggle-date").click(toggle_dates);
         $("#menu-queue").click(anime_queue);
-        $("#menu-cabinet").click(popup_cabinet);
-        $("#bouton-cabinet").click(request_monde);
+        $("#new-monde").click(anime_queue);
+//        $("#menu-cabinet").click(popup_cabinet);
+//        $("#bouton-cabinet").click(request_monde);
         $("#documents-new-monde").focus(function() {
             $(this).select();    
             

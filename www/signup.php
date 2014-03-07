@@ -19,7 +19,7 @@
 <div id="container-signup">
     <div id="container-tips">
         <h1>Bienvenido en la comunidad DINO !</h1>
-        <p>En 3 minutos estaras utilizando tu primer <b>archivero digital</b>!</p>
+        <p>En un momento estaras utilizando tu primer <b>archivero digital</b>!</p>
         <p>Te invitamos primero a ingresar tus <b>datos basicos</b>.</p>
     </div>
     <div id="container-champs">
@@ -45,16 +45,10 @@
             <div class="champ-signup">
                 <input type="text" name="secteur" id="secteur" placeholder="El sector de tu empresa"/>
             </div>
-            <div class="champ-signup">
-                <input type="text" name="poste" id="poste" placeholder="Tu puesto en la empresa"/>
-            </div>
-            <div class="champ-signup">
-                <input type="text" name="tel" id="tel" placeholder="Tu numero telefonico"/>
-            </div>
             <input type="submit" class="submit-signup" id="submit-page-2" value="Elegir un plan"/>
         </div>
     </div>
-    <div id="container-plan">
+    <!-- <div id="container-plan">
         <h1>Elige tu plan de tarifa</h1>
         <div class="plan" id="plan-1">
             <h3>Starter</h3>
@@ -91,7 +85,7 @@
                 <li>(A partir de 0.19$/mes el Gb adicional)</li>
             </ul>
         </div>
-    </div>
+    </div> -->
     <div style="clear: both;"></div>
 </div>
 
