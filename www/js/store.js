@@ -26,9 +26,7 @@ var change_monde_store = function() {
     $("#container-details").slideUp();
     $("#bouton-store").fadeOut();
     
-    if (Tuto.etape == 3) {
-        Tuto.next();
-    }
+    Tuto.flag(3);
     
     reload_champs();
 };
@@ -87,9 +85,7 @@ var change_champ_store = function() {
     $("#container-details").slideUp();
     $("#bouton-store").fadeOut();
                 
-    if (Tuto.etape == 4) {
-        Tuto.next();
-    }
+    Tuto.flag(4);
     
     reload_champs();
 };
@@ -742,9 +738,7 @@ var _store_document = function(position) {
     var li = queue[position].li;
     var ul = li.closest("ul");
 
-    if (Tuto.etape == 2) {
-        Tuto.next();
-    }
+    Tuto.flag(2);
 
     ul.find("li").attr("data-editing", "0");
     li.removeClass("done").attr("data-editing", "1");

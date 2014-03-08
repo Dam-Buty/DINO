@@ -411,13 +411,10 @@ var set_li_status = function(li, status) {
             
         case 1:
             li.find(".progressbar").slideUp();
-            li.children("img").fadeIn();    
-            if (Tuto.etape == 1) {
-                Tuto.next();
-            }
+            li.children("img").fadeIn();  
+            Tuto.flag(1);
             break;
     };
-    
     
     return li;
 }

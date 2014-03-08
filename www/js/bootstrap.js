@@ -72,7 +72,9 @@ var bootstrap = function() {
         $("#logout").fadeIn().click(logout);
         $("#bouton-pass").fadeIn().click(popup_pass);
         $("#bouton-mail").fadeIn().click(popup_mail);
-        $("#bouton-tuto").fadeIn().click(Tuto.start);
+        $("#bouton-tuto").fadeIn().click(function() {
+            Tuto.run(1);
+        });
         
         $("#pass-params").focus(tip_pass_params);
         $("#pass-params").keyup(check_pass_params);

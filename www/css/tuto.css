@@ -12,9 +12,6 @@
     
     background: rgb(0, 0, 0);
     background: rgba(0, 0, 0, 0.6); 
-    
-    
-    z-index: 700;
 }
 
 .etape {
@@ -50,29 +47,6 @@
     text-align: justify;
     
     font-size: 0.9em;
-}
-
-#etape-0 {
-    width: 50%;
-    left: 25%;
-}
-
-#etape-1 {
-    top: 40%;
-    right: 0;
-    width: 40%;
-}
-
-#etape-2 {
-    top: 60%;
-    right: 0;
-    width: 40%;
-}
-
-#etape-3 {
-    top: 0;
-    left: 0;
-    width: 40%;
 }
 
 #etape-4 {

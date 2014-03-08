@@ -1,107 +1,142 @@
-var Scenarios = [ { ////////////////////// SCENARIO 0
-    id: 0,
+var Scenarios = [ { ////////////////////// SCENARIO 999
+        id: 0,
+        titre: "Template",
+        description: "Es un muy bueno tutorial!",
+        etapes: [{////////////////////// 0
+            id: 0,
+            raises_flag: true,
+            animations: [{
+                type: "code",
+                code: function() {
+                
+                }
+            }],
+            clean: function() {}
+        }]
+    }, { ////////////////////// SCENARIO 1
+    id: 1,
     titre: "Première visite archiviste",
     description: "Es un muy bueno tutorial!",
     etapes: [{////////////////////// 0
-        id: 0,
-        raises_flag: false,
-        tooltips: [{
-            selector: $('#quit-tuto'),
-            options: {
-                content: 'Aqui para dejar el tutorial...',
-                autoClose: false
-            }
-        }, {
-            selector: $('#bouton-tuto'),
+        stage_css: {
+            width: "50%",
+            left: "25%",
+        },
+        animations: [{
+            type: "tooltip",
+            selector: '#bouton-tuto',
             options: {
                 content: '... y aqui para retomarlo mas tarde!',
                 autoClose: false
             }
-        }]
-        go: function() { },
-        clean: function() { }
-    }, { ////////////////////// 1
-        id: 1,
-        raises_flag: false,
-        go: function() {
-            if ($("#container-queue").attr("data-state") == "closed") {
-                $("#menu-queue").click();
+        }, {
+            type: "tooltip",
+            selector: '#quit-tuto',
+            options: {
+                content: 'Aqui para dejar el tutorial...',
+                autoClose: false
             }
-            
-            setTimeout(function(){           
-                $("#container-queue").css("z-index", "701");                 
-                $("#container-files-handler").css("border", "2px solid #DB7F1A");
-                $("#container-files-handler").tooltipster({
-                    content: 'Carga un documento en DINO!',
-                    position: "right",
-                    autoClose: false
-                }).tooltipster("show");
-            }, 400);
+        }]
+    }, { ////////////////////// 1
+        raises_flag: true,
+        stage_css: {
+            top: "40%",
+            right: "0",
+            width: "40%",
         },
-        clean: function() {
-            $('#container-queue').css("z-index", "");
-            $("#container-files-handler").css("border", "").tooltipster("destroy");
-        }
+        animations: [{
+            type: "code",
+            code: function() {
+                if ($("#container-queue").attr("data-state") == "closed") {
+                    $("#menu-queue").click();
+                }
+            }
+        }, {
+            type: "highlight",
+            selector: "#container-queue",
+            delay: 400
+        }, {
+            type: "border",
+            selector: "#container-files-handler"
+        }, {
+            type: "tooltip",
+            selector: "#container-files-handler",
+            options: {
+                content: 'Carga un documento en DINO!',
+                position: "right",
+                autoClose: false
+            }
+        }]
     }, { ////////////////////// 2
-        id: 2,
-        raises_flag: false,
-        go: function() {
-            $('#container-queue').css("z-index", "701");
-            $("#files-list li").first().find(".bouton-edit-li").css("border", "2px solid #DB7F1A");
-            $("#files-list li").first().find(".bouton-edit-li").tooltipster({
+        raises_flag: true,
+        stage_css: {
+            top: "60%",
+            right: "0",
+            width: "40%",
+        },
+        animations: [{
+            type: "highlight",
+            selector: '#container-queue'
+        }, {
+            type: "border",
+            selector: "#files-list li:first() .bouton-edit-li"
+        }, {
+            type: "tooltip",
+            selector: "#files-list li:first() .bouton-edit-li",
+            options: {
                 content: 'Da click aqui para clasificar tu documento',
                 position: "right",
                 autoClose: false
-            }).tooltipster("show");
-        },
-        clean: function() {
-            $('#container-queue').css("z-index", "");
-            $("#files-list li").first().find(".bouton-edit-li").tooltipster("destroy");
-            $("#files-list li").first().find(".bouton-edit-li").css("border", "");
-        }
+            }
+        }]
     }, { //////////////////////3
-        id: 3,
-        raises_flag: false,
-        go: function() {
-            $("#mondes-store").css("z-index", "701");
-            setTimeout(function() {
-                detache_element($("#mondes-store"));
-                $("#mondes-store li").first().tooltipster({
-                    content: 'Selecciona uno de esos mundos',
-                    autoClose: false
-                }).tooltipster("show");
-            }, 400);
+        raises_flag: true,
+        stage_css: {
+            top: "0",
+            right: "0",
+            width: "40%",
         },
-        clean: function() {
-            attache_element($("#mondes-store"));
-            $('#mondes-store li').first().tooltipster("destroy");
-            $("#mondes-store").css("z-index", "");
-        }
+        animations: [{
+            type: "highlight",
+            selector: "#mondes-store",
+            force: true,
+            delay: 400
+        }, {
+            type: "tooltip",
+            selector: "#mondes-store li:first()",
+            options: {
+                content: 'Selecciona uno de esos mundos',
+                autoClose: false
+            }
+        }]
     }, { ////////////////////// 4
-        id: 4,
-        raises_flag: false,
-        go: function() {
-            var monde = profil.mondes[Store.monde];
-            var label = monde.label;
-            var champ = monde.champs[monde.cascade[0]].label;
-            var pluriel = monde.champs[monde.cascade[0]].pluriel;
-            
-            $(".tuto-monde").text(label);
-            $(".tuto-pluriel").text(pluriel);
-            $(".tuto-champ").text(champ);
-            
-            $("#container-store").css("z-index", "701");
-            detache_element($("#container-store"));
-            $("#container-nouveau-champ").tooltipster({
-                content: $('<span><p>Teclea el nombre de un nuevo <b>' + champ + '</b>, y agregalo en DINO.</p></span>'),
+        raises_flag: true,
+        stage_css: {
+            top: "10%",
+            left: "0",
+            width: "40%",
+        },
+        substitutions: function() {
+            var leMonde = profil.mondes[Store.monde];
+            return {
+                monde: leMonde.label,
+                champ: leMonde.champs[monde.cascade[0]].label,
+                pluriel: leMonde.champs[monde.cascade[0]].pluriel
+            }
+        },
+        animations: [{
+            type: "highlight",
+            selector: "#container-store",
+            force: true
+        }, {
+            type: "tooltip",
+            selector: "#container-nouveau-champ",
+            options: {
+                content: $('<span><p>Teclea el nombre de un nuevo <b class="tuto-pluriel"></b>, y agregalo en DINO.</p></span>'),
                 autoClose: false,
                 position: "top"
-            }).tooltipster("show");
-        },
-        clean: function() {
-            attache_element($("#container-store"));
-            $('#container-nouveau-champ').tooltipster("destroy");
-        }
+            }
+        }]
     }, { ////////////////////// 5
         id: 5,
         raises_flag: false,
@@ -203,10 +238,10 @@ var Scenarios = [ { ////////////////////// SCENARIO 0
             var do_click = function(i) {
                 var last_click = false;
                 
-                if (Tuto.data["store"].champs[cascade[i]] !== undefined) {
-                    li = $("#liste ul").find('li[data-type="champ"][data-pk="' + Tuto.data["store"].champs[cascade[i]] + '"]');
+                if (Tuto.data.store.champs[cascade[i]] !== undefined) {
+                    li = $("#liste ul").find('li[data-type="champ"][data-pk="' + Tuto.data.store.champs[cascade[i]] + '"]');
                     li.click();
-                    stack.push(Tuto.data["store"].champs[cascade[i]]);
+                    stack.push(Tuto.data.store.champs[cascade[i]]);
                     
                     if (i < cascade.length - 1) {
                         setTimeout(function() {
@@ -229,15 +264,15 @@ var Scenarios = [ { ////////////////////// SCENARIO 0
             var end_click = function() {
                 var delay = 0;
                 
-                if (Tuto.data["store"].categorie != 0) {
-                    li = $("#liste ul").find('li[data-type="categorie"][data-pk="' + Tuto.data["store"].categorie + '"][data-stack="' + stack.join(",") + '"]');
+                if (Tuto.data.store.categorie != 0) {
+                    li = $("#liste ul").find('li[data-type="categorie"][data-pk="' + Tuto.data.store.categorie + '"][data-stack="' + stack.join(",") + '"]');
                     li.click();
                     delay = 200;
                 }
                 
-                li = li.next("ul").find('li[data-type-doc="' + Tuto.data["store"].type_doc.pk + '"]')[0];
+                li = li.next("ul").find('li[data-type-doc="' + Tuto.data.store.type_doc.pk + '"]')[0];
                 
-                Tuto.data["final_li"] = $(li);
+                Tuto.data.final_li = $(li);
                 
                 setTimeout(function() {
                     $(li).tooltipster({
@@ -259,7 +294,7 @@ var Scenarios = [ { ////////////////////// SCENARIO 0
         },
         clean: function() {
             attache_element($("#liste"));
-            Tuto.data["final_li"].tooltipster("destroy");
+            Tuto.data.final_li.tooltipster("destroy");
             $("#liste").css("z-index", "");
         }
     }, { ////////////////////// 8
@@ -366,70 +401,130 @@ var Scenarios = [ { ////////////////////// SCENARIO 0
     etapes: [{////////////////////// 0
         id: 0,
         raises_flag: false,
-        tooltips: [{
-            selector: ,
-            options: {
-                
-            } 
-        }]
-        go: function() {},
+        animations: [{
+            type: "code",
+            code: function() {
+            
+            }
+        }],
         clean: function() {}
     }]
 } ];
 
 var Tuto = {
-    // Config CSS et selecteurs
-    stages_container: $("#bucket-tuto"),
+    // Config
+    stages_container: "#bucket-tuto",
     css_prefix: "etape",
-    button_quit: $("#quit-tuto"),
-    button_next: $(".next"),
+    substitution_prefix: "tuto-",
+    exit_image: "img/exit_50.png",
+    button_next: ".next",
+    exit_on_opaque: true,
+    exit_callback: function() {},
+    z_opaque: 700,
+    z_highlight: 701,
+    css_border: "2px solid #DB7F1A",
     
     // Données persistentes entre les étapes
-    data: {},
+    data: { 
+        substitutions: { }
+    },
     flag_value: undefined,
+    
+    // Données locales d'étape
+    highlights: [ ],
+    borders: [ ],
+    tooltips: [ ],
     
     // Variables de navigation
     scenario: 0,
     etape: 0,
     
     // Exécute un scénario
-    run: function(scenario){
+    run: function(scenario){        
+        this.data = {};
+        this.flag_value = undefined;
+        this.highlights = [ ];
+        this.borders = [ ];
+        this.tooltips = [ ];
         this.scenario = scenario;
         this.etape = 0;
-        this.flag_value = undefined;
-        this.data = {};
         
-        css_container.fadeIn();
-        button_quit.unbind().click(cancel_tuto);
-        button_next.unbind().click(this.next);
+        // Fond opaque et bouton exit
+        $("body").append(
+            $("<div></div>")
+            .attr("id", "opak-tuto")
+            .css("z-index", this.z_opaque)
+            .append(
+                $("<div></div>")
+                .addClass("boutons")
+                .attr("id", "quit-tuto")
+                .append(
+                    $("<img/>")
+                    .attr("src", this.exit_image)
+                )
+            )
+        );
+        
+        $(this.stages_container).fadeIn();
+        $("#quit-tuto").unbind().click(this.exit);
+        if (this.exit_on_opaque) {
+            $("#opak-tuto").unbind().click(this.exit);
+        }        
+        $(this.button_next).unbind().click(this._next);
         this._show();
+    },
+    
+    // Sortie du tutorial
+    exit: function() {
+        Tuto._clean();
+        $(Tuto.stages_container).fadeOut();
+        $("#opak-tuto").remove();
+        Tuto.exit_callback();
     },
     
     // Affichage et clean des étapes
     _show: function() {
         var current = Scenarios[this.scenario].etapes[this.etape];
-        $("#" + css_prefix + "-" + this.etape).fadeIn();
+        
+        $("#" + this.css_prefix + "-" + this.scenario + "-" + this.etape)
+        .css(current.stage_css)
+        .fadeIn();
+        
         if (current.raises_flag) {
             this.flag("raise");
         }
-        this._tooltips("show", current.tooltips);
         
-        current.go();
+        this.highlights = [ ];
+        this.borders = [ ];
+        this.tooltips = [ ];
+        
+        this._animations($.merge([], current.animations));
+        
+        if (current.substitutions !== undefined) {
+            this._substitutions(current.substitutions());
+        }
     },
     _clean: function() {
         var current = Scenarios[this.scenario].etapes[this.etape];
-        $("." + css_prefix).fadeOut();
-        current.clean();
+        $("." + this.css_prefix).fadeOut();
+        
+        this._highlights_clean();
+        this._borders_clean();
+        this._tooltips_clean();
+        
+        if (current.clean !== undefined) {
+            current.clean();
+        }
     },
     
     // Navigation
     _next: function() {
-        this._clean();
-        if (this.etape < Scenarios[this.scenario].etapes.length - 1) {
-            this.etape = this.etape + 1;
-            this._show();
+        Tuto._clean();
+        if (Tuto.etape < Scenarios[Tuto.scenario].etapes.length - 1) {
+            Tuto.etape = Tuto.etape + 1;
+            Tuto._show();
         } else {
-            this.etape = 0;
+            Tuto.exit();
         }
     },
     _prev: function() {
@@ -456,23 +551,120 @@ var Tuto = {
         return this.flag_value;
     },
     
-    // Gestion des tooltips
-    _tooltips: function(action, list) {
-        $.each(list, function(i, tooltip) {
-            switch(action) {
-                case "show":
-                    tooltip.selector
-                    .tooltipster(tooltip.options)
+    // Gestion des animations
+    _animations: function(list) {
+        animation = list.shift(); // Retire le premier élément du tableau
+        var self = this;
+        setTimeout(function() {
+            switch(animation.type) {
+                case "code":
+                    animation.code();
+                    break;
+                case "highlight":
+                
+                    var highlight = {
+                        element: $(animation.selector),
+                        forced: animation.force,
+                        parent: undefined,
+                        sibling: undefined
+                    };
+                    
+                    $(animation.selector).css("z-index", self.z_highlight);
+                    
+                    if (animation.force) {
+                        // On récupère ses coordonées
+                        var element = $(animation.selector);
+                        var left = element.offset().left;
+                        var top = element.offset().top;
+                        
+                        var width = element.outerWidth();
+                        var height = element.outerHeight();
+                        
+                        // Pour pouvoir replacer l'élément par la suite, on repère son parent et son sibling
+                        highlight.parent = element.parent();
+                        if (element.prev().length == 0) {
+                            highlight.sibling = false;
+                        } else {
+                            highlight.sibling = element.prev();
+                        }
+
+                        element.detach();
+                        $("body").append(element);
+                        element.css({
+                            position: "absolute",
+                            top: top,
+                            left: left,
+                            width: width + "px",
+                            height: height + "px",
+                            margin: 0
+                        });
+                        
+                        self.highlights.push(highlight);
+                    }
+                    break;
+                case "border":
+                    self.borders.push($(animation.selector));
+                    $(animation.selector).css("border", self.css_border);
+                    break;
+                case "tooltip":
+                    self.tooltips.push($(animation.selector));
+                    $(animation.selector)
+                    .tooltipster(animation.options)
                     .tooltipster("show");
                     break;
-                case "destroy":
-                    tooltip.selector.tooltipster("destroy");
-                    break
             }
+            
+            if (list.length > 0) {
+                self._animations(list);
+            }
+        }, animation.delay || 0);
+    },
+    
+    // Gestion des substitutions de texte
+    _substitutions: function(substitutions) {
+        $.extend(this.data.substitutions, substitutions);
+        
+        $.each(substitutions, function(key, value) {
+            $("." + this.substitution_prefix + key).html(value);
+        })
+    },
+    
+    // Nettoyage des animations d'une étape
+    // - Highlights
+    _highlights_clean: function() {
+        $.each(this.highlights, function(i, highlight) {
+            highlight.element.css("z-index", "");
+            if (highlight.forced) {
+                if (highlight.sibling === false) {
+                    highlight.parent.append(highlight.element);
+                } else {
+                    highlight.sibling.after(highlight.element);
+                }
+                
+                highlight.selector.css({
+                    position: "",
+                    top: "",
+                    left: "",
+                    margin: "",
+                    width: "",
+                    height: ""
+                });
+            }
+        });
+    },
+    
+    _borders_clean: function() {
+        $.each(this.borders, function(i, element) {
+            element.css("border", "");
+        });
+    },
+    
+    _tooltips_clean: function() {
+        $.each(this.tooltips, function(i, element) {
+            element.tooltipster("destroy");
         });
     }
 };
-
 
 var bootstrap_tuto = function() {
     $.ajax({
@@ -486,7 +678,7 @@ var bootstrap_tuto = function() {
                     Tuto.start();
                 } else {
                     if (profil.tuto == 1 && profil.niveau >= 10 && window.location.search != "?notuto") {
-                        Tuto.start();
+                        Tuto.run(0);
                     } 
                 }
             }
@@ -494,58 +686,3 @@ var bootstrap_tuto = function() {
     })
 };
 
-var bootstrap_help = function() {
-
-};
-
-var cancel_tuto = function() {
-    Tuto.clean();
-    $("#bucket-tuto").fadeOut();
-    Tuto.etape = 0;
-    chat();
-};
-
-var detache_element = function(element) {
-    // On récupère ses coordonées
-    var left = element.offset().left;
-    var top = element.offset().top;
-    
-    var width = element.outerWidth();
-    var height = element.outerHeight();
-    
-    // Pour pouvoir replacer l'élément par la suite, on repère son parent et son sibling
-    Tuto.data["parent"] = element.parent();
-    if (element.prev().length == 0) {
-        Tuto.data["sibling"] = false;
-    } else {
-        Tuto.data["sibling"] = element.prev();
-    }
-
-    element.detach();
-    $("body").append(element);
-    element.css({
-        position: "absolute",
-        top: top,
-        left: left,
-        width: width + "px",
-        height: height + "px",
-        margin: 0
-    });
-};
-
-var attache_element = function(element) {
-    if (Tuto.data["sibling"] === false) {
-        Tuto.data["parent"].append(element);
-    } else {
-        Tuto.data["sibling"].after(element);
-    }
-    
-    element.css({
-        position: "",
-        top: "",
-        left: "",
-        margin: "",
-        width: "",
-        height: ""
-    })
-}
