@@ -675,6 +675,7 @@ var bootstrap_tuto = function() {
         30: "Gestionar"
     };
     var startup = false;
+    var li_lien;
     
     $.each(profil.tutos, function(i, tuto) {
         var li = $("<li></li>")
@@ -706,6 +707,18 @@ var bootstrap_tuto = function() {
         
         liste.append(li);
     });
+    
+    li_lien = $("<li></li>")
+        .addClass("entete-list-tutos")
+        .css("font-size", "1em")
+        .append(
+            $("<a/>")
+            .attr("href", "http://blog.dino.mx")
+            .attr("target", "_blank")
+            .html("Mas sciencia de DINO...")
+        );
+    
+    liste.append(li_lien);
     
     $("#bouton-tuto").fadeIn().click(toggle_tutos);
     $(".ligne-tuto").click(function() {
