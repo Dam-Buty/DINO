@@ -1457,3 +1457,55 @@ ul.ui-autocomplete {
 #container-merci {
     display: none;
 }
+
+#list-tutos {
+    list-style-type: none;    
+    
+    font-size: 0.8em;  
+    background-color: #D6DCEA;
+    border: 1px solid #A9A9A9; 
+    
+    padding: 5px;
+}
+
+#list-tutos li {
+    padding: 5px;
+    margin-top: 5px;
+}
+
+.ligne-tuto {
+    background-image: url(../img/tuto.png);
+    background-position: left 50%;
+    background-repeat: no-repeat;
+    
+    cursor: pointer;
+    padding-left: 25px !important;
+    
+}
+
+.ligne-tuto:hover {
+    background-color: white;
+}
+
+.new-tuto {
+    float: right;
+    background-color: #8ecb32;
+    color: white;
+    font-size: 0.8em;
+}
+
+.entete-list-tutos, .chapitre-tuto {
+    font-family: "Courier New", Courier, monospace;
+    font-weight: bold;
+    font-size: 1.2em;
+    
+    background-image: none !important;
+}
+
+.entete-list-tutos {
+    text-align: center;
+}
+
+.chapitre-tutos {
+    text-align: left;
+}

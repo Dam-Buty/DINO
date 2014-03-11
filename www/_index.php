@@ -111,7 +111,9 @@ if ($_SESSION["niveau"] >= 20) {
 ?>
 
 <div id="container-list-tutos">
-    <ul id="list-tutos"></ul>
+    <ul id="list-tutos">
+        <li class="entete-list-tutos">DINO UNIVERSITY</li>
+    </ul>
 </div>
 
 <div class="barre-bottom">

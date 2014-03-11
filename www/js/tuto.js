@@ -598,9 +598,9 @@ var Tuto = {
                             height: height + "px",
                             margin: 0
                         });
-                        
-                        self.highlights.push(highlight);
                     }
+                        
+                    self.highlights.push(highlight);
                     break;
                 case "border":
                     self.borders.push($(animation.selector));
@@ -668,35 +668,98 @@ var Tuto = {
 
 var bootstrap_tuto = function() {
     var liste = $("#list-tutos");
+    var niveau = 0;    
+    var chapitres = {
+        10: "Archivar",
+        20: "Administrar",
+        30: "Gestionar"
+    };
+    var startup = false;
     
     $.each(profil.tutos, function(i, tuto) {
         var li = $("<li></li>")
+            .addClass("ligne-tuto")
             .attr("data-pk", tuto.pk)
             .html(tuto.titre);
+        var li_chapitre;
         
-        if (tuto.done != 0) {
+        if (tuto.niveau != niveau) {
+            li_chapitre = $("<li></li>")
+                .addClass("chapitre-tuto")
+                .html(chapitres[tuto.niveau]);
+            
+            if (tuto.niveau == profil.niveau && tuto.done == 0) {
+                startup = li;
+            }
+            
+            liste.append(li_chapitre);
+            niveau = tuto.niveau;
+        }
+        
+        if (tuto.done == 0) {
             li.append(
                 $("<span></span>")
                 .addClass("new-tuto")
-            )
+                .text("NEW!")
+            );
         }
         
         liste.append(li);
     });
     
     $("#bouton-tuto").fadeIn().click(toggle_tutos);
-    $("#list-tutos li").click(function() {
-        Tuto.run(this.attr("data-pk"));
+    $(".ligne-tuto").click(function() {
+        var pk = $(this).attr("data-pk");
+        
+        $.ajax({
+            url: "modules/tuto/tuto-" + pk + ".php",
+            statusCode: {
+                200: function(tuto) {
+                    $("#container-tuto").html(tuto);
+                    toggle_tutos();
+                    Tuto.run(pk);
+                },                
+                404: function() {
+                    popup('No se pudo cargar el tutorial. Gracias por intentar otra vez.', 'error'); // LOCALISATION
+                }
+            }
+        });
+        
     });
+    
+    if (startup !== false) {
+        startup.click();
+    }
 };
 
 var toggle_tutos = function() {
     var liste = $("#list-tutos");
+    var width, height;
+    height = $("#list-tutos").outerHeight();
     
-    liste.css({
-        position: absolute,
+    if (liste.css("bottom") == "35px") {
+        liste.animate({
+            bottom: (0 - height) + "px"
+        });
+    } else {
         
-    })
+        width = ($(window).width() - (
+                    $("#bouton-tuto").offset().left + (
+                        $("#bouton-tuto").outerWidth() / 2
+                    )
+                )) * 2;
+        
+        liste.css({
+            position: "fixed",
+            width: (width * 0.95) + "px",
+            bottom: (0 - height) + "px",
+            left: ($("#bouton-tuto").offset().left - (width / 2)) + "px"
+        });
+    
+        liste.animate({
+            bottom: "35px"
+        });
+    }
 };
 
 
