@@ -110,6 +110,10 @@ if ($_SESSION["niveau"] >= 20) {
 }
 ?>
 
+<div id="container-list-tutos">
+    <ul id="list-tutos"></ul>
+</div>
+
 <div class="barre-bottom">
     <div id="container-notification"></div>
     <img id="logout" src="img/logout_20.png">
@@ -177,6 +181,8 @@ if ($_SESSION["niveau"] >= 20) {
     </div>
     <iframe id="viewer-global"></iframe>
 </div>
+
+<div id="container-tuto"></div>
 
 <?php
 if ($_SESSION["niveau"] >= 20) {

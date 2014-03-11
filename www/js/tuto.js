@@ -413,7 +413,7 @@ var Scenarios = [ { ////////////////////// SCENARIO 999
 
 var Tuto = {
     // Config
-    stages_container: "#bucket-tuto",
+    stages_container: "#container-tuto",
     css_prefix: "etape",
     substitution_prefix: "tuto-",
     exit_image: "img/exit_50.png",
@@ -667,22 +667,36 @@ var Tuto = {
 };
 
 var bootstrap_tuto = function() {
-    $.ajax({
-        url: "modules/tuto.php",
-        statusCode: {
-            200: function(tuto) {
-                $("body").append(tuto);
-                
-                if (profil.mondes.length == 0) {
-                    Tuto.etape = 13;
-                    Tuto.start();
-                } else {
-                    if (profil.tuto == 1 && profil.niveau >= 10 && window.location.search != "?notuto") {
-                        Tuto.run(0);
-                    } 
-                }
-            }
+    var liste = $("#list-tutos");
+    
+    $.each(profil.tutos, function(i, tuto) {
+        var li = $("<li></li>")
+            .attr("data-pk", tuto.pk)
+            .html(tuto.titre);
+        
+        if (tuto.done != 0) {
+            li.append(
+                $("<span></span>")
+                .addClass("new-tuto")
+            )
         }
+        
+        liste.append(li);
+    });
+    
+    $("#bouton-tuto").fadeIn().click(toggle_tutos);
+    $("#list-tutos li").click(function() {
+        Tuto.run(this.attr("data-pk"));
+    });
+};
+
+var toggle_tutos = function() {
+    var liste = $("#list-tutos");
+    
+    liste.css({
+        position: absolute,
+        
     })
 };
+
 

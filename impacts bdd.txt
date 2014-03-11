@@ -28,8 +28,8 @@ SIGNUP
 ======
 
 client:
-+ secteur_client
-+ first_gerant_client
++ secteur_client (VARCHAR 50)
++ first_gerant_client 
 - nom_contact_client
 - poste_contact_client
 - phone_contact_client
@@ -42,3 +42,18 @@ client:
 - call_me_maybe
 - statut_client
 
+user:
+- tuto_user
+- permanent_tuto_user
+- help_user
+
+demande : supprimé
+
+tuto:
++ pk_tuto (INT)
++ titre_tuto (VARCHAR 50)
++ niveau_tuto (INT)
+
+user_tuto:
++ fk_tuto (INT)
++ fk_user (VARCHAR 32)

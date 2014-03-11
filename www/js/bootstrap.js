@@ -72,9 +72,6 @@ var bootstrap = function() {
         $("#logout").fadeIn().click(logout);
         $("#bouton-pass").fadeIn().click(popup_pass);
         $("#bouton-mail").fadeIn().click(popup_mail);
-        $("#bouton-tuto").fadeIn().click(function() {
-            Tuto.run(1);
-        });
         
         $("#pass-params").focus(tip_pass_params);
         $("#pass-params").keyup(check_pass_params);
@@ -161,20 +158,11 @@ var bootstrap = function() {
                 
                 bootstrap_tuto();
                 
-                if (profil.tuto != 1 && profil.mondes.length > 0) {
-                    chat();
-                }
-                
-                if (profil.help == 1) {
-                    bootstrap_help();
-                }
+                // chat(); 
+                // TODO : remettre chat
             });
         });
     });
-    
-};
-
-var help_printer = function() {
     
 };
 

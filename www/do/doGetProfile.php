@@ -174,6 +174,60 @@ function recupere_categories($monde, $champ) {
         ]);
     }
 }
+
+function gestion_tutos($niveau) {
+    $tutos = [ ];
+    
+    $query_tutos = "
+        SELECT 
+            `pk_tuto`, 
+            `titre_tuto`, 
+            `niveau_tuto`,
+            ( 
+                SELECT COUNT(*)
+                FROM `user_tuto`
+                WHERE
+                    `fk_user` = :user
+                    AND `fk_tuto` = `pk_tuto`
+            ) AS `done`
+        FROM `tuto`
+        WHERE
+            `niveau_tuto` <= :niveau
+        ORDER BY
+            `niveau_tuto` DESC,
+            `pk_tuto` ASC
+    ";
+    
+    $result_tutos = dino_query($query_tutos,[
+        "user" => $_SESSION["user"],
+        "niveau" => $niveau
+    ]);
+    
+    if ($result_tutos["status"]) {
+        foreach($result_tutos["result"] as $row_tutos) {
+            array_push($tutos, [
+                "pk" => $row_tutos["pk_tuto"],
+                "titre" => $row_tutos["titre_tuto"],
+                "niveau" => $row_tutos["niveau_tuto"],
+                "done" => $row_tutos["done"]
+            ]);
+        } // FIN WHILE TUTOS
+        return $tutos;
+        
+    } else {
+        status(500);
+        write_log([
+            "libelle" => "GET tutos",
+            "admin" => 0,
+            "query" => $query_tutos,
+            "statut" => 1,
+            "message" => $result_tutos["errinfo"][2],
+            "erreur" => $result_tutos["errno"],
+            "document" => "",
+            "objet" => $_SESSION["user"]
+        ]);
+    }
+}
   
 
 if (isset($_SESSION["user"])) {
@@ -183,13 +237,14 @@ if (isset($_SESSION["user"])) {
     
     $profil = [
         "maxfilesize" => $maxFileSize,
+        "tutos" => [],
         "mondes" => []
     ];
     
     ////////////////////////
     // Récupération des informations générales de l'user
     ////////////////////////
-    $query = "SELECT `niveau_user`, `fk_client`, `tuto_user`, `permanent_tuto_user`, `help_user`, `printer_client`, `entreprise_client` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = :login ;";
+    $query = "SELECT `niveau_user`, `fk_client`, `printer_client`, `entreprise_client` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = :login ;";
     
     $result = dino_query($query,[
         "login" => $_SESSION["user"]
@@ -205,12 +260,8 @@ if (isset($_SESSION["user"])) {
             
             $profil["niveau"] = $row["niveau_user"];
             $profil["printer"] = $row["printer_client"];
-            $profil["tuto"] = $row["tuto_user"];
-            $profil["help"] = $row["help_user"];
             
-            if ($row["permanent_tuto_user"] == 1) {
-                $profil["tuto"] = 1;
-            }
+            $profil["tutos"] = gestion_tutos($profil["niveau"]);
                         
             //////////////////////////
             // Récupération des mondes sur lesquels l'user a des droits
@@ -224,12 +275,12 @@ if (isset($_SESSION["user"])) {
                 WHERE 
                     `fk_client` = :client
                     AND (
-                            SELECT COUNT(*)
-                            FROM `user_monde` AS `um`
-                            WHERE 
-                                `um`.`fk_client` = `m`.`fk_client`
-                                AND `um`.`fk_user` = :user
-                                AND `um`.`fk_monde` = `m`.`pk_monde`
+                        SELECT COUNT(*)
+                        FROM `user_monde` AS `um`
+                        WHERE 
+                            `um`.`fk_client` = `m`.`fk_client`
+                            AND `um`.`fk_user` = :user
+                            AND `um`.`fk_monde` = `m`.`pk_monde`
                     );";
             
             
