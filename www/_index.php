@@ -72,7 +72,7 @@ if (isset($_SESSION)) {
         <div id="toggle-date"></div><?php
     if ($_SESSION["niveau"] > 20) {
         ?>
-        <div id="new-monde"></div>
+        <div id="bouton-admin-designer"></div>
         <?php
     }
     ?>

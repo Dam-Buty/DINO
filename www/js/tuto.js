@@ -755,7 +755,6 @@ var toggle_tutos = function() {
             bottom: (0 - height) + "px"
         });
     } else {
-        
         width = ($(window).width() - (
                     $("#bouton-tuto").offset().left + (
                         $("#bouton-tuto").outerWidth() / 2

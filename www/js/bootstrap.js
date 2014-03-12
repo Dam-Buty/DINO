@@ -45,7 +45,6 @@ var bootstrap = function() {
         // On binde les events
         $("#toggle-date").click(toggle_dates);
         $("#menu-queue").click(anime_queue);
-        $("#new-monde").click(anime_queue);
 //        $("#menu-cabinet").click(popup_cabinet);
 //        $("#bouton-cabinet").click(request_monde);
         $("#documents-new-monde").focus(function() {
@@ -57,12 +56,6 @@ var bootstrap = function() {
                 $(this).unbind("mouseup");
                 return false;
             });
-        });
-        
-        $("#bouton-merci").click(function() {
-            $(".ZebraDialogOverlay").click();
-            $("#container-questions").show();
-            $("#container-merci").hide();
         });
         
         if (profil.printer != "") {
@@ -131,7 +124,7 @@ var bootstrap = function() {
                 $.ajax({ 
                     url: "do/doCheckAdmin.php",
                     statusCode: {
-                        200: function() {
+                        200: function(niveau) {
                             $.ajax({ url: "modules/admin/users.php" })
                             .done(function(users) {
                                 $("#backoffice").append(users);  
@@ -146,6 +139,13 @@ var bootstrap = function() {
                             .done(function(profil) {
                                 $("#core").append(profil);  
                             });
+                            
+                            if (niveau >= 30) {
+                                $.ajax({ url: "modules/admin/designer.php" })
+                                .done(function(designer) {
+                                    $("#core").append(designer);  
+                                });
+                            }
                             
                             bootstrap_admin();
                             $(window).trigger('resize');
