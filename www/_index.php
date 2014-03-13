@@ -215,6 +215,7 @@ if ($_SESSION["niveau"] >= 20) {
 <script src="vendor/switchy.js"></script>
 <script src="vendor/jquery.tooltipster.js"></script>
 
+<script src="js/Mentorial.js?v=7"></script>
 <script src="js/bootstrap.js?v=7"></script>
 <script src="js/util.js?v=7"></script>
 <script src="js/core.js?v=7"></script>

@@ -634,3 +634,27 @@ li.add-profil-type {
 .profil-save:hover {
     content: url(../img/save_back_hover_20.png);
 }
+
+/*#####################################
+#
+#        Designer
+#
+#######################################*/
+
+#designer {
+    display: none;
+    margin: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+#container-map {
+    float: left;
+    width: 33%;
+    height: 90%;
+}
+
+#container-action {
+    width: 62%;
+    margin-left: 3%;
+}

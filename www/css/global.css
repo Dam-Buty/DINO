@@ -1437,6 +1437,12 @@ ul.ui-autocomplete {
     display: none;
 }
 
+/*#####################################
+#
+#        Tutoriaux
+#
+#######################################*/
+
 #container-list-tutos {
     position: fixed;
     bottom: -9999px;
