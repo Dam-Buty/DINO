@@ -19,7 +19,7 @@ session_start();
             <div class="boutons bouton-designer" id="bouton-save-champ">Guardar</div>
         </div>
         <div class="action" id="action-type">
-            <h1>Nuevo campo</h1>
+            <h1>Nuevo tipo de documento</h1>
             <p><input type="text" id="label-new-type" placeholder="Tipo de documento"/>&nbsp;<i>(por ejemplo <b>Contrato</b>, <b>Factura</b>, <b>Comprobante</b>...)</i></p>
             <p><input type="checkbox" id="detail-new-type"/>&nbsp;Se puede agregar un detalle a este tipo de documento (por ejemplo "Comprobante <b>hotel</b>" o "Contrato <b>firmado</b>")</p>
             <p><input type="checkbox" id="time-new-type"/>&nbsp;Este documento es mensual</p>
@@ -34,6 +34,22 @@ session_start();
                 </select>
             </p>
             <div class="boutons bouton-designer" id="bouton-save-type">Guardar</div>
+        </div>
+        <div class="action" id="action-categorie">
+            <h1>Nueva categoria</h1>
+            <p><input type="text" id="label-new-categorie" placeholder="Categoria"/>&nbsp;<i>(por ejemplo <b>Contable</b>, <b>Operacional</b>, <b>Fiscal</b>...)</i></p>
+            <p><input type="checkbox" id="time-new-categorie"/>&nbsp;Esta categoria contiene documentos <b>mensuales</b></p>
+            <p>Esta categoria es visible a partir del nivel :
+                <select id="designer-categorie-niveau" class="select-new-niveau" data-placeholder="Nivel de usuario...">
+                    <option value=""></option>
+                    <option value="0">Visitor</option>
+                    <option value="10">Archivista</option>
+    <?php if ($_SESSION["niveau"] >= 30) { ?>
+                    <option value="20">Administrador</option>
+    <?php } ?>
+                </select>
+            </p>
+            <div class="boutons bouton-designer" id="bouton-save-categorie">Guardar</div>
         </div>
     </div>
     <div id="container-help">

@@ -1,6 +1,6 @@
 
 .boutons {
-    padding: 10px;
+    padding: 5px;
     box-sizing: border-box;
     
     color: white;
@@ -69,8 +69,6 @@
 }
 
 #bouton-new-champ {
-    position: absolute;
-    bottom: 0;
     width: 100%;
 }
 
@@ -84,5 +82,9 @@
 }
 
 #bouton-save-type {
+    display: none;
+}
+
+#bouton-save-categorie {
     display: none;
 }

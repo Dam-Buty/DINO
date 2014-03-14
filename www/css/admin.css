@@ -668,6 +668,7 @@ li.add-profil-type {
     height: 85%;
     
     box-shadow: 0 0 1px 1px #A9A9A9;
+    overflow-y: scroll;
 }
 
 #container-map h1 {
@@ -725,20 +726,48 @@ li.add-profil-type {
     padding-left: 10px;
 }
 
+#liste-map li {
+    padding: 10px;
+}
+
 #liste-map li.champ {
     background-color: #56d4eb;
 }
 
 #liste-map li.champ div {
-    padding: 10px;
     margin-right: 25px;
+    cursor: pointer;
 }
 
 #liste-map li.champ div:hover {
     background-color: #48AFC2;
-    cursor: pointer;
 }
 
 #liste-map li.champ img:hover {
     background-color: #48AFC2;
+}
+
+#liste-map li.categorie {
+    background-color: #A9A9A9;
+}
+
+#liste-map li.categorie div {
+    margin-right: 25px;
+    cursor: pointer;
+}
+
+#liste-map li.categorie div:hover {
+    background-color: #D6DCEA;
+}
+
+#liste-map li.categorie img:hover {
+    background-color: #D6DCEA;
+}
+
+#liste-map li.type {
+    cursor: pointer;
+}
+
+#liste-map li.type:hover {
+    background-color: #D6DCEA;
 }

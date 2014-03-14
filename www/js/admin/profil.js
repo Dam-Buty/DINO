@@ -213,7 +213,7 @@ var affiche_ligne = function(type, pk, label, marge, obj) {
                 ;
                 
             if (obj.detail == 1) {
-                input.attr("checked", "checked");
+                input.prop("checked", "checked");
             }
                 
             li.append(input).append("Detalle");
