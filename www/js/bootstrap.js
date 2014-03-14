@@ -211,17 +211,6 @@ $(document).ready(function(){
     bootstrap();
 });
 
-// Au resize, on redimensionne ce qui est positionné en jQuery
-$( window ).resize(function() {
-    $("#core").css({
-        height: ($(window).height() - 92) + "px" // 61 px barre top
-    });
-    
-    $("#backoffice").css({
-        height: ($(window).height() - 92) + "px" // 61 px barre top
-    });                                          // 31 px barre bottom
-});
-
 $( document ).keyup(function(e) {
     var code = e.keyCode ? e.keyCode : e.which;
         

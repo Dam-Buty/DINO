@@ -5,6 +5,10 @@
 #
 #######################################*/
 
+.admin {
+    display: none;
+}
+
 #backoffice ul {
     list-style-type: none;
     padding: 0;
@@ -372,7 +376,6 @@ img.bouton-save-back:hover {
 #######################################*/
 
 #mondes {
-    display: none;
     margin: 10px;
     margin-left: 20px;
     margin-right: 20px;
@@ -503,7 +506,6 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
 #######################################*/
 
 #profil {
-    display: none;
     margin: 10px;
     margin-left: 20px;
     margin-right: 20px;
@@ -641,20 +643,102 @@ li.add-profil-type {
 #
 #######################################*/
 
+.help {
+    display: none;
+}
+
 #designer {
     display: none;
     margin: 10px;
     margin-left: 20px;
     margin-right: 20px;
+    
+    height: 95%;
+}
+
+#designer>h1 {
+    height: 15%;
+    box-sizing: border-box;
 }
 
 #container-map {
-    float: left;
+    position: relative;
     width: 33%;
-    height: 90%;
+    float: left;
+    height: 85%;
+    
+    box-shadow: 0 0 1px 1px #A9A9A9;
+}
+
+#container-map h1 {
+    font-family: "Courier New", Courier, monospace;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: center;
+    background-color: #D6DCEA;
+    
+    border-bottom: 1px dotted #A9A9A9; 
+    
+    margin-top: 0;
+    margin-bottom: 0;
+    
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 #container-action {
+    padding: 10px;
     width: 62%;
-    margin-left: 3%;
+    margin-left: 36%;
+    background-color: #D6DCEA;
+    font-size: 0.8em;
+    
+    box-shadow: 0 0 1px 1px #A9A9A9;
+}
+
+#container-help {
+    width: 62%;
+    margin-left: 36%;
+}
+
+.action {
+    display: none;
+}
+
+#liste-map {
+    padding: 5px;
+}
+
+#liste-map img {
+    margin-left: 5px;
+}
+
+#liste-map ul {
+    border-bottom: 1px dotted #A9A9A9;
+}
+
+#liste-map li:not(:first-child) {
+    margin-left: 10px;
+}
+
+#liste-map ul:not(:first-child) {
+    padding-left: 10px;
+}
+
+#liste-map li.champ {
+    background-color: #56d4eb;
+}
+
+#liste-map li.champ div {
+    padding: 10px;
+    margin-right: 25px;
+}
+
+#liste-map li.champ div:hover {
+    background-color: #48AFC2;
+    cursor: pointer;
+}
+
+#liste-map li.champ img:hover {
+    background-color: #48AFC2;
 }

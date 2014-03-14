@@ -5,8 +5,8 @@ var bootstrap_profil = function() {
     var marge = 0;
     var niveau = 0;
     
-    $("#liste").slideUp();
-    $("#mondes").slideUp();
+    $("#liste").slideUp();    
+    $(".admin").slideUp();
     $("#profil").fadeIn();
     $("#bouton-admin-liste").attr("data-selected", 0);
     $("#bouton-admin-profil").attr("data-selected", 1);

@@ -237,6 +237,14 @@ if ($_SESSION["niveau"] >= 20) {
     }
 ?>
 
+<?php
+    if ($_SESSION["niveau"] >= 30) {
+    ?>
+<script src="js/admin/designer.js?v=7"></script>
+    <?php
+    }
+?>
+
 <script type="text/javascript">
     var profil = undefined;
 </script>

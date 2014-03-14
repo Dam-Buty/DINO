@@ -6,6 +6,7 @@ var Mentorial = function(Scenarios, options) {
         substitution_prefix: "tuto-",
         exit_image: "img/exit_50.png",
         button_next: ".next",
+        opaque: true,
         exit_on_opaque: true,
         exit_callback: function() {},
         z_opaque: 700,
@@ -39,20 +40,22 @@ var Mentorial = function(Scenarios, options) {
             this.stage = 0;
             
             // Fond opaque et bouton exit
-            $("body").append(
-                $("<div></div>")
-                .attr("id", "opak-tuto")
-                .css("z-index", this.z_opaque)
-                .append(
+            if (this.opaque) {
+                $("body").append(
                     $("<div></div>")
-                    .addClass("boutons")
-                    .attr("id", "quit-tuto")
+                    .attr("id", "opak-tuto")
+                    .css("z-index", this.z_opaque)
                     .append(
-                        $("<img/>")
-                        .attr("src", this.exit_image)
+                        $("<div></div>")
+                        .addClass("boutons")
+                        .attr("id", "quit-tuto")
+                        .append(
+                            $("<img/>")
+                            .attr("src", this.exit_image)
+                        )
                     )
-                )
-            );
+                );
+            }
             
             var self = this;
             

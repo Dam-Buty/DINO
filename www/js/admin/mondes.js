@@ -8,7 +8,7 @@ var bootstrap_monde = function() {
     var ul = $("#liste-valeurs");
     
     $("#liste").slideUp();
-    $("#profil").slideUp();
+    $(".admin").slideUp();
     $("#mondes").fadeIn();
     $("#bouton-admin-liste").attr("data-selected", 1);
     $("#bouton-admin-profil").attr("data-selected", 0);

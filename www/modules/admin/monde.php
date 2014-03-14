@@ -2,7 +2,7 @@
 session_start();
 ?>
 <!--LOCALISATION-->
-<div id="mondes">
+<div id="mondes" class="admin">
     <h1>Administracion de mundos</h1>
     <ul id="liste-valeurs">
         <li id="new-valeur" class="add-valeur">

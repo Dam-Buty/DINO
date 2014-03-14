@@ -32,6 +32,41 @@ html, body {
 /*::-webkit-scrollbar-corner  */
 /*::-webkit-resizer  */
 
+
+#core::-webkit-scrollbar {
+    width: 7px;
+    background-color: rgba(0,0,0,0);
+}
+
+#core::-webkit-scrollbar-track {
+    width: 3px;
+    background-color: #d6dcea;
+    margin-top: 80px;
+    margin-bottom: 40px;
+}   
+
+#core::-webkit-scrollbar-thumb {
+    width: 5px;
+    background-color: rgba(235, 84, 84, 1);
+}
+
+#backoffice::-webkit-scrollbar {
+    width: 7px;
+    background-color: rgba(0,0,0,0);
+}
+
+#backoffice::-webkit-scrollbar-track {
+    width: 3px;
+    background-color: #d6dcea;
+    margin-top: 80px;
+    margin-bottom: 40px;
+}   
+
+#backoffice::-webkit-scrollbar-thumb {
+    width: 5px;
+    background-color: rgba(235, 84, 84, 1);
+}
+
 /*###########################
         Blocs principaux
 #############################*/
@@ -43,11 +78,15 @@ html, body {
 #core {
     position: fixed;
     left: 10%;
-    top: 71px;
     width: 90%;
+    height: 98%;
     background-color: #e7e9f0;
     
+    padding-top: 75px;
+    padding-bottom: 35px;
+    
     overflow-y: scroll;
+    box-sizing: border-box;
 }
 
 #core ul {
@@ -67,11 +106,15 @@ html, body {
 #backoffice {
     position: fixed;
     left: 15%;
-    top: 71px;
     width: 85%;
+    height: 98%;
     background-color: #e7e9f0;
     
+    padding-top: 75px;
+    padding-bottom: 35px;
+    
     overflow-y: scroll;
+    box-sizing: border-box;
 }
 
 #container-viewer-global {
@@ -509,8 +552,6 @@ html, body {
 #liste {
    margin-right: 20px;
    margin-left: 20px;
-   
-   border-top: 1px solid #dddddd;
 }
 
 #liste>ul {
@@ -1453,7 +1494,8 @@ ul.ui-autocomplete {
     
     font-size: 0.8em;  
     background-color: #D6DCEA;
-    border: 1px solid #A9A9A9; 
+    
+    box-shadow: 0 0 1px 1px #A9A9A9;
     
     padding: 5px;
 }

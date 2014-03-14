@@ -60,3 +60,29 @@
     background-color: #8ecb32;
     border-color: #75a32d;
 }
+
+#bouton-save-monde {
+    width: 33%;
+    float: right;
+    background-color: #514985;
+    border-color: #3A335E;
+}
+
+#bouton-new-champ {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+#bouton-save-champ {
+    width: 33%;
+}
+
+.bouton-designer {
+    background-color: #8ECB32;
+    border-color: #599801;
+}
+
+#bouton-save-type {
+    display: none;
+}
