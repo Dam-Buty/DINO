@@ -117,11 +117,11 @@ var popup_confirmation = function(message, titre, bouton, callback) {
         'title':    titre,
         'buttons':  [bouton, 'Cancelar'],
         'onClose':  function(caption) {
-                        if (caption.indexOf("Confirmar") > -1) {
-                            callback();
-                        }
-                    }
+            if (caption.indexOf("Confirmar") > -1) {
+                callback();
+            }
+        }
     });
-}
+};
 
 

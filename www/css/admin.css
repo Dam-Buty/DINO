@@ -728,6 +728,8 @@ li.add-profil-type {
 
 #liste-map li {
     padding: 10px;
+    padding-left: 25px;
+    position: relative;
 }
 
 #liste-map li.champ {
@@ -770,4 +772,31 @@ li.add-profil-type {
 
 #liste-map li.type:hover {
     background-color: #D6DCEA;
+}
+
+.designer-ghost {
+    opacity: 0.6;
+    font-style: italic;
+}
+
+.tag-delete {    
+    position: absolute;
+    top: 0;
+    left: 0;
+    
+    width: 15px;
+    height: 15px;
+    
+    padding: 2px;
+    
+    box-shadow: 0 0 1px 1px #A9A9A9;
+    
+    background-image: url(../img/tag_15.png);
+    background-position: center center;
+    background-repeat: no-repeat;    
+    cursor: pointer;
+}
+
+.tag-delete:hover {
+    background-image: url(../img/del_15.png);
 }
