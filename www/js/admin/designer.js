@@ -114,6 +114,10 @@ var Monde = {
                 );
             });
         });
+        
+        if (this.champs.length == 0) {
+            $("#bouton-new-champ").click();
+        }
     }
 };
 
@@ -129,24 +133,27 @@ var bootstrap_designer = function() {
     $("#bouton-save-type").unbind().click(save_type);
     $("#bouton-save-categorie").unbind().click(save_categorie);
     
+    // ATTENTION
+    // Si on unbinde après les chosen, on unbinde
+    // TOUS les évènements Chosen! (updated, ...)
+    $("#designer-type-niveau").unbind().change(toggle_save_type);
+    $("#designer-categorie-niveau").unbind().change(toggle_save_categorie);
+    
     $("#designer-type-niveau").chosen({
         width: $("#new-login").outerWidth(),
         disable_search_threshold: 10,
-        inherit_select_classes: true,
-        allow_single_deselect: true
+        inherit_select_classes: true/*,
+        allow_single_deselect: true*/
     });
     
     $("#designer-categorie-niveau").chosen({
         width: $("#new-login").outerWidth(),
         disable_search_threshold: 10,
-        inherit_select_classes: true,
-        allow_single_deselect: true
+        inherit_select_classes: true/*,
+        allow_single_deselect: true*/
     });
     
-    $("#designer-type-niveau").unbind().change(toggle_save_type);
-    $("#designer-categorie-niveau").unbind().change(toggle_save_categorie);
-    
-    $("#bouton-new-champ").click();
+    Monde._refresh();
 };
 
 var toggle_champ = function() {
@@ -169,6 +176,7 @@ var toggle_champ = function() {
         $("#action-champ").attr("data-id", "");
         $("#pluriel-new-champ").val("");
         $("#action-champ h1").text("Nuevo campo"); // LOCALISATION
+        $(".designer-ghost").remove();
         $("#liste-map").append(
             $("<li></li>")
             .addClass("liste")
@@ -200,6 +208,7 @@ var toggle_type = function() {
         .attr("data-id", "")
         ;
         
+        $(".designer-ghost").remove();
         ul.append(
             $("<li></li>")
             .addClass("liste")
@@ -223,6 +232,7 @@ var toggle_type = function() {
             .attr("data-id", "")
             ;
         
+            $(".designer-ghost").remove();
             ul.append(
                 $("<li></li>")
                 .addClass("liste")
@@ -283,6 +293,7 @@ var toggle_categorie = function() {
         .attr("data-id", "")
         ;
         
+        $(".designer-ghost").remove();
         ul.append(
             $("<li></li>")
             .addClass("liste")
@@ -452,13 +463,24 @@ var remove_tree = function() {
     var champs = 0, types = 0, categories = 0;
     var go = false;
     
+    var count_categories = function() {
+    
+    }
+    
     if (li.hasClass("champ")) {
         element = "este campo"; // LOCALISATION
-        if (id < Monde.champs.length - 1) {
-            champs = Monde.champs.length - 1 - id;
-        }
         types = Monde.champs[id].types.length;
         categories = Monde.champs[id].categories.length;
+        $.each(Monde.champs, function(i, champ) {
+            if (i > id) {
+                champs += 1;
+                types += champ.types.length;
+                categories += champ.categories.length;
+                $.each(champ.categories, function(j, categorie) {
+                    types += categorie.types.length;
+                });
+            }
+        });
         _element = { type: "champ", id: id};
     } else {
         if (li.hasClass("categorie")) {

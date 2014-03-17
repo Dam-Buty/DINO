@@ -26,6 +26,10 @@ var bootstrap_users = function() {
     $("#new-niveau").on("chosen:showing_dropdown", tip_niveau);
     $("#new-niveau").on("chosen:hiding_dropdown", kill_tip_niveau);
     $("#new-niveau").change(kill_tip_niveau);
+    $("#new-niveau").change(toggle_niveau);
+    
+    $("#toggle-new-user").unbind().click(toggle_new_user);
+    $("#save-new-user").unbind().click(save_user);
     
     refresh_users();
 };
@@ -205,9 +209,6 @@ var refresh_users = function() {
                     $("#users").fadeIn();
                     
                     // Bind d'events
-                    $("#toggle-new-user").unbind().click(toggle_new_user);
-                    $("#save-new-user").unbind().click(save_user);
-                    $("#new-niveau").unbind().change(toggle_niveau);
                     $(".edit-niveau").unbind().change(toggle_niveau);
     
                     $(".edit-niveau").on("chosen:showing_dropdown", tip_niveau);

@@ -42,7 +42,7 @@ session_start();
             <p>Esta categoria es visible a partir del nivel :
                 <select id="designer-categorie-niveau" class="select-new-niveau" data-placeholder="Nivel de usuario...">
                     <option value=""></option>
-                    <option value="0">Visitor</option>
+                    <option value="1">Visitor</option>
                     <option value="10">Archivista</option>
     <?php if ($_SESSION["niveau"] >= 30) { ?>
                     <option value="20">Administrador</option>

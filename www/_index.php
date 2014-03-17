@@ -207,9 +207,6 @@ if ($_SESSION["niveau"] >= 20) {
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
-
-<script src="http://cdnjs.cloudflare.com/ajax/libs/chosen/1.0/chosen.jquery.min.js"></script>
-
 <script src="vendor/chosen.jquery.min.js"></script>
 <script src="vendor/zebra_dialog.js"></script>
 <script src="vendor/switchy.js"></script>
