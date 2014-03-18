@@ -57,3 +57,5 @@ tuto:
 user_tuto:
 + fk_tuto (INT)
 + fk_user (VARCHAR 32)
+
+OK sur baby

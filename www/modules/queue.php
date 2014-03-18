@@ -57,7 +57,7 @@
 <div id="bucket-queue" class="bucket">
     <ul>
         <li id="modele-li-queue" class="idle" draggable="true">
-            <img class="bouton-del-li" src="img/del_15.png"/>
+            <img class="bouton-del-li" src="img/trash_15.png"/>
             <img class="bouton-edit-li" src="img/edit_30.png"/>
             <div class="filename"></div>
             <div class="progressbar"></div>

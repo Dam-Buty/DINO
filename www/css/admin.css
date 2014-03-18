@@ -661,31 +661,9 @@ li.add-profil-type {
     box-sizing: border-box;
 }
 
-#container-map {
-    position: relative;
-    width: 33%;
-    float: left;
-    height: 85%;
-    
-    box-shadow: 0 0 1px 1px #A9A9A9;
-    overflow-y: scroll;
-}
-
-#container-map h1 {
-    font-family: "Courier New", Courier, monospace;
-    font-weight: bold;
-    font-size: 1.2em;
-    text-align: center;
-    background-color: #D6DCEA;
-    
-    border-bottom: 1px dotted #A9A9A9; 
-    
-    margin-top: 0;
-    margin-bottom: 0;
-    
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
+/*#####################################
+#        Action
+#######################################*/
 
 #container-action {
     padding: 10px;
@@ -706,76 +684,72 @@ li.add-profil-type {
     display: none;
 }
 
+/*#####################################
+#        Map
+#######################################*/
+
+#container-map {
+    position: relative;
+    width: 33%;
+    float: left;
+    height: 85%;
+    
+    box-shadow: 0 0 1px 1px #A9A9A9;
+    overflow-y: scroll;
+    padding: 3px;
+}
+
+#container-map h1 {
+    font-family: "Courier New", Courier, monospace;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: center;
+    background-color: #D6DCEA;
+    
+    margin-top: 0;
+    margin-bottom: 3px;
+    
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
 #liste-map {
     padding: 5px;
 }
 
 #liste-map img {
+    float: right;
     margin-left: 5px;
+    cursor: pointer;
 }
 
+#liste-map, #liste-map ul {
+    list-style-type: none;
+    margin: 0;
+}
+   
 #liste-map ul {
-    border-bottom: 1px dotted #A9A9A9;
-}
-
-#liste-map li:not(:first-child) {
+    padding-left: 9px;
     margin-left: 10px;
 }
 
-#liste-map ul:not(:first-child) {
-    padding-left: 10px;
-}
-
 #liste-map li {
-    padding: 10px;
-    padding-left: 25px;
+    margin: 0;
+    margin-top: 20px;
+    padding: 0 0 0 22px;
+    line-height: 20px;
+    font-weight: bold;
+    font-size: 0.8em;
     position: relative;
-}
 
-#liste-map li.champ {
-    background-color: #56d4eb;
-}
-
-#liste-map li.champ div {
-    margin-right: 25px;
+    border: 1px solid #A1A1A1;
+    border-radius: 3px;
+    color: white;
+    
     cursor: pointer;
-}
-
-#liste-map li.champ div:hover {
-    background-color: #48AFC2;
-}
-
-#liste-map li.champ img:hover {
-    background-color: #48AFC2;
-}
-
-#liste-map li.categorie {
-    background-color: #A9A9A9;
-}
-
-#liste-map li.categorie div {
-    margin-right: 25px;
-    cursor: pointer;
-}
-
-#liste-map li.categorie div:hover {
-    background-color: #D6DCEA;
-}
-
-#liste-map li.categorie img:hover {
-    background-color: #D6DCEA;
-}
-
-#liste-map li.type {
-    cursor: pointer;
-}
-
-#liste-map li.type:hover {
-    background-color: #D6DCEA;
 }
 
 .designer-ghost {
-    opacity: 0.6;
     font-style: italic;
 }
 
@@ -789,9 +763,7 @@ li.add-profil-type {
     
     padding: 2px;
     
-    box-shadow: 0 0 1px 1px #A9A9A9;
-    
-    background-image: url(../img/tag_15.png);
+    background-image: url(../img/trash_15.png);
     background-position: center center;
     background-repeat: no-repeat;    
     cursor: pointer;
@@ -799,4 +771,76 @@ li.add-profil-type {
 
 .tag-delete:hover {
     background-image: url(../img/del_15.png);
+}
+
+/*#####################################
+#        Arbre
+#######################################*/
+
+#liste-map>li:first-child {
+    margin-top: 0;
+}
+
+#liste-map li:before {
+    content: "x";
+    color: rgba(255, 255, 255, 0);
+    margin-left: -33px;
+    margin-right: 22px;
+    position: absolute;
+    bottom: 9px;
+}
+
+#liste-map li:first-child:before {
+    top: -22px;
+    margin-left: -34px;
+}
+
+.designer-champ>li:before {
+    border-bottom: 2px solid #8ecb32;
+}
+
+.designer-categorie>li:before {
+    border-bottom: 2px solid #A1A1A1;
+}
+
+.designer-champ>li:first-child:before {
+    border-left: 2px solid #8ecb32;
+}
+
+.designer-categorie>li:first-child:before {
+    border-left: 2px solid #A1A1A1;
+}
+
+#liste-map li:last-child:after {
+    content: "x";
+    color: rgba(255, 255, 255, 0);
+    border-left: 2px solid #E7E9F0;
+    position: absolute;
+    left: -12px;
+    top: 11px;
+}
+
+li.designer-champ {
+    background-color: #8ecb32;
+}
+
+li.designer-categorie {
+    background-color: #A1A1A1;
+}
+
+li.designer-type {
+    color: black !important;
+    margin-top: 8px !important;
+}
+
+li.designer-type:before {
+    top: -9px !important;
+}
+
+ul.designer-champ {
+    border-left: 2px solid #8ecb32 !important;
+}
+
+ul.designer-categorie {
+    border-left: 2px solid #A1A1A1 !important;
 }

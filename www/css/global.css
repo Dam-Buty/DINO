@@ -980,7 +980,7 @@ html, body {
 }
 
 .bouton-del-li:hover {
-    content: url(../img/del_hover_15.png);
+    content: url(../img/del_15.png);
 }
 
 #tiroir-queue .filename {
