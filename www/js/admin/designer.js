@@ -36,7 +36,7 @@ var Monde = {
         var images = {
             time: img.clone()
                     .attr("src", "img/date_black_20.png")
-                    .attr("title", "Documentos mensuales"),
+                    .attr("title", "Documento mensuale"),
             niveau: {
                 0: img.clone()
                     .attr("src", "img/niveau_0_20.png")
@@ -154,7 +154,7 @@ var Monde = {
                     var label = type.label;
                     
                     if (type.detail) {
-                        label += " de ...";
+                        label += " ...";
                     }
                     
                     if (type.time) {
