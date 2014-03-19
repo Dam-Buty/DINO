@@ -656,50 +656,12 @@ li.add-profil-type {
     height: 95%;
 }
 
-#designer>h1 {
-    height: 15%;
+#designer h1 {
+    height: 10%;
     box-sizing: border-box;
 }
 
-/*#####################################
-#        Action
-#######################################*/
-
-#container-action {
-    padding: 10px;
-    width: 62%;
-    margin-left: 36%;
-    background-color: #D6DCEA;
-    font-size: 0.8em;
-    
-    box-shadow: 0 0 1px 1px #A9A9A9;
-}
-
-#container-help {
-    width: 62%;
-    margin-left: 36%;
-}
-
-.action {
-    display: none;
-}
-
-/*#####################################
-#        Map
-#######################################*/
-
-#container-map {
-    position: relative;
-    width: 33%;
-    float: left;
-    height: 85%;
-    
-    box-shadow: 0 0 1px 1px #A9A9A9;
-    overflow-y: scroll;
-    padding: 3px;
-}
-
-#container-map h1 {
+#designer h2 {
     font-family: "Courier New", Courier, monospace;
     font-weight: bold;
     font-size: 1.2em;
@@ -713,6 +675,142 @@ li.add-profil-type {
     padding-bottom: 5px;
 }
 
+#designer h3 {
+    border-bottom: 1px dotted #A9A9A9;
+    font-size: 1em;
+}
+
+/*#####################################
+#        Action
+#######################################*/
+
+#container-action {
+    padding: 10px;
+    width: 55%;
+    margin-left: 43%;
+    
+    box-shadow: 0 0 1px 1px #A9A9A9;
+}
+
+#container-action input {
+    width: 70%;
+}
+
+#container-action p {
+    font-size: 0.9em;
+}
+
+#container-help {
+    width: 62%;
+    margin-left: 36%;
+}
+
+.action {
+    display: none;
+}
+
+/*#####################################
+#        Switches
+#######################################*/
+
+.designer-option {
+    float: right;
+    width: 40%;
+    margin-right: 5%;
+    margin-bottom: 20px;
+    font-size: 1em;
+    cursor: pointer;
+    
+    padding: 10px;
+    
+    text-align: center;
+}
+
+.designer-option h1 {
+    font-family: "Courier New", Courier, monospace;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+    color: white;
+    
+    background-repeat: no-repeat;
+    background-position: 5px center;
+    
+    margin: 0;
+}
+
+.designer-option p {
+    font-size: 1em;
+    margin: 0;
+    margin-top: 10px;
+}
+
+.designer-option p.option-ok {
+    display: none;
+}
+
+.designer-option p.option_ko {
+    display: none;
+}
+
+div.option-ok {    
+    box-shadow: 0 0 1px 1px #8ECB32;
+}
+
+div.option-ok:hover {    
+    box-shadow: 0 0 3px 3px #8ECB32;
+}
+
+div.option-ko {
+    box-shadow: 0 0 1px 1px #A9A9A9;
+}
+
+div.option-ko:hover {
+    box-shadow: 0 0 3px 3px #A9A9A9;
+}
+
+.option-ok h1 {
+    background-color: #8ECB32;
+    background-image: url(../img/option_OK_15.png);
+}
+
+.option-ko h1 {
+    background-color: #A9A9A9;
+    background-image: url(../img/option_KO_15.png);
+}
+
+.option-help {
+    box-shadow: 0 0 1px 1px #A9A9A9;
+}
+
+.option-help:hover {    
+    box-shadow: 0 0 3px 3px #8ECB32;
+}
+
+.option-help h1 {
+    background-color: #A9A9A9;
+    background-image: url(../img/option_OK_15.png);
+}
+
+.option-help:hover h1 {
+    background-color: #8ECB32;
+}
+
+/*#####################################
+#        Map
+#######################################*/
+
+#container-map {
+    position: relative;
+    width: 40%;
+    float: left;
+    height: 90%;
+    
+    box-shadow: 0 0 1px 1px #A9A9A9;
+    overflow-y: scroll;
+    padding: 3px;
+}
+
 #liste-map {
     padding: 5px;
 }
@@ -721,6 +819,22 @@ li.add-profil-type {
     float: right;
     margin-left: 5px;
     cursor: pointer;
+}
+
+.medailles {
+    float: right;
+    margin-top: 3px;
+    margin-right: 55px;
+}
+
+.designer-categorie div>.medailles {
+    margin-right: 30px;
+}
+
+.medailles img {
+    float: none !important;
+    height: 15px !important;
+    cursor: default !important;
 }
 
 #liste-map, #liste-map ul {

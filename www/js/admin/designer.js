@@ -24,11 +24,34 @@ var Monde = {
         var liste = $("#liste-map");
         var li = $("<li></li>").append(
             $("<span></span>")
+            .attr("title", "Borrar")
             .addClass("tag-delete")
             .click(remove_tree)
         );
         var ul = $("<ul></ul>");
+        var span = $("<span></span>").addClass("medailles");
+        var img = $("<img/>");
         var current_ul = liste;
+        
+        var images = {
+            time: img.clone()
+                    .attr("src", "img/date_black_20.png")
+                    .attr("title", "Documentos mensuales"),
+            niveau: {
+                0: img.clone()
+                    .attr("src", "img/niveau_0_20.png")
+                    .attr("title", "Visible para todos usuarios"),
+                10: img.clone()
+                    .attr("src", "img/niveau_10_20.png")
+                    .attr("title", "Visible a partir del nivel ARCHIVISTA"),
+                20: img.clone()
+                    .attr("src", "img/niveau_20_20.png")
+                    .attr("title", "Visible a partir del nivel ADMINISTRATOR"),
+                30: img.clone()
+                    .attr("src", "img/niveau_30_20.png")
+                    .attr("title", "Visible a partir del nivel GERENTE"),
+            }
+        };
         
         liste.empty();
         
@@ -42,16 +65,19 @@ var Monde = {
                 .addClass("designer-champ")
                 .append(
                     $("<img/>")
-                    .attr("src", "img/document_20.png")
+                    .attr("src", "img/add_20.png")
+                    .attr("title", "Agregar un tipo de documento")
                     .addClass("profil-toggle-type")
                     .click(toggle_type)
                 ).append(
                     $("<img/>")
                     .attr("src", "img/categorie_20.png")
+                    .attr("title", "Agregar una categorie de documentos")
                     .addClass("profil-toggle-categorie")
                     .click(toggle_categorie)
                 ).append(
                     $("<div></div>")
+                    .attr("title", "Editar " + champ.label)
                     .text(champ.label)
                     .click(toggle_champ)
                 )
@@ -63,19 +89,42 @@ var Monde = {
             current_ul = new_ul;
             
             $.each(champ.types, function(j, type) {
+                var new_span = span.clone();
+                var label = type.label;
+                
+                if (type.detail) {
+                    label += " ...";
+                }
+                
+                if (type.time) {
+                    new_span.append(images.time.clone());
+                }
+                
+                new_span.append(images.niveau[type.niveau].clone());
+                
                 current_ul.append(
                     li.clone(true)
                     .attr("data-champ", i)
                     .attr("data-id", j)
+                    .attr("title", "Editar " + type.label)
                     .addClass("designer")
                     .addClass("designer-type")
-                    .append(type.label)
+                    .append(label)
+                    .append(new_span)
                     .click(toggle_type)
                 );
             });
             
             $.each(champ.categories, function(j, categorie) {
                 var ul_categorie = ul.clone(true).addClass("designer-categorie");
+                var new_span = span.clone();
+                
+                if (categorie.time) {
+                    new_span.append(images.time.clone());
+                }
+                
+                new_span.append(images.niveau[categorie.niveau].clone());
+                
                 current_ul.append(
                     li.clone(true)
                     .attr("data-champ", i)
@@ -84,13 +133,16 @@ var Monde = {
                     .addClass("designer-categorie")
                     .append(
                         $("<img/>")
-                        .attr("src", "img/document_20.png")
+                        .attr("src", "img/add_20.png")
+                        .attr("title", "Agregar un tipo de documento")
                         .addClass("profil-toggle-type")
                         .click(toggle_type)
                     ).append(
                         $("<div></div>")
+                        .attr("title", "Editar " + categorie.label)
                         .text(categorie.label)
                         .click(toggle_categorie)
+                        .append(new_span)
                     )
                 ).append(
                     ul_categorie
@@ -98,14 +150,29 @@ var Monde = {
                 );
                 
                 $.each(categorie.types, function(k, type) {
+                    var new_span = span.clone();
+                    var label = type.label;
+                    
+                    if (type.detail) {
+                        label += " de ...";
+                    }
+                    
+                    if (type.time) {
+                        new_span.append(images.time.clone());
+                    }
+                    
+                    new_span.append(images.niveau[type.niveau].clone());
+                    
                     ul_categorie.append(
                         li.clone(true)
                         .attr("data-champ", i)
                         .attr("data-categorie", j)
                         .attr("data-id", k)
+                        .attr("title", "Editar " + type.label)
                         .addClass("designer")
                         .addClass("designer-type")
-                        .append(type.label)
+                        .append(label)
+                        .append(new_span)
                         .click(toggle_type)
                     );
                 });
@@ -129,6 +196,10 @@ var bootstrap_designer = function() {
     $("#bouton-save-champ").unbind().click(save_champ);
     $("#bouton-save-type").unbind().click(save_type);
     $("#bouton-save-categorie").unbind().click(save_categorie);
+    $("#add-doc-to-champ").unbind().click(toggle_type);
+    $("#add-doc-to-cat").unbind().click(toggle_type);
+    $("#add-cat-to-champ").unbind().click(toggle_categorie);
+    $("#add-cat-to-champ2").unbind().click(toggle_categorie);
     
     // ATTENTION
     // Si on unbinde après les chosen, on unbinde
@@ -150,6 +221,20 @@ var bootstrap_designer = function() {
         allow_single_deselect: true*/
     });
     
+    Switch($("#detail-new-type"), {
+        title: "detalle",
+        OK_text: '<b>Se puede</b> agregar un detalle a este tipo de documento.<br/>',
+        KO_text: '<b>No se puede</b> agregar un detalle a este tipo de documento.<br/>',
+        tip: "Por ejemplo, contrato 'anual' o contrato 'de servicio'."
+    });
+    
+    Switch($("#time-new-type"), {
+        title: "Mensual",
+        OK_text: 'Este tipo de documento <b>es mensual</b>',
+        KO_text: 'Este tipo de documento <b>no es mensual</b>',
+        tip: "Por ejemplo, las facturas pueden ser mensuales."
+    });
+    
     Monde._refresh();
 };
 
@@ -163,13 +248,7 @@ var toggle_champ = function() {
     
     $("#action-champ").fadeIn();
 
-    if (bouton.attr("id") != "bouton-new-champ") {
-        champ = Monde.champs[li.attr("data-id")];
-        $("#action-champ").attr("data-id", li.attr("data-id"));
-        $("#label-new-champ").val(champ.label);
-        $("#pluriel-new-champ").val(champ.pluriel);
-        $("#action-champ h1").html("Campo <b>" + champ.label + "</b>"); // LOCALISATION
-    } else {
+    if (bouton.attr("id") == "bouton-new-champ") {
         if (Monde.champs.length == 0) {
             ul = $("#liste-map");
         } else {
@@ -178,7 +257,7 @@ var toggle_champ = function() {
         $("#label-new-champ").val("");
         $("#action-champ").attr("data-id", "");
         $("#pluriel-new-champ").val("");
-        $("#action-champ h1").text("Nuevo campo"); // LOCALISATION
+        $("#action-champ>h2").text("Nuevo campo"); // LOCALISATION
         $(".designer-ghost").remove();
         ul.append(
             $("<li></li>")
@@ -186,27 +265,59 @@ var toggle_champ = function() {
             .addClass("designer-ghost")
             .text("Nuevo campo...")
         );
+    } else {
+        champ = Monde.champs[li.attr("data-id")];
+        $("#action-champ").attr("data-id", li.attr("data-id"));
+        $("#label-new-champ").val(champ.label);
+        $("#pluriel-new-champ").val(champ.pluriel);
+        $("#action-champ>h2").html("Campo <b>" + champ.label + "</b>"); // LOCALISATION
     }
 };
 
 var toggle_type = function() {
     var bouton = $(this);
-    var li = bouton.closest("li");
-    var ul = li.next("ul");
     var label = $("#label-new-type");
     var detail = $("#detail-new-type");
     var time = $("#time-new-type");
     var niveau = $("#designer-type-niveau");
     var action = $("#action-type");
-    var type;
+    var type, li, ul;
     
     $(".action").hide();
     
-    if (li.hasClass("designer-champ")) {
+    if (bouton.hasClass("profil-toggle-type") || bouton.hasClass("option-help")) { // NOUVEAU DOCUMENT
+        var champ, categorie;
+        
+        if (bouton.hasClass("profil-toggle-type")) {
+            li = bouton.closest("li");
+            
+            if (li.hasClass("designer-champ")) { // NEW CHAMP
+                champ = li.attr("data-id");
+                categorie = "";
+            } else { // NEW CATEGORIE
+                champ = li.attr("data-champ");
+                categorie = li.attr("data-id");
+            }
+        } else {
+            if (bouton.attr("data-categorie") === undefined || bouton.attr("data-categorie") === "") {
+                champ = bouton.attr("data-champ");
+                categorie = "";
+                
+                li = $('#liste-map li.designer-champ[data-id="' + bouton.attr("data-champ") + '"]');
+            } else {
+                champ = bouton.attr("data-champ");
+                categorie = bouton.attr("data-categorie");
+                
+                li = $('#liste-map li.designer-categorie[data-champ="' + bouton.attr("data-champ") + '"][data-id="' + bouton.attr("data-categorie") + '"]');
+            }
+        }
+        
+        ul = li.next("ul");
+        
         action
         .fadeIn()
-        .attr("data-champ", li.attr("data-id"))
-        .attr("data-categorie", "")
+        .attr("data-champ", champ)
+        .attr("data-categorie", categorie)
         .attr("data-id", "")
         ;
         
@@ -218,75 +329,58 @@ var toggle_type = function() {
             .text("Nuevo documento...")
         );
         
-        action.find("h1").html("Nuevo tipo de documento"); // LOCALISATION
+        action.children("h2").html("Nuevo tipo de documento"); // LOCALISATION
         
         label.removeClass("KO").val("");
         niveau.removeClass("KO").val("").trigger("chosen:updated");
-        detail.prop("checked", false);
-        time.prop("checked", false);
-    } else {
-        if (li.hasClass("designer-categorie")) {
-            action
-            .fadeIn()
-            .attr("data-champ", li.attr("data-champ"))
-            .attr("data-categorie", li.attr("data-id"))
-            .attr("data-id", "")
-            ;
+        detail.prop("checked", false).change();
+    } else { // EDIT DOCUMENT
+        li = bouton.closest("li");
         
-            $(".designer-ghost").remove();
-            ul.append(
-                $("<li></li>")
-                .addClass("designer-type")
-                .addClass("designer-ghost")
-                .text("Nuevo documento...")
-            );
-            
-            action.find("h1").html("Nuevo tipo de documento"); // LOCALISATION
-            
-            label.removeClass("KO").val("");
-            niveau.removeClass("KO").val("").trigger("chosen:updated");
-            detail.prop("checked", false);
-            time.prop("checked", false);
+        action
+        .fadeIn()
+        .attr("data-champ", li.attr("data-champ"))
+        .attr("data-id", li.attr("data-id"))
+        ;
+        
+        if (li.attr("data-categorie") === undefined || li.attr("data-categorie") === "") {
+            action
+            .attr("data-categorie", "");
+            type = Monde.champs[li.attr("data-champ")].types[li.attr("data-id")];
         } else {
             action
-            .fadeIn()
-            .attr("data-champ", li.attr("data-champ"))
-            .attr("data-id", li.attr("data-id"))
-            ;
-            
-            if (li.attr("data-categorie") === undefined || li.attr("data-categorie") === "") {
-                action
-                .attr("data-categorie", "");
-                type = Monde.champs[li.attr("data-champ")].types[li.attr("data-id")];
-            } else {
-                action
-                .attr("data-categorie", li.attr("data-categorie"));
-                type = Monde.champs[li.attr("data-champ")].categories[li.attr("data-categorie")].types[li.attr("data-id")];
-            }
-            
-            action.find("h1").html("Tipo de documento <b>" + type.label + "</b>"); // LOCALISATION
-            
-            label.val(type.label);
-            detail.prop('checked', type.detail);
-            time.prop('checked', type.time);
-            niveau.val(type.niveau);
-            niveau.trigger("chosen:updated");
+            .attr("data-categorie", li.attr("data-categorie"));
+            type = Monde.champs[li.attr("data-champ")].categories[li.attr("data-categorie")].types[li.attr("data-id")];
         }
+        
+        action.children("h2").html("Tipo de documento <b>" + type.label + "</b>"); // LOCALISATION
+        
+        label.val(type.label);
+        detail.prop('checked', type.detail).change();
+        niveau.val(type.niveau);
+        niveau.trigger("chosen:updated");
     }    
 };
 
 var toggle_categorie = function() {
     var bouton = $(this);
-    var li = bouton.closest("li");
-    var ul = li.next("ul");
     var label = $("#label-new-categorie");
-    var time = $("#time-new-categorie");
     var niveau = $("#designer-categorie-niveau");
-    var categorie;
-    
+    var li;
+        
     $(".action").hide();
     
-    if (bouton.hasClass("profil-toggle-categorie")) {
+    if (bouton.hasClass("profil-toggle-categorie") || bouton.hasClass("option-help")) { // NOUVELLE CATEGORIE
+        var ul;
+        
+        if (bouton.hasClass("profil-toggle-categorie")) {
+            li = bouton.closest("li");
+        } else {
+            li = $('#liste-map li.designer-champ[data-id="' + bouton.attr("data-champ") + '"]');
+        }
+        
+        ul = li.next("ul");
+        
         $("#action-categorie")
         .fadeIn()
         .attr("data-champ", li.attr("data-id"))
@@ -301,11 +395,13 @@ var toggle_categorie = function() {
             .text("Nueva categoria...")  // LOCALISATION
         );
         
+        $("#action-categorie>h2").html("Nueva categoria"); // LOCALISATION
+        
         label.removeClass("KO").val("");
         niveau.removeClass("KO").val("").trigger("chosen:updated");
-        time.prop("checked", false);
         
-    } else {
+    } else { // EDIT CATEGORIE
+        li = bouton.closest("li");
         $("#action-categorie")
         .fadeIn()
         .attr("data-champ", li.attr("data-champ"))
@@ -313,8 +409,9 @@ var toggle_categorie = function() {
         ;
         categorie = Monde.champs[li.attr("data-champ")].categories[li.attr("data-id")];
         
+        $("#action-categorie>h2").html("Categoria <b>" + categorie.label + "</b>"); // LOCALISATION
+        
         label.val(categorie.label);
-        time.prop('checked', categorie.time);
         niveau.val(categorie.niveau);
         niveau.trigger("chosen:updated");
     }
@@ -324,7 +421,7 @@ var save_champ = function() {
     var label = $("#label-new-champ");
     var pluriel = $("#pluriel-new-champ");
     var action = $("#action-champ");
-    var champ;
+    var champ, id;
     
     if (label.val() == "") {
         label.addClass("KO");
@@ -345,12 +442,22 @@ var save_champ = function() {
                     types: [],
                     categories: []
                 }));
+                id = Monde.champs.length - 1;
             } else {
-                Monde.champs[action.attr("data-id")] = $.extend(true, Monde.champs[action.attr("data-id")], champ);
+                id = action.attr("data-id");
+                Monde.champs[id] = $.extend(true, Monde.champs[id], champ);
             }
             
             label.val("");
             pluriel.val("");
+            $("#action-champ").attr("data-id", "");
+            $("#action-champ>h2").text("Nuevo campo");
+            $(".option-help-champ").text(champ.label);
+            $(".option-help").attr("data-champ", id);
+            $(".option-help").attr("data-categorie", "");
+            $("#action-champ").hide();
+            $("#action-post-champ").show();
+            $("#bouton-save-categorie").hide();
             Monde._refresh();
         }
     }
@@ -363,7 +470,7 @@ var save_type = function() {
     var niveau = $("#designer-type-niveau");
     var action = $("#action-type");
     var champ = Monde.champs[action.attr("data-champ")];
-    var type, types;
+    var type, types, post;
     
     if (label.val() == "") {
         label.addClass("KO");
@@ -379,16 +486,14 @@ var save_type = function() {
                 niveau: niveau.val()
             }
             
-            label.removeClass("KO").val("");
-            niveau.removeClass("KO").val("").trigger("chosen:updated");
-            detail.prop("checked", false);
-            time.prop("checked", false);
-            
             if (action.attr("data-categorie") === undefined 
             || action.attr("data-categorie") === "") {
                 types = champ.types;
+                post = "champ";
+                $(".option-help").attr("data-categorie", "");
             } else {
                 types = champ.categories[action.attr("data-categorie")].types;
+                post = "categorie";
             }
             
             if (action.attr("data-id") === undefined 
@@ -398,6 +503,16 @@ var save_type = function() {
                 types[action.attr("data-id")] = $.extend(true, types[action.attr("data-id")], type);
             }
             
+            label.removeClass("KO").val("");
+            niveau.removeClass("KO").val("").trigger("chosen:updated");
+            detail.prop("checked", false).change();
+            time.prop("checked", false).change();
+            
+            $("#action-type").attr("data-id", "");
+            $("#action-type>h2").text("Nuevo tipo de documento");
+            $("#action-type").hide();
+            $("#action-post-" + post).show();
+            $("#bouton-save-type").hide();
             Monde._refresh();
         }
     }
@@ -405,11 +520,10 @@ var save_type = function() {
 
 var save_categorie = function() {
     var label = $("#label-new-categorie");
-    var time = $("#time-new-categorie");
     var niveau = $("#designer-categorie-niveau");
     var action = $("#action-categorie");
     var champ = Monde.champs[action.attr("data-champ")];
-    var categorie;
+    var categorie, id;
     
     if (label.val() == "") {
         label.addClass("KO");
@@ -420,21 +534,30 @@ var save_categorie = function() {
             
             categorie = {
                 label: label.val(),
-                time: time.is(':checked'),
                 niveau: niveau.val()
             }
             
             label.removeClass("KO").val("");
             niveau.removeClass("KO").val("").trigger("chosen:updated");
-            time.prop("checked", false);
             
             if (action.attr("data-id") === undefined || action.attr("data-id") === "") {
                 champ.categories.push($.extend(categorie, {
                     types: []
                 }));
+                id = champ.categories.length - 1;
             } else {
-                champ.categories[action.attr("data-id")] = $.extend(true, champ.categories[action.attr("data-id")], categorie);
+                id = action.attr("data-id");
+                champ.categories[id] = $.extend(true, champ.categories[id], categorie);
             }
+            
+            $("#action-categorie").attr("data-id", "");
+            $("#action-categorie>h2").text("Nueva categoria");
+            $(".option-help-champ").text(champ.label);
+            $(".option-help-categorie").text(categorie.label);
+            $(".option-help").attr("data-champ", action.attr("data-champ"));
+            $(".option-help").attr("data-categorie", id);
+            $("#action-categorie").hide();
+            $("#action-post-categorie").show();
             
             Monde._refresh();
         }

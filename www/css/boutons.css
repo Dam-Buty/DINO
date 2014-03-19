@@ -64,17 +64,21 @@
 #bouton-save-monde {
     width: 33%;
     float: right;
-    background-color: #514985;
-    border-color: #3A335E;
+    background-color: #56D4EB;
+    border-color: #48AFC2;
 }
 
 #bouton-new-champ {
     margin-top: 20px;
     width: 100%;
+    background-color: #56D4EB;
+    border-color: #48AFC2;
 }
 
 #bouton-save-champ {
     width: 33%;
+    background-color: #56D4EB;
+    border-color: #48AFC2;
 }
 
 .bouton-designer {
@@ -84,8 +88,12 @@
 
 #bouton-save-type {
     display: none;
+    background-color: #56D4EB;
+    border-color: #48AFC2;
 }
 
 #bouton-save-categorie {
     display: none;
+    background-color: #56D4EB;
+    border-color: #48AFC2;
 }
