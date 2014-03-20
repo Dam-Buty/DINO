@@ -1,4 +1,5 @@
 
+
 var Designer = Mentorial([{ ////////////////////// SCENARIO 999
     id: 0,
     titre: "Designer",
@@ -17,6 +18,7 @@ var Designer = Mentorial([{ ////////////////////// SCENARIO 999
 }]);
 
 var Monde = {
+    pk: undefined,
     label: "",
     champs: [],
     
@@ -53,6 +55,8 @@ var Monde = {
             }
         };
         
+        $("#nom-monde").val(this.label);
+        
         liste.empty();
         
         $.each(this.champs, function(i, champ) {
@@ -68,18 +72,18 @@ var Monde = {
                     .attr("src", "img/add_20.png")
                     .attr("title", "Agregar un tipo de documento")
                     .addClass("profil-toggle-type")
-                    .click(toggle_type)
+                    .click(designer_toggle_type)
                 ).append(
                     $("<img/>")
                     .attr("src", "img/categorie_20.png")
                     .attr("title", "Agregar una categorie de documentos")
                     .addClass("profil-toggle-categorie")
-                    .click(toggle_categorie)
+                    .click(designer_toggle_categorie)
                 ).append(
                     $("<div></div>")
                     .attr("title", "Editar " + champ.label)
                     .text(champ.label)
-                    .click(toggle_champ)
+                    .click(designer_toggle_champ)
                 )
             ).append(
                 new_ul
@@ -111,7 +115,7 @@ var Monde = {
                     .addClass("designer-type")
                     .append(label)
                     .append(new_span)
-                    .click(toggle_type)
+                    .click(designer_toggle_type)
                 );
             });
             
@@ -136,12 +140,12 @@ var Monde = {
                         .attr("src", "img/add_20.png")
                         .attr("title", "Agregar un tipo de documento")
                         .addClass("profil-toggle-type")
-                        .click(toggle_type)
+                        .click(designer_toggle_type)
                     ).append(
                         $("<div></div>")
                         .attr("title", "Editar " + categorie.label)
                         .text(categorie.label)
-                        .click(toggle_categorie)
+                        .click(designer_toggle_categorie)
                         .append(new_span)
                     )
                 ).append(
@@ -173,7 +177,7 @@ var Monde = {
                         .addClass("designer-type")
                         .append(label)
                         .append(new_span)
-                        .click(toggle_type)
+                        .click(designer_toggle_type)
                     );
                 });
             });
@@ -182,24 +186,53 @@ var Monde = {
         if (this.champs.length == 0) {
             $("#bouton-new-champ").click();
         }
+    },
+    
+    _save_titre: function() {
+        Monde.label = $("#nom-monde").val();
+    },
+    
+    _save: function() {
+        $.ajax({
+            url: "do/doSaveMonde.php",
+            type: "POST",
+            data: {
+                label: Monde.label,
+                pk: Monde.pk,
+                champs: Monde.champs
+            },
+            statusCode: {
+                200: function() {
+                    //window.location.replace("index.php");
+                },
+                403: function() {
+                    window.location.replace("index.php");
+                },
+                500: function() {
+                    popup("Erreur!", "error");
+                }
+            }
+        });
     }
 };
 
 var bootstrap_designer = function() {
+    var bouton = $(this);
     $("#liste").slideUp();   
     $(".admin").slideUp();
     $("#designer").fadeIn();
     
     $("#action-champ").show();
     
-    $("#bouton-new-champ").unbind().click(toggle_champ);
-    $("#bouton-save-champ").unbind().click(save_champ);
-    $("#bouton-save-type").unbind().click(save_type);
-    $("#bouton-save-categorie").unbind().click(save_categorie);
-    $("#add-doc-to-champ").unbind().click(toggle_type);
-    $("#add-doc-to-cat").unbind().click(toggle_type);
-    $("#add-cat-to-champ").unbind().click(toggle_categorie);
-    $("#add-cat-to-champ2").unbind().click(toggle_categorie);
+    $("#bouton-save-monde").unbind().click(Monde._save);
+    $("#bouton-new-champ").unbind().click(designer_toggle_champ);
+    $("#bouton-save-champ").unbind().click(designer_save_champ);
+    $("#bouton-save-type").unbind().click(designer_save_type);
+    $("#bouton-save-categorie").unbind().click(designer_save_categorie);
+    $("#add-doc-to-champ").unbind().click(designer_toggle_type);
+    $("#add-doc-to-cat").unbind().click(designer_toggle_type);
+    $("#add-cat-to-champ").unbind().click(designer_toggle_categorie);
+    $("#add-cat-to-champ2").unbind().click(designer_toggle_categorie);
     
     // ATTENTION
     // Si on unbinde après les chosen, on unbinde
@@ -235,10 +268,68 @@ var bootstrap_designer = function() {
         tip: "Por ejemplo, las facturas pueden ser mensuales."
     });
     
+    Monde.pk = undefined;
+    Monde.label = "";
+    Monde.champs = [];
+    
+    if (bouton.attr("id") == "bouton-admin-profil") {
+        var pk_monde = $('#mondes-top li[data-selected="1"]').attr("data-monde");
+        var monde = profil.mondes[pk_monde];
+        
+        Monde.pk = pk_monde;
+        Monde.label = monde.label;
+        Monde.champs = [];
+        
+        $.each(monde.champs, function(i, champ) {
+            var champ_designer = {
+                pk: i,
+                label: champ.label,
+                pluriel: champ.pluriel,
+                types: [],
+                categories: []
+            };
+            
+            $.each(champ.types, function(j, type) {
+                champ_designer.types.push({
+                    pk: j,
+                    label: type.label,
+                    detail: (type.detail == "1"),
+                    time: (type.time == "1"),
+                    niveau: type.niveau
+                });
+            });
+            
+            $.each(champ.categories, function(j, categorie) {
+                var categorie_designer = {
+                    pk: j,
+                    label: categorie.label,
+                    niveau: categorie.niveau,
+                    types: []
+                };
+                
+                $.each(categorie.types, function(k, type) {
+                    categorie_designer.types.push({
+                        pk: k,
+                        label: type.label,
+                        detail: (type.detail == "1"),
+                        time: (type.time == "1"),
+                        niveau: type.niveau
+                    });
+                });
+                champ_designer.categories.push(categorie_designer);
+            });
+            Monde.champs.push(champ_designer);
+            $(".action").hide();
+            $("#designer>h1>span").text("Edicion del mundo ");
+        });
+    } else {
+        $("#designer>h1>span").text("Creacion del mundo ");
+    }
+    
     Monde._refresh();
 };
 
-var toggle_champ = function() {
+var designer_toggle_champ = function() {
     var bouton = $(this);
     var li = bouton.closest("li");
     var ul;
@@ -274,7 +365,7 @@ var toggle_champ = function() {
     }
 };
 
-var toggle_type = function() {
+var designer_toggle_type = function() {
     var bouton = $(this);
     var label = $("#label-new-type");
     var detail = $("#detail-new-type");
@@ -357,12 +448,13 @@ var toggle_type = function() {
         
         label.val(type.label);
         detail.prop('checked', type.detail).change();
+        time.prop('checked', type.time).change();
         niveau.val(type.niveau);
         niveau.trigger("chosen:updated");
     }    
 };
 
-var toggle_categorie = function() {
+var designer_toggle_categorie = function() {
     var bouton = $(this);
     var label = $("#label-new-categorie");
     var niveau = $("#designer-categorie-niveau");
@@ -417,7 +509,7 @@ var toggle_categorie = function() {
     }
 };
 
-var save_champ = function() {
+var designer_save_champ = function() {
     var label = $("#label-new-champ");
     var pluriel = $("#pluriel-new-champ");
     var action = $("#action-champ");
@@ -463,7 +555,7 @@ var save_champ = function() {
     }
 };
 
-var save_type = function() {
+var designer_save_type = function() {
     var label = $("#label-new-type");
     var detail = $("#detail-new-type");
     var time = $("#time-new-type");
@@ -518,7 +610,7 @@ var save_type = function() {
     }
 };
 
-var save_categorie = function() {
+var designer_save_categorie = function() {
     var label = $("#label-new-categorie");
     var niveau = $("#designer-categorie-niveau");
     var action = $("#action-categorie");
@@ -656,4 +748,4 @@ var _remove_tree = function(element) {
             break;
     };
     Monde._refresh();
-};
+}

@@ -4,7 +4,7 @@ session_start();
 <!--LOCALISATION-->
 <div id="designer" class="admin">
     <div class="boutons" id="bouton-save-monde">Guardar</div>
-    <h1>Creacion del mundo <input type="text" id="nom-monde" placeholder="Nuevo mundo..."/></h1>
+    <h1><span>Creacion del mundo </span><input type="text" id="nom-monde" placeholder="Nuevo mundo..."/></h1>
     <div id="container-map">
         <h2>Perfil documental</h2>
         <ul id="liste-map">
@@ -47,8 +47,11 @@ session_start();
                     <option value=""></option>
                     <option value="0">Visitor</option>
                     <option value="10">Archivista</option>
-    <?php if ($_SESSION["niveau"] >= 30) { ?>
+    <?php if ($_SESSION["niveau"] >= 20) { ?>
                     <option value="20">Administrador</option>
+    <?php } ?>
+    <?php if ($_SESSION["niveau"] >= 30) { ?>
+                    <option value="30">Gerente</option>
     <?php } ?>
                 </select>
             </p>
@@ -71,8 +74,11 @@ session_start();
                     <option value=""></option>
                     <option value="0">Visitor</option>
                     <option value="10">Archivista</option>
-    <?php if ($_SESSION["niveau"] >= 30) { ?>
+    <?php if ($_SESSION["niveau"] >= 20) { ?>
                     <option value="20">Administrador</option>
+    <?php } ?>
+    <?php if ($_SESSION["niveau"] >= 30) { ?>
+                    <option value="30">Gerente</option>
     <?php } ?>
                 </select>
             </p>

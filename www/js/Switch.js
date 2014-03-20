@@ -39,27 +39,30 @@ var Switch = function(checkbox, _options) {
         display_switch();
     };
     
-    checkbox.hide().change(display_switch);
-    checkbox.after(
-        $("<div></div>")
-        .attr("title", options.tip)
-        .addClass(options.card_class)
-        .append(
-            $("<h1></h1>")
-            .html(options.title)
-        )
-        .append(
-            $("<p></p>")
-            .addClass(options.OK_class)
-            .html(options.OK_text)
-        )
-        .append(
-            $("<p></p>")
-            .addClass(options.KO_class)
-            .html(options.KO_text)
-        )
-        .click(toggle_switch)
-    );
     
-    display_switch();
+    if (checkbox.next("div").length == 0 || !checkbox.next("div").hasClass(options.card_class)) {
+        checkbox.hide().change(display_switch);
+        
+        checkbox.after(
+            $("<div></div>")
+            .attr("title", options.tip)
+            .addClass(options.card_class)
+            .append(
+                $("<h1></h1>")
+                .html(options.title)
+            )
+            .append(
+                $("<p></p>")
+                .addClass(options.OK_class)
+                .html(options.OK_text)
+            )
+            .append(
+                $("<p></p>")
+                .addClass(options.KO_class)
+                .html(options.KO_text)
+            )
+            .click(toggle_switch)
+        );
+        display_switch();
+    }    
 }

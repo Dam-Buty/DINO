@@ -5,8 +5,6 @@ var bootstrap_admin = function() {
     $("#menu-retour").unbind().click(toggle_admin);
     $("#menu-users").unbind().click(change_admin);
     $("#bouton-admin-liste").unbind().click(bootstrap_monde);
-    $("#bouton-admin-profil").unbind().click(bootstrap_profil);
-    $("#bouton-admin-designer").click(bootstrap_designer);
 };
 
 var change_admin = function() {

@@ -135,15 +135,14 @@ var bootstrap = function() {
                                 $("#core").append(monde);  
                             });
                             
-                            $.ajax({ url: "modules/admin/profil.php" })
-                            .done(function(profil) {
-                                $("#core").append(profil);  
-                            });
-                            
                             if (niveau >= 30) {
                                 $.ajax({ url: "modules/admin/designer.php" })
                                 .done(function(designer) {
-                                    $("#core").append(designer);  
+                                    $("#core").append(designer); 
+                                    $("#bouton-admin-designer").click(bootstrap_designer);
+                                    $("#bouton-admin-profil").click(bootstrap_designer);
+                                    $("#nom-monde").change(Monde._save_titre);
+
                                 });
                             }
                             
