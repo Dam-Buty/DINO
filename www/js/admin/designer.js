@@ -184,6 +184,9 @@ var Monde = {
             });
         });
         
+        // On efface le bouton supprimer du premier champ
+        $("#liste-map>li:first-child span.tag-delete").remove();
+        
         if (this.champs.length == 0) {
             $("#bouton-new-champ").click();
         }
@@ -857,7 +860,7 @@ var _count_documents = function(element) {
                 case "mois":
                     break;
                 default:
-                    docs += (is_on && (ligne.type == (criteres.type || ligne.type)));
+                    docs += (is_on && (ligne.type == (criteres.type || ligne.type))) * ligne.revision;
                     break;
             }
         });

@@ -8,7 +8,7 @@ function dino_query($query, $params = []) {
 
     $hostname = "localhost";
     $username = "root";
-    $dbname = "dino_baby";
+    $dbname = "dino";
     $password = "C4dillac5";
     
 #    echo $query;

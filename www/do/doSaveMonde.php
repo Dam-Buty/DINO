@@ -3,12 +3,12 @@ session_start();
 include("../includes/status.php");
 include("../includes/log.php");
 
-function total_query($params, $query) {
+function total_query($query, $params) {
     $result = dino_query($query, $params);
     
     if ($result["status"]) {
         write_log([
-            "libelle" => "INSERT type",
+            "libelle" => "TOTAL query",
             "admin" => 1,
             "query" => $query,
             "statut" => 0,
@@ -20,7 +20,7 @@ function total_query($params, $query) {
         return true;
     } else {
         write_log([
-            "libelle" => "INSERT type",
+            "libelle" => "TOTAL query",
             "admin" => 1,
             "query" => $query,
             "statut" => 1,
@@ -84,12 +84,13 @@ function delete_type($champ, $categorie, $pk) {
     ]);
     
     $query_del_doc_val = "
-        DELETE FROM `document_valeur_champ`
+        DELETE  `dvc` 
+        FROM  `document_valeur_champ` AS  `dvc` 
         WHERE
-            `fk_client` = :client1
-            AND `fk_monde` = :monde1
+            `dvc`.`fk_client` = :client1
+            AND `dvc`.`fk_monde` = :monde1
             AND (
-                SELECT COUNT(`fk_document`)
+                SELECT COUNT(`tdd`.`fk_document`)
                 FROM `type_doc_document` AS `tdd`
                 WHERE
                     `tdd`.`fk_client` = :client2
@@ -97,7 +98,7 @@ function delete_type($champ, $categorie, $pk) {
                     AND `tdd`.`fk_champ` = :champ
                     AND `tdd`.`fk_categorie_doc` = :categorie
                     AND `tdd`.`fk_type_doc` = :pk
-                    AND `tdd`.`fk_document` = `fk_document`
+                    AND `tdd`.`fk_document` = `dvc`.`fk_document`
             ) > 0
     ;";
     
@@ -129,10 +130,10 @@ function delete_type($champ, $categorie, $pk) {
     
 #    var_dump($params_null_docs);
 #    var_dump($query_null_docs);
-    if (total_query($params_null_docs, $query_null_docs)) {
-        if (total_query($params_del_doc_val, $query_del_doc_val)) {
-            if (total_query($params_del_doc_type, $query_del_doc_type)) {
-                if (total_query($params_del_type, $query_del_type)) {
+    if (total_query($query_null_docs, $params_null_docs)) {
+        if (total_query($query_del_doc_val, $params_del_doc_val)) {
+            if (total_query($query_del_doc_type, $params_del_doc_type)) {
+                if (total_query($query_del_type, $params_del_type)) {
                     return true;
                 } else {
                     return false;
@@ -195,7 +196,7 @@ function delete_categorie($champ, $pk) {
         }
         
         if (!$err) {
-            if (!total_query($params_null_docs, $query_null_docs)) {
+            if (!total_query($query_del_cat, $params_del_cat)) {
                 $err = true;
             }
         }
@@ -235,32 +236,55 @@ function delete_champ($pk) {
             `fk_client` = :client
             AND `fk_monde` = :monde
             AND `fk_champ` = :champ
-            AND `fk_categorie` = 0
+            AND `fk_categorie_doc` = 0
+    ;";
+    
+    // DELETE les valeurs de champ
+    $params_del_val = $params_base;
+    
+    $query_del_val = "
+        DELETE FROM `valeur_champ`
+        WHERE
+            `fk_client` = :client
+            AND `fk_monde` = :monde
+            AND `fk_champ` = :champ
+    ;";
+    
+    // DELETE le champ
+    $params_del_champ = $params_base;
+    
+    $query_del_champ = "
+        DELETE FROM `champ`
+        WHERE
+            `fk_client` = :client
+            AND `fk_monde` = :monde
+            AND `pk_champ` = :champ
     ;";
     
     $result_sel_cat = dino_query($query_sel_cat, $params_sel_cat);
     
     $err = false;
     
-    if ($result_sel_cat["status"]) {
+    // Suppression des types 
+    $result_sel_types = dino_query($query_sel_types, $params_sel_types);
+    
+    if ($result_sel_types["status"]) {
         
-        foreach($result_sel_cat["result"] as $row) {
-            if (!delete_categorie($champ, $row["pk_categorie_doc"])) {
+        foreach($result_sel_types["result"] as $row) {
+            if (!delete_type($pk, 0, $row["pk_type_doc"])) {
                 $err = true;
                 break;
             }
         }
     } else {
         $err = true;
-    }
+    }   
     
-    if (!err) {
-        $result_sel_types = dino_query($query_sel_types, $params_sel_types);
-        
-        if ($result_sel_types["status"]) {
-            
-            foreach($result_sel_types["result"] as $row) {
-                if (!delete_type($champ, 0, $row["pk_type_doc"])) {
+    // Suppression des catégories   
+    if (!$err) {
+        if ($result_sel_cat["status"]) {
+            foreach($result_sel_cat["result"] as $row) {
+                if (!delete_categorie($pk, $row["pk_categorie_doc"])) {
                     $err = true;
                     break;
                 }
@@ -268,9 +292,24 @@ function delete_champ($pk) {
         } else {
             $err = true;
         }
+    } else {
+        return false;
     }
     
-    return !err;
+    // Suppression des valeurs de champ et du champ
+    if (!$err) {
+        if (total_query($query_del_val, $params_del_val)) {
+            if (total_query($query_del_champ, $params_del_champ)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
 }
 
 if ($_SESSION["niveau"] >= 30) {
@@ -717,6 +756,18 @@ if ($_SESSION["niveau"] >= 30) {
                 "statut" => 0,
                 "message" => "",
                 "erreur" => "",
+                "document" => "",
+                "objet" => $_POST["pk"]
+            ]);
+        } else {
+            status(500);
+            write_log([
+                "libelle" => "SAVE Monde",
+                "admin" => 1,
+                "query" => $query,
+                "statut" => 1,
+                "message" => $result["errinfo"][2],
+                "erreur" => $result["errno"],
                 "document" => "",
                 "objet" => $_POST["pk"]
             ]);
