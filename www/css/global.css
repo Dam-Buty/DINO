@@ -1541,3 +1541,14 @@ ul.ui-autocomplete {
 .chapitre-tutos {
     text-align: left;
 }
+
+.with-tip {
+    font-style: italic;
+    cursor: pointer;
+    border-bottom: 1px dashed #EB5454;
+    background-color: #FFFFB3;
+}
+
+.with-tip:hover {
+    background-color: #FFEAB3;
+}

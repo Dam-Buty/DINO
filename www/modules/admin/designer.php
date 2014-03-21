@@ -3,7 +3,7 @@ session_start();
 ?>
 <!--LOCALISATION-->
 <div id="designer" class="admin">
-    <div class="boutons" id="bouton-save-monde">Guardar</div>
+    <div class="boutons" id="bouton-save-monde">Publicar el mundo</div>
     <h1><span>Creacion del mundo </span><input type="text" id="nom-monde" placeholder="Nuevo mundo..."/></h1>
     <div id="container-map">
         <h2>Perfil documental</h2>

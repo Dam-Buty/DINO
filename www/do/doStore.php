@@ -15,9 +15,7 @@ $champs = array_filter($_POST["champs"]);
 
 if ($_SESSION["niveau"] >= 10) {
     include("../includes/PDO.php");
-    
-    
-    
+        
     $query_document = "
         UPDATE `document` 
         SET 

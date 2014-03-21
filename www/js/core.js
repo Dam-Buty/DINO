@@ -113,6 +113,7 @@ var change_monde = function() {
     
     $("#profil").fadeOut();
     $("#mondes").fadeOut();
+    $("#designer").fadeOut();
     
     ul.find("li").attr("data-selected", "0");
     

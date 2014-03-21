@@ -21,6 +21,7 @@ var Monde = {
     pk: undefined,
     label: "",
     champs: [],
+    graveyard: [],
     
     _refresh: function() {
         var liste = $("#liste-map");
@@ -199,14 +200,15 @@ var Monde = {
             data: {
                 label: Monde.label,
                 pk: Monde.pk,
-                champs: Monde.champs
+                champs: Monde.champs,
+                graveyard: Monde.graveyard
             },
             statusCode: {
                 200: function() {
                     //window.location.replace("index.php");
                 },
                 403: function() {
-                    window.location.replace("index.php");
+                    //window.location.replace("index.php");
                 },
                 500: function() {
                     popup("Erreur!", "error");
@@ -324,6 +326,8 @@ var bootstrap_designer = function() {
         });
     } else {
         $("#designer>h1>span").text("Creacion del mundo ");
+        $("#bouton-save-type").hide();
+        $("#bouton-save-categorie").hide();
     }
     
     Monde._refresh();
@@ -336,6 +340,7 @@ var designer_toggle_champ = function() {
     var champ;
     
     $(".action").hide();
+    $(".designer-ghost").remove();
     
     $("#action-champ").fadeIn();
 
@@ -375,6 +380,7 @@ var designer_toggle_type = function() {
     var type, li, ul;
     
     $(".action").hide();
+    $(".designer-ghost").remove();
     
     if (bouton.hasClass("profil-toggle-type") || bouton.hasClass("option-help")) { // NOUVEAU DOCUMENT
         var champ, categorie;
@@ -425,6 +431,7 @@ var designer_toggle_type = function() {
         label.removeClass("KO").val("");
         niveau.removeClass("KO").val("").trigger("chosen:updated");
         detail.prop("checked", false).change();
+        $("#bouton-save-type").hide();
     } else { // EDIT DOCUMENT
         li = bouton.closest("li");
         
@@ -451,6 +458,7 @@ var designer_toggle_type = function() {
         time.prop('checked', type.time).change();
         niveau.val(type.niveau);
         niveau.trigger("chosen:updated");
+        $("#bouton-save-type").show();
     }    
 };
 
@@ -461,6 +469,7 @@ var designer_toggle_categorie = function() {
     var li;
         
     $(".action").hide();
+    $(".designer-ghost").remove();
     
     if (bouton.hasClass("profil-toggle-categorie") || bouton.hasClass("option-help")) { // NOUVELLE CATEGORIE
         var ul;
@@ -479,7 +488,6 @@ var designer_toggle_categorie = function() {
         .attr("data-id", "")
         ;
         
-        $(".designer-ghost").remove();
         ul.prepend(
             $("<li></li>")
             .addClass("designer-categorie")
@@ -491,7 +499,7 @@ var designer_toggle_categorie = function() {
         
         label.removeClass("KO").val("");
         niveau.removeClass("KO").val("").trigger("chosen:updated");
-        
+        $("#bouton-save-categorie").hide();
     } else { // EDIT CATEGORIE
         li = bouton.closest("li");
         $("#action-categorie")
@@ -506,6 +514,7 @@ var designer_toggle_categorie = function() {
         label.val(categorie.label);
         niveau.val(categorie.niveau);
         niveau.trigger("chosen:updated");
+        $("#bouton-save-categorie").show();
     }
 };
 
@@ -669,22 +678,22 @@ var toggle_save_categorie = function() {
 };
 
 var remove_tree = function() {
-    var bouton = $(this);
-    var li = bouton.closest("li");
+    var click = $(this);
+    var li = click.closest("li");
     var id = parseInt(li.attr("data-id"));
     var _element;
-    var message, bouton, element;
-    var champs = 0, types = 0, categories = 0;
+    var message = "", bouton = "", titre = "Supresion de ", element;
+    var champs = 0, types = 0, categories = 0, documents = 0, criteres, retour;
     var go = false;
     
-    var count_categories = function() {
-    
-    }
-    
     if (li.hasClass("designer-champ")) {
-        element = "este campo"; // LOCALISATION
+        element = "el campo <b>" + Monde.champs[id].label + "</b>"; // LOCALISATION
+        titre += Monde.champs[id].label;
         types = Monde.champs[id].types.length;
         categories = Monde.champs[id].categories.length;
+        $.each(Monde.champs[id].categories, function(i, categorie) {
+            types += categorie.types.length;
+        });
         $.each(Monde.champs, function(i, champ) {
             if (i > id) {
                 champs += 1;
@@ -698,52 +707,209 @@ var remove_tree = function() {
         _element = { type: "champ", id: id};
     } else {
         if (li.hasClass("designer-categorie")) {
-            element = "esta categoria"; // LOCALISATION
-            _element = { type: "categorie", id: id, champ: li.attr("data-champ")};
+            element = "la categoria <b>" + Monde.champs[li.attr("data-champ")].categories[id].label + "</b>"; // LOCALISATION
+            titre += Monde.champs[li.attr("data-champ")].categories[id]; 
+            _element = { type: "categorie", id: id, champ: parseInt(li.attr("data-champ"))};
+            
             types = Monde.champs[li.attr("data-champ")].categories[id].types.length;
         } else {
-            element = "este tipo de documento";
+            
+            if (li.attr("data-categorie") !== undefined && li.attr("data-categorie") !== "") {
+                element = "el documento <b>" + Monde.champs[li.attr("data-champ")].categories[li.attr("data-categorie")].types[id].label + "</b>"; // LOCALISATION
+                titre += Monde.champs[li.attr("data-champ")].categories[li.attr("data-categorie")].types[id].label;
+            } else {
+                element = "el documento <b>" + Monde.champs[li.attr("data-champ")].types[id].label + "</b>"; // LOCALISATION
+                titre += Monde.champs[li.attr("data-champ")].types[id].label;
+            }
             _element = { type: "type", id: id, champ: parseInt(li.attr("data-champ")), categorie: li.attr("data-categorie") };
         }
     }
     
-    if (champs != 0 || types != 0 || categories != 0) {
-        message = "Ojo! Si borras " + element + ", tambien se borraran :<ul>";
+    retour = _count_documents(_element);
+    documents = retour.num_docs;
+    criteres = retour.criteres;
+    
+    if (champs != 0 || types != 0 || categories != 0 || documents > 0) {
+        message = "Ojo! Si borras " + element + " :<ul>";
+        bouton = " (<i>";
+        if (documents > 0) {
+            message += "<li><b>" + documents + "</b> documentos relacionados seran <b class='with-tip' title='Los documentos declasificados NO son borrados del sistema. Los encontraras en tu fila de espera para volver a clasificarlos.'>declasificados.</b></li>";
+            bouton += "Declasificar";
+        }
         
-        if (champs != 0) {
-            message += "<li><b>" + champs + "</b> campos</li>";
-        }
-        if (types != 0) {
-            message += "<li><b>" + types + "</b> tipos de documentos</li>";
-        }
-        if (categories != 0) {
-            message += "<li><b>" + categories + "</b> categorias</li>";
+        if (champs != 0 || types != 0 || categories != 0) {
+            message += "<li><b>" + (champs + types + categories) + "</b> elementos relacionados seran <b>borrados</b>:</li><ul>";
+            
+            if (champs != 0) {
+                message += "<li><b>" + champs + "</b> campos</li>";
+            }
+            if (types != 0) {
+                message += "<li><b>" + types + "</b> tipos de documentos</li>";
+            }
+            if (categories != 0) {
+                message += "<li><b>" + categories + "</b> categorias</li>";
+            }
+            
+            message += "</ul>";
+            if (bouton != " (<i>") {
+                bouton += " y ";
+            }
+            bouton += "Borrar"
         }
         
         message += "</ul>";
-        var callback = function() {
-            _remove_tree(_element);
-        };
-        
-        popup_confirmation(message, "Nueva revision de documento", "Confirmar (<i>Borrar todos</i>)", callback);
+        bouton += " </i>)";
     } else {
-        _remove_tree(_element);
+        message += "Gracias por confirmar la supresion.";
     }
+    
+    var callback = function() {
+        _remove_tree(_element, criteres);
+    };
+    
+    popup_confirmation(message, titre, "Confirmar" + bouton, callback);
 };
 
-var _remove_tree = function(element) {
+var _count_documents = function(element) {
+    var no_doc = false, break_on_child, pk;
+    var type;
+    var criteres = {};
+    var is_on = false, docs = 0;
+    
+    // Si l'élément n'a pas de pk, alors il ne peut pas avoir de documents
+    // Sinon selon son type :
+    // - champ : tous les docs situés après ce champ dans la Liste sont supprimables.
+    //           le break se fait sur les champs parents
+    // - categorie : tous les docs situés après cette catégorie dans la Liste sont supprimables.
+    //               le break se fait sur le prochain champ(fils ou parent) ou catégorie
+    // - type de doc : seulement les docs qui ont ce type sont concernés
+    //                 le break se fait sur le prochain champ(fils ou parent) ou catégorie
+    
+    switch(element.type) {
+        case "champ":
+            if (Monde.champs[element.id].pk === undefined) {
+                no_doc = true;
+            } else {
+                break_on_child = false;
+                criteres["champ"] = Monde.champs[element.id].pk;
+            }
+            break;
+        case "categorie":
+            if (Monde.champs[element.champ].categories[element.id].pk === undefined) {
+                no_doc = true;
+            } else {
+                break_on_child = true;
+                criteres["champ"] = Monde.champs[element.champ].pk;
+                criteres["categorie"] = Monde.champs[element.champ].categories[element.id].pk;
+            }
+            break;
+        case "type":
+            if (element.categorie !== undefined && element.categorie !== "") {
+                type = Monde.champs[element.champ].categories[element.categorie].types[element.id];
+            } else {
+                type = Monde.champs[element.champ].types[element.id];
+            }
+            
+            if (type.pk === undefined) {
+                no_doc = true;
+            } else {
+                break_on_child = true;
+                criteres["champ"] = Monde.champs[element.champ].pk;
+                
+                if (element.categorie !== undefined && element.categorie !== "") {
+                    criteres["categorie"] = Monde.champs[element.champ].categories[element.categorie].pk;
+                }
+                criteres["type"] = type.pk;
+            }
+            break;
+    };
+    
+    if (!no_doc) {
+        $.each(Core.liste, function(i, ligne) {
+            switch(ligne.type) {
+                case "champ":
+                    if (profil.mondes[Core.monde].cascade[ligne.niveau] == criteres.champ) {
+                        if (criteres.categorie === undefined) {
+                            is_on = true;
+                        } else {
+                            is_on = false;  
+                        }
+                    } else {
+                        if (parseInt(profil.mondes[Core.monde].cascade[ligne.niveau]) < parseInt(criteres.champ)) {
+                            is_on = false;
+                        } else {
+                            is_on = !break_on_child;
+                        }
+                    }
+                    break;
+                case "categorie":                    
+                    if (criteres.categorie === undefined) {
+                        is_on = (is_on && !break_on_child);
+                    } else {
+                        if (ligne.pk != criteres.categorie) {
+                            is_on = (is_on && !break_on_child);
+                        } else {
+                            is_on = true;
+                        }
+                    }
+                    break;
+                case "an":
+                case "mois":
+                    break;
+                default:
+                    docs += (is_on && (ligne.type == (criteres.type || ligne.type)));
+                    break;
+            }
+        });
+    }
+    
+    return {
+        num_docs: docs,
+        criteres: criteres
+    };
+}
+
+var _remove_tree = function(element, criteres) {
     switch(element.type) {
         case "champ":
             Monde.champs.splice(element.id);
+            if (criteres.champ !== undefined) {
+                Monde.graveyard.push({
+                    type: "champ",
+                    pk: criteres.champ
+                })
+            }
             break;
         case "categorie":
             Monde.champs[element.champ].categories.splice(element.id, 1);
+            if (criteres.categorie !== undefined) {
+                Monde.graveyard.push({
+                    type: "categorie",
+                    champ: criteres.champ,
+                    pk: criteres.categorie
+                })
+            }
             break;
         case "type":
             if (element.categorie !== undefined && element.categorie !== "") {
                 Monde.champs[element.champ].categories[element.categorie].types.splice(element.id, 1);
+                if (criteres.type !== undefined) {
+                    Monde.graveyard.push({
+                        type: "type",
+                        champ: criteres.champ,
+                        categorie: criteres.categorie,
+                        pk: criteres.type
+                    })
+                }
             } else {
                 Monde.champs[element.champ].types.splice(element.id, 1);
+                if (criteres.type !== undefined) {
+                    Monde.graveyard.push({
+                        type: "type",
+                        champ: criteres.champ,
+                        pk: criteres.type
+                    })
+                }
             }
             break;
     };
