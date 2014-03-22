@@ -213,10 +213,12 @@ var Monde = {
                 statusCode: {
                     200: function() {
                         $("#bouton-save-monde").fadeOut();
-                        _profil(function() { });
+                        if (Monde.pk === undefined) {
+                            window.location.replace("index.php");
+                        }
                     },
                     403: function() {
-                        //window.location.replace("index.php");
+                        window.location.replace("index.php");
                     },
                     500: function() {
                         popup("Erreur!", "error");
@@ -309,6 +311,7 @@ var bootstrap_designer = function() {
     Monde.pk = undefined;
     Monde.label = "";
     Monde.champs = [];
+    Monde.graveyard = [];
     
     if (bouton.attr("id") == "bouton-admin-profil") {
         var pk_monde = $('#mondes-top li[data-selected="1"]').attr("data-monde");
