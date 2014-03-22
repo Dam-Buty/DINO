@@ -515,7 +515,7 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
     margin-left: 20px;
     margin-right: 20px;
     
-    height: 95%;
+    height: 90%;
 }
 
 #designer h1 {
@@ -671,6 +671,18 @@ div.option-ko:hover {
     box-shadow: 0 0 1px 1px #A9A9A9;
     overflow-y: scroll;
     padding: 3px;
+}
+
+.designer-add-champ {
+    position: absolute;
+    right: 4px;
+    top: 9px;
+    background-image: url(../img/add_champ_20.png);
+    background-repeat: no-repeat;
+    background-position: right center;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
 }
 
 #liste-map {

@@ -341,7 +341,7 @@ if ($_SESSION["niveau"] >= 30) {
         $params["pk"] = $_POST["pk"];
     }
       
-    $result = dino_query($query,$params);  
+    $result = dino_query($query,$params);
     
     if ($result["status"]) {
         $err = false;
@@ -533,88 +533,90 @@ if ($_SESSION["niveau"] >= 30) {
                                 $pk_categorie = $categorie["pk"];
                             }
                             
-                            foreach($categorie["types"] as $k => $type) {
-                                if ($type["detail"] == "true") {
-                                    $type_detail = 1;
-                                } else {
-                                    $type_detail = 0;
-                                }
-                                
-                                if ($type["time"] == "true") {
-                                    $type_time = 1;
-                                } else {
-                                    $type_time = 0;
-                                }
-                                
-                                $params_type = [
-                                    "client" => $_SESSION["client"],
-                                    "monde" => $pk_monde,
-                                    "champ" => $pk_champ,
-                                    "categorie" => $pk_categorie,
-                                    "label" => $type["label"],
-                                    "detail" => $type_detail,
-                                    "time" => $type_time,
-                                    "niveau" => $type["niveau"]
-                                ];
-                                
-                                if (!isset($type["pk"])) {
-                                    $query_type = "
-                                        INSERT INTO `type_doc` (
-                                            `label_type_doc`,
-                                            `detail_type_doc`,
-                                            `niveau_type_doc`,
-                                            `time_type_doc`,
-                                            `fk_categorie_doc`,
-                                            `fk_champ`,
-                                            `fk_monde`,
-                                            `fk_client`
-                                        ) VALUES (
-                                            :label,
-                                            :detail,
-                                            :niveau,
-                                            :time,
-                                            :categorie,
-                                            :champ,
-                                            :monde,
-                                            :client
-                                        )
-                                    ;";
-                                } else {
-                                    $query_type = "
-                                        UPDATE `type_doc`
-                                        SET
-                                            `label_type_doc` = :label,
-                                            `detail_type_doc` = :detail,
-                                            `niveau_type_doc` = :niveau,
-                                            `time_type_doc` = :time
-                                        WHERE
-                                            `fk_client` = :client
-                                            AND `fk_monde` = :monde
-                                            AND `fk_champ` = :champ
-                                            AND `fk_categorie_doc` = :categorie
-                                            AND `pk_type_doc` = :pk
-                                    ";
-                                    $params_type["pk"] = $type["pk"];
-                                }
-                                
-                                $result_type = dino_query($query_type,$params_type);
-                
-                                if (!$result_type["status"]) {
-                                    write_log([
-                                        "libelle" => "INSERT Type dans catégorie",
-                                        "admin" => 1,
-                                        "query" => $query_type,
-                                        "statut" => 1,
-                                        "message" => $result_type["errinfo"][2],
-                                        "erreur" => $result_type["errno"],
-                                        "document" => "",
-                                        "objet" => $_POST["pk"]
-                                    ]);
-                                    $err = true;
-                                    break;
-                                }
-                            } // FIN WHILE TYPES
+                            if (isset($categorie["types"])) {
                             
+                                foreach($categorie["types"] as $k => $type) {
+                                    if ($type["detail"] == "true") {
+                                        $type_detail = 1;
+                                    } else {
+                                        $type_detail = 0;
+                                    }
+                                    
+                                    if ($type["time"] == "true") {
+                                        $type_time = 1;
+                                    } else {
+                                        $type_time = 0;
+                                    }
+                                    
+                                    $params_type = [
+                                        "client" => $_SESSION["client"],
+                                        "monde" => $pk_monde,
+                                        "champ" => $pk_champ,
+                                        "categorie" => $pk_categorie,
+                                        "label" => $type["label"],
+                                        "detail" => $type_detail,
+                                        "time" => $type_time,
+                                        "niveau" => $type["niveau"]
+                                    ];
+                                    
+                                    if (!isset($type["pk"])) {
+                                        $query_type = "
+                                            INSERT INTO `type_doc` (
+                                                `label_type_doc`,
+                                                `detail_type_doc`,
+                                                `niveau_type_doc`,
+                                                `time_type_doc`,
+                                                `fk_categorie_doc`,
+                                                `fk_champ`,
+                                                `fk_monde`,
+                                                `fk_client`
+                                            ) VALUES (
+                                                :label,
+                                                :detail,
+                                                :niveau,
+                                                :time,
+                                                :categorie,
+                                                :champ,
+                                                :monde,
+                                                :client
+                                            )
+                                        ;";
+                                    } else {
+                                        $query_type = "
+                                            UPDATE `type_doc`
+                                            SET
+                                                `label_type_doc` = :label,
+                                                `detail_type_doc` = :detail,
+                                                `niveau_type_doc` = :niveau,
+                                                `time_type_doc` = :time
+                                            WHERE
+                                                `fk_client` = :client
+                                                AND `fk_monde` = :monde
+                                                AND `fk_champ` = :champ
+                                                AND `fk_categorie_doc` = :categorie
+                                                AND `pk_type_doc` = :pk
+                                        ";
+                                        $params_type["pk"] = $type["pk"];
+                                    }
+                                    
+                                    $result_type = dino_query($query_type,$params_type);
+                    
+                                    if (!$result_type["status"]) {
+                                        write_log([
+                                            "libelle" => "INSERT Type dans catégorie",
+                                            "admin" => 1,
+                                            "query" => $query_type,
+                                            "statut" => 1,
+                                            "message" => $result_type["errinfo"][2],
+                                            "erreur" => $result_type["errno"],
+                                            "document" => "",
+                                            "objet" => $_POST["pk"]
+                                        ]);
+                                        $err = true;
+                                        break;
+                                    }
+                                } // FIN WHILE TYPES
+                            }
                         } else {
                             write_log([
                                 "libelle" => "INSERT Categorie",
@@ -723,27 +725,29 @@ if ($_SESSION["niveau"] >= 30) {
             }
         }
         
-        foreach($_POST["graveyard"] as $i => $element) {
-            switch($element["type"]) {
-                case "champ":
-                    $err = !delete_champ($element["pk"]);
+        if (isset($_POST["graveyard"])) {
+            foreach($_POST["graveyard"] as $i => $element) {
+                switch($element["type"]) {
+                    case "champ":
+                        $err = !delete_champ($element["pk"]);
+                        break;
+                    case "categorie":
+                        $err = !delete_categorie($element["champ"], $element["pk"]);
+                        break;
+                    case "type":
+                        if (isset($element["categorie"])) {
+                            $categorie = $element["categorie"];
+                        } else {
+                            $categorie = 0;
+                        }
+                        
+                        $err = !delete_type($element["champ"], $categorie, $element["pk"]);
+                        break;
+                }
+                
+                if ($err) {
                     break;
-                case "categorie":
-                    $err = !delete_categorie($element["champ"], $element["pk"]);
-                    break;
-                case "type":
-                    if (isset($element["categorie"])) {
-                        $categorie = $element["categorie"];
-                    } else {
-                        $categorie = 0;
-                    }
-                    
-                    $err = !delete_type($element["champ"], $categorie, $element["pk"]);
-                    break;
-            }
-            
-            if ($err) {
-                break;
+                }
             }
         }
         

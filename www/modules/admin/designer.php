@@ -3,13 +3,12 @@ session_start();
 ?>
 <!--LOCALISATION-->
 <div id="designer" class="admin">
-    <div class="boutons" id="bouton-save-monde">Publicar el mundo</div>
+    <div class="boutons" id="bouton-save-monde">Publicar</div>
     <h1><span>Creacion del mundo </span><input type="text" id="nom-monde" placeholder="Nuevo mundo..."/></h1>
     <div id="container-map">
-        <h2>Perfil documental</h2>
+        <h2>Perfil documental<span class="designer-add-champ"></span></h2>
         <ul id="liste-map">
         </ul>
-        <div class="boutons bouton-designer" id="bouton-new-champ">Agregar un campo</div>
     </div>
     <div id="container-action">
         <div class="action" id="action-champ">

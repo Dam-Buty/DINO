@@ -188,7 +188,7 @@ var Monde = {
         $("#liste-map>li:first-child span.tag-delete").remove();
         
         if (this.champs.length == 0) {
-            $("#bouton-new-champ").click();
+            $(".designer-add-champ").click();
         }
     },
     
@@ -197,27 +197,48 @@ var Monde = {
     },
     
     _save: function() {
-        $.ajax({
-            url: "do/doSaveMonde.php",
-            type: "POST",
-            data: {
-                label: Monde.label,
-                pk: Monde.pk,
-                champs: Monde.champs,
-                graveyard: Monde.graveyard
-            },
-            statusCode: {
-                200: function() {
-                    //window.location.replace("index.php");
+        var documents = 0;
+        var titre = "", message = "", bouton = "";
+        
+        var ajax_save = function() {
+            $.ajax({
+                url: "do/doSaveMonde.php",
+                type: "POST",
+                data: {
+                    label: Monde.label,
+                    pk: Monde.pk,
+                    champs: Monde.champs,
+                    graveyard: Monde.graveyard
                 },
-                403: function() {
-                    //window.location.replace("index.php");
-                },
-                500: function() {
-                    popup("Erreur!", "error");
+                statusCode: {
+                    200: function() {
+                        $("#bouton-save-monde").fadeOut();
+                        _profil(function() { });
+                    },
+                    403: function() {
+                        //window.location.replace("index.php");
+                    },
+                    500: function() {
+                        popup("Erreur!", "error");
+                    }
                 }
-            }
+            });
+        };
+        
+        $.each(Monde.graveyard, function(i, element) {
+            documents += element.bilan.documents || 0;
         });
+        
+        titre = "Modificacion del mundo <b>" + Monde.label + "</b>";
+        message = "Gracias por confirmar la modificacion del mundo <b>" + Monde.label + "</b> :";
+        
+        if (documents > 0) {
+            bouton = " (<i>Declasificar</i>)";
+
+            message += "<pre><b>" + documents + "</b> documentos relacionados seran <b class='with-tip' title='Los documentos declasificados NO son borrados del sistema. Los encontraras en tu fila de espera para volver a clasificarlos.'>declasificados.</b></pre>";
+        }
+        
+        popup_confirmation(message, titre, "Confirmar" + bouton, ajax_save);
     }
 };
 
@@ -230,7 +251,6 @@ var bootstrap_designer = function() {
     $("#action-champ").show();
     
     $("#bouton-save-monde").unbind().click(Monde._save);
-    $("#bouton-new-champ").unbind().click(designer_toggle_champ);
     $("#bouton-save-champ").unbind().click(designer_save_champ);
     $("#bouton-save-type").unbind().click(designer_save_type);
     $("#bouton-save-categorie").unbind().click(designer_save_categorie);
@@ -238,12 +258,25 @@ var bootstrap_designer = function() {
     $("#add-doc-to-cat").unbind().click(designer_toggle_type);
     $("#add-cat-to-champ").unbind().click(designer_toggle_categorie);
     $("#add-cat-to-champ2").unbind().click(designer_toggle_categorie);
+    $("#nom-monde").unbind().keyup(function() {
+        if ($(this).val() != "") {
+            Monde.label = $(this).val();
+            $(this).removeClass("KO");
+        } else {
+            $(this).removeClass("OK").addClass("KO");
+        }
+        check_bouton_save();
+    })
+    
+    $(".designer-add-champ").unbind().click(designer_toggle_champ);
     
     // ATTENTION
     // Si on unbinde après les chosen, on unbinde
     // TOUS les évènements Chosen! (updated, ...)
     $("#designer-type-niveau").unbind().change(toggle_save_type);
     $("#designer-categorie-niveau").unbind().change(toggle_save_categorie);
+    
+    $("#bouton-save-monde").hide();
     
     $("#designer-type-niveau").chosen({
         width: $("#new-login").outerWidth(),
@@ -347,7 +380,7 @@ var designer_toggle_champ = function() {
     
     $("#action-champ").fadeIn();
 
-    if (bouton.attr("id") == "bouton-new-champ") {
+    if (bouton.hasClass("designer-add-champ")) {
         if (Monde.champs.length == 0) {
             ul = $("#liste-map");
         } else {
@@ -562,6 +595,7 @@ var designer_save_champ = function() {
             $("#action-champ").hide();
             $("#action-post-champ").show();
             $("#bouton-save-categorie").hide();
+            check_bouton_save();
             Monde._refresh();
         }
     }
@@ -617,6 +651,7 @@ var designer_save_type = function() {
             $("#action-type").hide();
             $("#action-post-" + post).show();
             $("#bouton-save-type").hide();
+            check_bouton_save();
             Monde._refresh();
         }
     }
@@ -662,7 +697,7 @@ var designer_save_categorie = function() {
             $(".option-help").attr("data-categorie", id);
             $("#action-categorie").hide();
             $("#action-post-categorie").show();
-            
+            check_bouton_save();
             Monde._refresh();
         }
     }
@@ -766,8 +801,15 @@ var remove_tree = function() {
         message += "Gracias por confirmar la supresion.";
     }
     
+    var bilan = {
+        documents: documents,
+        champs: champs,
+        categories: categories,
+        types: types
+    };
+    
     var callback = function() {
-        _remove_tree(_element, criteres);
+        _remove_tree(_element, criteres, bilan);
     };
     
     popup_confirmation(message, titre, "Confirmar" + bouton, callback);
@@ -788,6 +830,7 @@ var _count_documents = function(element) {
     // - type de doc : seulement les docs qui ont ce type sont concernés
     //                 le break se fait sur le prochain champ(fils ou parent) ou catégorie
     
+    // Selon l'élément on détermine les critères
     switch(element.type) {
         case "champ":
             if (Monde.champs[element.id].pk === undefined) {
@@ -827,6 +870,7 @@ var _count_documents = function(element) {
             break;
     };
     
+    // Et on boucle sur la Core.liste pour compter les docs
     if (!no_doc) {
         $.each(Core.liste, function(i, ligne) {
             switch(ligne.type) {
@@ -872,15 +916,17 @@ var _count_documents = function(element) {
     };
 }
 
-var _remove_tree = function(element, criteres) {
+var _remove_tree = function(element, criteres, bilan) {
     switch(element.type) {
         case "champ":
             Monde.champs.splice(element.id);
             if (criteres.champ !== undefined) {
                 Monde.graveyard.push({
                     type: "champ",
-                    pk: criteres.champ
-                })
+                    pk: criteres.champ,
+                    bilan: bilan
+                });
+                check_bouton_save();
             }
             break;
         case "categorie":
@@ -889,8 +935,10 @@ var _remove_tree = function(element, criteres) {
                 Monde.graveyard.push({
                     type: "categorie",
                     champ: criteres.champ,
-                    pk: criteres.categorie
-                })
+                    pk: criteres.categorie,
+                    bilan: bilan
+                });
+                check_bouton_save();
             }
             break;
         case "type":
@@ -901,8 +949,10 @@ var _remove_tree = function(element, criteres) {
                         type: "type",
                         champ: criteres.champ,
                         categorie: criteres.categorie,
-                        pk: criteres.type
-                    })
+                        pk: criteres.type,
+                        bilan: bilan
+                    });
+                    check_bouton_save();
                 }
             } else {
                 Monde.champs[element.champ].types.splice(element.id, 1);
@@ -910,11 +960,21 @@ var _remove_tree = function(element, criteres) {
                     Monde.graveyard.push({
                         type: "type",
                         champ: criteres.champ,
-                        pk: criteres.type
-                    })
+                        pk: criteres.type,
+                        bilan: bilan
+                    });
+                    check_bouton_save();
                 }
             }
             break;
     };
     Monde._refresh();
 }
+
+var check_bouton_save = function() {
+    if ($("#nom-monde").val() != "" && Monde.champs.length > 0) {
+        $("#bouton-save-monde").fadeIn();
+    } else {
+        $("#bouton-save-monde").fadeOut();
+    }
+};
