@@ -50,7 +50,7 @@ if (isset($_SESSION)) {
     if ($_SESSION["niveau"] >= 10) {
         ?>
             <li id="menu-queue" class="element-menu-front">
-                <h1>CARGAR DOCUMENTOS</h1>
+                <h1>CARGAR</h1>
             </li>
         <?php
     }
@@ -59,7 +59,16 @@ if (isset($_SESSION)) {
     if ($_SESSION["niveau"] >= 20) {
         ?>
             <li id="menu-admin" class="element-menu-front">
-                <h1>ADMIN</h1>
+                <h1>USUARIOS</h1>
+            </li>
+        <?php
+    }
+    ?>
+    <?php
+    if ($_SESSION["niveau"] >= 30) {
+        ?>
+            <li id="menu-designer" class="element-menu-front">
+                <h1>NUEVO MUNDO</h1>
             </li>
         <?php
     }
@@ -69,13 +78,7 @@ if (isset($_SESSION)) {
 
     <div id="top-front" class="barre-top">
         <select class="busquedor" type="text" id="search" multiple="multiple" data-placeholder="Buscar en este mundo..." data-state="closed"></select>
-        <div id="toggle-date"></div><?php
-    if ($_SESSION["niveau"] > 20) {
-        ?>
-        <div id="bouton-admin-designer"></div>
-        <?php
-    }
-    ?>
+        <div id="toggle-date"></div>
         <ul class="list-mondes" id="mondes-top"></ul>
         <div id="container-dates">
             <div id="slider-date"></div>
@@ -117,7 +120,7 @@ if ($_SESSION["niveau"] >= 20) {
 </div>
 
 <div class="barre-bottom">
-    <div id="container-notification"></div>
+    <div id="container-notification">DINO esta en fase Beta, si encuentras algun bug o tienes cualquiera pregunta, nos puedes contactar <a href="mailto:beta@dino.mx">aqui</a></div>
     <img id="logout" src="img/logout_20.png">
     <img id="bouton-pass" src="img/pass_20.png">
     <img id="bouton-mail" src="img/mail_20.png">

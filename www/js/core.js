@@ -114,6 +114,7 @@ var change_monde = function() {
     $("#profil").fadeOut();
     $("#mondes").fadeOut();
     $("#designer").fadeOut();
+    $("#menu-queue").removeClass("inactive");
     
     ul.find("li").attr("data-selected", "0");
     

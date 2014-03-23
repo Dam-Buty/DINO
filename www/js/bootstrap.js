@@ -139,8 +139,14 @@ var bootstrap = function() {
                                 $.ajax({ url: "modules/admin/designer.php" })
                                 .done(function(designer) {
                                     $("#core").append(designer); 
-                                    $("#bouton-admin-designer").click(bootstrap_designer);
-                                    $("#bouton-admin-profil").click(bootstrap_designer);
+                                    $("#menu-designer").click(function() {
+                                        check_queue();
+                                        bootstrap_designer();
+                                    });
+                                    $("#bouton-admin-profil").click(function() {
+                                        check_queue();
+                                        bootstrap_designer();
+                                    });
                                     $("#nom-monde").change(Monde._save_titre);
 
                                 });
@@ -218,3 +224,11 @@ $( document ).keyup(function(e) {
         $("#opak-tuto").click();
     }
 });
+
+var check_queue = function() {
+    if ($("#container-queue").attr("data-state") == "open") {
+        $("#menu-queue").click();
+    }
+    
+    $("#menu-queue").addClass("inactive");
+};

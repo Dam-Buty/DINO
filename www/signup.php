@@ -18,9 +18,9 @@
 
 <div id="container-signup">
     <div id="container-tips">
-        <h1>Bienvenido en la comunidad DINO !</h1>
+        <h1>Bienvenido en la comunidad DINO!</h1>
         <p>En un momento estaras utilizando tu primer <b>archivero digital</b>!</p>
-        <p>Te invitamos primero a ingresar tus <b>datos basicos</b>.</p>
+        <p>Te invitamos primero a <b>ingresar tus datos</b>.</p>
     </div>
     <div id="container-champs">
         <div id="page-1">
@@ -36,9 +36,9 @@
             <div class="champ-signup">
                 <input type="password" name="pass2" id="pass2" placeholder="Confirmar contrasena"/>
             </div>
-            <input type="submit" class="submit-signup" id="submit-page-1" value="Continuar"/>
+            <input type="submit" class="submit-signup" id="submit-page-1" value="Empieza con DINO !"/>
         </div>
-        <div id="page-2">
+        <!-- <div id="page-2">
             <div class="champ-signup">
                 <input type="text" name="entreprise" id="entreprise" placeholder="Nombre de tu empresa"/>
             </div>
@@ -46,7 +46,7 @@
                 <input type="text" name="secteur" id="secteur" placeholder="El sector de tu empresa"/>
             </div>
             <input type="submit" class="submit-signup" id="submit-page-2" value="Elegir un plan"/>
-        </div>
+        </div> -->
     </div>
     <!-- <div id="container-plan">
         <h1>Elige tu plan de tarifa</h1>

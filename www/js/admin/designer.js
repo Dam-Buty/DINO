@@ -231,8 +231,13 @@ var Monde = {
             documents += element.bilan.documents || 0;
         });
         
-        titre = "Modificacion del mundo <b>" + Monde.label + "</b>";
-        message = "Gracias por confirmar la modificacion del mundo <b>" + Monde.label + "</b> :";
+        if (Monde.pk === undefined) {
+            titre = "Creacion del mundo <b>" + Monde.label + "</b>";
+            message = "Gracias por confirmar la creacion del mundo <b>" + Monde.label + "</b>";
+        } else {
+            titre = "Modificacion del mundo <b>" + Monde.label + "</b>";
+            message = "Gracias por confirmar la modificacion del mundo <b>" + Monde.label + "</b>";
+        }
         
         if (documents > 0) {
             bouton = " (<i>Declasificar</i>)";
@@ -246,6 +251,9 @@ var Monde = {
 
 var bootstrap_designer = function() {
     var bouton = $(this);
+    
+    Tuto.flag(0);
+    
     $("#liste").slideUp();   
     $(".admin").slideUp();
     $("#designer").fadeIn();
@@ -407,6 +415,8 @@ var designer_toggle_champ = function() {
         $("#pluriel-new-champ").val(champ.pluriel);
         $("#action-champ>h2").html("Campo <b>" + champ.label + "</b>"); // LOCALISATION
     }
+    
+    $("#label-new-champ").focus();
 };
 
 var designer_toggle_type = function() {
@@ -471,6 +481,7 @@ var designer_toggle_type = function() {
         niveau.removeClass("KO").val("").trigger("chosen:updated");
         detail.prop("checked", false).change();
         $("#bouton-save-type").hide();
+        Tuto.flag(2);
     } else { // EDIT DOCUMENT
         li = bouton.closest("li");
         
@@ -499,6 +510,8 @@ var designer_toggle_type = function() {
         niveau.trigger("chosen:updated");
         $("#bouton-save-type").show();
     }    
+    
+    $("#label-new-type").focus();
 };
 
 var designer_toggle_categorie = function() {
@@ -555,6 +568,8 @@ var designer_toggle_categorie = function() {
         niveau.trigger("chosen:updated");
         $("#bouton-save-categorie").show();
     }
+    
+    $("#label-new-categorie").focus();
 };
 
 var designer_save_champ = function() {
@@ -583,6 +598,7 @@ var designer_save_champ = function() {
                     categories: []
                 }));
                 id = Monde.champs.length - 1;
+                Tuto.flag(1);
             } else {
                 id = action.attr("data-id");
                 Monde.champs[id] = $.extend(true, Monde.champs[id], champ);
@@ -615,6 +631,7 @@ var designer_save_type = function() {
     
     if (label.val() == "") {
         label.addClass("KO");
+        label.focus();
     } else {
         if (niveau.val() == "") {
             niveau.next("div").addClass("KO");
@@ -655,6 +672,7 @@ var designer_save_type = function() {
             $("#action-post-" + post).show();
             $("#bouton-save-type").hide();
             check_bouton_save();
+            Tuto.flag(3);
             Monde._refresh();
         }
     }

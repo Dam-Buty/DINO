@@ -552,6 +552,8 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
     margin-left: 43%;
     
     box-shadow: 0 0 1px 1px #A9A9A9;
+    
+    background-color: #E7E9F0;
 }
 
 #container-action input {
@@ -671,6 +673,8 @@ div.option-ko:hover {
     box-shadow: 0 0 1px 1px #A9A9A9;
     overflow-y: scroll;
     padding: 3px;
+    
+    background-color: #E7E9F0;
 }
 
 .designer-add-champ {

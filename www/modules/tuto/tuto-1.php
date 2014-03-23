@@ -78,3 +78,9 @@
     <p>Un exemplo seria el mundo <b>Ventas</b>, donde vas a organizar tus documentos por <b>Cliente</b> y por <b>Proyecto</b>.</p>
     <p>Da click en "Nuevo Mundo" para empezar a crear tu primer mundo.</p>
 </div>
+<div class="etape" id="etape-1-13">
+    <h1>Tu primer mundo <b>DINO</b></h1>
+    <p>Para empezar a utilizar <b>DINO</b>, necesitas a lo minimo <b>un mundo documental</b>. Los <b>mundos documentales</b> te permiten agrupar juntos los documentos que concernan cada ramo de tu empresa.</p>
+    <p>Un exemplo seria el mundo <b>Ventas</b>, donde vas a organizar tus documentos por <b>Cliente</b> y por <b>Proyecto</b>.</p>
+    <p>Da click en "Nuevo Mundo" para empezar a crear tu primer mundo.</p>
+</div>

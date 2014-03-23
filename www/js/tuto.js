@@ -394,20 +394,161 @@ var Scenarios = [ { ////////////////////// SCENARIO 999
             $("#new-monde").tooltipster("destroy");
         }
     }]
-}, { ////////////////////// SCENARIO 999
-    id: 999,
-    titre: "Template",
+}, { ////////////////////// SCENARIO 2
+    id: 2,
+    titre: "Arrivée du gérant",
     description: "Es un muy bueno tutorial!",
     stages: [{////////////////////// 0
         id: 0,
-        raises_flag: false,
+        stage_css: {
+            width: "50%",
+            left: "25%",
+        },
+        raises_flag: true,
         animations: [{
+            type: "highlight",
+            selector: "#menu-designer",
+            force: true
+        }, {
+            type: "tooltip",
+            selector: "#menu-designer",
+            options: {
+                content: 'Da click aqui!',
+                autoClose: false,
+                position: "right"
+            }
+        }]
+    }, {////////////////////// 1
+        id: 1,
+        stage_css: {
+            left: "0",
+            width: "40%",
+            top: "30%"
+        },
+        raises_flag: true,
+        animations: [{
+            type: "highlight",
+            selector: "#nom-monde",
+            force: true,
+            delay: 400
+        }, {
+            type: "tooltip",
+            selector: "#nom-monde",
+            options: {
+                content: 'Aqui viene el nombre de tu mundo',
+                autoClose: false,
+                position: "top"
+            }
+        }, {
+            type: "highlight",
+            selector: "#container-action",
+            force: true
+        }, {
+            type: "tooltip",
+            selector: "#container-action",
+            options: {
+                content: 'Crea tu primer campo aqui',
+                autoClose: false,
+                position: "bottom"
+            }
+        }]
+    }, {////////////////////// 2
+        id: 2,
+        stage_css: {
+            left: "0",
+            width: "40%",
+            top: "30%"
+        },
+        raises_flag: true,
+        animations: [{
+            type: "highlight",
+            selector: "#add-doc-to-champ",
+            force: true,
+            delay: 400
+        }, {
             type: "code",
             code: function() {
-            
+                $("#add-doc-to-champ h1").css({
+                    "font-size": "1.2em"
+                });
+                $("#add-doc-to-champ").css({
+                    "background-color": "#E7E9F0"
+                });
+            }
+        }, {
+            type: "tooltip",
+            selector: "#add-doc-to-champ",
+            options: {
+                content: 'Click!',
+                autoClose: false,
+                position: "top"
             }
         }],
-        clean: function() {}
+        clean: function() {
+            $("#add-doc-to-champ h1").css({
+                "font-size": ""
+            });
+            $("#add-doc-to-champ").css({
+                "background-color": ""
+            });
+        },
+        substitutions: function() {
+            return {
+                champ: Monde.champs[0].label
+            };
+        }
+    }, {////////////////////// 3
+        id: 3,
+        stage_css: {
+            left: "0",
+            width: "40%",
+            top: "30%"
+        },
+        raises_flag: true,
+        animations: [{
+            type: "highlight",
+            selector: "#container-action",
+            force: true,
+            delay: 400
+        }]
+    }, {////////////////////// 4
+        id: 4,
+        stage_css: {
+            right: "0",
+            width: "40%",
+            top: "30%"
+        },
+        raises_flag: true,
+        animations: [{
+            type: "highlight",
+            selector: "#container-map",
+            force: true,
+            delay: 400
+        }, {
+            type: "highlight",
+            selector: "#bouton-save-monde",
+            force: true
+        }, {
+            type: "code",
+            code: function() {
+                $(".designer-option h1").css({
+                    "font-size": "1.2em"
+                });
+            }
+        }, {
+            type: "tooltip",
+            selector: "#bouton-tuto",
+            options: {
+                content: 'Puedes encontrar toda la documentacion sobre el uso de DINO aqui!',
+                autoClose: false,
+                position: "top"
+            }
+        }],
+        clean: function() {
+            $(".designer-option h1").css({
+                "font-size": ""
+            });
+        }
     }]
 } ];
 
@@ -476,7 +617,7 @@ var bootstrap_tuto = function() {
             statusCode: {
                 200: function(tuto) {
                     $("#container-tuto").html(tuto);
-                    toggle_tutos();
+                    //toggle_tutos();
                     Tuto.run(pk);
                 },                
                 404: function() {
@@ -503,10 +644,10 @@ var toggle_tutos = function() {
         });
     } else {
         width = ($(window).width() - (
-                    $("#bouton-tuto").offset().left + (
-                        $("#bouton-tuto").outerWidth() / 2
-                    )
-                )) * 2;
+            $("#bouton-tuto").offset().left + (
+                $("#bouton-tuto").outerWidth() / 2
+            )
+        )) * 2;
         
         liste.css({
             position: "fixed",

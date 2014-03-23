@@ -4,7 +4,10 @@ var bootstrap_admin = function() {
     $("#menu-admin").unbind().click(toggle_admin);
     $("#menu-retour").unbind().click(toggle_admin);
     $("#menu-users").unbind().click(change_admin);
-    $("#bouton-admin-liste").unbind().click(bootstrap_monde);
+    $("#bouton-admin-liste").unbind().click(function() {
+        check_queue();
+        bootstrap_monde();
+    });
 };
 
 var change_admin = function() {

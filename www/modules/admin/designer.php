@@ -6,7 +6,7 @@ session_start();
     <div class="boutons" id="bouton-save-monde">Publicar</div>
     <h1><span>Creacion del mundo </span><input type="text" id="nom-monde" placeholder="Nuevo mundo..."/></h1>
     <div id="container-map">
-        <h2>Perfil documental<span class="designer-add-champ"></span></h2>
+        <h2>Perfil documental<span class="designer-add-champ" title="Agregar un campo"></span></h2>
         <ul id="liste-map">
         </ul>
     </div>
@@ -24,13 +24,13 @@ session_start();
         <div class="action" id="action-post-champ">
             <h2>Campo <b class="option-help-champ"></b></h2>
             <p></p>
-            <div class="designer-option option-help" id="add-doc-to-champ">
-                <h1>Documento</h1>
-                <p>Agregar un tipo de documento al campo <b class="option-help-champ"></b></p>
-            </div>
             <div class="designer-option option-help" id="add-cat-to-champ">
                 <h1>Categoria</h1>
                 <p>Agregar una categoria de documentos al campo <b class="option-help-champ"></b></p>
+            </div>
+            <div class="designer-option option-help" id="add-doc-to-champ">
+                <h1>Documento</h1>
+                <p>Agregar un tipo de documento al campo <b class="option-help-champ"></b></p>
             </div>
             <div style="clear: right;"></div>
         </div>
@@ -43,7 +43,6 @@ session_start();
             <p>
                 Este documento es visible a partir del nivel :<br/>
                 <select id="designer-type-niveau" class="select-new-niveau" data-placeholder="Nivel de usuario...">
-                    <option value=""></option>
                     <option value="0">Visitor</option>
                     <option value="10">Archivista</option>
     <?php if ($_SESSION["niveau"] >= 20) { ?>
@@ -70,7 +69,6 @@ session_start();
             <h3>Seguridad</h3>
             <p>Esta categoria es visible a partir del nivel :
                 <select id="designer-categorie-niveau" class="select-new-niveau" data-placeholder="Nivel de usuario...">
-                    <option value=""></option>
                     <option value="0">Visitor</option>
                     <option value="10">Archivista</option>
     <?php if ($_SESSION["niveau"] >= 20) { ?>

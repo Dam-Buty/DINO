@@ -26,7 +26,7 @@ var bootstrap_signup = function() {
 };
 
 var tip_mail = function() {
-    $("#container-tips").html("<p>DINO nunca haria nada para lastimar un buzon inocente!</p>");
+    $("#container-tips").html("<p>DINO odia el SPAM! Tu correo electronico esta en seguridad con nosotros.</p>");
     tip_champ($("#mail"), $("#container-tips"));
 };
 
@@ -44,7 +44,7 @@ var tip_pass = function() {
             "<li>una <b>MAYUSCULA</b>,</li>" + 
             "<li>un <b>numero</b></li>" + 
             "<li>y uno de esos <b>caracteres especiales</b> :</li>" + 
-            "<li>!@#$%^&*?_~</li>" + 
+            "<ul><li>!@#$%^&*?_~</li></ul>" + 
         "</ul>" +
         "Por ejemplo : <b>Bacon_2013</b> es una deliciosa contrasena."
     );
@@ -55,8 +55,8 @@ var check_signup = function() {
     if ($("#login").hasClass("OK") && $("#pass").hasClass("OK") && $("#pass2").hasClass("OK") && $("#mail").hasClass("OK")) {
         $('#submit-page-1').show();
         $("#container-tips").html(
-            "<h1>Todo bueno !</h1>" +
-                "<p>Da click en 'Continuar' para continuar tu inscripcion</p>"
+            "<h1>Listo!</h1>" +
+                "<p>Da click para crear tu cuenta DINO!</p>"
         );
     } else {
         $('#submit-page-1').hide();
@@ -102,18 +102,8 @@ var save_page = function() {
                 pass: $("#pass").val()
             };
             current = $("#page-1");
-            next = $("#page-2");
-            break;    
-        case 2:
-            data = {
-                page: page,
-                pk: pk_client,
-                entreprise: $("#entreprise").val(),
-                secteur: $("#secteur").val()
-            };
-            current = $("#container-champs");
             next = "end";
-            break;   
+            break;    
     };
     
     $.ajax({

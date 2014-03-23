@@ -87,10 +87,13 @@ var Mentorial = function(Scenarios, options) {
         // Affichage et clean des étapes
         _show: function() {
             var current = this.Scenarios[this.scenario].stages[this.stage];
+            var stage = $("#" + this.css_prefix + "-" + this.scenario + "-" + this.stage);
             
-            $("#" + this.css_prefix + "-" + this.scenario + "-" + this.stage)
-            .css(current.stage_css)
-            .fadeIn();
+            if (current.stage_css !== undefined) {
+                stage
+                .css(current.stage_css);
+            }
+            stage.fadeIn();
             
             if (current.raises_flag) {
                 this.flag("raise");
@@ -122,8 +125,8 @@ var Mentorial = function(Scenarios, options) {
         // Navigation
         _next: function() {
             
-            this._clean();
             if (this.stage < this.Scenarios[this.scenario].stages.length - 1) {
+                this._clean();
                 this.stage = this.stage + 1;
                 this._show();
             } else {
@@ -244,7 +247,7 @@ var Mentorial = function(Scenarios, options) {
                         highlight.sibling.after(highlight.element);
                     }
                     
-                    highlight.selector.css({
+                    highlight.element.css({
                         position: "",
                         top: "",
                         left: "",
