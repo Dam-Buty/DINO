@@ -266,6 +266,7 @@ var bootstrap_designer = function(action) {
     $("#add-doc-to-cat").unbind().click(designer_toggle_type);
     $("#add-cat-to-champ").unbind().click(designer_toggle_categorie);
     $("#add-cat-to-champ2").unbind().click(designer_toggle_categorie);
+    $(".option-add-champ").unbind().click(designer_toggle_champ);
     $("#nom-monde").unbind().keyup(function() {
         if ($(this).val() != "") {
             Monde.label = $(this).val();
@@ -366,7 +367,7 @@ var bootstrap_designer = function(action) {
     } else {
         $("#designer>h1>span").text("Creacion del mundo ");
     }
-    
+    $("#action-welcome").fadeIn();
     Monde._refresh();
 };
 
@@ -381,7 +382,7 @@ var designer_toggle_champ = function() {
     
     $("#action-champ").fadeIn();
 
-    if (bouton.hasClass("designer-add-champ")) {
+    if (bouton.hasClass("designer-add-champ") || bouton.hasClass("option-add-champ")) {
         if (Monde.champs.length == 0) {
             ul = $("#liste-map");
         } else {
@@ -713,7 +714,7 @@ var remove_tree = function() {
     var li = click.closest("li");
     var id = parseInt(li.attr("data-id"));
     var _element;
-    var message = "", bouton = "", titre = "Supresion de ", element;
+    var message = "", bouton = "", titre = "Supresion de ", element, post = "champ";
     var champs = 0, types = 0, categories = 0, documents = 0, criteres, retour;
     var go = false;
     
@@ -736,6 +737,11 @@ var remove_tree = function() {
             }
         });
         _element = { type: "champ", id: id};
+        
+        $(".option-help-champ").text(Monde.champs[id - 1].label);
+        $(".option-help").attr("data-champ", id);
+        $(".option-help").attr("data-categorie", "");
+        post = "champ";
     } else {
         if (li.hasClass("designer-categorie")) {
             element = "la categoria <b>" + Monde.champs[li.attr("data-champ")].categories[id].label + "</b>"; // LOCALISATION
@@ -743,16 +749,30 @@ var remove_tree = function() {
             _element = { type: "categorie", id: id, champ: parseInt(li.attr("data-champ"))};
             
             types = Monde.champs[li.attr("data-champ")].categories[id].types.length;
+            $(".option-help-champ").text(Monde.champs[li.attr("data-champ")].label);
+            $(".option-help").attr("data-champ", li.attr("data-champ"));
+            $(".option-help").attr("data-categorie", "");
+            post = "champ";
         } else {
             
             if (li.attr("data-categorie") !== undefined && li.attr("data-categorie") !== "") {
                 element = "el documento <b>" + Monde.champs[li.attr("data-champ")].categories[li.attr("data-categorie")].types[id].label + "</b>"; // LOCALISATION
                 titre += Monde.champs[li.attr("data-champ")].categories[li.attr("data-categorie")].types[id].label;
+                $(".option-help-champ").text(Monde.champs[li.attr("data-champ")].label);
+                $(".option-help-categorie").text(Monde.champs[li.attr("data-champ")].categories[li.attr("data-categorie")].label);
+                $(".option-help").attr("data-champ", li.attr("data-champ"));
+                $(".option-help").attr("data-categorie", li.attr("data-categorie"));
+                post = "categorie";
             } else {
                 element = "el documento <b>" + Monde.champs[li.attr("data-champ")].types[id].label + "</b>"; // LOCALISATION
                 titre += Monde.champs[li.attr("data-champ")].types[id].label;
+                $(".option-help-champ").text(Monde.champs[li.attr("data-champ")].label);
+                $(".option-help").attr("data-champ", li.attr("data-champ"));
+                $(".option-help").attr("data-categorie", "");
+                post = "champ";
             }
             _element = { type: "type", id: id, champ: parseInt(li.attr("data-champ")), categorie: li.attr("data-categorie") };
+            
         }
     }
     
@@ -803,6 +823,8 @@ var remove_tree = function() {
     
     var callback = function() {
         _remove_tree(_element, criteres, bilan);
+        $(".action").hide();
+        $("#action-post-" + post).show();
     };
     
     popup_confirmation(message, titre, "Confirmar" + bouton, callback);

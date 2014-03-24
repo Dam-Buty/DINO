@@ -725,6 +725,22 @@ html, body {
     background-color: #48afc2;
 }
 
+#liste li[data-type="champ"][data-niveau="4"]:nth-of-type(odd) {
+    background-color: #8ecb32;
+}
+
+#liste li[data-type="champ"][data-niveau="4"]:nth-of-type(even) {
+    background-color: #599801;
+}
+
+#liste li[data-type="champ"][data-niveau="5"]:nth-of-type(odd) {
+    background-color: #56d4eb;
+}
+
+#liste li[data-type="champ"][data-niveau="5"]:nth-of-type(even) {
+    background-color: #48afc2;
+}
+
 #liste li[data-type="champ"][data-an] {
     background-image: url(../img/date_20.png);
 }
@@ -787,6 +803,30 @@ html, body {
 }
 
 #liste ul[data-niveau="3"]:nth-of-type(even) {
+    border-left: 2px solid #48afc2;
+    border-right: 2px solid #48afc2;
+    border-bottom: 10px solid #48afc2;
+}
+
+#liste ul[data-niveau="4"]:nth-of-type(odd) {
+    border-left: 2px solid #8ecb32;
+    border-right: 2px solid #8ecb32;
+    border-bottom: 10px solid #8ecb32;
+}
+
+#liste ul[data-niveau="4"]:nth-of-type(even) {
+    border-left: 2px solid #599801;
+    border-right: 2px solid #599801;
+    border-bottom: 10px solid #599801;
+}
+
+#liste ul[data-niveau="5"]:nth-of-type(odd) {
+    border-left: 2px solid #56d4eb;
+    border-right: 2px solid #56d4eb;
+    border-bottom: 10px solid #56d4eb;
+}
+
+#liste ul[data-niveau="5"]:nth-of-type(even) {
     border-left: 2px solid #48afc2;
     border-right: 2px solid #48afc2;
     border-bottom: 10px solid #48afc2;

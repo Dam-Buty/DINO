@@ -180,7 +180,8 @@ var Mentorial = function(Scenarios, options) {
                             element: $(animation.selector),
                             forced: animation.force,
                             parent: undefined,
-                            sibling: undefined
+                            prevSibling: undefined,
+                            nextSibling: undefined
                         };
                         
                         $(animation.selector).css("z-index", self.z_highlight);
@@ -194,12 +195,15 @@ var Mentorial = function(Scenarios, options) {
                             var width = element.outerWidth();
                             var height = element.outerHeight();
                             
-                            // Pour pouvoir replacer l'élément par la suite, on repère son parent et son sibling
+                            // Pour pouvoir replacer l'élément par la suite, on repère son parent et ses siblings
                             highlight.parent = element.parent();
-                            if (element.prev().length == 0) {
-                                highlight.sibling = false;
-                            } else {
-                                highlight.sibling = element.prev();
+                            
+                            if (element.prev().length != 0) {
+                                highlight.prevSibling = element.prev();
+                            }
+                            
+                            if (element.next().length != 0) {
+                                highlight.nextSibling = element.next();
                             }
 
                             element.detach();
@@ -238,8 +242,10 @@ var Mentorial = function(Scenarios, options) {
         _substitutions: function(substitutions) {
             $.extend(this.data.substitutions, substitutions);
             
+            var prefix = this.substitution_prefix;
+            
             $.each(substitutions, function(key, value) {
-                $("." + this.substitution_prefix + key).html(value);
+                $("." + prefix + key).html(value);
             })
         },
         
@@ -249,10 +255,14 @@ var Mentorial = function(Scenarios, options) {
             $.each(this.highlights, function(i, highlight) {
                 highlight.element.css("z-index", "");
                 if (highlight.forced) {
-                    if (highlight.sibling === false) {
+                    if (highlight.prevSibling === undefined && highlight.nextSibling === undefined) {
                         highlight.parent.append(highlight.element);
                     } else {
-                        highlight.sibling.after(highlight.element);
+                        if (highlight.prevSibling !== undefined) {
+                            highlight.prevSibling.after(highlight.element);
+                        } else {
+                            highlight.nextSibling.before(highlight.element);
+                        }
                     }
                     
                     highlight.element.css({

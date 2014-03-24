@@ -660,6 +660,14 @@ div.option-ko:hover {
     background-color: #8ECB32;
 }
 
+.option-add-champ {
+    margin-right: 27%;
+}
+
+.container-o {
+    text-align: center;
+}
+
 /*#####################################
 #        Map
 #######################################*/

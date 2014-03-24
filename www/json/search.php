@@ -306,6 +306,7 @@ $query .= "
                 $year = 0;
                 $month = 0;
                 $categorie = 0;
+                $decal_categorie = 0;
                 
                 foreach($champs_documents as $niveau => $champ) {
                     if ($champ != $valeurs_champs[$niveau]) {

@@ -510,6 +510,15 @@ var Scenarios = [ { ////////////////////// SCENARIO 999
             selector: "#container-action",
             force: true,
             delay: 400
+        }, {
+            type: "tooltip",
+            selector: "#designer_type_niveau_chosen",
+            options: {
+                content: 'Aqui decides quien puede acceder a tu documento.',
+                autoClose: false,
+                position: "bottom right"
+            },
+            delay: 400
         }]
     }, {////////////////////// 4
         id: 4,

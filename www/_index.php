@@ -120,7 +120,7 @@ if ($_SESSION["niveau"] >= 20) {
 </div>
 
 <div class="barre-bottom">
-    <div id="container-notification">DINO esta en fase Beta, si encuentras algun bug o tienes cualquiera pregunta, nos puedes contactar <a href="mailto:beta@dino.mx">aqui</a></div>
+    <div id="container-notification">DINO esta en fase Beta, si encuentras algun bug o tienes cualquier pregunta, nos puedes contactar <a href="mailto:beta@dino.mx">aqui</a></div>
     <img id="logout" src="img/logout_20.png">
     <img id="bouton-pass" src="img/pass_20.png">
     <img id="bouton-mail" src="img/mail_20.png">
@@ -174,7 +174,7 @@ if ($_SESSION["niveau"] >= 20) {
         <li><div id="change-mail" class="boutons boutons-param">Guardar email</div></li>
     </ul>
     <div id="tip-mail-params" class="container-arrow OK arrow-params">
-        DINO nunca haria nada para lastimar un buzon inocente!
+        DINO odia el SPAM! Tu correo electronico esta seguro con nosotros.
     </div>
 </div>
 

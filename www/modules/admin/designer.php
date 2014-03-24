@@ -11,6 +11,12 @@ session_start();
         </ul>
     </div>
     <div id="container-action">
+        <div class="action" id="action-welcome">
+            <h2>Editar un mundo</h2>
+            <p>Bienvenido en el editor de mundos documentales <b>DINO</b>.</p>
+            <p> En la parte de izquierda se encuentra tu mundo actual.</p>
+            <p>Puedes agregar o modificar campos, categorias y tipos de documentos para adaptarlos a tus necesidades.</p>
+        </div>
         <div class="action" id="action-champ">
             <h2>Nuevo campo</h2>
             <p>
@@ -31,6 +37,12 @@ session_start();
             <div class="designer-option option-help" id="add-doc-to-champ">
                 <h1>Documento</h1>
                 <p>Agregar un tipo de documento al campo <b class="option-help-champ"></b></p>
+            </div>
+            <div style="clear: right;"></div>
+            <p class="container-o">- O -</p>
+            <div class="designer-option option-help option-add-champ">
+                <h1>Campo</h1>
+                <p>Agregar un <b>nuevo Campo</b></p>
             </div>
             <div style="clear: right;"></div>
         </div>
@@ -91,6 +103,12 @@ session_start();
             <div class="designer-option option-help" id="add-doc-to-cat">
                 <h1>Documento</h1>
                 <p>Agregar un tipo de documento a la categoria <b class="option-help-categorie"></b></p>
+            </div>
+            <div style="clear: right;"></div>
+            <p class="container-o">- O -</p>
+            <div class="designer-option option-help option-add-champ">
+                <h1>Campo</h1>
+                <p>Agregar un <b>nuevo Campo</b></p>
             </div>
             <div style="clear: right;"></div>
         </div>
