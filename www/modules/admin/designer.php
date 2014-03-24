@@ -64,6 +64,7 @@ session_start();
                     <option value="30">Gerente</option>
     <?php } ?>
                 </select>
+                <i>Aqui decides <a href="http://www.dino.mx">quien puede acceder a tu documento</a>.</i>
             </p>
             <h3>Opciones</h3>
             <p>
@@ -90,6 +91,7 @@ session_start();
                     <option value="30">Gerente</option>
     <?php } ?>
                 </select>
+                <i>Aqui decides <a href="http://www.dino.mx">quien puede acceder a tu categoria</a>.</i>
             </p>
             <div class="boutons bouton-designer" id="bouton-save-categorie">Guardar</div>
         </div>

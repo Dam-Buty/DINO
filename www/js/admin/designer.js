@@ -215,6 +215,8 @@ var Monde = {
                         $("#bouton-save-monde").fadeOut();
                         if (Monde.pk === undefined) {
                             window.location.replace("index.php");
+                        } else {
+                            _profil(function() {});
                         }
                     },
                     403: function() {

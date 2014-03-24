@@ -194,7 +194,6 @@ function gestion_tutos($niveau) {
         WHERE
             `niveau_tuto` <= :niveau
         ORDER BY
-            `niveau_tuto` DESC,
             `pk_tuto` ASC
     ";
     
@@ -228,6 +227,52 @@ function gestion_tutos($niveau) {
         ]);
     }
 }
+
+function gestion_documentation($niveau) {
+    $documentations = [ ];
+    
+    $query_documentations = "
+        SELECT 
+            `pk_documentation`, 
+            `titre_documentation`, 
+            `niveau_documentation`, 
+            `url_documentation`
+        FROM `documentation`
+        WHERE
+            `niveau_documentation` <= :niveau
+        ORDER BY
+            `pk_documentation` ASC
+    ";
+    
+    $result_documentations = dino_query($query_documentations,[
+        "niveau" => $niveau
+    ]);
+    
+    if ($result_documentations["status"]) {
+        foreach($result_documentations["result"] as $row_documentation) {
+            array_push($documentations, [
+                "pk" => $row_documentation["pk_documentation"],
+                "titre" => $row_documentation["titre_documentation"],
+                "niveau" => $row_documentation["niveau_documentation"],
+                "url" => $row_documentation["url_documentation"]
+            ]);
+        } // FIN WHILE TUTOS
+        return $documentations;
+        
+    } else {
+        status(500);
+        write_log([
+            "libelle" => "GET documentations",
+            "admin" => 0,
+            "query" => $query_documentations,
+            "statut" => 1,
+            "message" => $result_documentations["errinfo"][2],
+            "erreur" => $result_documentations["errno"],
+            "document" => "",
+            "objet" => $_SESSION["user"]
+        ]);
+    }
+}
   
 
 if (isset($_SESSION["user"])) {
@@ -238,6 +283,7 @@ if (isset($_SESSION["user"])) {
     $profil = [
         "maxfilesize" => $maxFileSize,
         "tutos" => [],
+        "documentations" => [],
         "mondes" => []
     ];
     
@@ -262,6 +308,8 @@ if (isset($_SESSION["user"])) {
             $profil["printer"] = $row["printer_client"];
             
             $profil["tutos"] = gestion_tutos($profil["niveau"]);
+            $profil["documentations"] = gestion_documentation($profil["niveau"]);
+            
                         
             //////////////////////////
             // Récupération des mondes sur lesquels l'user a des droits

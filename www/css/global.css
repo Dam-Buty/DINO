@@ -1527,22 +1527,26 @@ ul.ui-autocomplete {
 #container-list-tutos {
     position: fixed;
     bottom: -9999px;
-}
-
-#list-tutos {
-    list-style-type: none;    
     
     font-size: 0.8em;  
     background-color: #D6DCEA;
     
     box-shadow: 0 0 1px 1px #A9A9A9;
-    
-    padding: 5px;
 }
 
-#list-tutos li {
+#container-list-tutos ul {
+    padding: 5px;
+    margin: 5px;
+}
+
+#container-list-tutos li {
+    list-style-type: none;    
     padding: 5px;
     margin-top: 5px;
+}
+
+#list-documentation {
+    display: none;
 }
 
 .ligne-tuto {

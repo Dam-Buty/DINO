@@ -115,7 +115,11 @@ if ($_SESSION["niveau"] >= 20) {
 
 <div id="container-list-tutos">
     <ul id="list-tutos">
+        <li class="entete-list-tutos">TUTORIALES DINO</li>
+    </ul>
+    <ul id="list-documentation">
         <li class="entete-list-tutos">DINO UNIVERSITY</li>
+        <li><a href="http://blog.dino.mx" title="Puedes encontrar toda la documentacion en el Blog DINO!">Blog DINO</a></li>
     </ul>
 </div>
 

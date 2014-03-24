@@ -58,4 +58,10 @@ user_tuto:
 + fk_tuto (INT)
 + fk_user (VARCHAR 32)
 
-OK sur baby
+documentation:
++ pk_documentation (INT)
++ titre_documentation (VARCHAR 50)
++ url_documentation (VARCHAR 100)
++ niveau_documentation (INT)
+
+OK sur baby sauf documentation
