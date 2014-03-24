@@ -141,11 +141,11 @@ var bootstrap = function() {
                                     $("#core").append(designer); 
                                     $("#menu-designer").click(function() {
                                         check_queue();
-                                        bootstrap_designer();
+                                        bootstrap_designer("new");
                                     });
-                                    $("#bouton-admin-profil").click(function() {
+                                    $("#bouton-admin-profil").click(function() {                                        
                                         check_queue();
-                                        bootstrap_designer();
+                                        bootstrap_designer("edit");
                                     });
                                     $("#nom-monde").change(Monde._save_titre);
 

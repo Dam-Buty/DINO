@@ -249,9 +249,7 @@ var Monde = {
     }
 };
 
-var bootstrap_designer = function() {
-    var bouton = $(this);
-    
+var bootstrap_designer = function(action) {
     Tuto.flag(0);
     
     $("#liste").slideUp();   
@@ -279,12 +277,6 @@ var bootstrap_designer = function() {
     })
     
     $(".designer-add-champ").unbind().click(designer_toggle_champ);
-    
-    // ATTENTION
-    // Si on unbinde après les chosen, on unbinde
-    // TOUS les évènements Chosen! (updated, ...)
-    $("#designer-type-niveau").unbind().change(toggle_save_type);
-    $("#designer-categorie-niveau").unbind().change(toggle_save_categorie);
     
     $("#bouton-save-monde").hide();
     
@@ -321,7 +313,7 @@ var bootstrap_designer = function() {
     Monde.champs = [];
     Monde.graveyard = [];
     
-    if (bouton.attr("id") == "bouton-admin-profil") {
+    if (action == "edit") {
         var pk_monde = $('#mondes-top li[data-selected="1"]').attr("data-monde");
         var monde = profil.mondes[pk_monde];
         
@@ -373,8 +365,6 @@ var bootstrap_designer = function() {
         });
     } else {
         $("#designer>h1>span").text("Creacion del mundo ");
-        $("#bouton-save-type").hide();
-        $("#bouton-save-categorie").hide();
     }
     
     Monde._refresh();
@@ -478,9 +468,8 @@ var designer_toggle_type = function() {
         action.children("h2").html("Nuevo tipo de documento"); // LOCALISATION
         
         label.removeClass("KO").val("");
-        niveau.removeClass("KO").val("").trigger("chosen:updated");
+        niveau.removeClass("KO").val("0").trigger("chosen:updated");
         detail.prop("checked", false).change();
-        $("#bouton-save-type").hide();
         Tuto.flag(2);
     } else { // EDIT DOCUMENT
         li = bouton.closest("li");
@@ -508,7 +497,6 @@ var designer_toggle_type = function() {
         time.prop('checked', type.time).change();
         niveau.val(type.niveau);
         niveau.trigger("chosen:updated");
-        $("#bouton-save-type").show();
     }    
     
     $("#label-new-type").focus();
@@ -550,8 +538,7 @@ var designer_toggle_categorie = function() {
         $("#action-categorie>h2").html("Nueva categoria"); // LOCALISATION
         
         label.removeClass("KO").val("");
-        niveau.removeClass("KO").val("").trigger("chosen:updated");
-        $("#bouton-save-categorie").hide();
+        niveau.removeClass("KO").val("0").trigger("chosen:updated");
     } else { // EDIT CATEGORIE
         li = bouton.closest("li");
         $("#action-categorie")
@@ -566,7 +553,6 @@ var designer_toggle_categorie = function() {
         label.val(categorie.label);
         niveau.val(categorie.niveau);
         niveau.trigger("chosen:updated");
-        $("#bouton-save-categorie").show();
     }
     
     $("#label-new-categorie").focus();
@@ -613,7 +599,6 @@ var designer_save_champ = function() {
             $(".option-help").attr("data-categorie", "");
             $("#action-champ").hide();
             $("#action-post-champ").show();
-            $("#bouton-save-categorie").hide();
             check_bouton_save();
             Monde._refresh();
         }
@@ -670,7 +655,6 @@ var designer_save_type = function() {
             $("#action-type>h2").text("Nuevo tipo de documento");
             $("#action-type").hide();
             $("#action-post-" + post).show();
-            $("#bouton-save-type").hide();
             check_bouton_save();
             Tuto.flag(3);
             Monde._refresh();
@@ -721,18 +705,6 @@ var designer_save_categorie = function() {
             check_bouton_save();
             Monde._refresh();
         }
-    }
-};
-
-var toggle_save_type = function() {
-    if (!$("#bouton-save-type").is(":visible")) {
-        $("#bouton-save-type").slideDown();
-    }
-};
-
-var toggle_save_categorie = function() {
-    if (!$("#bouton-save-categorie").is(":visible")) {
-        $("#bouton-save-categorie").slideDown();
     }
 };
 

@@ -78,7 +78,15 @@ var Mentorial = function(Scenarios, options) {
         
         // Sortie du tutorial
         exit: function() {
-            this._clean();
+            this._clean();  
+            this.data = {};
+            this.flag_value = undefined;
+            this.highlights = [ ];
+            this.borders = [ ];
+            this.tooltips = [ ];
+            this.scenario = 0;
+            this.stage = 0;
+            
             $(this.stages_container).fadeOut();
             $("#opak-tuto").remove();
             this.exit_callback();
