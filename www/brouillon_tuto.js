@@ -255,3 +255,52 @@
             $("#new-monde").tooltipster("destroy");
         }
     }
+    
+    
+<div class="etape" id="etape-1-8">
+    <h1>Tu primer documento</h1>
+    <p>Muy bien, ahora sabes como archivar y consultar documentos en <b>DINO</b>!</p>
+    <p>Te voy a ensenar las tecnicas avanzadas de busqueda, para convertirte en un verdadero <b>Experto Documental</b> :)</p>
+    <div class="boutons next">Busqueda avanzada</div>
+</div>
+<div class="etape" id="etape-1-9">
+    <h1>Tus mundos documentales</h1>
+    <p>En <b>DINO</b>, tus documentos estan organizados por <b>mundos documentales</b>, que corresponden a diferentes aspectos de tu vida empresarial.</p>
+    <p>Puedes navegar entre tus <b>mundos documentales</b> en el menu de arriba.</p>
+    <div class="boutons next">Siguiente...</div>
+</div>
+<div class="etape" id="etape-1-10">
+    <h1>Busqueda por fecha</h1>
+    <p>Si necesitas documentos de una fecha especifica, puedes utilizar el slider para seleccionar un <b>rango de fecha</b>.</p>
+    <div class="boutons next">Siguiente...</div>
+</div>
+<div class="etape" id="etape-1-11">
+    <h1>Buscar en un mundo</h1>
+    <p>Cada <b>mundo</b> tiene un <b>criterio de clasificacion</b> propio.</p>
+    <p>Por ejemplo, en el mundo <b class="tuto-monde"></b> los documentos se clasifican por <b class="tuto-champ"></b>.</p>
+    <p>El busquedor te permite buscar por <b class="tuto-champ"></b>, o cualquier <b>criterio de clasificacion</b> del <b>mundo</b> donde te encuentras.</p>
+    <div class="boutons next">Siguiente...</div>
+</div>
+<div class="etape" id="etape-1-12">
+    <h1>Tips</h1>
+    <p>Ya sabes todo lo que necesitas para archivar, organizar y consultar los <b>documentos</b> de tu empresa en tu <b>archivero digital</b>!</p>
+    <p>Algunos tips mas, y te dejo con <b>DINO</b> :</p>
+    <p><img src="img/tuto_20.png"/> : para retomar el tutorial</p>
+    <p><img src="img/printer_20.png"/> : para configurar tu impresora virtual (opcional)</p>
+    <p><img src="img/mail_20.png"/> : para cambiar tu direccion de correo electronico</p>
+    <p><img src="img/pass_20.png"/> : para cambiar tu contrasena personal</p>
+    <p><img src="img/logout_20.png"/> : para desconectarte de DINO.</p>
+    <div class="boutons next">Hasta luego!</div>
+</div>
+<div class="etape" id="etape-1-13">
+    <h1>Tu primer mundo <b>DINO</b></h1>
+    <p>Para empezar a utilizar <b>DINO</b>, necesitas a lo minimo <b>un mundo documental</b>. Los <b>mundos documentales</b> te permiten agrupar juntos los documentos que concernan cada ramo de tu empresa.</p>
+    <p>Un exemplo seria el mundo <b>Ventas</b>, donde vas a organizar tus documentos por <b>Cliente</b> y por <b>Proyecto</b>.</p>
+    <p>Da click en "Nuevo Mundo" para empezar a crear tu primer mundo.</p>
+</div>
+<div class="etape" id="etape-1-13">
+    <h1>Tu primer mundo <b>DINO</b></h1>
+    <p>Para empezar a utilizar <b>DINO</b>, necesitas a lo minimo <b>un mundo documental</b>. Los <b>mundos documentales</b> te permiten agrupar juntos los documentos que concernan cada ramo de tu empresa.</p>
+    <p>Un exemplo seria el mundo <b>Ventas</b>, donde vas a organizar tus documentos por <b>Cliente</b> y por <b>Proyecto</b>.</p>
+    <p>Da click en "Nuevo Mundo" para empezar a crear tu primer mundo.</p>
+</div>

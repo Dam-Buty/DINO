@@ -168,10 +168,10 @@ var change_type_store = function() {
     
     affiche_details();
     
-    if (Tuto.etape == 5) {
+    if (Tuto.stage == 5) {
         Store.categorie = li.attr("data-categorie");
         Store.type_doc = document.store.type_doc;
-        Tuto.next();
+        Tuto.flag(5);
     }
 };
 
@@ -223,9 +223,7 @@ var add_value = function(term) {
                 $("#bouton-store").fadeOut();
                 reload_champs();
                 
-                if (Tuto.etape == 4) {
-                    Tuto.next();
-                }
+                Tuto.flag(4);
             },
             403: function() {
                 window.location.replace("index.php");
@@ -682,10 +680,7 @@ var _archive_document = function(document, store) {
                 
                 avance_store(position);
                 
-                if (Tuto.etape == 6) {
-                    Tuto.store = store;
-                    Tuto.next();
-                }                
+                Tuto.flag(6);       
             },
             403: function() {
                 window.location.replace("index.php");

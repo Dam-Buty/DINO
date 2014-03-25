@@ -114,17 +114,18 @@ if ($_SESSION["niveau"] >= 20) {
 ?>
 
 <div id="container-list-tutos">
+    <span id="toggle-university"></span>
     <ul id="list-tutos">
         <li class="entete-list-tutos">TUTORIALES DINO</li>
     </ul>
     <ul id="list-documentation">
         <li class="entete-list-tutos">DINO UNIVERSITY</li>
-        <li><a href="http://blog.dino.mx" title="Puedes encontrar toda la documentacion en el Blog DINO!">Blog DINO</a></li>
+        <li class="ligne-tuto"><a href="http://blog.dino.mx" title="Puedes encontrar toda la documentacion en el Blog DINO!">Blog DINO</a></li>
     </ul>
 </div>
 
 <div class="barre-bottom">
-    <div id="container-notification">DINO esta en fase Beta, si encuentras algun bug o tienes cualquier pregunta, nos puedes contactar <a href="mailto:beta@dino.mx">aqui</a></div>
+    <div id="container-notification">DINO esta en fase Beta, si encuentras algun bug o tienes cualquier pregunta, nos puedes contactar <a href="mailto:beta@dino.mx">aqui</a>.</div>
     <img id="logout" src="img/logout_20.png">
     <img id="bouton-pass" src="img/pass_20.png">
     <img id="bouton-mail" src="img/mail_20.png">

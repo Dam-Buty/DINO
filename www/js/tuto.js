@@ -3,7 +3,6 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
     titre: "Arrivée du gérant",
     description: "Es un muy bueno tutorial!",
     stages: [{////////////////////// 0
-        id: 0,
         stage_css: {
             width: "50%",
             left: "25%",
@@ -23,7 +22,6 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             }
         }]
     }, {////////////////////// 1
-        id: 1,
         stage_css: {
             left: "0",
             width: "40%",
@@ -57,7 +55,6 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             }
         }]
     }, {////////////////////// 2
-        id: 2,
         stage_css: {
             left: "0",
             width: "40%",
@@ -102,7 +99,6 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             };
         }
     }, {////////////////////// 3
-        id: 3,
         stage_css: {
             left: "0",
             width: "40%",
@@ -116,7 +112,6 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             delay: 400
         }]
     }, {////////////////////// 4
-        id: 4,
         stage_css: {
             right: "0",
             width: "40%",
@@ -154,22 +149,7 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             });
         }
     }]
-}, { ////////////////////// SCENARIO 999
-        id: 0,
-        titre: "Template",
-        description: "Es un muy bueno tutorial!",
-        stages: [{////////////////////// 0
-            id: 0,
-            raises_flag: true,
-            animations: [{
-                type: "code",
-                code: function() {
-                
-                }
-            }],
-            clean: function() {}
-        }]
-    }, { ////////////////////// SCENARIO 1
+}, { ////////////////////// SCENARIO 1
     id: 1,
     titre: "Première visite archiviste",
     description: "Es un muy bueno tutorial!",
@@ -248,7 +228,7 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
     }, { //////////////////////3
         raises_flag: true,
         stage_css: {
-            top: "0",
+            top: "40%",
             right: "0",
             width: "40%",
         },
@@ -276,8 +256,43 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             var leMonde = profil.mondes[Store.monde];
             return {
                 monde: leMonde.label,
-                champ: leMonde.champs[monde.cascade[0]].label,
-                pluriel: leMonde.champs[monde.cascade[0]].pluriel
+                champ: leMonde.champs[leMonde.cascade[0]].label,
+                pluriel: leMonde.champs[leMonde.cascade[0]].pluriel
+            }
+        },
+        animations: [{
+            type: "highlight",
+            selector: "#container-store",
+            force: true,
+            delay: 400
+        }, {
+            type: "tooltip",
+            selector: "#container-nouveau-champ",
+            options: {
+                content: $('<span><p>Teclea el nombre de un nuevo <b class="tuto-champ"></b>, y agregalo en DINO.</p></span>'),
+                autoClose: false,
+                position: "top"
+            }
+        }]
+    }, { ////////////////////// 5
+        raises_flag: true,
+        stage_css: {
+            width: "40%",
+            left: "0",
+            top: "40%"
+        },
+        substitutions: function() {
+            var monde = profil.mondes[Store.monde];
+            var champ, valeur;
+            
+            $.each(Store.champs, function(i, pk) {
+                champ = monde.champs[i];
+                valeur = pk;
+                return false;
+            });
+            
+            return {
+                valeur: champ.liste[valeur]
             }
         },
         animations: [{
@@ -286,15 +301,118 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             force: true
         }, {
             type: "tooltip",
-            selector: "#container-nouveau-champ",
+            selector: "#container-classification",
             options: {
-                content: $('<span><p>Teclea el nombre de un nuevo <b class="tuto-pluriel"></b>, y agregalo en DINO.</p></span>'),
+                content: "Elige un tipo de documento aqui",
                 autoClose: false,
-                position: "top"
+                position: "bottom"
             }
         }]
+    }, { ////////////////////// 6
+        raises_flag: true,
+        stage_css: {
+            width: "40%",
+            left: "0",
+            top: "50%"
+        },
+        animations: [{
+            type: "highlight",
+            selector: "#container-store",
+            force: true
+        }, {
+            type: "tooltip",
+            selector: "#bouton-store",
+            options: {
+                content: "Click!",
+                autoClose: false,
+                position: "bottom"
+            },
+            delay: 400
+        }]
+    }, { ////////////////////// 7
+        raises_flag: true,
+        stage_css: {
+            width: "50%",
+            left: "25%",
+            top: "30%"
+        },
+        clean: function() {
+            $("#menu-queue").click();
+            $("#bouton-tuto").click();
+        }
     }]
-} ];
+}, {
+    id: 2,
+    titre: "Première visite archiviste",
+    description: "Es un muy bueno tutorial!",
+    stages: [{ ////////////////////// 0
+        stage_css: {
+            width: "40%",
+            left: "25%",
+            top: "20%"
+        },
+        animations: [{
+            type: "highlight",
+            selector: "#top-front"
+        }, {
+            type: "tooltip",
+            selector: "#mondes-top li:first-child",
+            options: {
+                content: "Aqui estan tus mundos!",
+                autoClose: false,
+                position: "bottom"
+            },
+            delay: 400
+        }]
+    }, { ////////////////////// 1
+        stage_css: {
+            width: "40%",
+            left: "25%",
+            top: "20%"
+        },
+        animations: [{
+            type: "highlight",
+            selector: "#top-front"
+        }, {
+            type: "code",
+            code: function() {
+                $("#toggle-date").click();
+            }
+        }, {
+            type: "tooltip",
+            selector: "#container-dates",
+            options: {
+                content: "Aqui para seleccionar un rango de fechas!",
+                autoClose: false,
+                position: "left"
+            },
+            delay: 400
+        }],
+        clean: function() {
+            $("#toggle-date").click();
+        }
+    }, { ////////////////////// 2
+        stage_css: {
+            width: "40%",
+            left: "0%",
+            bottom: "15%"
+        },
+        animations: [{
+            type: "highlight",
+            selector: "#top-front"
+        }, {
+            type: "tooltip",
+            selector: "#search_chosen",
+            options: {
+                content: "Aqui para buscar en tu mundo!",
+                autoClose: false,
+                position: "bottom"
+            },
+            delay: 400
+        }]
+    }]
+    
+}];
 
 var Tuto = Mentorial(Scenarios, {
     exit_callback: function() {
@@ -311,7 +429,8 @@ var Tuto = Mentorial(Scenarios, {
                 }
             }
         });
-    }
+    },
+    exit_on_opaque: false
 });
 
 var bootstrap_tuto = function() {
@@ -324,7 +443,6 @@ var bootstrap_tuto = function() {
         30: "Gestionar"
     };
     var startup = false;
-    var li_lien, li_lien2;
     
     $.each(profil.tutos, function(i, tuto) {
         var li = $("<li></li>")
@@ -380,30 +498,9 @@ var bootstrap_tuto = function() {
         liste_documentations.append(li);
     });
     
-    li_lien = $("<li></li>")
-        .addClass("entete-list-tutos")
-        .css("font-size", "1em")
-        .append(
-            $("<a></a>")
-            .attr("href", "#")
-            .html("Documentacion DINO ...")
-            .click(toggle_university)
-        );
-    
-    li_lien2 = $("<li></li>")
-        .addClass("entete-list-tutos")
-        .css("font-size", "1em")
-        .append(
-            $("<a></a>")
-            .attr("href", "#")
-            .html("Tutoriales DINO ...")
-            .click(toggle_university)
-        );
-    
-    liste.append(li_lien);
-    liste_documentations.append(li_lien2);
-    
     $("#bouton-tuto").fadeIn().click(toggle_tutos);
+    $("#toggle-university").click(toggle_university);
+    
     $(".ligne-tuto").click(function() {
         var pk = $(this).attr("data-pk");
         

@@ -1586,6 +1586,20 @@ ul.ui-autocomplete {
     text-align: left;
 }
 
+#toggle-university {
+    position: absolute;
+    top: 0;
+    right: 0;
+    
+    margin: 18px;
+    width: 20px;
+    height: 20px;    
+    
+    background-image: url(../img/next_20.png);
+    
+    cursor: pointer;
+}
+
 .with-tip {
     font-style: italic;
     cursor: pointer;

@@ -24,6 +24,7 @@ var Mentorial = function(Scenarios, options) {
         highlights: [ ],
         borders: [ ],
         tooltips: [ ],
+        delay: 200,
         
         // Variables de navigation
         scenario: 0,
@@ -111,6 +112,7 @@ var Mentorial = function(Scenarios, options) {
             this.highlights = [ ];
             this.borders = [ ];
             this.tooltips = [ ];
+            this.delay = 200;
             
             this._animations($.merge([], current.animations));
             
@@ -170,6 +172,13 @@ var Mentorial = function(Scenarios, options) {
         _animations: function(list) {
             animation = list.shift(); // Retire le premier élément du tableau
             var self = this;
+            
+            this.delay += animation.delay || 0;
+            
+            if (animation.type == "tooltip") {
+                this.delay += 200;
+            }
+            
             setTimeout(function() {
                 switch(animation.type) {
                     case "code":
@@ -245,9 +254,11 @@ var Mentorial = function(Scenarios, options) {
             
             var prefix = this.substitution_prefix;
             
-            $.each(substitutions, function(key, value) {
-                $("." + prefix + key).html(value);
-            })
+            setTimeout(function() {
+                $.each(substitutions, function(key, value) {
+                    $("." + prefix + key).html(value);
+                });
+            }, this.delay);
         },
         
         // Nettoyage des animations d'une étape
