@@ -172,6 +172,11 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
                 content: 'Aqui para dejar el tutorial...',
                 autoClose: false
             }
+        }, {
+            type: "code",
+            code: function() {
+                $("#bouton-tuto").click();
+            }
         }]
     }, { ////////////////////// 1
         raises_flag: true,
@@ -363,6 +368,11 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
                 position: "bottom"
             },
             delay: 400
+        }, {
+            type: "code",
+            code: function() {
+                $("#bouton-tuto").click();
+            }
         }]
     }, { ////////////////////// 1
         stage_css: {
@@ -412,6 +422,284 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
         }]
     }]
     
+}, {
+    id: 3,
+    titre: "Admin utilisateurs",
+    description: "",
+    stages: [{ ////////////////////// 0
+        raises_flag: true,
+        stage_css: {
+            width: "40%",
+            left: "25%",
+            top: "20%"
+        },
+        animations: [{
+            type: "highlight",
+            selector: "#menu-admin",
+            force: true
+        }, {
+            type: "tooltip",
+            selector: "#menu-admin",
+            options: {
+                content: "Click!",
+                autoClose: false,
+                position: "top-right"
+            },
+            delay: 400
+        }, {
+            type: "code",
+            code: function() {
+                $("#bouton-tuto").click();
+            }
+        }]
+    }, { ////////////////////// 1
+        raises_flag: true,
+        stage_css: {
+            width: "40%",
+            left: "25%",
+            top: "35%"
+        },
+        animations: [{
+            type: "highlight",
+            selector: "#toggle-new-user",
+            force: true,
+            delay: 400
+        }, {
+            type: "tooltip",
+            selector: "#toggle-new-user",
+            options: {
+                content: "Click!",
+                autoClose: false,
+                position: "bottom"
+            },
+            delay: 400
+        }]
+    }, { ////////////////////// 2
+        raises_flag: true,
+        stage_css: {
+            width: "40%",
+            left: "25%",
+            bottom: "0"
+        },
+        animations: [{
+            type: "highlight",
+            selector: "#users",
+            force: true
+        }, {
+            type: "code",
+            code: function() {
+                $("#container-new-user").css("background-color", "#E7E9F0");
+                $("#container-new-user ul").css("list-style-type", "none");
+            }
+        }],
+        clean: function() {
+            $("#container-new-user").css("background-color", "");
+            $("#container-new-user ul").css("list-style-type", "");
+        }
+    }, { ////////////////////// 3
+        stage_css: {
+            width: "40%",
+            left: "0",
+            bottom: "20%"
+        },
+        animations: [{
+            type: "highlight",
+            selector: "#regles-new-user",
+            force: true
+        }, {
+            type: "code",
+            code: function() {
+                $("#regles-new-user ul").css("list-style-type", "none");
+            }
+        }],
+        substitutions: function() {
+            var monde = profil.mondes[$("#regles-new-user li:first-child").attr("data-monde")];
+            
+            return {
+                monde: monde.label,
+                champ: monde.champs[monde.cascade[0]].label
+            };
+        },
+        clean: function() {
+            $("#regles-new-user ul").css("list-style-type", "");
+        }
+    }]
+}, {
+    titre: "Administration des listes",
+    description: "",
+    stages: [{
+        raises_flag: true,
+        stage_css: {
+            left: "25%",
+            top: "30%",
+            width: "40%"
+        },
+        substitutions: function() {
+            var monde = profil.mondes[Core.monde]
+            var cascade = monde.cascade;
+            var champs = "", first_champ = "";
+            
+            $.each(cascade, function(i, pk) {
+                var champ = monde.champs[pk];
+                
+                if (i == 0) {
+                    first_champ = champ.pluriel;
+                } else {
+                    if (i < cascade.length - 1) {
+                        champs += ", "
+                    } else {
+                        champs += " y "
+                    }
+                }
+                
+                champs += champ.pluriel;
+            });
+            
+            return {
+                monde: monde.label,
+                champs: champs,
+                champ: first_champ
+            }
+        },
+        animations: [{
+            type: "highlight",
+            selector: "#top-front",
+        }, {
+            type: "highlight",
+            selector: "#container-icones-admin"
+        }, {
+            type: "tooltip",
+            selector: "#bouton-admin-liste",
+            options: {
+                content: "Click!",
+                autoClose: false,
+                position: "bottom"
+            },
+            delay: 400
+        }, {
+            type: "code",
+            code: function() {
+                $("#bouton-tuto").click();
+            }
+        }]
+    }, {
+        stage_css: {
+            left: "25%",
+            bottom: "0",
+            width: "50%"
+        },
+        substitutions: function() {
+            var monde = profil.mondes[Core.monde]
+            var cascade = monde.cascade;
+            var champ, champpl, champ2, champ2si;
+            
+            $.each(cascade, function(i, pk) {
+                if (i == 0) {
+                    champ = monde.champs[pk].label;
+                    champpl = monde.champs[pk].pluriel;
+                } else {
+                    champ2 = monde.champs[pk].pluriel;
+                    champ2si = monde.champs[pk].label;
+                    return false;
+                }
+            });
+            return {
+                champ: champ,
+                champpl: champpl,
+                champ2pl: champ2,
+                champ2: champ2si
+            }
+        },
+        animations: [{
+            type: "code",
+            code: function() {
+                $("#mondes").css("background-color", "#E7E9F0");
+                $("#mondes ul").css({
+                    "list-style-type": "none",
+                    "padding": "0",
+                    "margin": "0",
+                    "padding-bottom": "10px",
+                    "padding-top": "5px"
+                });
+                $("#mondes h1").css({
+                    "font-size": "1.1em"
+                });
+                $("#liste-valeurs>li.valeur:nth-child(2)>div").click();
+            }
+        }, {
+            type: "highlight",
+            selector: "#mondes",
+            force: true,
+            delay: 600
+        }, {
+            type: "tooltip",
+            selector: "#liste-valeurs>li.valeur:nth-child(2)",
+            options: {
+                content: "Click!",
+                autoClose: false,
+                position: "top-left"
+            }
+        }]
+    }, {
+        stage_css: {
+            left: "25%",
+            bottom: "0",
+            width: "50%"
+        },
+        animations: [{
+            type: "highlight",
+            selector: "#mondes",
+            force: true
+        }, {
+            type: "tooltip",
+            selector: "#liste-valeurs>li.valeur:nth-child(2) input.valeur",
+            options: {
+                content: "Aqui para modificar el nombre!",
+                autoClose: false,
+                position: "top"
+            }
+        }, {
+            type: "tooltip",
+            selector: "#liste-valeurs>li.valeur:nth-child(2) img.bouton-save-back",
+            options: {
+                content: "Y aqui para guardar tus cambios!",
+                autoClose: false,
+                position: "top-left"
+            }
+        }]
+    }, {
+        stage_css: {
+            left: "25%",
+            bottom: "0",
+            width: "50%"
+        },
+        animations: [{
+            type: "highlight",
+            selector: "#mondes",
+            force: true
+        }, {
+            type: "tooltip",
+            selector: "#new-valeur input",
+            options: {
+                content: "Aqui para crear un nuevo elemento!",
+                autoClose: false,
+                position: "bottom"
+            }
+        }],
+        clean: function() {
+            $("#mondes").css("background-color", "");
+            $("#mondes ul").css({
+                "list-style-type": "",
+                "padding": "",
+                "margin": "",
+                "padding-bottom": "",
+                "padding-top": ""
+            });
+            $("#mondes h1").css({
+                "font-size": ""
+            });
+        }
+    }]
 }];
 
 var Tuto = Mentorial(Scenarios, {

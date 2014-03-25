@@ -107,6 +107,8 @@ var Mentorial = function(Scenarios, options) {
             
             if (current.raises_flag) {
                 this.flag("raise");
+            } else {
+                this.flag("drop");
             }
             
             this.highlights = [ ];
@@ -160,7 +162,7 @@ var Mentorial = function(Scenarios, options) {
                     this.flag_value = undefined;
                     break;
                 default:
-                    if (this.flag_value === this.stage) {
+                    if (this.flag_value === this.stage && action == this.stage) {
                         this.flag("drop");
                         this._next();
                     }

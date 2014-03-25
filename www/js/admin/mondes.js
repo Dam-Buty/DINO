@@ -41,6 +41,8 @@ var bootstrap_monde = function() {
     $.each(lignes_ouvertes, function(i, ligne) {
         $('#liste-valeurs li[data-champ="' + ligne[0] + '"][data-valeur="' + ligne[1] + '"]').find("div").click();
     });
+    
+    Tuto.flag(0);
 }
 
 var affiche_valeur = function(reference, niveau, ul) {

@@ -112,11 +112,19 @@ var tip_champ = function(field, tip, ignore_KO) {
             "width": "45%"
         });
     } else {
-        tip.css({
-            "z-index": "",
-            "left": "",
-            "width": ""
-        });
+        if (field.hasClass("select-new-niveau")) {
+            tip.css({
+                "z-index": 701,
+                "left": "45%",
+                "width": "45%"
+            });
+        } else {
+            tip.css({
+                "z-index": "",
+                "left": "",
+                "width": ""
+            });
+        }
     }
 };
 

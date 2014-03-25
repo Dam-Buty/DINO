@@ -31,6 +31,8 @@ var bootstrap_users = function() {
     $("#toggle-new-user").unbind().click(toggle_new_user);
     $("#save-new-user").unbind().click(save_user);
     
+    Tuto.flag(0);
+    
     refresh_users();
 };
 
@@ -307,11 +309,11 @@ var bootstrap_regles = function() {
 
 var reset_tips = function() {
     $("#tip-login").html(
-        "Entre un nombre de usuario <b>entre 8 y 32 caracteres</b>."
+        "Entra un nombre de usuario <b>entre 8 y 32 caracteres</b>."
     );
     
     $("#tip-pass").html(
-        "Su contrasena es la pieza clave de la seguridad de sus datos.<br/>" +
+        "Tu contrasena es la pieza clave de la seguridad de tus datos.<br/>" +
         "Una contrasena robusta contiene a lo menos 8 caracteres, incluyendo :<br/>" +
         "<ul>" +
             "<li>una minuscula,</li>" +
@@ -323,7 +325,7 @@ var reset_tips = function() {
     );
     
     $("#tip-mail").html(
-        "DINO nunca haria nada para lastimar un buzon inocente!"
+        "DINO odia el SPAM! Tu correo electronico esta en seguridad con nosotros."
     );
     
     $("#tip-niveau").html(
@@ -398,6 +400,8 @@ var toggle_regles = function(isnew, user) {
         });
         div.find(".switch-me").trigger("change");
     }
+    
+    Tuto.flag(2);
 };
 
 var toggle_monde = function() {
@@ -569,6 +573,8 @@ var toggle_new_user = function() {
         if ($("#regles-new-user").is(":visible")) {
             $("#save-new-user").fadeIn();
         }
+        
+        Tuto.flag(1);
     }
 };
 
@@ -578,6 +584,14 @@ var tip_niveau = function() {
     var tip = $("#tip-niveau");
     
     tip_champ(field, tip);
+    
+    if (Tuto.stage == 2) {
+        Tuto._animations([{
+            type: "highlight",
+            selector: "#tip-niveau",
+            force: true
+        }])
+    }
 };
 
 var kill_tip_niveau = function() {
