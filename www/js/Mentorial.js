@@ -84,7 +84,7 @@ var Mentorial = function(Scenarios, options) {
             
             $(this.stages_container).fadeOut();
             $("#opak-tuto").remove();
-            this.exit_callback();
+            this.exit_callback(this.scenario, this.stage);
             
             this.data = {};
             this.flag_value = undefined;

@@ -510,7 +510,7 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
         },
         animations: [{
             type: "highlight",
-            selector: "#users",
+            selector: "#container-new-user",
             force: true
         }, {
             type: "code",
@@ -733,16 +733,16 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
 }];
 
 var Tuto = Mentorial(Scenarios, {
-    exit_callback: function() {
+    exit_callback: function(scenario,stage) {
         
         var end_tuto = function() {
-            $('#list-tutos li.ligne-tuto[data-pk="' + Tuto.scenario + '"]').find(".new-tuto").remove();
+            $('#list-tutos li.ligne-tuto[data-pk="' + scenario + '"]').find(".new-tuto").remove();
             
             $.ajax({
                 url: "do/doEndTuto.php",
                 type: "POST",
                 data: {
-                    tuto: Tuto.scenario
+                    tuto: scenario
                 },
                 statusCode: {
                     200: function() {},
@@ -754,8 +754,10 @@ var Tuto = Mentorial(Scenarios, {
         };
         
         if (Tuto.bootstrapped) {
-            if (Tuto.stage < Tuto.Scenarios[Tuto.scenario].stages.length - 1) {
+            if (stage < Tuto.Scenarios[scenario].stages.length - 1) {
                 popup_tuto(end_tuto);
+            } else {
+                end_tuto();
             }
             Tuto.bootstrapped = false;
         } else {
@@ -836,7 +838,7 @@ var bootstrap_tuto = function() {
     $("#bouton-tuto").fadeIn().click(toggle_tutos);
     $("#toggle-university").click(toggle_university);
     
-    $(".ligne-tuto").click(function() {
+    $("#list-tutos .ligne-tuto").click(function() {
         var pk = $(this).attr("data-pk");
         
         $.ajax({
@@ -846,7 +848,10 @@ var bootstrap_tuto = function() {
                     $("#container-tuto").html(tuto);
                     //toggle_tutos();
                     Tuto.run(pk);
-                    $("#bouton-tuto").click();
+                    if ($("#bouton-tuto").css("bottom") == "35px") {
+                        $("#bouton-tuto").click();
+                    }
+                    
                 },                
                 404: function() {
                     popup('No se pudo cargar el tutorial. Gracias por intentar otra vez.', 'error'); // LOCALISATION

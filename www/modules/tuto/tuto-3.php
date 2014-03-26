@@ -15,7 +15,7 @@
 <div class="etape" id="etape-3-3">
     <h1><b>5</b>/<b>5</b> - Parametros de acceso</h1>
     <p>Ahora vas a determinar los accesos de tu collaborador :</p>
-    <p>Puedes autorizar o prohibir el acceso a cada mundo con el switch <img src="img/tuto_switch.png" style="vertical-align: middle;"/></p>
+    <p>Puedes autorizar o prohibir el acceso a cada <b>mundo</b> con el switch <img src="img/tuto_switch.png" style="vertical-align: middle;"/></p>
     <p>Tambien puedes limitar su acceso a ciertas <b>valores de campos</b>. Por ejemplo en el mundo <b class="tuto-monde"></b> puedes limitar el acceso a ciertos <b class="tuto-champ"></b>.</p>
     <div class="boutons next">Terminar</div>
 </div>
