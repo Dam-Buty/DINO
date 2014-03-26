@@ -115,18 +115,5 @@ session_start();
             <div style="clear: right;"></div>
         </div>
     </div>
-    <div id="container-help">
-        <div class="action help" id="help-0">
-            <h2>Elige un tipo de documento</h2>
-            <p>Para empezar la creacion de tu mundo, tienes que identificar el tipo de documento que quieres clasificar.</p>
-            <p><input type="text" id="champ-type" placeholder="Factura, Nomina, Cotizacion, Comprobante..."></p>
-        </div>
-        <div class="action help" id="help-1">
-            <h2>Clasificacion de <b class="tuto-monde"></b></h2>
-            <p>Segun cual criterio se clasifica un <b class="tuto-monde"></b>?</p>
-            <p>Por ejemplo, hemos visto un <b class="tuto-monde"></b> clasificado : </p>
-            <p><ul class="suggest-champs"></ul></p>
-            <p><input type="text" id="champ-type" placeholder="Proyecto, Cliente, Segmento ..."></p>
-        </div>
-    </div>
+    <div id="container-help">Si tienes alguna duda, te invitamos a consultar<br/><a href="http://prezi.com/7rblvsge3xfs/" target="_blank">3 ejemplos de mundos documentales</a> o <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">10 tips para un perfil perfecto</a></div>
 </div>

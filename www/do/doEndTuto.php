@@ -16,7 +16,7 @@ if (isset($_SESSION["niveau"])) {
     ;";       
       
     $result = dino_query($query,[
-        "login" => $_SESSION["user"],
+        "user" => $_SESSION["user"],
         "tuto" => $_POST["tuto"]
     ]);  
     

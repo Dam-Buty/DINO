@@ -1,6 +1,6 @@
 var Scenarios = [{ ////////////////////// SCENARIO 0
     id: 0,
-    titre: "Arrivée du gérant",
+    titre: "Premier monde",
     description: "Es un muy bueno tutorial!",
     stages: [{////////////////////// 0
         stage_css: {
@@ -9,9 +9,17 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
         },
         raises_flag: true,
         animations: [{
+            type: "code",
+            code: function() {
+                if ($("#backoffice").is(":visible")) {
+                    $("#menu-retour").click();
+                }
+            }
+        }, {
             type: "highlight",
             selector: "#menu-designer",
-            force: true
+            force: true,
+            delay: 400
         }, {
             type: "tooltip",
             selector: "#menu-designer",
@@ -151,7 +159,7 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
     }]
 }, { ////////////////////// SCENARIO 1
     id: 1,
-    titre: "Première visite archiviste",
+    titre: "Charger un document",
     description: "Es un muy bueno tutorial!",
     stages: [{////////////////////// 0
         stage_css: {
@@ -159,23 +167,26 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             left: "25%",
         },
         animations: [{
+            type: "code",
+            code: function() {
+                if ($("#backoffice").is(":visible")) {
+                    $("#menu-retour").click();
+                }
+            }
+        }, {
             type: "tooltip",
             selector: '#bouton-tuto',
             options: {
                 content: '... y aqui para retomarlo mas tarde!',
                 autoClose: false
-            }
+            },
+            delay: 400
         }, {
             type: "tooltip",
             selector: '#quit-tuto',
             options: {
                 content: 'Aqui para dejar el tutorial...',
                 autoClose: false
-            }
-        }, {
-            type: "code",
-            code: function() {
-                $("#bouton-tuto").click();
             }
         }]
     }, { ////////////////////// 1
@@ -343,12 +354,11 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
         },
         clean: function() {
             $("#menu-queue").click();
-            $("#bouton-tuto").click();
         }
     }]
 }, {
     id: 2,
-    titre: "Première visite archiviste",
+    titre: "Chercher un document",
     description: "Es un muy bueno tutorial!",
     stages: [{ ////////////////////// 0
         stage_css: {
@@ -357,8 +367,16 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             top: "20%"
         },
         animations: [{
+            type: "code",
+            code: function() {
+                if ($("#backoffice").is(":visible")) {
+                    $("#menu-retour").click();
+                }
+            }
+        }, {
             type: "highlight",
-            selector: "#top-front"
+            selector: "#top-front",
+            delay: 400
         }, {
             type: "tooltip",
             selector: "#mondes-top li:first-child",
@@ -368,11 +386,6 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
                 position: "bottom"
             },
             delay: 400
-        }, {
-            type: "code",
-            code: function() {
-                $("#bouton-tuto").click();
-            }
         }]
     }, { ////////////////////// 1
         stage_css: {
@@ -407,6 +420,17 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             left: "0%",
             bottom: "15%"
         },
+        substitutions: function() {
+            var monde = profil.mondes[Core.monde];
+            var champ = monde.champs[monde.cascade[0]].label;
+            
+            monde = monde.label;            
+            
+            return {
+                monde: monde,
+                champ: champ
+            };
+        },
         animations: [{
             type: "highlight",
             selector: "#top-front"
@@ -434,9 +458,17 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             top: "20%"
         },
         animations: [{
+            type: "code",
+            code: function() {
+                if ($("#backoffice").is(":visible")) {
+                    $("#menu-retour").click();
+                }
+            }
+        }, {
             type: "highlight",
             selector: "#menu-admin",
-            force: true
+            force: true,
+            delay: 600
         }, {
             type: "tooltip",
             selector: "#menu-admin",
@@ -446,11 +478,6 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
                 position: "top-right"
             },
             delay: 400
-        }, {
-            type: "code",
-            code: function() {
-                $("#bouton-tuto").click();
-            }
         }]
     }, { ////////////////////// 1
         raises_flag: true,
@@ -562,8 +589,16 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             }
         },
         animations: [{
+            type: "code",
+            code: function() {
+                if ($("#backoffice").is(":visible")) {
+                    $("#menu-retour").click();
+                }
+            }
+        }, {
             type: "highlight",
             selector: "#top-front",
+            delay: 400
         }, {
             type: "highlight",
             selector: "#container-icones-admin"
@@ -576,11 +611,6 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
                 position: "bottom"
             },
             delay: 400
-        }, {
-            type: "code",
-            code: function() {
-                $("#bouton-tuto").click();
-            }
         }]
     }, {
         stage_css: {
@@ -704,19 +734,34 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
 
 var Tuto = Mentorial(Scenarios, {
     exit_callback: function() {
-        $.ajax({
-            url: "do/doEndTuto.php",
-            type: "POST",
-            data: {
-                tuto: Tuto.scenario
-            },
-            statusCode: {
-                200: function() {},
-                500: function() {
-                    popup("Erreur!", "error");
+        
+        var end_tuto = function() {
+            $('#list-tutos li.ligne-tuto[data-pk="' + Tuto.scenario + '"]').find(".new-tuto").remove();
+            
+            $.ajax({
+                url: "do/doEndTuto.php",
+                type: "POST",
+                data: {
+                    tuto: Tuto.scenario
+                },
+                statusCode: {
+                    200: function() {},
+                    500: function() {
+                        popup("Erreur!", "error");
+                    }
                 }
+            });
+        };
+        
+        if (Tuto.bootstrapped) {
+            if (Tuto.stage < Tuto.Scenarios[Tuto.scenario].stages.length - 1) {
+                popup_tuto(end_tuto);
             }
-        });
+            Tuto.bootstrapped = false;
+        } else {
+            end_tuto();
+        }
+        
     },
     exit_on_opaque: false
 });
@@ -770,8 +815,10 @@ var bootstrap_tuto = function() {
             .append(
                 $("<a></a>")
                 .attr("href", documentation.url)
+                .attr("target", "_blank")
                 .text(documentation.titre)
             );
+            
         var li_chapitre;
         
         if (documentation.niveau != niveau) {
@@ -799,6 +846,7 @@ var bootstrap_tuto = function() {
                     $("#container-tuto").html(tuto);
                     //toggle_tutos();
                     Tuto.run(pk);
+                    $("#bouton-tuto").click();
                 },                
                 404: function() {
                     popup('No se pudo cargar el tutorial. Gracias por intentar otra vez.', 'error'); // LOCALISATION
@@ -810,6 +858,7 @@ var bootstrap_tuto = function() {
     
     if (startup !== false) {
         startup.click();
+        Tuto.bootstrapped = true;
     }
 };
 

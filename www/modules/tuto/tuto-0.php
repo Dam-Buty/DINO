@@ -11,13 +11,13 @@
     <p>En DINO, un <b>mundo</b> debe tener a lo menos un <b>nombre</b> y un <b>campo de clasificacion</b>.</p>
     <p>Un <b>campo de clasificacion</b> es como una caja donde organizas tus documentos.</p>
     <p>Por ejemplo, puedes organizar tus documentos por <b>Cliente</b>, <b>Proyecto</b>, <b>Empleado</b>...</p>
-    <p><i>Si tienes una duda, puedes consultar nuestros <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">10 tips para un perfil perfecto</a>.</i></p>
+    <p><i>Si tienes una duda, puedes consultar nuestros <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">10 tips para un perfil perfecto</a> o nuestros <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">3 ejemplos de mundos documentales</a>.</i></p>
 </div>
 <div class="etape" id="etape-0-2">
     <h1><b>3</b>/<b>5</b> - Primer documento</h1>
     <p>Gracias! Ahora vamos a crear el primer <b>tipo de documento</b> que vamos a organizar en la caja <b class="tuto-champ"></b>.</p>
     <p>Da click en "<b>Documento</b>" para empezar.</p>
-    <p><i>Si tienes una duda, puedes consultar nuestros <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">10 tips para un perfil perfecto</a>.</i></p>
+    <p><i>Si tienes una duda, puedes consultar nuestros <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">10 tips para un perfil perfecto</a> o nuestros <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">3 ejemplos de mundos documentales</a>.</i></p>
 </div>
 <div class="etape" id="etape-0-3">
     <h1><b>4</b>/<b>5</b> - Primer documento</h1>
@@ -29,13 +29,12 @@
             <li>Puede ser <a href="http://www.dino.mx">mensual</a> o tener un <a href="http://www.dino.mx">detalle</a></li>
         </ul>
     </p>
-    <p><i>Si tienes una duda, puedes consultar nuestros <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">10 tips para un perfil perfecto</a>.</i></p>
+    <p><i>Si tienes una duda, puedes consultar nuestros <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">10 tips para un perfil perfecto</a> o nuestros <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">3 ejemplos de mundos documentales</a>.</i></p>
 </div>
 <div class="etape" id="etape-0-4">
     <h1><b>5</b>/<b>5</b> - Tu perfil documental</h1>
     <p>Aqui puedes ver directamente todas las modificaciones que haces en tu perfil documental. Puedes agregar campos, tipos de documentos, y categorias para agruparlos.</p>
-    <p>No dudes en familiarizarte con las funcionalidades, nada es definitivo hasta que das click en "<b>Publicar</b>"!
-    <p><i>Si tienes una duda, puedes consultar nuestros <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">10 tips para un perfil perfecto</a>.</i></p>
-    </p>
+    <p>No dudes en familiarizarte con las funcionalidades, nada es definitivo hasta que das click en "<b>Publicar</b>"!</p>
+    <p><i>Si tienes una duda, puedes consultar nuestros <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">10 tips para un perfil perfecto</a> o nuestros <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">3 ejemplos de mundos documentales</a>.</i></p>
     <div class="boutons next">Terminar</div>
 </div>

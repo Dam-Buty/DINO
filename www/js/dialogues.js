@@ -124,4 +124,18 @@ var popup_confirmation = function(message, titre, bouton, callback) {
     });
 };
 
-
+var popup_tuto = function(callback) {
+    dialogue = new $.Zebra_Dialog(
+        "No has terminado el tutorial, te gustaria retomarlo la proxima vez que te conectes?", {
+            type: "question",
+            overlay_close: false,
+            'buttons':  [ {
+                caption: 'Si', 
+                callback: function() {}
+            }, {
+                caption: 'No', 
+                callback: callback
+            } ]
+        }
+    );
+}

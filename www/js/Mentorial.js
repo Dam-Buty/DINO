@@ -19,6 +19,7 @@ var Mentorial = function(Scenarios, options) {
             substitutions: { }
         },
         flag_value: undefined,
+        bootstrapped: false,
         
         // Données locales d'étape
         highlights: [ ],

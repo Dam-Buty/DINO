@@ -75,7 +75,7 @@ switch($_POST["page"]) {
                 status(200);
                 echo $idclient;
                 write_log([
-                    "libelle" => "INSERT client + user",
+                    "libelle" => "SIGNUP INSERT client + user",
                     "admin" => 0,
                     "query" => $query_user,
                     "statut" => 0,

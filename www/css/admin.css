@@ -565,8 +565,18 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
 }
 
 #container-help {
-    width: 62%;
-    margin-left: 36%;
+    padding: 10px;
+    width: 55%;
+    margin-left: 43%;
+    margin-top: 5px;
+    
+    box-shadow: 0 0 1px 1px #A9A9A9;
+    
+    background-color: #E7E9F0;
+    
+    font-size: 0.9em;
+    font-style: italic;
+    text-align: right;
 }
 
 .action {

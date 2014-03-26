@@ -37,6 +37,11 @@ var bootstrap = function() {
     })
     .done(function (data) {
         profil = data;
+        
+        $.each(profil.mondes, function(i, monde) {
+            Core.monde = i;
+            return false;
+        });
         //console.log(data);
         
         $(".div_login").hide();
