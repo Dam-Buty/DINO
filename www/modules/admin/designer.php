@@ -64,7 +64,7 @@ session_start();
                     <option value="30">Gerente</option>
     <?php } ?>
                 </select>
-                <i>Aqui decides <a href="http://www.dino.mx">quien puede acceder a tu documento</a>.</i>
+                <i style="display: block;">Aqui decides <a href="http://www.dino.mx/university/los-diferentes-niveles-de-usuarios-dino/">quien puede acceder a tu documento</a>.</i>
             </p>
             <h3>Opciones</h3>
             <p>
@@ -115,5 +115,5 @@ session_start();
             <div style="clear: right;"></div>
         </div>
     </div>
-    <div id="container-help">Si tienes alguna duda, te invitamos a consultar<br/><a href="http://prezi.com/7rblvsge3xfs/" target="_blank">3 ejemplos de mundos documentales</a> o <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">10 tips para un perfil perfecto</a></div>
+    <div id="container-help">Si tienes alguna duda, te invitamos a consultar<br/><a href="http://prezi.com/i1z9x8l-77l7/" target="_blank">3 ejemplos de mundos documentales</a> o <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">8 tips para un perfil perfecto</a></div>
 </div>

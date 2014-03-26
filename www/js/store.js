@@ -696,7 +696,7 @@ var avance_store = function(position) {
     var new_position;
     
     // Si c'est le seul document de la queue on ferme le store
-    if (queue.length == 1 || Tuto.etape == 6) {
+    if (queue.length == 1 || Tuto.stage == 6) {
         if (queue.length == 1) {
             queue.length = 0;
         }

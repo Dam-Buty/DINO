@@ -171,6 +171,10 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             code: function() {
                 if ($("#backoffice").is(":visible")) {
                     $("#menu-retour").click();
+                } else {
+                    if (!$("#liste").is(":visible")) {
+                        $('#mondes-top li[data-selected="1"]').click();
+                    }
                 }
             }
         }, {
@@ -627,6 +631,10 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
                 if (i == 0) {
                     champ = monde.champs[pk].label;
                     champpl = monde.champs[pk].pluriel;
+                    if (monde.cascade.length == 1) {
+                        champ2 = "campos";
+                        champ2si = "campo";
+                    }
                 } else {
                     champ2 = monde.champs[pk].pluriel;
                     champ2si = monde.champs[pk].label;
@@ -711,7 +719,7 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             type: "tooltip",
             selector: "#new-valeur input",
             options: {
-                content: "Aqui para crear un nuevo elemento!",
+                content: "Aqui para agregar un nuevo elemento!",
                 autoClose: false,
                 position: "bottom"
             }
@@ -745,7 +753,15 @@ var Tuto = Mentorial(Scenarios, {
                     tuto: scenario
                 },
                 statusCode: {
-                    200: function() {},
+                    200: function() {
+                        $("#bouton-tuto")
+                        .tooltipster({
+                            content: $("<p>No olvides que puedes encontrar toda la documentacion de DINO aqui!</p><p><i>(Da click aqui para cerrar)</i></p>"),
+                            position: "top",
+                            timer: 1200
+                        })
+                        .tooltipster("show");
+                    },
                     500: function() {
                         popup("Erreur!", "error");
                     }
@@ -848,7 +864,7 @@ var bootstrap_tuto = function() {
                     $("#container-tuto").html(tuto);
                     //toggle_tutos();
                     Tuto.run(pk);
-                    if ($("#bouton-tuto").css("bottom") == "35px") {
+                    if ($("#container-list-tutos").css("bottom") == "35px") {
                         $("#bouton-tuto").click();
                     }
                     
@@ -864,6 +880,14 @@ var bootstrap_tuto = function() {
     if (startup !== false) {
         startup.click();
         Tuto.bootstrapped = true;
+    } else {
+        $("#bouton-tuto")
+        .tooltipster({
+            content: $("<p>No olvides que puedes encontrar toda la documentacion de DINO aqui!</p><p><i>(Da click aqui para cerrar)</i></p>"),
+            position: "top",
+            timer: 1200
+        })
+        .tooltipster("show");
     }
 };
 

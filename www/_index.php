@@ -120,7 +120,7 @@ if ($_SESSION["niveau"] >= 20) {
     </ul>
     <ul id="list-documentation">
         <li class="entete-list-tutos">DINO UNIVERSITY</li>
-        <li class="ligne-tuto"><a href="http://blog.dino.mx" target="_blank" title="Puedes encontrar toda la documentacion en el Blog DINO!">Blog DINO</a></li>
+        <li class="ligne-tuto"><a href="http://www.dino.mx/universidad/" target="_blank" title="Puedes encontrar toda la documentacion en el Blog DINO!">Blog DINO</a></li>
     </ul>
 </div>
 

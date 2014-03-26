@@ -11,11 +11,11 @@
 </div>
 <div class="etape" id="etape-4-2">
     <h1><b>3</b>/<b>4</b> - Administracion de tus listas</h1>
-    <p>Puedes modificar el nombre de cualquier <b class="tuto-champ"></b> o de cualquier <b class="tuto-champ2"></b> asociado.</p>
+    <p>Puedes editar el nombre de cualquier <b class="tuto-champ"></b> o de cualquier <b class="tuto-champ2"></b> asociado.</p>
     <div class="boutons next">Siguiente</div>
 </div>
 <div class="etape" id="etape-4-3">
     <h1><b>4</b>/<b>4</b> - Administracion de tus listas</h1>
-    <p>Tambien puedes crear un nuevo <b class="tuto-champ"></b> o un nuevo <b class="tuto-champ2"></b>.</p>
+    <p>Tambien puedes agregar un nuevo <b class="tuto-champ"></b> o un nuevo <b class="tuto-champ2"></b>.</p>
     <div class="boutons next">Terminar</div>
 </div>

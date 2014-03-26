@@ -1,7 +1,7 @@
 <div class="etape" id="etape-3-0">
     <h1><b>1</b>/<b>5</b> - Administracion de usuarios</h1>
-    <p><b>DINO</b> esta disenado por el trabajo en equipo.</p>
-    <p>Puedes collaborar con tu equipo a la organizacion de tus documentos y tu, como <b>Gerente</b>, tienes el control sobre lo que cada uno puede hacer.</p>
+    <p><b>DINO</b> esta disenado para el trabajo en equipo.</p>
+    <p>Puedes collaborar con tu equipo en la organizacion de tus documentos y tu, como <b>Gerente</b>, tienes el control sobre lo que cada uno puede hacer.</p>
     <p>Da click en "<b>Usuarios</b>" para crear tu primer usuario.</p>
 </div>
 <div class="etape" id="etape-3-1">

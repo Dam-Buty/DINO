@@ -1,3 +1,72 @@
+var allowed_extensions = {
+    "pdf": 1,
+    "jpg": 1,
+    "png": 1,
+    "gif": 1,
+    "doc": 1,
+    "xls": 1,
+    "ppt": 1,
+    "docx": 1,
+    "xlsx": 1,
+    "pptx": 1,
+    "zip": 1,
+    "rar": 1,
+    "odt": 1,
+    "epub": 1,
+    "mobi": 1
+}
+
+var pdf_extensions =  {
+    "pdf": 1,
+    "ps": 1,
+    "eps": 1
+};
+
+var img_extensions =  {
+    "jpg": 1,
+    "png": 1,
+    "gif": 1,
+    "jpeg": 1,
+    "psd": 1,
+    "ai": 1
+};
+
+var doc_extensions = {
+    "doc": 1,
+    "dot": 1,
+    "odt": 1,
+    "ott": 1,
+    "sxw": 1,
+    "stw": 1,
+    "docx": 1,
+    "dotx": 1,
+    "xls": 1,
+    "xlt": 1,
+    "ods": 1,
+    "ots": 1,
+    "sxc": 1,
+    "stc": 1,
+    "xlsx": 1,
+    "xltx": 1,
+    "csv": 1,
+    "odp": 1,
+    "otp": 1,
+    "sxi": 1,
+    "sti": 1,
+    "pps": 1,
+    "ppt": 1,
+    "ppsx": 1,
+    "pptx": 1
+};
+
+var vid_extensions = {
+    "mp4": 1,
+    "avi": 1,
+    "wmv": 1,
+    "mov": 1,
+    "divx": 1,
+    "mkv": 1
+};
 
 var m_strUpperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 var m_strLowerCase = "abcdefghijklmnopqrstuvwxyz";
