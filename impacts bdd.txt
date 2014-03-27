@@ -63,7 +63,7 @@ documentation:
 + url_documentation (VARCHAR 100)
 + niveau_documentation (INT)
 
-OK sur baby
+OK sur baby, OK sur my
 
 
 ACTIVATE
@@ -72,4 +72,4 @@ ACTIVATE
 user:
 + activation_user
 
-OK sur baby
+OK sur baby, OK sur my
