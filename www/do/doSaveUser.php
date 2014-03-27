@@ -237,8 +237,8 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
 
                     dinomail($_POST["mail"], $mail, [], [
                         "user" => $_POST["login"],
-                        "client" => $_SESSION["nom_client"],
                         "pass" => $_POST["pass"],
+                        "mail" => $_POST["mail"],
                         "clef" => $activation_user
                     ]);
                 }

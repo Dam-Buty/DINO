@@ -1,10 +1,10 @@
 Hola %user%,
 
-%client% tiene documentos que quiere compartir contigo!
+Tiene documentos compartidos en DINO!
 
 Para consultarlos, solo necesitas dar click en http://my.dino.mx/activate.php?key=%clef%&mail=%mail%.
 
-Te recordamos los datos de conexion que eligiste :
+Abajo encontraras tus datos de conexion :
 
 - Nombre de usuario : %user%
 - Contrasena        : %pass%

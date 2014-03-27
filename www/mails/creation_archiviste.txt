@@ -4,7 +4,7 @@ Tu cuenta DINO ha sido creada!
 
 Para empezar a archivar y consultar los documentos de tu empresa %client%, solo necesitas dar click en http://my.dino.mx/activate.php?key=%clef%&mail=%mail%.
     
-Te recordamos los datos de conexion que eligiste :
+Abajo encontraras tus datos de conexion :
 
 - Nombre de usuario : %user%
 - Contrasena        : %pass%
