@@ -122,7 +122,6 @@ var save_page = function() {
                         tip_page(page + 1);
                     });                
                 }
-                
             },
             403: function() {
                 window.location.replace("index.php");

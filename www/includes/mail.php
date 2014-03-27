@@ -9,7 +9,7 @@ function dinomail($adresse, $mail, $attach = [], $subst = [], $root = false) {
     $domain = "dino.mx";
     
     if ($root) {
-        $path = "mails/";
+        $path = "../../mails/";
     } else {
         $path = "../mails/";
     }
