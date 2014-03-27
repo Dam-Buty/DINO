@@ -21,6 +21,8 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
     #    echo "User : " . $clef_user . "<br/>";
     #    echo "Clef : <pre>" . $clef_stockage . "</pre>";
     
+        $activation_user = genere_clef(12, true);
+        
         $query_user = "
             INSERT INTO `user`
             (
@@ -29,6 +31,7 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
                 `mail_user`, 
                 `niveau_user`, 
                 `fk_client`, 
+                `activation_user`, 
                 `clef_user`
             ) VALUES (
                 :login, 
@@ -36,6 +39,7 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
                 :mail, 
                 :niveau, 
                 :client, 
+                :activation,
                 :clef
             );";     
             
@@ -45,6 +49,7 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
             "mail" => $_POST["mail"],
             "niveau" => $_POST["niveau"],
             "client" => $_SESSION["client"],
+            "activation" => $activation_user,
             "clef" => $clef_cryptee
         ];
             
@@ -233,7 +238,8 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
                     dinomail($_POST["mail"], $mail, [], [
                         "user" => $_POST["login"],
                         "client" => $_SESSION["nom_client"],
-                        "pass" => $_POST["pass"]
+                        "pass" => $_POST["pass"],
+                        "clef" => $activation_user
                     ]);
                 }
             }

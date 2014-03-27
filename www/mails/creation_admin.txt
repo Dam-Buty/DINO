@@ -2,7 +2,9 @@ Hola %user%,
 
 Tu cuenta DINO ha sido creada!
 
-Para empezar a administrar los documentos de tu empresa %client%, solo necesitas conectarte en la pagina http://my.dino.mx con las informaciones siguientes :
+Para empezar a administrar los documentos de tu empresa %client%, solo necesitas dar click en http://my.dino.mx/activate.php?key=%clef%&mail=%mail%.
+    
+Te recordamos los datos de conexion que eligiste :
 
 - Nombre de usuario : %user%
 - Contrasena        : %pass%
