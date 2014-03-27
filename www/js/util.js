@@ -28,6 +28,7 @@ var img_extensions =  {
     "gif": 1,
     "jpeg": 1,
     "psd": 1,
+    "svg": 1,
     "ai": 1
 };
 
