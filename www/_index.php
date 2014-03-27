@@ -126,9 +126,9 @@ if ($_SESSION["niveau"] >= 20) {
 
 <div class="barre-bottom">
     <div id="container-notification">DINO esta en fase Beta, si encuentras algun bug o tienes cualquier pregunta, nos puedes contactar <a href="mailto:beta@dino.mx">aqui</a>.</div>
-    <img id="logout" src="img/logout_20.png">
-    <img id="bouton-pass" src="img/pass_20.png">
-    <img id="bouton-mail" src="img/mail_20.png">
+    <img id="logout" src="img/logout_20.png" title="Desconectar">
+    <img id="bouton-pass" src="img/pass_20.png" title="Cambiar tu contrasena">
+    <img id="bouton-mail" src="img/mail_20.png" title="Cambiar tu correo electronico">
     <img id="help-printer" src="img/printer_20.png">
     <?php if ($_SESSION["niveau"] >= 10) {
     ?>
