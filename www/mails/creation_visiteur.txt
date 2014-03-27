@@ -1,6 +1,6 @@
 Hola %user%,
 
-Tiene documentos compartidos en DINO!
+Tienes documentos compartidos en DINO!
 
 Para consultarlos, solo necesitas dar click en http://my.dino.mx/activate.php?key=%clef%&mail=%mail%.
 
