@@ -115,7 +115,7 @@ var save_page = function() {
                 pk_client = pk;
                 
                 if (next === "end") {
-                    window.location.replace("index.php");
+                    window.location.replace("welcome.php?mail=" + $("#mail").val());
                 } else {
                     current.fadeOut(function() {
                         next.fadeIn();

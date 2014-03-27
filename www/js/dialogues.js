@@ -167,3 +167,13 @@ var popup_designer = function(callback) {
         return true;
     }
 };
+
+popup_activate = function() {
+    $.Zebra_Dialog(
+        '<h1>Tu cuenta no ha sido activada!</h1><p>Si no ves nuestro mail de activacion en tu correo electronico, pensa a revisar en el spam.</p><p>Si encuentras dificultidades activando tu cuenta, nos puedes contactar en <a href="mailto:beta@dino.mx">beta@dino.mx</a> .</p>', 
+        {
+            'type':     'error',
+            'title':    'Error de activacion'
+        }
+    );
+};

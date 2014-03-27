@@ -35,6 +35,8 @@ switch($_POST["page"]) {
         if ($result_client["status"]) {
             $idclient = $result_client["result"];
             
+            $activation_user = genere_clef(12);
+            
             // On crée le user gestionnaire
             $query_user = "
                 INSERT INTO `user` (
@@ -43,14 +45,16 @@ switch($_POST["page"]) {
                     `mail_user`, 
                     `niveau_user`, 
                     `fk_client`, 
-                    `clef_user`
+                    `clef_user`,
+                    `activation_user`
                 ) VALUES (
                     :login, 
                     :password, 
                     :mail, 
                     30, 
                     :idclient, 
-                    :clef
+                    :clef,
+                    :activation
             );";
             
             $result_user = dino_query($query_user,[
@@ -58,7 +62,8 @@ switch($_POST["page"]) {
                 "password" => $password,
                 "mail" => $_POST["mail"],
                 "idclient" => $idclient,
-                "clef" => $clef_cryptee
+                "clef" => $clef_cryptee,
+                "activation" => $activation_user
             ]);
             
             if ($result_user["status"]) {
@@ -66,6 +71,15 @@ switch($_POST["page"]) {
                 mkdir($idclient);
                 chdir($idclient);
                 mkdir("temp");
+                
+                $mail = "signup";
+                
+                dinomail($_POST["mail"], $mail, [], [
+                    "user" => $_POST["login"],
+                    "pass" => $password,
+                    "mail" => $_POST["mail"],
+                    "clef" => $activation_user
+                ]);
                 
                 $_SESSION["user"] = $_POST["login"];
                 $_SESSION["niveau"] = 30;

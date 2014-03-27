@@ -33,6 +33,9 @@ $(document).ready(function() {
                             if (retour.responseJSON.error == "pass") {
                                 $("#pass").addClass("KO");
                             }
+                            if (retour.responseJSON.error == "activate") {
+                                popup_activate();
+                            }
                         }
                     }
                 }); 
