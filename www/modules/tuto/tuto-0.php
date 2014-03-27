@@ -25,7 +25,7 @@
     <p>Un documento tiene las caracteristicas siguientes :
         <ul>
             <li>Un <b>nombre</b></li>
-            <li>Un <a href="http://www.dino.mx/university/los-diferentes-niveles-de-usuarios-dino/" target="_blank">nivel de seguridad</a></li>
+            <li>Un <a href="http://www.dino.mx/university/los-diferentes-niveles-de-usuarios-dino/" target="_blank"><b>nivel de seguridad</b></a></li>
         </ul>
     </p>
     <p>Tambien puede ser <a href="http://www.dino.mx/university/los-diferentes-atributos-disponibles-para-un-documento/" target="_blank"><b>mensual</b></a> o tener un <a href="http://www.dino.mx/university/los-diferentes-atributos-disponibles-para-un-documento/" target="_blank"><b>detalle</b></a>.</p>

@@ -111,6 +111,12 @@ var change_monde = function() {
     var ul = $(this).closest("ul");
     var li = $(this).closest("li");
     
+    popup_designer(function() {
+        _change_monde(ul, li);
+    });
+};
+
+var _change_monde = function(ul, li) {
     $("#profil").fadeOut();
     $("#mondes").fadeOut();
     $("#designer").fadeOut();

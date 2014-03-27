@@ -252,6 +252,12 @@ var Monde = {
 };
 
 var bootstrap_designer = function(action) {
+    popup_designer(function() {
+        _bootstrap_designer(action);
+    });
+};
+
+var _bootstrap_designer = function(action) {
     Tuto.flag(0);
     
     $("#liste").slideUp();   

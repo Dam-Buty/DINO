@@ -1,6 +1,10 @@
 
 
 var bootstrap_monde = function() {
+    popup_designer(_bootstrap_monde);
+};
+
+var _bootstrap_monde = function() {
     var monde = profil.mondes[Core.monde];
     var champ = monde.champs[monde.cascade[0]];
     var label = champ.label;

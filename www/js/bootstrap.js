@@ -50,8 +50,6 @@ var bootstrap = function() {
         // On binde les events
         $("#toggle-date").click(toggle_dates);
         $("#menu-queue").click(anime_queue);
-//        $("#menu-cabinet").click(popup_cabinet);
-//        $("#bouton-cabinet").click(request_monde);
         $("#documents-new-monde").focus(function() {
             $(this).select();    
             
@@ -227,6 +225,12 @@ $( document ).keyup(function(e) {
     if (code == 27) {
         $("#opak").click();
         $("#opak-tuto").click();
+    }
+});
+
+$(window).bind('beforeunload', function(){
+    if ($("#bouton-save-monde").is(":visible")) {
+        return "Tu mundo tiene modificacions que no publicaste. Si dejas esta pagina tus modificaciones seran perdidas.";
     }
 });
 

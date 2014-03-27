@@ -139,3 +139,31 @@ var popup_tuto = function(callback) {
         }
     );
 }
+
+var popup_designer = function(callback) {
+    if ($("#bouton-save-monde").is(":visible")) {
+        $.Zebra_Dialog(
+            "Tu mundo tiene modificacions que no publicaste. Si dejas esta pagina tus modificaciones seran perdidas.", {
+            'type':     'question',
+            'title':    "Modificaciones",
+            'buttons':  ["Cancelar", 'Continuar (<i>borrar las modificaciones</i>)'],
+            'onClose':  function(caption) {
+                if (caption != "Cancelar") {
+                    callback();
+                    return true;
+                } else {
+                    $("#bouton-save-monde")
+                    .tooltipster({
+                        content: $("<p>Aqui para <b>Publicar</b> tu mundo!</p>"),
+                        position: "top",
+                        timer: 1200
+                    })
+                    return false;
+                }
+            }
+        });
+    } else {
+        callback();
+        return true;
+    }
+};

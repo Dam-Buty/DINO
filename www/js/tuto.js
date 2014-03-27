@@ -754,13 +754,7 @@ var Tuto = Mentorial(Scenarios, {
                 },
                 statusCode: {
                     200: function() {
-                        $("#bouton-tuto")
-                        .tooltipster({
-                            content: $("<p>No olvides que puedes encontrar toda la documentacion de DINO aqui!</p><p><i>(Da click aqui para cerrar)</i></p>"),
-                            position: "top",
-                            timer: 1200
-                        })
-                        .tooltipster("show");
+                        $("#bouton-tuto").tooltipster("show");
                     },
                     500: function() {
                         popup("Erreur!", "error");
@@ -877,17 +871,18 @@ var bootstrap_tuto = function() {
         
     });
     
+    $("#bouton-tuto")
+    .tooltipster({
+        content: $("<p>No olvides que puedes encontrar toda la documentacion de DINO aqui!</p>"),
+        position: "top",
+        timer: 1200
+    });
+    
     if (startup !== false) {
         startup.click();
         Tuto.bootstrapped = true;
     } else {
-        $("#bouton-tuto")
-        .tooltipster({
-            content: $("<p>No olvides que puedes encontrar toda la documentacion de DINO aqui!</p><p><i>(Da click aqui para cerrar)</i></p>"),
-            position: "top",
-            timer: 1200
-        })
-        .tooltipster("show");
+        $("#bouton-tuto").tooltipster("show");
     }
 };
 
