@@ -64,3 +64,12 @@ documentation:
 + niveau_documentation (INT)
 
 OK sur baby
+
+
+ACTIVATE
+========
+
+user:
++ activation_user
+
+OK sur baby

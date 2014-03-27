@@ -2,23 +2,28 @@
 require 'vendor/autoload.php';
 use Mailgun\Mailgun;
 
-function dinomail($adresse, $mail, $attach = [], $subst = []) {
+function dinomail($adresse, $mail, $attach = [], $subst = [], $root = false) {
 
     # Instantiate the client.
     $mgClient = new Mailgun('key-8mwfyrfwzmam66qe-20my2lqcmt-o6k4');
     $domain = "dino.mx";
     
-    // Récupère le contenu du mail
+    if ($root) {
+        $path = "mails/";
+    } else {
+        $path = "../mails/";
+    }
     
-    $text = file_get_contents("../mails/" . $mail . ".txt");
-    $html = file_get_contents("../mails/" . $mail . ".html");
-    $sujet = file_get_contents("../mails/" . $mail . ".subject");
+    // Récupère le contenu du mail
+    $text = file_get_contents($path . $mail . ".txt");
+    $html = file_get_contents($path . $mail . ".html");
+    $sujet = file_get_contents($path . $mail . ".subject");
     
     foreach($subst as $key => $value) {
         $text = str_replace("%" . $key . "%", $value, $text);
         $html = str_replace("%" . $key . "%", $value, $html);
     }
-
+    
     # Make the call to the client.
     try {
         $mgClient->sendMessage(
@@ -34,6 +39,7 @@ function dinomail($adresse, $mail, $attach = [], $subst = []) {
         );
         return "";
     } catch (Exception $e ) {
+        var_dump($e);
         return $e->getMessage();
     }
 }
