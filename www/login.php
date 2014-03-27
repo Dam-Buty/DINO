@@ -28,7 +28,7 @@
     </div>
     <input type="submit" value="Ingresar"/>
     <div class="phrase-login">
-        Todavia no tienes tu acceso DINO? <a href="http://signup.dino.mx/">Pidelo aqui!</a>
+        Todavia no tienes tu cuenta GRATIS DINO? <a href="http://signup.dino.mx/">Inscribete aqui!</a>
     </div>
 </form>
 </div>

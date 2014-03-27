@@ -7,7 +7,6 @@ include("../includes/crypt.php");
 include("../includes/mail.php");
 include("../includes/status.php");
 
-echo "lklklk";
 switch($_POST["page"]) {
     case 1:
         // Génération et cryptage de la clef de sécurité avec le login, le mdp et le mail_client
@@ -68,27 +67,19 @@ switch($_POST["page"]) {
             ]);
             
             if ($result_user["status"]) {
-                chdir("../cache/");
+                chdir("../cache/"); // TODO : plutôt le faire à l'activation :)
                 mkdir($idclient);
                 chdir($idclient);
                 mkdir("temp");
                 
                 $mail = "signup";
                 
-                var_dump($_POST);
-                
-                
                 dinomail($_POST["mail"], $mail, [], [
                     "user" => $_POST["login"],
-                    "pass" => $password,
+                    "pass" => $_POST["pass"],
                     "mail" => $_POST["mail"],
                     "clef" => $activation_user
                 ], true);
-                
-                $_SESSION["user"] = $_POST["login"];
-                $_SESSION["niveau"] = 30;
-                $_SESSION["clef"] = $clef_stockage;
-                $_SESSION["client"] = $idclient;
                 
                 status(200);
                 echo $idclient;
