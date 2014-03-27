@@ -29,7 +29,6 @@ SIGNUP
 
 client:
 + secteur_client (VARCHAR 50)
-+ first_gerant_client 
 - nom_contact_client
 - poste_contact_client
 - phone_contact_client
@@ -64,4 +63,4 @@ documentation:
 + url_documentation (VARCHAR 100)
 + niveau_documentation (INT)
 
-OK sur baby sauf documentation
+OK sur baby

@@ -229,7 +229,7 @@ $( document ).keyup(function(e) {
 });
 
 $(window).bind('beforeunload', function(){
-    if ($("#bouton-save-monde").is(":visible")) {
+    if ($("#bouton-save-monde").is(":visible") && !Monde.saving) {
         return "Tu mundo tiene modificacions que no publicaste. Si dejas esta pagina tus modificaciones seran perdidas.";
     }
 });

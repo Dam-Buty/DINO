@@ -23,6 +23,8 @@ var Monde = {
     champs: [],
     graveyard: [],
     
+    saving: false,
+    
     _refresh: function() {
         var liste = $("#liste-map");
         var li = $("<li></li>").append(
@@ -214,6 +216,7 @@ var Monde = {
                     200: function() {
                         $("#bouton-save-monde").fadeOut();
                         if (Monde.pk === undefined) {
+                            Monde.saving = true;
                             window.location.replace("index.php");
                         } else {
                             _profil(function() {});
