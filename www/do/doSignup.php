@@ -35,7 +35,7 @@ switch($_POST["page"]) {
         if ($result_client["status"]) {
             $idclient = $result_client["result"];
             
-            $activation_user = genere_clef(12);
+            $activation_user = genere_clef(12, true);
             
             // On crée le user gestionnaire
             $query_user = "
