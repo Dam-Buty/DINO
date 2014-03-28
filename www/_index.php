@@ -74,6 +74,10 @@ if (isset($_SESSION)) {
     }
     ?>
         </ul>
+        <div class="container-powered">
+            <i>Powered by</i><br/>
+            <div><a href="http://www.dino.mx" target="_blank">DINO</a></div>
+        </div>
     </div>
 
     <div id="top-front" class="barre-top">
@@ -100,6 +104,10 @@ if ($_SESSION["niveau"] >= 20) {
                 <h1>Mis documentos</h1>
             </li>
         </ul>
+        <div class="container-powered">
+            Powered by<br/>
+            <div><a href="http://www.dino.mx" target="_blank">DINO</a></div>
+        </div>
     </div>
     
     <div id="top-back" class="barre-top">

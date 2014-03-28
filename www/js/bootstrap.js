@@ -65,6 +65,14 @@ var bootstrap = function() {
             $("#help-printer").fadeIn().click(help_printer);
         }
         
+        if (profil.branded == "1") {
+            $(".barre-laterale>a h1").css({
+                "background-image": "url(img/branding/" + profil.client + ".png)"
+            }).text("");
+            
+            $(".container-powered").show();
+        }
+        
         $("#logout").fadeIn().click(logout);
         $("#bouton-pass").fadeIn().click(popup_pass);
         $("#bouton-mail").fadeIn().click(popup_mail);

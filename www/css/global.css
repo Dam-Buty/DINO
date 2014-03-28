@@ -239,11 +239,11 @@ html, body {
     cursor: pointer;
 }
 
-.barre-laterale>a h1:hover {
-    background-image: url(../img/dino_flou_100.png);
-    
-    font-family: "Courier New", Courier, monospace;
-}
+/*.barre-laterale>a h1:hover {*/
+/*    background-image: url(../img/dino_flou_100.png);*/
+/*    */
+/*    font-family: "Courier New", Courier, monospace;*/
+/*}*/
 
 #laterale-front {
     background-color: #8ecb32;
@@ -253,6 +253,32 @@ html, body {
 #laterale-back {
     background-color: #514985;
     width: 15%;
+}
+
+.container-powered {
+    display: none;
+    
+    position: absolute;
+    bottom: 10px;
+    
+    font-size: 0.9em;
+    text-transform: uppercase;
+    text-align: center;
+    color: #FFF;
+}
+
+.container-powered div {
+    background-image: url(../img/dino_20.png);
+    background-position: 1px 1px;
+    background-repeat: no-repeat;
+    
+    height: 22px;
+        
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 5px;
+    
+    font-weight: bold;
 }
 
 /*###########################
@@ -516,7 +542,12 @@ html, body {
     background-size: 20px 20px;
 }
 
-.barre-bottom img {
+#container-notification img {
+    margin-left: 5px;
+    margin-top: -5px;
+}
+
+.barre-bottom>img {
     float: right;
     margin-right: 20px;
     margin-top: 5px;
