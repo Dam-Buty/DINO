@@ -39,6 +39,10 @@ if (isset($_SESSION["niveau"])) {
         "dvc3Monde" => $_POST["monde"],
         "vc3Client" => $_SESSION["client"],
         "vc3Monde" => $_POST["monde"],
+        "dvc4Client" => $_SESSION["client"],
+        "dvc4Monde" => $_POST["monde"],
+        "vc4Client" => $_SESSION["client"],
+        "vc4Monde" => $_POST["monde"],
         "cdClient" => $_SESSION["client"],
         "cdMonde" => $_POST["monde"]
     ]; 
@@ -69,6 +73,23 @@ if (isset($_SESSION["niveau"])) {
                     AND `dvc`.`fk_document` = `d`.`filename_document`
                 ORDER BY `vc`.`fk_champ`
             ) AS `champs`,
+            ( 
+                SELECT GROUP_CONCAT( `label_valeur_champ` SEPARATOR '||' )
+                FROM 
+                    `valeur_champ` AS `vc_labels`,
+                    `document_valeur_champ` AS `dvc_labels`
+                WHERE 
+                    `dvc_labels`.`fk_client` = :dvc4Client
+                    AND `dvc_labels`.`fk_monde` = :dvc4Monde
+                    AND `vc_labels`.`fk_client` = :vc4Client
+                    AND `vc_labels`.`fk_monde` = :vc4Monde
+                    
+                    AND `vc_labels`.`fk_champ` = `dvc_labels`.`fk_champ`
+                    AND `vc_labels`.`pk_valeur_champ` = `dvc_labels`.`fk_valeur_champ`
+                    
+                    AND `dvc_labels`.`fk_document` = `d`.`filename_document`
+                ORDER BY `vc_labels`.`fk_champ`
+            ) AS `labels`,
             ( `td`.`time_type_doc` * `d`.`date_document`) AS `time`
         FROM 
             `type_doc` AS `td`,
@@ -261,7 +282,7 @@ $query .= "
         # - Par champ n+1 ASC ou DESC
         # - Par nombre de champs ASC ...
         # - Par time ASC, time * date DESC, catégorie ASC, type ASC, détail ASC
-        ORDER BY `champs` ASC, `td`.`time_type_doc` ASC, LEFT(`time`, 6) DESC, (
+        ORDER BY `labels` ASC, `td`.`time_type_doc` ASC, LEFT(`time`, 6) DESC, (
             SELECT `label_categorie_doc`
             FROM `categorie_doc` AS `cd`
             WHERE 
