@@ -17,7 +17,7 @@
 
 <body>
 
-<div id="container-login">
+<div id="container-login" class="login-box">
 <form name="form-login" id="form-login">
     <img src="img/dino_title_400.png"/>
     <div class="champ-login">
@@ -31,6 +31,10 @@
         Todavia no tienes tu cuenta GRATIS DINO? <a href="signup.php">Inscribete aqui!</a>
     </div>
 </form>
+</div>
+
+<div id="container-loading" class="login-box">
+    <img src="img/big_loader.gif"/>
 </div>
 
 

@@ -15,6 +15,8 @@ $(document).ready(function() {
                 $("#pass").addClass("KO");
                 $("#pass").focus();
             } else {
+                $("#container-login").hide();
+                $("#container-loading").show();
                 $.ajax({
                     url: "do/doLogin.php",
                     type: "POST",
@@ -36,6 +38,8 @@ $(document).ready(function() {
                             if (retour.responseJSON.error == "activate") {
                                 popup_activate();
                             }
+                            $("#container-login").show();
+                            $("#container-loading").hide();
                         }
                     }
                 }); 
@@ -49,6 +53,8 @@ $(document).ready(function() {
     
     // Si on est sur un sous domaine de visiteurs, on auto login
     if (subdomain != "baby" && subdomain != "my") {
+        $("#container-login").hide();
+        $("#container-loading").show();
         $("#login").val(subdomain);
         $("#pass").val(subdomain);
         $('input[type="submit"]').click();

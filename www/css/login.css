@@ -7,14 +7,17 @@ body {
     color: white;
 }
 
-#container-login {
+.login-box {
     background-color: #99c951;
-    width: 40%;
-    margin-left: 30%;
-    
-    padding: 30px;
     
     box-shadow: 0 0 5px 5px #5b8020;
+    
+    padding: 30px;
+}
+
+#container-login {
+    width: 40%;
+    margin-left: 30%;
 }
 
 #container-login img {
@@ -50,6 +53,27 @@ body {
     cursor: pointer;
     
     border: none;
+}
+
+#container-loading {
+    display: none;
+    
+    background-image: url(../img/dino_title_400.png);
+    background-position: 30px 30px;
+    
+    width: 460px;
+    height: 207px;
+    
+    margin: auto;
+    
+    background-repeat: no-repeat;
+    
+    box-sizing: border-box;
+}
+
+#container-loading img {
+    margin-top: 41px;
+    margin-left: 42px;
 }
 
 .phrase-login {
