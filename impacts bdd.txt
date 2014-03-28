@@ -80,4 +80,9 @@ MARK
 client:
 + branded_client
 
+user:
++ public_user
+
+OK sur baby, OK sur my
+
 

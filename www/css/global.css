@@ -265,6 +265,8 @@ html, body {
     text-transform: uppercase;
     text-align: center;
     color: #FFF;
+    
+    width: 100%;
 }
 
 .container-powered div {

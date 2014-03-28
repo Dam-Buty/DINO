@@ -73,6 +73,11 @@ var bootstrap = function() {
             $(".container-powered").show();
         }
         
+        if (profil.public == "1") {
+            $("#bouton-mail").remove();
+            $("#bouton-pass").remove();
+        }
+        
         $("#logout").fadeIn().click(logout);
         $("#bouton-pass").fadeIn().click(popup_pass);
         $("#bouton-mail").fadeIn().click(popup_mail);

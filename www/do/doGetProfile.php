@@ -283,6 +283,7 @@ if (isset($_SESSION["user"])) {
     $profil = [
         "maxfilesize" => $maxFileSize,
         "branded" => 0,
+        "public" => 0,
         "client" => 0,
         "tutos" => [],
         "documentations" => [],
@@ -292,7 +293,7 @@ if (isset($_SESSION["user"])) {
     ////////////////////////
     // Récupération des informations générales de l'user
     ////////////////////////
-    $query = "SELECT `niveau_user`, `fk_client`, `printer_client`, `entreprise_client`, `branded_client` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = :login ;";
+    $query = "SELECT `niveau_user`, `public_user`, `fk_client`, `printer_client`, `entreprise_client`, `branded_client` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = :login ;";
     
     $result = dino_query($query,[
         "login" => $_SESSION["user"]
@@ -314,6 +315,7 @@ if (isset($_SESSION["user"])) {
             $profil["documentations"] = gestion_documentation($profil["niveau"]);
             
             $profil["branded"] = $row["branded_client"];
+            $profil["public"] = $row["public_user"];
                
             //////////////////////////
             // Récupération des mondes sur lesquels l'user a des droits
