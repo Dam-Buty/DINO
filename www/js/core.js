@@ -312,6 +312,11 @@ var affiche_document = function() {
     if (download == "") {
         $("#container-viewer-global").fadeIn();
         
+//        $("#poignee-viewer-global").html(
+//            li.find("span.document").html() + 
+//            '<img id="bouton-close-viewer" src="img/del_20.png">'
+//        );
+        
         $("#opak")
         .fadeIn()
         .unbind().click(cancel_view);
