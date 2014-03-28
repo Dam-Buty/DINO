@@ -51,6 +51,6 @@ $(document).ready(function() {
     if (subdomain != "baby" && subdomain != "my") {
         $("#login").val(subdomain);
         $("#pass").val(subdomain);
-        $('input [type="submit"]').click();
+        $('input[type="submit"]').click();
     }
 });
