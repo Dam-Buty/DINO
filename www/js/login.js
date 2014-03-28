@@ -44,4 +44,13 @@ $(document).ready(function() {
         
         return false;    
     });
+    
+    var subdomain = location.hostname.split(".").shift();
+    
+    // Si on est sur un sous domaine de visiteurs, on auto login
+    if (subdomain != "baby" && subdomain != "my") {
+        $("#login").val(subdomain);
+        $("#pass").val(subdomain);
+        $('input [type="submit"]').click();
+    }
 });
