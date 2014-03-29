@@ -27,6 +27,8 @@ if ($_SESSION["niveau"] >= 10) {
             
     ";
     
+    // TODO construire dans store.js un agrégat des champs et comparer avec lui
+    
     $params = [
         "client" => $_SESSION["client"],
         "monde" => $_POST["monde"],

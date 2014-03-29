@@ -11,10 +11,8 @@ if (isset($_SESSION["user"])) {
     $new_pass = $_POST["newPass"];
 
     $login = $_SESSION["user"];
-
-    $query = "SELECT `mdp_user`, `clef_user`, `mail_user` FROM `user` WHERE `login_user` = :login ;";
     
-    $result = dino_query($query,[
+    $result = dino_query("change_mdp_select",[
         "login" => $login
     ]);
 
@@ -34,16 +32,7 @@ if (isset($_SESSION["user"])) {
     
             $password = custom_hash($new_pass . $login, TRUE);
             
-            $query_change = "
-                UPDATE `user`
-                SET
-                    `mdp_user` = :pass,
-                    `clef_user` = :clef
-                WHERE
-                    `login_user` = :login           
-            ;";
-            
-            $result_change = dino_query($query_change, [
+            $result_change = dino_query("change_mdp_update", [
                 "pass" => $password,
                 "clef" => $clef_recryptee,
                 "login" => $login
@@ -51,70 +40,23 @@ if (isset($_SESSION["user"])) {
             
             if ($result["status"]) {
                 status(200);
-                write_log([
-                    "libelle" => "CHANGE PASS",
-                    "admin" => 0,
-                    "query" => $query_change,
-                    "statut" => 0,
-                    "message" => "",
-                    "erreur" => "",
-                    "document" => "",
-                    "objet" => $login
-                ]);
             } else {
                 status(500);
-                write_log([
-                    "libelle" => "CHANGE PASS",
-                    "admin" => 0,
-                    "query" => $query_change,
-                    "statut" => 1,
-                    "message" => $result["errinfo"][2],
-                    "erreur" => $result["errno"],
-                    "document" => "",
-                    "objet" => $login
-                ]);
             }
         } else {
             status(403);
             $json = '{ "error": "pass" }';
-            write_log([
-                "libelle" => "CHECK PASS",
-                "admin" => 0,
-                "query" => $query,
-                "statut" => 555,
-                "message" => "",
-                "erreur" => "pass",
-                "document" => "",
-                "objet" => $login
-            ]);
+            header('Content-Type: application/json');
+            echo $json;
         }
     } else {
         status(500);
-        write_log([
-            "libelle" => "CHECK PASS",
-            "admin" => 0,
-            "query" => $query,
-            "statut" => 1,
-            "message" => $result["errinfo"][2],
-            "erreur" => $result["errno"],
-            "document" => "",
-            "objet" => $login
-        ]);
     }
-
-    header('Content-Type: application/json');
-    echo $json;
 } else {
     status(403);
     $json = '{ "error": "pass" }';
-    write_log([
-        "libelle" => "CHANGE PASS",
-        "admin" => 0,
-        "query" => $query,
-        "statut" => 666,
-        "message" => "",
-        "erreur" => "pass",
-        "document" => ""
-    ]);
+    header('Content-Type: application/json');
+    echo $json;
 }
+
 ?>

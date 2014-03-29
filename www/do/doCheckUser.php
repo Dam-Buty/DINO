@@ -2,9 +2,7 @@
 include("../includes/PDO.php");
 include("../includes/status.php");
 
-$query = "SELECT * FROM `user` WHERE `login_user` = :login;";
-
-$result = dino_query($query,[
+$result = dino_query("check_login",[
     "login" => $_GET["login"]
 ]);
 
