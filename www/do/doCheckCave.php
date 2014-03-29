@@ -25,44 +25,16 @@ if ($cave = opendir($cave_path)) {
 	            
 	            // On vérifie qu'il n'a pas encore été pris en compte
 	            // (via son numéro de job)
-	            $query_check = "
-	                SELECT `filename_document`
-	                FROM `document`
-	                WHERE
-	                    `fk_client` = :client
-	                    AND `job_document` = :job
-	            ;";
 	            
-                $result_check = dino_query($query_check,[
+                $result_check = dino_query("check_cave_select",[
                     "client" => $_SESSION["client"],
                     "job" => $elements[1]
                 ]);
 	            
 	            if ($result_check["status"]) {
 	                if (count($result_check["result"]) == 0) {
-                        $query = "
-                            INSERT INTO `document` (
-                                `filename_document`, 
-                                `job_document`,
-                                `taille_document`, 
-                                `display_document`, 
-                                `fk_client`, 
-                                `fk_user`, 
-                                `date_upload_document`,
-                                `niveau_document`
-                            ) VALUES (
-                                :filename, 
-                                :job,
-                                :taille, 
-                                :display, 
-                                :client, 
-                                :user, 
-                                :date,
-                                999
-                            )
-                        ;";
                         
-                        $result = dino_query($query,[
+                        $result = dino_query("check_cave_insert",[
                             "filename" => $filename. ".pdf",
                             "job" => $elements[1],
                             "taille" => $filesize,
@@ -74,59 +46,29 @@ if ($cave = opendir($cave_path)) {
                         
                         if ($result["status"]) {        
                             if (copy($cave_path . $file, "../cache/" . $_SESSION["client"] . "/temp/" . $filename . ".pdf")) {
-                                write_log([
-                                    "libelle" => "UNCAVE document",
-                                    "admin" => 0,
-                                    "query" => $query,
-                                    "statut" => 0,
-                                    "message" => "",
-                                    "erreur" => "",
-                                    "document" => $filename,
-                                    "objet" => $file
+                                dino_log([
+                                    "niveau" => "I",
+                                    "message" => "Document décavé vers ../cache/" . $_SESSION["client"] . "/temp/" . $filename . ".pdf",
+                                    "query" => $cave_path . $file
                                 ]);
                             } else {
                                 status(500);
-                                write_log([
-                                    "libelle" => "MOVE caved document",
-                                    "admin" => 0,
-                                    "query" => $cave_path . $file,
-                                    "statut" => 1,
-                                    "message" => "",
-                                    "erreur" => "Pas de permission?",
-                                    "document" => "",
-                                    "objet" => $filename
+                                dino_log([
+                                    "niveau" => "E",
+                                    "message" => "Impossible de décaver vers ../cache/" . $_SESSION["client"] . "/temp/" . $filename . ".pdf",
+                                    "query" => $cave_path . $file
                                 ]);
                                 $err = true;
                                 break;
                             }
                         } else {
                             status(500);
-                            write_log([
-                                "libelle" => "INSERT nouveau document",
-                                "admin" => 0,
-                                "query" => $query,
-                                "statut" => 1,
-                                "message" => $result["errinfo"][2],
-                                "erreur" => $result["errno"],
-                                "document" => "",
-                                "objet" => $filename
-                            ]);
                             $err = true;
                             break;
                         }
 	                }
 	            } else {
                     status(500);
-                    write_log([
-                        "libelle" => "CHECK nouveau document",
-                        "admin" => 0,
-                        "query" => $query_check,
-                        "statut" => 1,
-                        "message" => $result["errinfo"][2],
-                        "erreur" => $result["errno"],
-                        "document" => $file,
-                        "objet" => $elements[1]
-                    ]);
                     $err = true;
                     break;
                 }
@@ -140,15 +82,10 @@ if ($cave = opendir($cave_path)) {
     }
 } else {
     status(500);
-    write_log([
-        "libelle" => "GET le contenu de la cave",
-        "admin" => 0,
-        "query" => $cave_path,
-        "statut" => 1,
-        "message" => "Pas de permission ?",
-        "erreur" => "",
-        "document" => "",
-        "objet" => ""
+    dino_log([
+        "niveau" => "E",
+        "message" => "Impossible de vérifier la cave",
+        "query" => $cave_path
     ]);
 }
 

@@ -1,6 +1,6 @@
 <?php
 
-function write_log($params) {
+function dino_log($params) {
     if (!isset($_SESSION["user"])) {
         $user = "";
     } else {
@@ -12,55 +12,46 @@ function write_log($params) {
     } else {
         $client = $_SESSION["client"];
     }
-
-    $query_log = "
-        INSERT INTO `log` (
-            `date_operation`, 
-            `fk_user`, 
-            `fk_client`, 
-            `libelle_operation`, 
-            `admin_operation`, 
-            `query_operation`, 
-            `statut_operation`, 
-            `message_operation`, 
-            `erreur_operation`, 
-            `document_operation`, 
-            `objet_operation`,
-            `referrer_operation`,
-            `ip_operation`
-        ) VALUES (
-            :date,
-            :user,
-            :client,
-            :libelle,
-            :admin,
-            :query,
-            :statut,
-            :message,
-            :erreur,
-            :document,
-            :objet,
-            :referrer,
-            :ip
-        )
-    ;";
-        
-    $params_log = [
-        "date" => date("Y-m-d H:i:s"),
-        "user" => $user ,
-        "client" => $client,
-        "libelle" => $params["libelle"],
-        "admin" => $params["admin"],
-        "query" => $params["query"],
-        "statut" => $params["statut"],
-        "message" => $params["message"],
-        "erreur" => $params["erreur"],
-        "document" => $params["document"],
-        "objet" => $params["objet"],
-        "referrer" => $_SERVER['HTTP_REFERER'],
-        "ip" => $_SERVER['REMOTE_ADDR']
+    
+    $tableau_log = [
+        $params["niveau"],
+        date("Y-m-d H:i:s"),
+        $client,
+        $user
     ];
-
-    dino_query($query_log, $params_log);
+    
+    switch($params["niveau"]) {
+        case "I":
+            array_push($tableau_log, $params["query"]);
+            array_push($tableau_log, $params["message"]);
+            break;
+        case "W":
+        
+            break;
+        case "E":
+            array_push($tableau_log, $params["query"]);
+            array_push($tableau_log, $params["errno"]);
+            array_push($tableau_log, $params["errinfo"]);
+            array_push($tableau_log, $params["params"]);
+            break;
+        case "X":
+            array_push($tableau_log, $params["message"]);
+            array_push($tableau_log, $params["errinfo"]);
+            break;
+        case "Z":
+            array_push($tableau_log, "Accés non autorisé!");
+            array_push($tableau_log, $params["query"]);
+            break;
+             
+    };
+    
+    array_push($tableau_log, $_SERVER['HTTP_REFERER']);
+    array_push($tableau_log, $_SERVER['REMOTE_ADDR']);
+    
+    $ligne_log = join("|", $tableau_log) . "\r\n";
+    
+    $path = "../log/" . date("Y-m-d") . "_" . $client . ".csv";
+    
+    file_put_contents($path, $ligne_log, FILE_APPEND);
 }
 ?>
