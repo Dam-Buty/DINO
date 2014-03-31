@@ -15,6 +15,7 @@ if ($_SESSION["niveau"] >= 20) {
         WHERE 
             `fk_client` = :client
             AND `niveau_user` < :niveau
+            AND `public_user` = 0
     ;";
         
     $params = [

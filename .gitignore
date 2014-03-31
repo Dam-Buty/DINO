@@ -9,3 +9,5 @@ www/cache/*/*/*.*
 key.php
 2014*.jpg
 www/img/branding/*.*
+www/log/*.*
+

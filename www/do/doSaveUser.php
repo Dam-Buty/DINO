@@ -124,6 +124,8 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
                     "login" => $_POST["login"]
                 ];
                 
+                // TODO : faire le reste que si niveau < 20
+                
                 $result_insert_droits = dino_query($query_insert_droits, $params_insert_droits);
              
                 if ($result_insert_droits["status"]) {

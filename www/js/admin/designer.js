@@ -998,7 +998,7 @@ var _remove_tree = function(element, criteres, bilan) {
 }
 
 var check_bouton_save = function() {
-    if ($("#nom-monde").val() != "" && Monde.champs.length > 0) {
+    if (Monde.champs.length > 0) {
         $("#bouton-save-monde").fadeIn();
     } else {
         $("#bouton-save-monde").fadeOut();

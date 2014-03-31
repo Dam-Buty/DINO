@@ -19,8 +19,7 @@ var bootstrap_users = function() {
     $("#new-niveau").chosen({
         width: $("#new-login").outerWidth(),
         disable_search_threshold: 10,
-        inherit_select_classes: true,
-        allow_single_deselect: true
+        inherit_select_classes: true
     });
     
     $("#new-niveau").on("chosen:showing_dropdown", tip_niveau);
@@ -216,9 +215,7 @@ var refresh_users = function() {
                     $(".edit-niveau").on("chosen:showing_dropdown", tip_niveau);
                     $(".edit-niveau").on("chosen:hiding_dropdown", kill_tip_niveau);
                     $(".edit-niveau").change(kill_tip_niveau);
-                    
-                    
-                    
+                                        
                     bootstrap_regles();
             },
             403: function() {
@@ -289,6 +286,10 @@ var bootstrap_regles = function() {
     ul.clone().attr("id", "").appendTo($("#regles-new-user>div").empty());
     $(".edit-regles").empty().append(ul.clone().attr("id", ""));
     
+    // Switche tous les mondes pour le new
+    $("#regles-new-user select.switch-me").val("OK").trigger("change");
+    
+    // Switche les bons mondes pour chaque utilisateur
     $.each(Core.users, function(i, user) {
         $.each(user.mondes, function(monde, valeurs) {
             $('li[data-user="' + i + '"]')
@@ -370,15 +371,11 @@ var toggle_niveau = function() {
     
     select.addClass("OK");
     
-    $.each(profil.mondes, function(i, monde) {
-        if (monde.niveau <= niveau) {
-            ul.find('li[data-monde="' + i + '"]')
-            .find("select").val("OK").trigger("change");
-        } else {
-            ul.find('li[data-monde="' + i + '"]')
-            .find("select").val("KO").trigger("change");
-        }
-    });
+    if (select.val() == "20") {
+        ul.find(".tableau-regle").hide();
+    } else {
+        ul.find('li[data-monde] option[value="OK"]:selected').closest("li").next("li").show();
+    }
 };
 
 var toggle_regles = function(isnew, user) {
@@ -392,7 +389,7 @@ var toggle_regles = function(isnew, user) {
     }
     
     // style les champs si ce n'est déjà fait
-    if (div.find(".switchy-container").length == 0) {
+    if (div.find(".liste-regles .chosen-container").length == 0) {
         div.find(".switch-me").switchy(); // style les selects en switch
         div.find(".switch-me").on("change", toggle_monde);
         div.find("select[multiple]").chosen({
@@ -407,8 +404,16 @@ var toggle_regles = function(isnew, user) {
 var toggle_monde = function() {
     var switchy = $(this);
     var li = switchy.closest("li");
+    var ul = li.closest("ul");
+    var div = ul.closest("div");
     var monde = profil.mondes[li.attr("data-monde")];
     var newli = li.next("li");
+    
+    if (div.hasClass("edit-regles")) { // EDIT
+        niveau = div.parent("div").find("select").val();
+    } else { // NEW
+        niveau = div.parent("div").next("div").find("select").val();
+    }
     
     if ($(this).val() == 'OK') {
         bgColor = '#B8DCB3';
@@ -424,7 +429,9 @@ var toggle_monde = function() {
             );
         }
         
-        newli.show();
+        if (niveau != "20") {
+            newli.show();
+        }
     } else if ($(this).val() == 'KO'){
         bgColor = '#DCB3B3';
         li.find("span").empty().append("Mundo <b>" + monde.label + "</b> :<br/> - El usuario <b>no tiene</b> acceso" );
@@ -477,8 +484,7 @@ var edit_user = function() {
             li.find(".edit")
             .find(".edit-niveau").chosen({
                 inherit_select_classes: true,
-                disable_search_threshold: 10,
-                allow_single_deselect: true
+                disable_search_threshold: 10
             });
         }
         
