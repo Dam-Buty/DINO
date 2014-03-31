@@ -438,35 +438,44 @@ var reload_champs = function() {
         $("#container-nouveau-champ").empty().show()
         .append(select);
         
-        $("#container-nouveau-champ")
-        .find("select")
-        .attr("data-champ", pk)
-        .chosen({
-            create_option_text:'Agregar ' + champ.label + " ", // LOCALISATION
-            create_option: add_value,
-            inherit_select_classes: true,
-            skip_no_results: true
-        });
-        
-        $("#container-nouveau-champ")
-        .find("select")
-        .on("chosen:showing_dropdown", function() {
-            $("div.select-champ input").tooltipster({
-                content: 'Empeza a teclear para agregar un nuevo ' + champ.label,
-                position: "left",
-                timer: 1400
-            }).tooltipster("show");
-        });
-                    
-        $("#container-nouveau-champ")
-        .find("select")
-        .next("div")
-        .find("input")
-        .keyup(function(event) {
-            if (event.which == 13) {
-                $("#container-champs").find("select").next("div").find("li.create-option").click();
-            }
-        });
+        if (profil.niveau < 20 && !profil.mondes[monde].all && last_i == 0) {
+            $("#container-nouveau-champ")
+            .find("select")
+            .attr("data-champ", pk)
+            .chosen({
+                inherit_select_classes: true
+            });
+        } else {
+            $("#container-nouveau-champ")
+            .find("select")
+            .attr("data-champ", pk)
+            .chosen({
+                create_option_text:'Agregar ' + champ.label + " ", // LOCALISATION
+                create_option: add_value,
+                inherit_select_classes: true,
+                skip_no_results: true
+            });
+            
+            $("#container-nouveau-champ")
+            .find("select")
+            .on("chosen:showing_dropdown", function() {
+                $("div.select-champ input").tooltipster({
+                    content: 'Empeza a teclear para agregar un nuevo ' + champ.label,
+                    position: "left",
+                    timer: 1400
+                }).tooltipster("show");
+            });
+                        
+            $("#container-nouveau-champ")
+            .find("select")
+            .next("div")
+            .find("input")
+            .keyup(function(event) {
+                if (event.which == 13) {
+                    $("#container-nouveau-champ").find("select").next("div").find("li.create-option").click();
+                }
+            });
+        }
     } else {
         $("#container-nouveau-champ").hide();
     }
@@ -527,7 +536,6 @@ var change_document = function(document) {
     
     if (queue[document].store.monde === "") {
         queue[document].store.monde = Store.monde;
-        console.log(queue[document].store.monde + " : " + Store.monde);
     }
     
     $("#mondes-store li").attr("data-selected", "0");
@@ -537,10 +545,6 @@ var change_document = function(document) {
     if (queue[document].store.last_champ === "") { 
         queue[document].store.last_champ = Store.last_champ;
         queue[document].store.champs = Store.champs;
-        console.log(queue[document].store.last_champ);
-        console.log(Store.last_champ);
-        console.log(queue[document].store.champs);
-        console.log(Store.champs);
     }
     
     $("#container-details").slideUp();

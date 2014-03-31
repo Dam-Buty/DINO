@@ -4,7 +4,7 @@ include("../includes/status.php");
 include("../includes/log.php");  
 
 if ($_SESSION["niveau"] >= 20) {
-    include("../includes/PDO.php");   
+    include("../includes/PDO.php"); 
         
     $params = [
         "client" => $_SESSION["client"],
