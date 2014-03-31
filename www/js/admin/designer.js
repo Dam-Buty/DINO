@@ -194,10 +194,6 @@ var Monde = {
         }
     },
     
-    _save_titre: function() {
-        Monde.label = $("#nom-monde").val();
-    },
-    
     _save: function() {
         var documents = 0;
         var titre = "", message = "", bouton = "";
@@ -232,25 +228,34 @@ var Monde = {
             });
         };
         
-        $.each(Monde.graveyard, function(i, element) {
-            documents += element.bilan.documents || 0;
-        });
-        
-        if (Monde.pk === undefined) {
-            titre = "Creacion del mundo <b>" + Monde.label + "</b>";
-            message = "Gracias por confirmar la creacion del mundo <b>" + Monde.label + "</b>";
+        if (Monde.label == "") {
+            $("#nom-monde").focus().addClass("KO").tooltipster({
+                content: "Tu mundo debe tener un nombre!",
+                position: "bottom",
+                timer: 1400
+            }).tooltipster("show");
         } else {
-            titre = "Modificacion del mundo <b>" + Monde.label + "</b>";
-            message = "Gracias por confirmar la modificacion del mundo <b>" + Monde.label + "</b>";
-        }
-        
-        if (documents > 0) {
-            bouton = " (<i>Declasificar</i>)";
+            $.each(Monde.graveyard, function(i, element) {
+                documents += element.bilan.documents || 0;
+            });
+            
+            if (Monde.pk === undefined) {
+                titre = "Creacion del mundo <b>" + Monde.label + "</b>";
+                message = "Gracias por confirmar la creacion del mundo <b>" + Monde.label + "</b>";
+            } else {
+                titre = "Modificacion del mundo <b>" + Monde.label + "</b>";
+                message = "Gracias por confirmar la modificacion del mundo <b>" + Monde.label + "</b>";
+            }
+            
+            if (documents > 0) {
+                bouton = " (<i>Declasificar</i>)";
 
-            message += "<pre><b>" + documents + "</b> documentos relacionados seran <b class='with-tip' title='Los documentos declasificados NO son borrados del sistema. Los encontraras en tu fila de espera para volver a clasificarlos.'>declasificados.</b></pre>";
+                message += "<pre><b>" + documents + "</b> documentos relacionados seran <b class='with-tip' title='Los documentos declasificados NO son borrados del sistema. Los encontraras en tu fila de espera para volver a clasificarlos.'>declasificados.</b></pre>";
+            }
+            
+            popup_confirmation(message, titre, "Confirmar" + bouton, ajax_save);
         }
         
-        popup_confirmation(message, titre, "Confirmar" + bouton, ajax_save);
     }
 };
 
@@ -279,8 +284,8 @@ var _bootstrap_designer = function(action) {
     $("#add-cat-to-champ2").unbind().click(designer_toggle_categorie);
     $(".option-add-champ").unbind().click(designer_toggle_champ);
     $("#nom-monde").unbind().keyup(function() {
+        Monde.label = $(this).val();
         if ($(this).val() != "") {
-            Monde.label = $(this).val();
             $(this).removeClass("KO");
         } else {
             $(this).removeClass("OK").addClass("KO");
