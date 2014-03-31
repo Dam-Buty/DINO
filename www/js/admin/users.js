@@ -373,6 +373,7 @@ var toggle_niveau = function() {
     
     if (select.val() == "20") {
         ul.find(".tableau-regle").hide();
+        ul.find(".tableau-regle select[multiple]").val("").change().trigger("chosen:updated");
     } else {
         ul.find('li[data-monde] option[value="OK"]:selected').closest("li").next("li").show();
     }
@@ -431,6 +432,8 @@ var toggle_monde = function() {
         
         if (niveau != "20") {
             newli.show();
+        } else {
+            newli.hide();
         }
     } else if ($(this).val() == 'KO'){
         bgColor = '#DCB3B3';
