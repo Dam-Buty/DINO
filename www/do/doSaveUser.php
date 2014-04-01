@@ -23,25 +23,7 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
     
         $activation_user = genere_clef(12, true);
         
-        $query_user = "
-            INSERT INTO `user`
-            (
-                `login_user`, 
-                `mdp_user`, 
-                `mail_user`, 
-                `niveau_user`, 
-                `fk_client`, 
-                `activation_user`, 
-                `clef_user`
-            ) VALUES (
-                :login, 
-                :password, 
-                :mail, 
-                :niveau, 
-                :client, 
-                :activation,
-                :clef
-            );";     
+        $query_user = "user_add";     
             
         $params_user = [
             "login" => $_POST["login"],
@@ -54,12 +36,7 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
         ];
             
     } else {
-        $query_user = "
-            UPDATE `user`
-            SET
-                `niveau_user` = :niveau
-            WHERE `login_user` = :login
-        ;";
+        $query_user = "user_change";
         
         $params_user = [
             "login" => $_POST["pk"],
@@ -71,6 +48,7 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
     
     if ($result_user["status"]) {
         
+        // TODO on fait plus ça
         $query_del_droits = "
             DELETE FROM `user_monde`
                 WHERE 
@@ -107,36 +85,16 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
             
             $err = false;
             
-            foreach($_POST["mondes"] as $monde => $valeurs) {    
-                $query_insert_droits .= "
-                    INSERT INTO `user_monde`
-                    (`fk_client`, `fk_monde`, `fk_user`) 
-                    VALUES (
-                        :client,
-                        :monde,
-                        :login
-                    );
-                ";      
-                        
+            foreach($_POST["mondes"] as $monde => $valeurs) {     
                 $params_insert_droits = [
                     "client" => $_SESSION["client"],
                     "monde" => $monde,
                     "login" => $_POST["login"]
                 ];
                 
-                $result_insert_droits = dino_query($query_insert_droits, $params_insert_droits);
+                $result_insert_droits = dino_query("user_droits_monde", $params_insert_droits);
              
-                if ($result_insert_droits["status"]) {
-                    
-                    $query_del_vc = "
-                        DELETE FROM `user_valeur_champ`
-                        WHERE 
-                            `fk_client` = :client
-                            AND `fk_monde` = :monde
-                            AND `fk_champ` =  :champ
-                            AND `fk_user` = :login ;
-                    ";     
-                        
+                if ($result_insert_droits["status"]) {                        
                     $params_del_vc = [
                         "client" => $_SESSION["client"],
                         "monde" => $monde,
@@ -144,22 +102,10 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
                         "login" => $_POST["login"]
                     ];
                     
-                    $result_del_vc = dino_query($query_del_vc, $params_del_vc);
+                    $result_del_vc = dino_query("user_droits_del_valeurs", $params_del_vc);
                  
                     if ($result_del_vc["status"]) {
                         foreach($valeurs["valeurs"] as $i => $valeur) {
-                            $query_insert_vc = "
-                                INSERT INTO `user_valeur_champ`
-                                (`fk_client`, `fk_monde`, `fk_champ`, `fk_user`, `fk_valeur_champ`) 
-                                VALUES (
-                                    :client,
-                                    :monde,
-                                    :champ,
-                                    :login,
-                                    :valeur
-                                );
-                            "; 
-                        
                             $params_insert_vc = [
                                 "client" => $_SESSION["client"],
                                 "monde" => $monde,
@@ -168,20 +114,10 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
                                 "valeur" => $valeur
                             ];
                             
-                            $result_insert_vc = dino_query($query_insert_vc, $params_insert_vc);
+                            $result_insert_vc = dino_query("user_droits_add_valeurs", $params_insert_vc);
                  
                             if (!$result_insert_vc["status"]) {
                                 status(500);
-                                write_log([
-                                    "libelle" => "INSERT valeurs de champs",
-                                    "admin" => 0,
-                                    "query" => $query_insert_vc,
-                                    "statut" => 1,
-                                    "message" => $result_insert_vc["errinfo"][2],
-                                    "erreur" => $result_insert_vc["errno"],
-                                    "document" => "",
-                                    "objet" => $POST["document"]
-                                ]);
                                 $err = true;
                                 break;
                             }
@@ -191,31 +127,11 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
                         }
                     } else {
                         status(500);
-                        write_log([
-                            "libelle" => "DELETE valeurs de champs",
-                            "admin" => 0,
-                            "query" => $query_del_vc,
-                            "statut" => 1,
-                            "message" => $result_del_vc["errinfo"][2],
-                            "erreur" => $result_del_vc["errno"],
-                            "document" => "",
-                            "objet" => $POST["document"]
-                        ]);
                         $err = true;
                         break;
                     }
                 } else {
                     status(500);
-                    write_log([
-                        "libelle" => "INSERT DROITS USER",
-                        "admin" => 0,
-                        "query" => $query_insert_droits,
-                        "statut" => 1,
-                        "message" => $result_insert_droits["errinfo"][2],
-                        "erreur" => $result_insert_droits["errno"],
-                        "document" => "",
-                        "objet" => $POST["document"]
-                    ]);
                     $err = true;
                     break;
                 }
@@ -245,53 +161,17 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
             }
                     
             status(200);
-            write_log([
-                "libelle" => "INSERT user",
-                "admin" => 1,
-                "query" => $query,
-                "statut" => 0,
-                "message" => "",
-                "erreur" => "",
-                "document" => "",
-                "objet" => $_POST["login"]
-            ]);
         } else {
             status(500);
-            write_log([
-                "libelle" => "UPDATE document a cleaner",
-                "admin" => 0,
-                "query" => $query_del_droits,
-                "statut" => 1,
-                "message" => $result_del_droits["errinfo"][2],
-                "erreur" => $result_del_droits["errno"],
-                "document" => "",
-                "objet" => $POST["document"]
-            ]);
         }
     } else {
         status(500);
-        write_log([
-            "libelle" => "INSERT user",
-            "admin" => 0,
-            "query" => $query_user,
-            "statut" => 1,
-            "message" => $result_user["errinfo"][2],
-            "erreur" => $result_user["errno"],
-            "document" => "",
-            "objet" => $POST["document"]
-        ]);
     }
 } else {
-    status(403);
-    write_log([
-        "libelle" => "INSERT user",
-        "admin" => 1,
-        "query" => "",
-        "statut" => 666,
-        "message" => "",
-        "erreur" => "",
-        "document" => "",
-        "objet" => $_POST["login"]
+    dino_log([
+        "niveau" => "Z",
+        "query" => "Save user : droits insuffisants"
     ]);
+    status(403);
 }
 ?>

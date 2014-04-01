@@ -15,37 +15,11 @@ if ($_SESSION["niveau"] >= 20) {
     ];
     
     if ($_POST["pk"] == "new") {
-        $query = "
-            INSERT INTO `categorie_doc` (
-                `label_categorie_doc`, 
-                `niveau_categorie_doc`,
-                `time_categorie_doc`,
-                `fk_champ`, 
-                `fk_monde`, 
-                `fk_client`
-            ) VALUES (
-                :categorie,
-                :niveau,
-                :time,
-                :champ,
-                :monde,
-                :client
-            )
-        ;";
+        $query = "categorie_add";
         
         $params["time"] = $_POST["time"];
     } else {
-        $query = "
-            UPDATE `categorie_doc`
-            SET 
-                `label_categorie_doc` = :categorie,
-                `niveau_categorie_doc` = :niveau
-            WHERE
-                `fk_client` = :client
-                AND `fk_monde` = :monde
-                AND `fk_champ` = :champ
-                AND `pk_categorie_doc` = :pk
-        ;";
+        $query = "categorie_change";
         
         $params["pk"] = $_POST["pk"];
     }
@@ -60,41 +34,14 @@ if ($_SESSION["niveau"] >= 20) {
         } else {
             $objet = $_POST["pk"];
         }
-        
-        write_log([
-            "libelle" => "INSERT categorie",
-            "admin" => 1,
-            "query" => $query,
-            "statut" => 0,
-            "message" => "",
-            "erreur" => "",
-            "document" => "",
-            "objet" => $objet
-        ]);
     } else {
         status(500);
-        write_log([
-            "libelle" => "INSERT categorie",
-            "admin" => 1,
-            "query" => $query,
-            "statut" => 1,
-            "message" => $result["errinfo"][2],
-            "erreur" => $result["errno"],
-            "document" => "",
-            "objet" => $_POST["pk"]
-        ]);
     }
 } else {
-    header("Location: ../index.php");
-    write_log([
-        "libelle" => "INSERT categorie",
-        "admin" => 1,
-        "query" => "",
-        "statut" => 666,
-        "message" => "",
-        "erreur" => "",
-        "document" => "",
-        "objet" => $_POST["pk"]
+    dino_log([
+        "niveau" => "Z",
+        "query" => "Sauvegarde catégorie : droits insuffisants"
     ]);
+    header("Location: ../index.php");
 }
 ?>

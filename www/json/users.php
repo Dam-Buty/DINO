@@ -5,25 +5,13 @@ include("../includes/log.php");
 
 if ($_SESSION["niveau"] >= 20) {
     include("../includes/PDO.php");   
-    
-    $query = "
-        SELECT 
-            `login_user`, 
-            `mail_user`, 
-            `niveau_user` 
-        FROM `user` 
-        WHERE 
-            `fk_client` = :client
-            AND `niveau_user` < :niveau
-            AND `public_user` = 0
-    ;";
         
     $params = [
         "client" => $_SESSION["client"],
         "niveau" => $_SESSION["niveau"]
     ];
     
-    $result = dino_query($query, $params);
+    $result = dino_query("json_users", $params);
     
     if ($result["status"]) {
         
@@ -35,29 +23,6 @@ if ($_SESSION["niveau"] >= 20) {
                 "niveau" => $row["niveau_user"],
                 "mondes" => []
             ];
-                        
-            $query_mondes = "
-                SELECT 
-                    `pk_monde`, 
-                    `niveau_monde`,
-                    (
-                        SELECT COUNT(*)
-                        FROM `user_monde` AS `um`
-                        WHERE 
-                            `um`.`fk_user` = :user
-                            AND `um`.`fk_monde` = `pk_monde`
-                    ) AS `droit`
-                FROM `monde`
-                WHERE 
-                    `fk_client` = :client
-                    AND (
-                        SELECT COUNT(*)
-                        FROM `user_monde` AS `um`
-                        WHERE 
-                            `um`.`fk_user` = :user2
-                            AND `um`.`fk_monde` = `pk_monde`
-                    ) = 1;
-            ";
             
             $params_mondes = [
                 "user" => $row["login_user"],
@@ -65,7 +30,7 @@ if ($_SESSION["niveau"] >= 20) {
                 "user2" => $row["login_user"]
             ];
             
-            $result_mondes = dino_query($query_mondes, $params_mondes);
+            $result_mondes = dino_query("json_user_mondes", $params_mondes);
             
             if ($result_mondes["status"]) {
             
@@ -75,22 +40,13 @@ if ($_SESSION["niveau"] >= 20) {
                             $users[$row["login_user"]]["mondes"][$row_mondes["pk_monde"]] = [];
                     }
                     
-                    $query_champs = "
-                        SELECT `fk_valeur_champ` 
-                        FROM `user_valeur_champ`
-                        WHERE 
-                            `fk_client` = :client
-                            AND `fk_monde` = :monde
-                            AND `fk_user` = :user
-                    ";
-                    
                     $params_champs = [
                         "client" => $_SESSION["client"],
                         "monde" => $row_mondes["pk_monde"],
                         "user" => $row["login_user"]
                     ];
                     
-                    $result_champs = dino_query($query_champs, $params_champs);
+                    $result_champs = dino_query("json_user_valeurs", $params_champs);
                     
                     if ($result_champs["status"]) {
                         
@@ -99,7 +55,7 @@ if ($_SESSION["niveau"] >= 20) {
                         }
                     }
                 }
-            }
+            } 
         }
         
         $json = json_encode($users);
@@ -108,29 +64,13 @@ if ($_SESSION["niveau"] >= 20) {
         echo $json;
     } else {
         status(500);
-        write_log([
-            "libelle" => "GET liste users",
-            "admin" => 1,
-            "query" => $query,
-            "statut" => 1,
-            "message" => $result["errinfo"][2],
-            "erreur" => $result["errno"],
-            "document" => "",
-            "objet" => $_SESSION["client"]
-        ]);
     }
 } else {
-    status(403);
-    write_log([
-        "libelle" => "GET liste users",
-        "admin" => 1,
-        "query" => $query,
-        "statut" => 666,
-        "message" => "",
-        "erreur" => "",
-        "document" => "",
-        "objet" => $_SESSION["client"]
+    dino_log([
+        "niveau" => "Z",
+        "query" => "JSON users : droits insuffisants"
     ]);
+    status(403);
 }
 
 ?>

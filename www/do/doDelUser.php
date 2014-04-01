@@ -15,8 +15,12 @@ if ($_SESSION["niveau"] >= 20) {
         status(204);
     } else {
         status(500);
-    }
+    } 
 } else {
+    dino_log([
+        "niveau" => "Z",
+        "query" => "Suppression d'user : droits insuffisants"
+    ]);
     status(403);
 }
 ?>

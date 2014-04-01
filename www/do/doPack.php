@@ -43,55 +43,39 @@ if ($_SESSION["niveau"] >= 10) {
         // proc_close in order to avoid a deadlock
         $return_value = proc_close($process);
 
+        
+        $err_log = str_replace($clef, "%%CLEF%%", $err);
+
         if ($return_value == 0) {
             status(200);
-            write_log([
-                "libelle" => "PACK",
-                "admin" => 0,
-                "query" => $commande_log,
-                "statut" => 0,
-                "message" => "",
-                "erreur" => "",
-                "document" => $document,
-                "objet" => $document
+            dino_log([
+                "niveau" => "I",
+                "message" => "PACK document",
+                "query" => $commande_log
             ]);
         } else {
             status(500);
-            write_log([
-                "libelle" => "PACK",
-                "admin" => 0,
+            dino_log([
+                "niveau" => "E",
                 "query" => $commande_log,
-                "statut" => 1,
-                "message" => $return_value,
-                "erreur" => $err,
-                "document" => $document,
-                "objet" => $document
+                "errno" => $return_value,
+                "errinfo" => $err_log
             ]);
         }
     } else {
         status(500);
-        write_log([
-            "libelle" => "PACK",
-            "admin" => 0,
+        dino_log([
+            "niveau" => "E",
             "query" => $commande_log,
-            "statut" => 1,
-            "message" => "",
-            "erreur" => "Inconnue",
-            "document" => $document,
-            "objet" => $document
+            "errno" => 666,
+            "errinfo" => "Erreur inconnue"
         ]);
     }
 } else {
     status(403);
-    write_log([
-        "libelle" => "PACK",
-        "admin" => 0,
-        "query" => "",
-        "statut" => 666,
-        "message" => "",
-        "erreur" => "",
-        "document" => $document,
-        "objet" => $document
+    dino_log([
+        "niveau" => "Z",
+        "query" => "Pack : droits insuffisants"
     ]);
 }
 ?>

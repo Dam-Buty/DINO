@@ -9,95 +9,71 @@
 <meta content="La revolucion documental" name="description" />
 <link href='css/Oswald-Bold.ttf' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/signup.css" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/login.css" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/boutons.css" media="screen" type="text/css"/>
 <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 </head>
 
 <body>
-<?php
-include("includes/PDO.php");
-include("includes/status.php");
-include("includes/log.php");
 
-$query = "
-    SELECT `login_user`
-    FROM `user`
-    WHERE 
-        `mail_user` = :mail
-        AND `activation_user` = :activation
-;";
+<div id="container-loading" class="login-box">
+    <img src="img/big_loader.gif"/>
+</div>
 
-$params = [
-    "mail" => $_GET["mail"],
-    "activation" => $_GET["key"]
-];
-
-$result = dino_query($query, $params);
-
-if ($result["status"]) {
-    if (count($result["result"]) > 0) {
-        $login = $result["result"][0]["login_user"];
-        
-        $query_activate = "
-            UPDATE `user`
-            SET `activation_user` = ''
-            WHERE
-                `login_user` = :login
-        ;";
-        
-        $params_activate = [
-            "login" => $login
-        ];
-        
-        if (dino_query($query_activate, $params_activate)) {
-         ?>
 <div id="container-signup">
-    <h1>Tu cuenta esta activada!</h1>
-    <p>Ahora solo necesitas conectarte en DINO para empezar a mejorar tu vida documental!</p>
-    <a href="index.php"><div class="boutons" id="bouton-activate">ENTRAR EN DINO</div></a>
-</div>            
-        <?php           
-        } else {
-            status(500);
-            write_log([
-                "libelle" => "ACTIVATION activate user",
-                "admin" => 0,
-                "query" => $query_activate,
-                "statut" => 1,
-                "message" => $result_activate["errinfo"][2],
-                "erreur" => $result_activate["errno"],
-                "document" => "",
-                "objet" => $_GET["mail"]
-            ]);
+    <div id="container-OK">
+        <h1>Tu cuenta esta activada!</h1>
+        <p>Ahora solo necesitas conectarte en DINO para empezar a mejorar tu vida documental!</p>
+        <a href="index.php"><div class="boutons" id="bouton-activate">ENTRAR EN DINO</div></a>
+    </div>
+    <div id="container-KO">
+        <h1>Error de activacion!</h1>
+        <p>Tal vez tu cuenta ya ha sido activada, o tal vez hay una error en la direccion que entraste.</p>
+        <p>Si encuentras problemas activando tu cuenta <b>DINO</b>, nos puedes contactar en <a href="mailto:beta@dino.mx">beta@dino.mx</a>!</p>
+    </div>
+</div>     
+        
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+
+<script type="text/javascript">
+$("#container-loading").show();
+$("#container-signup").hide();
+
+var arguments = {};
+
+$.each(window.location.search.replace("?", "").split("&"), function(i, param) {
+    var name = param.split("=")[0];
+    var value = param.split("=")[1];
+    
+    arguments[name] = value;
+})
+
+$.ajax({
+    url: "do/doActivate.php",
+    data: {
+        key: arguments.key,
+        mail: arguments.mail
+    },
+    statusCode: {
+        200: function() {
+            $("#container-loading").hide();
+            $("#container-OK").show();
+            $("#container-signup").show();
+        },
+        204: function() {
+            $("#container-loading").hide();
+            $("#container-KO").show();
+            $("#container-signup").show();
+        },
+        500: function() {
+            $("#container-loading").hide();
+            $("#container-KO").show();
+            $("#container-signup").show();
         }
-        
-
     }
-    else {
-        ?>
-<div id="container-signup">
-    <h1>Error de activacion!</h1>
-    <p>Tal vez tu cuenta ya ha sido activada, o tal vez hay una error en la direccion que entraste.</p>
-    <p>Si encuentras problemas activando tu cuenta <b>DINO</b>, nos puedes contactar en <a href="mailto:beta@dino.mx">beta@dino.mx</a>!</p>
-</div>    
-        <?php
-    }
-} else {
-    status(500);
-    write_log([
-        "libelle" => "ACTIVATION check user",
-        "admin" => 0,
-        "query" => $query,
-        "statut" => 1,
-        "message" => $result["errinfo"][2],
-        "erreur" => $result["errno"],
-        "document" => "",
-        "objet" => $_POST["champ"]
-    ]);
-}
+})
 
-?>
-
+</script>
 
 </body>
 </html>

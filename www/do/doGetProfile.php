@@ -27,23 +27,8 @@ function convertBytes( $value ) {
 
 function recupere_types($monde, $champ, $categorie) {
     $types = [];
-    
-    $query_types = "
-        SELECT 
-            `pk_type_doc`, 
-            `label_type_doc`, 
-            `detail_type_doc`, 
-            `niveau_type_doc`,
-            `time_type_doc`
-        FROM `type_doc` 
-        WHERE 
-            `fk_client` = :client
-            AND `fk_monde` = :monde
-            AND `fk_champ` = :champ
-            AND `fk_categorie_doc` = :categorie
-            AND `niveau_type_doc` <= :niveau;";
             
-    $result_types = dino_query($query_types,[
+    $result_types = dino_query("profil_types",[
         "client" => $_SESSION["client"],
         "monde" => $monde,
         "champ" => $champ,
@@ -66,18 +51,9 @@ function recupere_types($monde, $champ, $categorie) {
             // pour les types de doc à détails
             if ($row_types["detail_type_doc"] == 1) {
                 
-                $query_details = "
-                    SELECT DISTINCT(`detail_type_doc`) 
-                    FROM `type_doc_document` 
-                    WHERE 
-                        `fk_client` = :client
-                        AND `fk_monde` = :monde
-                        AND `fk_champ` = :champ
-                        AND `fk_categorie_doc` = :categorie
-                        AND `fk_type_doc` = :type
-                    ORDER BY `detail_type_doc`;";
+                $query_details = "";
                 
-                $result_details = dino_query($query_details,[
+                $result_details = dino_query("profil_type_details",[
                     "client" => $_SESSION["client"],
                     "monde" => $monde,
                     "champ" => $champ,
@@ -92,16 +68,6 @@ function recupere_types($monde, $champ, $categorie) {
                     
                 } else {
                     status(500);
-                    write_log([
-                        "libelle" => "GET details type doc",
-                        "admin" => 0,
-                        "query" => $query_details,
-                        "statut" => 1,
-                        "message" => $result["errinfo"][2],
-                        "erreur" => $result["errno"],
-                        "document" => "",
-                        "objet" => $_SESSION["user"]
-                    ]);
                 }
             }
         } // FIN WHILE TYPES
@@ -109,36 +75,13 @@ function recupere_types($monde, $champ, $categorie) {
         return $types;        
     } else {
         status(500);
-        write_log([
-            "libelle" => "GET types doc",
-            "admin" => 0,
-            "query" => $query_types,
-            "statut" => 1,
-            "message" => $result["errinfo"][2],
-            "erreur" => $result["errno"],
-            "document" => "",
-            "objet" => $_SESSION["user"]
-        ]);
     }
 }
 
 function recupere_categories($monde, $champ) {    
     $categories = [];
-    
-    $query_categories = "
-        SELECT 
-            `pk_categorie_doc`, 
-            `label_categorie_doc`, 
-            `niveau_categorie_doc`, 
-            `time_categorie_doc` 
-        FROM `categorie_doc` 
-        WHERE 
-            `fk_client` = :client
-            AND `fk_monde` = :monde
-            AND `fk_champ` = :champ
-            AND `niveau_categorie_doc` <= :niveau ;";
 
-    $result_categories = dino_query($query_categories,[
+    $result_categories = dino_query("profil_categories",[
         "client" => $_SESSION["client"],
         "monde" => $monde,
         "champ" => $champ,
@@ -162,42 +105,13 @@ function recupere_categories($monde, $champ) {
         
     } else {
         status(500);
-        write_log([
-            "libelle" => "GET categories doc",
-            "admin" => 0,
-            "query" => $query_categories,
-            "statut" => 1,
-            "message" => $result["errinfo"][2],
-            "erreur" => $result["errno"],
-            "document" => "",
-            "objet" => $_SESSION["user"]
-        ]);
     }
 }
 
 function gestion_tutos($niveau) {
     $tutos = [ ];
     
-    $query_tutos = "
-        SELECT 
-            `pk_tuto`, 
-            `titre_tuto`, 
-            `niveau_tuto`,
-            ( 
-                SELECT COUNT(*)
-                FROM `user_tuto`
-                WHERE
-                    `fk_user` = :user
-                    AND `fk_tuto` = `pk_tuto`
-            ) AS `done`
-        FROM `tuto`
-        WHERE
-            `niveau_tuto` <= :niveau
-        ORDER BY
-            `pk_tuto` ASC
-    ";
-    
-    $result_tutos = dino_query($query_tutos,[
+    $result_tutos = dino_query("profil_tutos",[
         "user" => $_SESSION["user"],
         "niveau" => $niveau
     ]);
@@ -215,16 +129,6 @@ function gestion_tutos($niveau) {
         
     } else {
         status(500);
-        write_log([
-            "libelle" => "GET tutos",
-            "admin" => 0,
-            "query" => $query_tutos,
-            "statut" => 1,
-            "message" => $result_tutos["errinfo"][2],
-            "erreur" => $result_tutos["errno"],
-            "document" => "",
-            "objet" => $_SESSION["user"]
-        ]);
     }
 }
 
@@ -232,19 +136,9 @@ function gestion_documentation($niveau) {
     $documentations = [ ];
     
     $query_documentations = "
-        SELECT 
-            `pk_documentation`, 
-            `titre_documentation`, 
-            `niveau_documentation`, 
-            `url_documentation`
-        FROM `documentation`
-        WHERE
-            `niveau_documentation` <= :niveau
-        ORDER BY
-            `pk_documentation` ASC
     ";
     
-    $result_documentations = dino_query($query_documentations,[
+    $result_documentations = dino_query("profil_documentations",[
         "niveau" => $niveau
     ]);
     
@@ -261,16 +155,6 @@ function gestion_documentation($niveau) {
         
     } else {
         status(500);
-        write_log([
-            "libelle" => "GET documentations",
-            "admin" => 0,
-            "query" => $query_documentations,
-            "statut" => 1,
-            "message" => $result_documentations["errinfo"][2],
-            "erreur" => $result_documentations["errno"],
-            "document" => "",
-            "objet" => $_SESSION["user"]
-        ]);
     }
 }
   
@@ -293,9 +177,8 @@ if (isset($_SESSION["user"])) {
     ////////////////////////
     // Récupération des informations générales de l'user
     ////////////////////////
-    $query = "SELECT `niveau_user`, `public_user`, `fk_client`, `printer_client`, `entreprise_client`, `branded_client` FROM `user`, `client` WHERE `pk_client` = `fk_client` AND `login_user` = :login ;";
     
-    $result = dino_query($query,[
+    $result = dino_query("profil_client_user",[
         "login" => $_SESSION["user"]
     ]);
     
@@ -320,25 +203,8 @@ if (isset($_SESSION["user"])) {
             //////////////////////////
             // Récupération des mondes sur lesquels l'user a des droits
             //////////////////////////
-            $query_mondes = "
-                SELECT 
-                    `pk_monde`, 
-                    `label_monde`,
-                    `niveau_monde`
-                FROM `monde` AS `m`
-                WHERE 
-                    `fk_client` = :client
-                    AND (
-                        SELECT COUNT(*)
-                        FROM `user_monde` AS `um`
-                        WHERE 
-                            `um`.`fk_client` = `m`.`fk_client`
-                            AND `um`.`fk_user` = :user
-                            AND `um`.`fk_monde` = `m`.`pk_monde`
-                    );";
             
-            
-            $result_mondes = dino_query($query_mondes,[
+            $result_mondes = dino_query("profil_mondes",[
                 "client" => $row["fk_client"],
                 "user" => $_SESSION["user"]
             ]);
@@ -360,9 +226,8 @@ if (isset($_SESSION["user"])) {
                     //////////////////////////
                     // Récupération des champs
                     //////////////////////////
-                    $query_champs = "SELECT `pk_champ`, `label_champ`, `pluriel_champ` FROM `champ` WHERE `fk_client` = :client AND `fk_monde` = :monde ORDER BY `pk_champ` ASC;";
                     
-                    $result_champs = dino_query($query_champs,[
+                    $result_champs = dino_query("profil_champs",[
                         "client" => $_SESSION["client"],
                         "monde" => $row_mondes["pk_monde"]
                     ]);
@@ -383,30 +248,9 @@ if (isset($_SESSION["user"])) {
                             //////////////////////////
                             // Récupération des valeurs de champ sur lesquelles
                             // l'user a des droits
-                            // Attention, pour les niveau 1 et + , il a accés à tout! TODO
                             //////////////////////////
-                            $query_liste = "
-                                SELECT `pk_valeur_champ`, 
-                                    `label_valeur_champ`, 
-                                    `fk_parent`, ( 
-                                        SELECT COUNT(*) 
-                                        FROM `user_valeur_champ` AS `uvc` 
-                                        WHERE `uvc`.`fk_client` = :client
-                                        AND `uvc`.`fk_monde` = :monde
-                                        AND `uvc`.`fk_champ` = :champ
-                                        AND `uvc`.`fk_user` = :user
-                                        AND `uvc`.`fk_valeur_champ` = `vc`.`pk_valeur_champ`
-                                    ) AS `droits_valeur_champ` 
-                                FROM `valeur_champ` AS `vc` 
-                                WHERE `fk_client` = :client1
-                                    AND `fk_monde` = :monde1
-                                    AND `fk_champ` = :champ1
-                                ORDER BY 
-                                    `droits_valeur_champ` DESC,
-                                    `fk_parent` ASC
-                                ;";
                               
-                            $result_liste = dino_query($query_liste,[
+                            $result_liste = dino_query("profil_valeurs",[
                                 "client" => $_SESSION["client"],
                                 "monde" => $row_mondes["pk_monde"],
                                 "champ" => $row_champs["pk_champ"],
@@ -445,16 +289,6 @@ if (isset($_SESSION["user"])) {
                                 } // FIN WHILE LISTE
                             } else {
                                 status(500);
-                                write_log([
-                                    "libelle" => "GET valeurs champ",
-                                    "admin" => 0,
-                                    "query" => $query_liste,
-                                    "statut" => 1,
-                                    "message" => $result["errinfo"][2],
-                                    "erreur" => $result["errno"],
-                                    "document" => "",
-                                    "objet" => $row_champs["pk_champ"]
-                                ]);
                                 break;
                             }
                             
@@ -470,16 +304,6 @@ if (isset($_SESSION["user"])) {
                         } // FIN WHILE CHAMPS
                     } else {
                         status(500);
-                        write_log([
-                            "libelle" => "GET champs",
-                            "admin" => 0,
-                            "query" => $query_liste,
-                            "statut" => 1,
-                            "message" => $result["errinfo"][2],
-                            "erreur" => $result["errno"],
-                            "document" => "",
-                            "objet" => $row_mondes["pk_monde"]
-                        ]);
                         break;
                     }
                     
@@ -495,55 +319,19 @@ if (isset($_SESSION["user"])) {
                 echo $json;
             } else {
                 status(500);
-                write_log([
-                    "libelle" => "GET mondes",
-                    "admin" => 0,
-                    "query" => $query_mondes,
-                    "statut" => 1,
-                    "message" => $result["errinfo"][2],
-                    "erreur" => $result["errno"],
-                    "document" => "",
-                    "objet" => $_SESSION["user"]
-                ]);
                 break;
             }
         } else {
             status(403);
-            write_log([
-                "libelle" => "GET user",
-                "admin" => 0,
-                "query" => $query,
-                "statut" => 1,
-                "message" => "",
-                "erreur" => "Incohérence Session/BDD",
-                "document" => "",
-                "objet" => $_SESSION["user"]
-            ]);
         }
     } else {
         status(500);
-        write_log([
-            "libelle" => "GET user",
-            "admin" => 0,
-            "query" => $query,
-            "statut" => 1,
-            "message" => $result["errinfo"][2],
-            "erreur" => $result["errno"],
-            "document" => "",
-            "objet" => $_SESSION["user"]
-        ]);
     }
 } else {
-    status(403);
-    write_log([
-        "libelle" => "GET user",
-        "admin" => 0,
-        "query" => "",
-        "statut" => 666,
-        "message" => "",
-        "erreur" => "",
-        "document" => "",
-        "objet" => ""
+    dino_log([
+        "niveau" => "Z",
+        "query" => "Profil : pas de session pour cet user"
     ]);
+    status(403);
 }
 ?>

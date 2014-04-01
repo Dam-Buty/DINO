@@ -25,6 +25,7 @@ if (isset($_SESSION["niveau"])) {
         "vc3Monde" => $_POST["monde"]
     ];   
     
+    // TODO : améliorer cette requête!
     $query = "
             SELECT `fk_document`, `revision_type_doc`, 
                 DATE_FORMAT(`d`.`date_document`, '%d/%m/%Y') AS `date`,
