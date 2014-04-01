@@ -25,6 +25,10 @@ if ($_SESSION["niveau"] >= 10) {
         status(500);
     }
 } else {
+    dino_log([
+        "niveau" => "Z",
+        "query" => "Add valeur : droits insuffisants"
+    ]);
     status(403);
 }
 

@@ -44,6 +44,8 @@ if (isset($_SESSION["niveau"])) {
         // It is important that you close any pipes before calling
         // proc_close in order to avoid a deadlock
         $return_value = proc_close($process);
+    
+        $err_log = str_replace($clef, "CLEF", $err);
 
         if ($return_value == 0) {
             status(200);
@@ -81,41 +83,29 @@ if (isset($_SESSION["niveau"])) {
             echo $out;
         } else {
             status(500);
-            write_log([
-                "libelle" => "UNPACK document",
-                "admin" => 0,
+            dino_log([
+                "niveau" => "E",
                 "query" => $commande_log,
-                "statut" => 1,
-                "message" => $return_value,
-                "erreur" => $err, // TODO : la clef peut venir se cacher dans l'erreur!!  (par exemple si pas de doc)
-                "document" => "",
-                "objet" => $document
+                "errno" => $return_value,
+                "errinfo" => $err_log,
+                "params" => json_encode($document)
             ]);
         }
     } else {
         status(500);
-        write_log([
-            "libelle" => "UNPACK document",
-            "admin" => 0,
+        dino_log([
+            "niveau" => "E",
             "query" => $commande_log,
-            "statut" => 1,
-            "message" => "",
-            "erreur" => "unknown",
-            "document" => "",
-            "objet" => $document
+            "errno" => 666,
+            "errinfo" => "Erreur inconnue",
+            "params" => json_encode($document)
         ]);
     }
 } else {
-    status(403);
-    write_log([
-        "libelle" => "UNPACK document",
-        "admin" => 0,
-        "query" => "",
-        "statut" => 666,
-        "message" => "",
-        "erreur" => "",
-        "document" => "",
-        "objet" => $_GET["document"]
+    dino_log([
+        "niveau" => "Z",
+        "query" => "Unpack : pas de niveau session"
     ]);
+    status(403);
 }
 ?>

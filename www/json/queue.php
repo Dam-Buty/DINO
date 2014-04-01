@@ -5,24 +5,6 @@ include("../includes/log.php");
 
 if (isset($_SESSION["niveau"])) {
     include("../includes/PDO.php");
-    
-    $query = "
-        SELECT 
-            `filename_document`, 
-            `display_document`, 
-            `taille_document`, 
-            DATE(`date_upload_document`) AS `date_doc`, 
-            `fk_user` 
-        FROM `document` 
-        WHERE 
-            `fk_client` = :client
-            AND `niveau_document` IS NULL
-            AND (
-                `fk_user` = :user
-                OR 20 <= :niveau
-            )
-        ORDER BY `display_document` ASC
-        ;";
             
     $params = [
         "client" => $_SESSION["client"],
@@ -30,7 +12,7 @@ if (isset($_SESSION["niveau"])) {
         "niveau" => $_SESSION["niveau"]
     ];
     
-    $result = dino_query($query, $params);
+    $result = dino_query("json_queue", $params);
     
     if ($result["status"]) {
         status(200);
@@ -72,28 +54,12 @@ if (isset($_SESSION["niveau"])) {
         echo json_encode($queue);
     } else {
         status(500);
-        write_log([
-            "libelle" => "GET queue",
-            "admin" => 0,
-            "query" => $query,
-            "statut" => 1,
-            "message" => "",
-            "erreur" => $mysqli->error,
-            "document" => "",
-            "objet" => $_SESSION["client"]
-        ]);
     }
 } else {
-    status(403);
-    write_log([
-        "libelle" => "GET queue",
-        "admin" => 0,
-        "query" => "",
-        "statut" => 666,
-        "message" => "",
-        "erreur" => "",
-        "document" => "",
-        "objet" => ""
+    dino_log([
+        "niveau" => "Z",
+        "query" => "JSON queue : pas de niveau session"
     ]);
+    status(403);
 }
 ?>

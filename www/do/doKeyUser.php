@@ -16,18 +16,7 @@ if ($_SESSION["niveau"] >= 20) {
 
     $password_stockable = custom_hash($pass . $_POST["login"], TRUE);
     
-    $query_user = "
-        UPDATE `user`
-        SET 
-            `mdp_user` = :pass,
-            `clef_user` = :clef
-        WHERE
-            `fk_client` = :client
-            AND `niveau_user` <= :niveau
-            AND `login_user` = :login
-    ;";
-            
-    $result_user = dino_query($query_user, [
+    $result_user = dino_query("key_user", [
         "pass" => $password_stockable,
         "clef" => $clef_cryptee,
         "client" => $_SESSION["client"],
@@ -43,54 +32,28 @@ if ($_SESSION["niveau"] >= 20) {
         
                     
         if ($retour != "") {
-            write_log([
-                "libelle" => "MAIL key user",
-                "admin" => 1,
-                "query" => "",
-                "statut" => 1,
-                "message" => $retour,
-                "erreur" => "",
-                "document" => "",
-                "objet" => $_POST["login"]
+            dino_log([
+                "niveau" => "E",
+                "query" => "mail reset_pass",
+                "errno" => "",
+                "errinfo" => $retour,
+                "params" => json_encode([
+                    "user" => $_POST["login"],
+                    "pass" => $pass
+                ])
             ]);
         }
         
         status(200);
-        write_log([
-            "libelle" => "RESET mot de passe",
-            "admin" => 1,
-            "query" => $query_user,
-            "statut" => 0,
-            "message" => "",
-            "erreur" => "",
-            "document" => "",
-            "objet" => $_POST["login"]
-        ]);
     } else {
         status(500);
-        write_log([
-            "libelle" => "RESET mot de passe",
-            "admin" => 1,
-            "query" => $query_user,
-            "statut" => 1,
-            "message" => $result_user["errinfo"][2],
-            "erreur" => $result_user["errno"],
-            "document" => "",
-            "objet" => $_POST["login"]
-        ]);
     }
     
 } else {
-    header("Location: ../index.php");
-    write_log([
-        "libelle" => "RESET mot de passe",
-        "admin" => 1,
-        "query" => $query_user,
-        "statut" => 666,
-        "message" => "",
-        "erreur" => "",
-        "document" => "",
-        "objet" => $_POST["login"]
+    dino_log([
+        "niveau" => "Z",
+        "query" => "Key user : droits insuffisants"
     ]);
+    header("Location: ../index.php");
 }
 ?>

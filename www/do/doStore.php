@@ -16,19 +16,12 @@ $champs = array_filter($_POST["champs"]);
 if ($_SESSION["niveau"] >= 10) {
     include("../includes/PDO.php");
         
-    $query_document = "
-        UPDATE `document` 
-        SET 
-            niveau_document = 0, 
-            date_document = :date
-        WHERE `filename_document` = :filename ;";
-        
     $params_document = [
         "date" => format_date($_POST["date"]),
         "filename" => $_POST["filename"]
     ];
     
-    $result_document = dino_query($query_document, $params_document);
+    $result_document = dino_query("store_document", $params_document);
         
     if ($result_document["status"]) {
         $params_type = [
@@ -47,6 +40,7 @@ if ($_SESSION["niveau"] >= 10) {
             "tddDetail" => $_POST["detail"]
         ];
         
+        // TODO : on fait plus ça
         $query_type = "
             INSERT INTO `type_doc_document` (
                 `fk_type_doc`, 
@@ -123,20 +117,6 @@ if ($_SESSION["niveau"] >= 10) {
             $err = false;
             
             foreach($champs as $pk => $valeur) {
-                $query_champ .= "INSERT INTO `document_valeur_champ` (
-                            `fk_document`, 
-                            `fk_monde`, 
-                            `fk_client`, 
-                            `fk_valeur_champ`, 
-                            `fk_champ`
-                        ) VALUES (
-                            :filename, 
-                            :monde, 
-                            :client, 
-                            :valeur, 
-                            :pk
-                        );";
-                        
                 $params_champ = [
                     "filename" => $_POST["filename"],
                     "monde" => $_POST["monde"],
@@ -145,20 +125,10 @@ if ($_SESSION["niveau"] >= 10) {
                     "pk" => $pk
                 ];
                 
-                $result_champ = dino_query($query_champ, $params_champ);
+                $result_champ = dino_query("store_valeur", $params_champ);
                 
                 if (!$result_champ["status"]) {
                     status(500);
-                    write_log([
-                        "libelle" => "STORE document",
-                        "admin" => 0,
-                        "query" => $query_type,
-                        "statut" => 1,
-                        "message" => $result_type["errinfo"][2],
-                        "erreur" => $result_type["errno"],
-                        "document" => "",
-                        "objet" => $_POST["filename"]
-                    ]);
                     $err = true;
                     break;
                 }
@@ -166,54 +136,18 @@ if ($_SESSION["niveau"] >= 10) {
             
             if (!$err) {
                 status(200);
-                write_log([
-                    "libelle" => "STORE document",
-                    "admin" => 0,
-                    "query" => $query,
-                    "statut" => 0,
-                    "message" => "",
-                    "erreur" => "",
-                    "document" => "",
-                    "objet" => $_POST["filename"]
-                ]);
             }
         } else {
             status(500);
-            write_log([
-                "libelle" => "STORE document",
-                "admin" => 0,
-                "query" => $query_type,
-                "statut" => 1,
-                "message" => $result_type["errinfo"][2],
-                "erreur" => $result_type["errno"],
-                "document" => "",
-                "objet" => $_POST["filename"]
-            ]);
         }    
     } else {
         status(500);
-        write_log([
-            "libelle" => "STORE document",
-            "admin" => 0,
-            "query" => $query_document,
-            "statut" => 1,
-            "message" => $result_document["errinfo"][2],
-            "erreur" => $result_document["errno"],
-            "document" => "",
-            "objet" => $_POST["filename"]
-        ]);
     } 
 } else {
-    status(403);
-    write_log([
-        "libelle" => "STORE document",
-        "admin" => 0,
-        "query" => $query,
-        "statut" => 666,
-        "message" => "",
-        "erreur" => "",
-        "document" => "",
-        "objet" => $_POST["filename"]
+    dino_log([
+        "niveau" => "Z",
+        "query" => "Store document : droits insuffisants"
     ]);
+    status(403);
 }
 ?>

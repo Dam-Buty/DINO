@@ -6,21 +6,7 @@ include("../includes/log.php");
 if (isset($_SESSION["niveau"])) {
     include("../includes/PDO.php");
     
-    $query = "
-        SELECT 
-            `filename_document`, 
-            `display_document`, 
-            `taille_document`, 
-            DATE(`date_upload_document`) AS `date_doc`, 
-            `fk_user` 
-        FROM `document` 
-        WHERE 
-            `fk_client` = :client
-            AND `niveau_document` = 999
-        LIMIT 1
-        ;";
-    
-    $result = dino_query($query, [
+    $result = dino_query("request_document_select", [
         "client" => $_SESSION["client"]
     ]);
     
@@ -53,16 +39,7 @@ if (isset($_SESSION["niveau"])) {
                 ]
             ];
             
-            $query_update = "
-                UPDATE `document`
-                SET
-                    `niveau_document` = 888
-                WHERE 
-                    `fk_client` = :client
-                    AND `filename_document` = :filename
-            ;";
-            
-            $result_update = dino_query($query_update, [
+            $result_update = dino_query("request_document_update", [
                 "client" => $_SESSION["client"],
                 "filename" => $row["filename_document"]
             ]);
@@ -73,42 +50,16 @@ if (isset($_SESSION["niveau"])) {
                 echo json_encode($document);
             } else {
                 status(500);
-                write_log([
-                    "libelle" => "UPDATE document a cleaner",
-                    "admin" => 0,
-                    "query" => $query_update,
-                    "statut" => 1,
-                    "message" => $result_update["errinfo"][2],
-                    "erreur" => $result_update["errno"],
-                    "document" => "",
-                    "objet" => $row["filename_document"]
-                ]);
             }
         }
     } else {
         status(500);
-        write_log([
-            "libelle" => "GET document a cleaner",
-            "admin" => 0,
-            "query" => $query,
-            "statut" => 1,
-            "message" => $result["errinfo"][2],
-            "erreur" => $result["errno"],
-            "document" => "",
-            "objet" => $_SESSION["client"]
-        ]);
     }
 } else {
-    status(403);
-    write_log([
-        "libelle" => "GET document a cleaner",
-        "admin" => 0,
-        "query" => "",
-        "statut" => 666,
-        "message" => "",
-        "erreur" => "",
-        "document" => "",
-        "objet" => ""
+    dino_log([
+        "niveau" => "Z",
+        "query" => "Request document : pas de niveau session"
     ]);
+    status(403);
 }
 ?>

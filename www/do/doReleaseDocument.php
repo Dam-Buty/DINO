@@ -6,16 +6,7 @@ include("../includes/log.php");
 if (isset($_SESSION["niveau"])) {
     include("../includes/PDO.php");
     
-    $query_update = "
-        UPDATE `document`
-        SET
-            `niveau_document` = NULL
-        WHERE 
-            `fk_client` = " .  . "
-            AND `filename_document` = '" .  . "'
-    ;";
-    
-    $result_update = dino_query($query_update,[
+    $result_update = dino_query("release_document",[
         "client" => $_SESSION["client"],
         "filename" => $_POST["document"]
     ]);
@@ -24,28 +15,12 @@ if (isset($_SESSION["niveau"])) {
         status(200);
     } else {
         status(500);
-        write_log([
-            "libelle" => "UPDATE document a cleaner",
-            "admin" => 0,
-            "query" => $query_update,
-            "statut" => 1,
-            "message" => $result_update["errinfo"][2],
-            "erreur" => $result_update["errno"],
-            "document" => "",
-            "objet" => $POST["document"]
-        ]);
     }
 } else {
-    status(403);
-    write_log([
-        "libelle" => "GET document a cleaner",
-        "admin" => 0,
-        "query" => "",
-        "statut" => 666,
-        "message" => "",
-        "erreur" => "",
-        "document" => "",
-        "objet" => $POST["document"]
+    dino_log([
+        "niveau" => "Z",
+        "query" => "Release document : pas de niveau session"
     ]);
+    status(403);
 }
 ?>

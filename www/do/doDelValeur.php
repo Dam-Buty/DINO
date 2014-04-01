@@ -96,10 +96,10 @@ if ($_SESSION["niveau"] >= 20) {
         status(500);
     }
 } else {
-    status(403);
     dino_log([
         "niveau" => "Z",
-        "query" => "Suppression de valeur de champ"
+        "query" => "Suppression de valeur de champ : droits insuffisants"
     ]);
+    status(403);
 }
 ?>
