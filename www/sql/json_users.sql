@@ -7,4 +7,5 @@ FROM `user`
 WHERE 
     `fk_client` = :client
     AND `niveau_user` < :niveau
+ORDER BY `login_user`
 ;

@@ -26,7 +26,7 @@ function dino_query($query_name, $params = [], $substitutions = []) {
     $message = array_shift($query_array);
     $query = implode("\n", $query_array);
     
-    $query_type = substr(trim(explode("\n", $query)[1]), 0, 6);
+    $query_type = substr(trim(explode("\n", $query)[0]), 0, 6);
     
     if (count($substitutions) > 0) {
         foreach($substitutions as $key => $value) {
@@ -80,7 +80,7 @@ function dino_query($query_name, $params = [], $substitutions = []) {
                 "query" => $query_name,
                 "errno" => $stmt->errorCode(),
                 "errinfo" => $stmt->errorInfo()[2],
-                "params" => json_encode($params)
+                "params" => json_encode($params) . "," . json_encode($substitutions)
             ]);
             
             $return = [

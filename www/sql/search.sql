@@ -8,21 +8,15 @@ SELECT
     `tdd`.`detail_type_doc` AS `detail`,
     `tdd`.`revision_type_doc` AS `revision`,
     ( 
-        SELECT GROUP_CONCAT( `pk_valeur_champ` SEPARATOR '||' )
+        SELECT GROUP_CONCAT( `fk_valeur_champ` SEPARATOR '||' )
         FROM 
-            `valeur_champ` AS `vc`,
             `document_valeur_champ` AS `dvc`
         WHERE 
             `dvc`.`fk_client` = :dvcClient
             AND `dvc`.`fk_monde` = :dvcMonde
-            AND `vc`.`fk_client` = :vcClient
-            AND `vc`.`fk_monde` = :vcMonde
-            
-            AND `vc`.`fk_champ` = `dvc`.`fk_champ`
-            AND `vc`.`pk_valeur_champ` = `dvc`.`fk_valeur_champ`
             
             AND `dvc`.`fk_document` = `d`.`filename_document`
-        ORDER BY `vc`.`fk_champ`
+        ORDER BY `dvc`.`fk_champ`
     ) AS `champs`,
     ( 
         SELECT GROUP_CONCAT( `label_valeur_champ` SEPARATOR '||' )
@@ -59,50 +53,7 @@ WHERE
     AND `td`.`fk_categorie_doc` = `tdd`.`fk_categorie_doc`
     AND `td`.`pk_type_doc` = `tdd`.`fk_type_doc`
     AND `tdd`.`fk_document` = `d`.`filename_document`
-    
-    # On ne prend que les dernieres revisions
-    AND `tdd`.`revision_type_doc` = (
-        SELECT 
-            MAX(`revision_type_doc`)
-        FROM 
-            `type_doc_document` AS `tdd2`,
-            `document` AS `d2`
-        WHERE 
-            `tdd2`.`fk_document` = `d2`.`filename_document`
-            AND `d2`.`fk_client` = :d2Client
-            
-            AND `tdd2`.`fk_client` = :tdd2Client
-            AND `tdd2`.`fk_monde` = :tdd2Monde
-            
-            AND `tdd2`.`fk_categorie_doc` = `tdd`.`fk_categorie_doc`
-            AND `tdd2`.`fk_type_doc` = `tdd`.`fk_type_doc`
-            AND `tdd2`.`detail_type_doc` = `tdd`.`detail_type_doc`
-            AND ( SELECT GROUP_CONCAT( 
-                    `pk_valeur_champ` SEPARATOR '||'
-                 )
-                FROM 
-                    `valeur_champ` AS `vc_revisions`,
-                    `document_valeur_champ` AS `dvc_revisions`
-                WHERE 
-                    `dvc_revisions`.`fk_client` = :dvc2Client
-                    AND `dvc_revisions`.`fk_monde` = :dvc2Monde
-                    
-                    AND `vc_revisions`.`fk_client` = :vc2Client
-                    AND `vc_revisions`.`fk_monde` = :vc2Monde
-                    
-                    AND `vc_revisions`.`fk_champ` = `dvc_revisions`.`fk_champ`
-                    AND `vc_revisions`.`pk_valeur_champ` = `dvc_revisions`.`fk_valeur_champ`
-                    
-                    AND `dvc_revisions`.`fk_document` = `tdd2`.`fk_document`
-                ORDER BY `vc_revisions`.`fk_champ`
-            ) = `champs`
-            AND LEFT (
-                (`td`.`time_type_doc` * `d2`.`date_document`) , 6
-            ) = LEFT (
-                (`td`.`time_type_doc` * `d`.`date_document`) , 6
-            )
-    )
-    
+        
     # Verification du niveau
     AND `niveau_document` <= :niveauDoc
     AND `td`.`niveau_type_doc` <= :niveauType
@@ -130,9 +81,9 @@ WHERE
         FROM `document_valeur_champ` AS `dvc_droits`
         WHERE 
             `dvc_droits`.`fk_client` = :droitsClient
-            AND `dvc_droits`.`fk_monde` IN (%droitsMondes%)
+            AND `dvc_droits`.`fk_monde` = :droitsMonde
             
-            AND `dvc_droits`.`fk_valeur_champ` IN (%droitsValeurs%)
+            AND `dvc_droits`.`fk_valeur_champ` IN (0%droitsValeurs%)
                 
             AND `dvc_droits`.`fk_document` = `d`.`filename_document`
     ) > 0  OR 
@@ -143,7 +94,7 @@ WHERE
     AND `date_document` BETWEEN FROM_UNIXTIME(:mini) AND FROM_UNIXTIME(:maxi)
     
     # Recherche
-    AND ( 
+    AND (( 
         SELECT COUNT(*)
         FROM `document_valeur_champ` AS `dvc_search`
         WHERE
@@ -152,8 +103,10 @@ WHERE
             
             AND `dvc_search`.`fk_document` = `d`.`filename_document`
             
-            AND `dvc_search`.`fk_valeur_champ` IN (%search%)
-    ) > 0
+            AND `dvc_search`.`fk_valeur_champ` IN (0%search%)
+    ) > 0  OR 
+        1 = :no_search
+    )
     
     # Tris
     # - Par labels de champs concaténés
@@ -173,7 +126,8 @@ WHERE
                 AND `cd`.`pk_categorie_doc` = `td`.`fk_categorie_doc`
         ) ASC, 
         `td`.`label_type_doc` ASC, 
-        `tdd`.`detail_type_doc` ASC
+        `tdd`.`detail_type_doc` ASC,
+        `tdd`.`revision_type_doc` DESC
 
     # Limites    
     LIMIT 0, 500

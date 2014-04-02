@@ -40,6 +40,12 @@ $(document).ready(function() {
                             }
                             $("#container-login").show();
                             $("#container-loading").hide();
+                        },
+                        500: function() {
+                            $("#login").addClass("KO");
+                            $("#pass").addClass("KO");
+                            $("#container-login").show();
+                            $("#container-loading").hide();
                         }
                     }
                 }); 

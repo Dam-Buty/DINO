@@ -14,63 +14,56 @@ if (isset($_SESSION["niveau"])) {
         $all = 1;
     }
     
+    if (isset($_POST["recherche"])) {
+        $no_search = 0;
+    } else {
+        $no_search = 1;
+    }
+    
     $params = [
+        "all_droits" => $all,
+        "no_search" => $no_search,
         "dvcClient" => $_SESSION["client"],
         "dvcMonde" => $_POST["monde"],
-        "vcClient" => $_SESSION["client"],
-        "vcMonde" => $_POST["monde"],
         "dvc1Client" => $_SESSION["client"],
         "dvc1Monde" => $_POST["monde"],
         "vc1Client" => $_SESSION["client"],
         "vc1Monde" => $_POST["monde"],
-        "dvc2Client" => $_SESSION["client"],
-        "dvc2Monde" => $_POST["monde"],
-        "vc2Client" => $_SESSION["client"],
-        "vc2Monde" => $_POST["monde"],
         "tdClient" => $_SESSION["client"],
         "tdMonde" => $_POST["monde"],
         "tddClient" => $_SESSION["client"],
         "tddMonde" => $_POST["monde"],
         "dClient" => $_SESSION["client"],
-        "tdd2Client" => $_SESSION["client"],
-        "tdd2Monde" => $_POST["monde"],
-        "d2Client" => $_SESSION["client"],
         "niveauDoc" => $_SESSION["niveau"],
         "niveauType" => $_SESSION["niveau"],
         "niveauCategorie" => $_SESSION["niveau"],
-        "all_droits" => $all,
         "mini" => $_POST["dates"]["mini"],
         "maxi" => $_POST["dates"]["maxi"],
         "cdClient" => $_SESSION["client"],
         "cdMonde" => $_POST["monde"],
         "searchClient" => $_SESSION["client"],
         "searchMonde" => $_POST["monde"],
-        "droitsClient" => $_SESSION["client"]
+        "droitsClient" => $_SESSION["client"],
+        "droitsMonde" => $_POST["monde"]
     ]; 
     
     if (count($_POST["recherche"]) > 0) {
         $search = "";
         foreach($_POST["recherche"] as $i => $valeur) {
-            if ($search != "") {
-                $search .= ", ";
-            }
-            $search .= $valeur;
+            $search .= ", " . $valeur;
         }
     }
     
     if ($_POST["all"] == "false" && count($_POST["droits"]) > 0) {
         $droits = "";
-        foreach($_POST["droits"] as $pk => $label) {
-            if ($droits != "") {
-                $droits .= ", ";
-            }
-            $droits .= $pk;
+        foreach($_POST["droits"] as $pk => $valeur) {
+            $droits .= ", " . $pk;
         }
     }
 
     $result = dino_query("search", $params, [
         "search" => $search,
-        "droits" => $droits
+        "droitsValeurs" => $droits
     ]);
     
     
