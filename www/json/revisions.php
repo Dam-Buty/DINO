@@ -3,7 +3,7 @@ session_start();
 include("../includes/status.php");  
 include("../includes/log.php");  
 
-if (isset($_SESSION["niveau"])) {
+if ($_SESSION["niveau"] >= 10) {
     include("../includes/PDO.php");
        
     $params = [
@@ -14,90 +14,20 @@ if (isset($_SESSION["niveau"])) {
         "type" => $_POST["type"],
         "detail" => $_POST["detail"],
         "filename" => $_POST["filename"],
-        "dvc2Client" => $_SESSION["client"],
-        "dvc2Monde" => $_POST["monde"],
-        "vc2Client" => $_SESSION["client"],
-        "vc2Monde" => $_POST["monde"],
-        "vc2Filename" => $_POST["filename"],
-        "dvc3Client" => $_SESSION["client"],
-        "dvc3Monde" => $_POST["monde"],
-        "vc3Client" => $_SESSION["client"],
-        "vc3Monde" => $_POST["monde"]
+        "dvcClient" => $_SESSION["client"],
+        "dvcMonde" => $_POST["monde"],
+        "dvcClient" => $_SESSION["client"],
+        "dvcMonde" => $_POST["monde"],
+        "dvcPk" => $_POST["maxchamp"],
+        "dvcValeur" = $champs[$_POST["maxchamp"]]
     ];   
-    
-    // TODO : améliorer cette requête!
-    $query = "
-            SELECT `fk_document`, `revision_type_doc`, 
-                DATE_FORMAT(`d`.`date_document`, '%d/%m/%Y') AS `date`,
-                `d`.`display_document` AS `display`
-            FROM `type_doc_document` AS `tdd`, `document` AS `d`
-            WHERE 
-                # Jointure
-                `d`.`fk_client` = `tdd`.`fk_client`
-                AND `d`.`filename_document` = `tdd`.`fk_document`
-                
-                # Selection des documents de meme categorie, type, detail
-                AND `tdd`.`fk_client` = :client
-                AND `tdd`.`fk_monde` = :monde
-                AND `tdd`.`fk_champ` = :champ
-                AND `tdd`.`fk_categorie_doc` = :categorie
-                AND `tdd`.`fk_type_doc` = :type
-                AND `tdd`.`detail_type_doc` = :detail
-                
-                # Elimination du document quon recherche
-                AND `tdd`.`fk_document` != :filename
-                
-                # Selection des documents ayant les memes champs
-                AND ( 
-                    SELECT GROUP_CONCAT( 
-                        `pk_valeur_champ`
-                        SEPARATOR '||'
-                    )
-                    FROM 
-                        `valeur_champ` AS `vc2`,
-                        `document_valeur_champ` AS `dvc2`
-                    WHERE 
-                        `dvc2`.`fk_client` = :dvc2Client
-                        AND `dvc2`.`fk_monde` = :dvc2Monde
-                        AND `vc2`.`fk_client` = :vc2Client
-                        AND `vc2`.`fk_monde` = :vc2Monde
-
-                        AND `vc2`.`fk_champ` = `dvc2`.`fk_champ`
-                        AND `vc2`.`pk_valeur_champ` = `dvc2`.`fk_valeur_champ`
-
-                        AND `dvc2`.`fk_document` = :vc2Filename
-                    ORDER BY `vc2`.`fk_champ`
-                    ) = ( 
-                        SELECT GROUP_CONCAT(
-                            `pk_valeur_champ`
-                            SEPARATOR '||'
-                        )
-                        FROM 
-                            `valeur_champ` AS `vc3`,
-                            `document_valeur_champ` AS `dvc3`
-                        WHERE 
-                            `dvc3`.`fk_client` = :dvc3Client
-                            AND `dvc3`.`fk_monde` = :dvc3Monde
-                            AND `vc3`.`fk_client` = :vc3Client
-                            AND `vc3`.`fk_monde` = :vc3Monde
-
-                            AND `vc3`.`fk_champ` = `dvc3`.`fk_champ`
-                            AND `vc3`.`pk_valeur_champ` = `dvc3`.`fk_valeur_champ`
-
-                            AND `dvc3`.`fk_document` = `d`.`filename_document`
-                        ORDER BY `vc3`.`fk_champ`
-                    )";
               
     if ($_POST["time"] != "000000") {
-        $query .= "
-                AND LEFT(
-                    `d`.`date_document` * 1, 6
-                ) = :time";
+        $query .= "revisions_time";
         $params["time"] = $_POST["time"];
+    } else {
+        $query .= "revisions";
     }
-    
-            "ORDER BY `revision_type_doc` ASC
-            ;";
               
     $result = dino_query($query, $params);
     
@@ -120,28 +50,12 @@ if (isset($_SESSION["niveau"])) {
         echo $json;
     } else {
         status(500);
-        write_log([
-            "libelle" => "GET revisions",
-            "admin" => 0,
-            "query" => $query,
-            "statut" => 1,
-            "message" => $result["errinfo"][2],
-            "erreur" => $result["errno"],
-            "document" => "",
-            "objet" => $_POST["filename"]
-        ]);
     }
 } else {
-    status(403);
-    write_log([
-        "libelle" => "GET revisions",
-        "admin" => 0,
-        "query" => "",
-        "statut" => 666,
-        "message" => "",
-        "erreur" => "",
-        "document" => "",
-        "objet" => $_POST["filename"]
+    dino_log([
+        "niveau" => "Z",
+        "query" => "Affichage des révisions : droits insuffisants"
     ]);
+    status(403);
 }
 ?>

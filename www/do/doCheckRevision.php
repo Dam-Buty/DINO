@@ -8,63 +8,24 @@ $champs = array_filter($_POST["champs"]);
 if ($_SESSION["niveau"] >= 10) {
     include("../includes/PDO.php");
     
-    $query = "
-        SELECT `revision_type_doc`, LEFT(
-            `d`.`date_document`, 6
-        ) AS `time`
-        FROM 
-            `type_doc_document` AS `tdd`,
-            `document` AS `d`
-        WHERE `tdd`.`fk_client` = :client 
-            AND `tdd`.`fk_monde` = :monde
-            
-            AND `tdd`.`fk_client` = `d`.`fk_client`
-            AND `tdd`.`fk_document` = `d`.`filename_document`
-            
-            AND `tdd`.`fk_categorie_doc` = :categorie
-            AND `tdd`.`fk_type_doc` = :type 
-            AND `tdd`.`detail_type_doc` = :detail
-            
-    ";
-    
-    // TODO construire dans store.js un agrégat des champs et comparer avec lui
-    
     $params = [
         "client" => $_SESSION["client"],
         "monde" => $_POST["monde"],
         "categorie" => $_POST["categorie"],
         "type" => $_POST["type"],
-        "detail" => $_POST["detail"]
+        "detail" => $_POST["detail"],
+        "dvcClient" => $_SESSION["client"],
+        "dvcMonde" => $_POST["monde"],
+        "dvcPk" => $_POST["maxchamp"],
+        "dvcValeur" = $champs[$_POST["maxchamp"]]
     ];
-            
-            foreach($champs as $pk => $valeur) {
-                $query .= " 
-            AND (
-                SELECT COUNT(*) 
-                FROM `document_valeur_champ` AS `dvc` 
-                WHERE `dvc`.`fk_client` = :client" . $pk . "
-                    AND `dvc`.`fk_monde` = :monde" . $pk . "
-                    AND `dvc`.`fk_champ` = :pk" . $pk . "
-                    AND `dvc`.`fk_valeur_champ` = :valeur" . $pk . "
-                    AND `dvc`.`fk_document` = `tdd`.`fk_document`
-                ) > 0";
-                
-                $params["client" . $pk] = $_SESSION["client"];
-                $params["monde" . $pk] = $_POST["monde"];
-                $params["pk" . $pk] = $pk;
-                $params["valeur" . $pk] = $valeur;
-            }
     
     if ($_POST["time"] != "000000") {
-        $query .= "
-                AND LEFT(
-                    `d`.`date_document` * 1, 6
-                ) = :time";
+        $query = "check_revision_time";
         $params["time"] = $_POST["time"];
-    }
-    
-    $query .= "
-        ;";      
+    } else {
+        $query = "check_revision";
+    }   
     
     $result = dino_query($query, $params);
                              
@@ -76,28 +37,12 @@ if ($_SESSION["niveau"] >= 10) {
         }
     } else {
         status(500);
-        write_log([
-            "libelle" => "CHECK revision",
-            "admin" => 0,
-            "query" => $query,
-            "statut" => 1,
-            "message" => $result["errinfo"][2],
-            "erreur" => $result["errno"],
-            "document" => "",
-            "objet" => $_POST["filename"]
-        ]);
     }    
 } else {
-    status(403);
-    write_log([
-        "libelle" => "CHECK revision",
-        "admin" => 0,
-        "query" => $query,
-        "statut" => 666,
-        "message" => "",
-        "erreur" => "",
-        "document" => "",
-        "objet" => $_POST["filename"]
+    dino_log([
+        "niveau" => "Z",
+        "query" => "Check revision : droits insuffisants"
     ]);
+    status(403);
 }
 ?>

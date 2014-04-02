@@ -37,78 +37,19 @@ if ($_SESSION["niveau"] >= 10) {
             "tddMonde" => $_POST["monde"],
             "tddCategorie" => $_POST["categorie"],
             "tddType" => $_POST["type"],
-            "tddDetail" => $_POST["detail"]
+            "tddDetail" => $_POST["detail"],
+            "dvcClient" => $_SESSION["client"],
+            "dvcMonde" => $_POST["monde"],
+            "dvcChamp" => $_POST["maxchamp"],
+            "dvcValeur" = $champs[$_POST["maxchamp"]]
         ];
-        
-        // TODO : on fait plus ça
-        $query_type = "
-            INSERT INTO `type_doc_document` (
-                `fk_type_doc`, 
-                `fk_categorie_doc`, 
-                `fk_champ`, 
-                `fk_monde`, 
-                `fk_client`, 
-                `fk_document`, 
-                `detail_type_doc`, 
-                `revision_type_doc`
-            ) VALUES (
-                :type, 
-                :categorie, 
-                :champ, 
-                :monde, 
-                :client, 
-                :filename, 
-                :detail, 
-                (
-                    SELECT COALESCE(MAX(`revision_type_doc`) + 1, 1) 
-                    FROM (
-                        SELECT `revision_type_doc` 
-                        FROM 
-                            `type_doc_document` AS `tdd`,
-                            `document` AS `d`
-                        WHERE 
-                            `d`.`fk_client` = :dClient
-                            AND `d`.`filename_document` = `tdd`.`fk_document`
-                        
-                            AND `tdd`.`fk_client` = :tddClient
-                            AND `tdd`.`fk_monde` = :tddMonde
-                            AND `tdd`.`fk_categorie_doc` = :tddCategorie
-                            AND `tdd`.`fk_type_doc` = :tddType 
-                            
-                            AND `tdd`.`detail_type_doc` = :tddDetail
-                            
-        ";
-        
-        foreach($champs as $pk => $valeur) {
-            $query_type .= " 
-                            AND (
-                                SELECT COUNT(*) 
-                                FROM `document_valeur_champ` AS `dvc` 
-                                WHERE `dvc`.`fk_client` = :client" . $pk . "
-                                    AND `dvc`.`fk_monde` = :monde" . $pk . "
-                                    AND `dvc`.`fk_champ` = :champ" . $pk . "
-                                    AND `dvc`.`fk_valeur_champ` = :valeur" . $pk . "
-                                    AND `dvc`.`fk_document` = `tdd`.`fk_document`
-                                ) > 0";
-                                
-            $params_type["client" . $pk] = $_SESSION["client"];
-            $params_type["monde" . $pk] = $_POST["monde"];
-            $params_type["champ" . $pk] = $pk;
-            $params_type["valeur" . $pk] = $valeur;
-        }
     
         if ($_POST["time"] != "000000") {
-            $query_type .= "
-                            AND LEFT(
-                                `d`.`date_document` * 1, 6
-                            ) = :time";
+            $query_type .= "store_type_time";
             $params_type["time"] = $_POST["time"];
+        } else {
+            $query_type .= "store_type";
         }
-    
-        $query_type .= "
-                ) AS `magic_revision` 
-            )
-        );";
         
         $result_type = dino_query($query_type, $params_type);
         
@@ -139,10 +80,10 @@ if ($_SESSION["niveau"] >= 10) {
             }
         } else {
             status(500);
-        }    
+        }   
     } else {
         status(500);
-    } 
+    }
 } else {
     dino_log([
         "niveau" => "Z",

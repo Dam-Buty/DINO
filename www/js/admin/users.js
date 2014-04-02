@@ -693,7 +693,7 @@ var save_user = function() {
                 mail: mail,
                 niveau: niveau,
                 mondes: mondes,
-                droits: mondes_droits
+                droits: mondes_droits.join(",")
             },
             statusCode : {
                 200: function() {
