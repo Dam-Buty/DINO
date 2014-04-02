@@ -143,6 +143,14 @@ if (isset($_SESSION["niveau"])) {
                 ]);
             }
            
+           // Si il n'y a pas eu de rupture de quoi que ce soit
+           // alors c'est une révision!
+           if ($champs_documents != $valeurs_champs || $row["categorie"] != $categorie || $row["type"] != $type || substr($row["time"], 0, 6) != $date || $row["detail"] != $detail) {
+                $first = 1;
+           } else {
+                $first = 0;
+           }
+           
             // Ajout du document
             $document = [
                 "type" => $row["type"],
@@ -151,13 +159,17 @@ if (isset($_SESSION["niveau"])) {
                 "date" => $row["date"],
                 "detail" => $row["detail"],
                 "time" => $row["time"],
-                "revision" => $row["revision"]
+                "revision" => $row["revision"],
+                "first" => $first
             ];
             
             array_push($liste, $document);
             
             $valeurs_champs = $champs_documents;
             $categorie = $row["categorie"];
+            $type = $row["type"];
+            $date = substr($row["time"], 0, 6);
+            $detail = $row["detail"];
         }
         
         

@@ -58,7 +58,7 @@ $(document).ready(function() {
     var subdomain = location.hostname.split(".").shift();
     
     // Si on est sur un sous domaine de visiteurs, on auto login
-    if (subdomain != "baby" && subdomain != "my") {
+    if (subdomain != "baby" && subdomain != "my" && subdomain != "localhost") {
         $("#container-login").hide();
         $("#container-loading").show();
         $("#login").val(subdomain);

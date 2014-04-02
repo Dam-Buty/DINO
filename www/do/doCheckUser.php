@@ -1,4 +1,5 @@
 <?php
+include("../includes/log.php");
 include("../includes/PDO.php");
 include("../includes/status.php");
 

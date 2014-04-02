@@ -1,9 +1,9 @@
 <?php
 session_start();
-include("../includes/log2.php");
+include("../includes/log.php");
 
 if ($_SESSION["niveau"] >= 10) {  
-    include("../includes/PDO2.php");
+    include("../includes/PDO.php");
     include("../includes/status.php"); 
     
     $result = dino_query("insert_valeur_champ", [

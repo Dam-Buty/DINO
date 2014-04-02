@@ -330,68 +330,13 @@ var affiche_document = function() {
 var affiche_revisions = function() {
     var img = $(this);
     var li = img.closest("li");
-    var filename = li.attr("data-filename");
-    var categorie = li.attr("data-categorie");
-    var type = li.attr("data-type-doc");
-    var detail = li.attr("data-detail");
-    var champ = profil.mondes[Core.monde].cascade[li.attr("data-niveau")];
-    var time = li.attr("data-time");
     
     if (img.attr("data-state") == "closed") {
-        $.ajax({
-            url: "json/revisions.php",
-            type: "POST",
-            data: {
-                monde: Core.monde,
-                champ: champ,
-                filename: filename,
-                time: time,
-                categorie: categorie,
-                type: type,
-                detail: detail
-            },
-            statusCode: {
-                200: function(revisions) {
-                    img.attr("data-state", "open");
-                    $.each(revisions, function(i, revision) {
-                        var new_li = $("<li></li>")
-                                    .attr({
-                                        "data-filename": revision.filename,
-                                        "data-display": revision.display,
-                                        "data-type": "revision"
-                                    })
-                                    .css("margin-left", li.css("margin-left"))
-                                    .append(
-                                        $("<span></span>")
-                                        .addClass("document")
-                                        .text(" > Revision " + revision.revision)
-                                        .click(affiche_document)
-                                        .append(
-                                            $("<i></i>")
-                                            .text(" (" + revision.date + ")")
-                                        )
-                                    );
-                        li.after(new_li);
-                        new_li.slideDown();
-                    });
-                },
-                403: function() {
-                    window.location.replace("index.php");
-                },
-                500: function() {
-                    popup('Error de recuperacion de los documentos. Gracias por intentar otra vez', 'error'); // LOCALISATION
-                }
-                
-            }
-        });
+        img.attr("data-state", "open");
+        li.closest("ul").find('li[data-type="revision"]').slideDown({ });
     } else {
         img.attr("data-state", "closed");
-        li.closest("ul").find('li[data-type="revision"]').slideUp({
-            complete: function() {
-                $(this).remove();
-//                (li.closest("ul").find('li[data-type="revision"]').remove());
-            }
-        });
+        li.closest("ul").find('li[data-type="revision"]').slideUp({ });
     }
 };
 
@@ -572,6 +517,8 @@ var construit_table = function() {
                     var type, img_revisions, img_del;
                     var extension = ligne.filename.split(".").pop().toLowerCase();
                     var time;
+                    var revision_type;
+                    var libelle_type;
                     
                     if (categorie == 0) {
                         type = champ_parent.types[ligne.type].label;
@@ -583,17 +530,26 @@ var construit_table = function() {
                         marge = stack_champs.length * 2 + 2;
                     }
                     
-                    if (ligne.revision > 1 && profil.niveau > 0) {
-                        img_revisions = $("<img></img>")
-                            .attr({
-                                src: "img/revision_15.png",
-                                title: "Existan " + (ligne.revision - 1) + " revisiones anteriores de este documento.",
-                                "data-state": "closed"
-                            })
-                            .addClass("imgboutons")
-                            .click(affiche_revisions)
+                    if (ligne.first && profil.niveau >= 10) {
+                        revision_type = "document";
+                        libelle_type = type + " " + ligne.detail;
+                        
+                        if (ligne.revision > 1) {
+                            img_revisions = $("<img></img>")
+                                .attr({
+                                    src: "img/revision_15.png",
+                                    title: "Existan " + (ligne.revision - 1) + " revisiones anteriores de este documento.",
+                                    "data-state": "closed"
+                                })
+                                .addClass("imgboutons")
+                                .click(affiche_revisions);
+                        } else {
+                            img_revisions = "";
+                        }
                     } else {
                         img_revisions = "";
+                        revision_type = "revision";
+                        libelle_type = "> Revision " + ligne.revision;
                     }
                     
                     if (profil.niveau >= 10) {
@@ -638,7 +594,7 @@ var construit_table = function() {
                     
                     li = $("<li></li>")
                     .attr({
-                        "data-type": "document",
+                        "data-type": revision_type,
                         "data-stack": stack_champs,
                         "data-filename": ligne.filename,
                         "data-time": time,
@@ -654,7 +610,7 @@ var construit_table = function() {
                     .append(
                         $("<span></span>")
                         .addClass("document")
-                        .text(type + " " + ligne.detail)
+                        .text(libelle_type)
                         .click(affiche_document)
                         .append(
                             $("<i></i>")

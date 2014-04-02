@@ -1,4 +1,4 @@
-# Efface type 1/4 : déclassifie monde 
+# Efface type 1/4 : déclassifie documents 
 UPDATE `document`
 SET
     `niveau_document` = NULL,

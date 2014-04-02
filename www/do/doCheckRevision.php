@@ -17,7 +17,7 @@ if ($_SESSION["niveau"] >= 10) {
         "dvcClient" => $_SESSION["client"],
         "dvcMonde" => $_POST["monde"],
         "dvcPk" => $_POST["maxchamp"],
-        "dvcValeur" = $champs[$_POST["maxchamp"]]
+        "dvcValeur" => $champs[$_POST["maxchamp"]]
     ];
     
     if ($_POST["time"] != "000000") {
