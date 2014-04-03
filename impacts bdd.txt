@@ -4,7 +4,7 @@ WOODSTOCK
 
 Déploiement :
 
-
+Créer le dossier log, le chowner sur correosolucion:psaserv
 
 
 MARK
