@@ -333,10 +333,10 @@ var affiche_revisions = function() {
     
     if (img.attr("data-state") == "closed") {
         img.attr("data-state", "open");
-        li.closest("ul").find('li[data-type="revision"]').slideDown({ });
+        li.closest("ul").children('li[data-type="revision"]').slideDown({ });
     } else {
         img.attr("data-state", "closed");
-        li.closest("ul").find('li[data-type="revision"]').slideUp({ });
+        li.closest("ul").children('li[data-type="revision"]').slideUp({ });
     }
 };
 
