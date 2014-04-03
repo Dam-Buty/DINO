@@ -4,7 +4,23 @@ include("../includes/status.php");
 include("../includes/log.php");  
 
 if ($_SESSION["niveau"] >= 20) {
+<<<<<<< HEAD
     include("../includes/PDO.php"); 
+=======
+    include("../includes/PDO.php");   
+    
+    $query = "
+        SELECT 
+            `login_user`, 
+            `mail_user`, 
+            `niveau_user` 
+        FROM `user` 
+        WHERE 
+            `fk_client` = :client
+            AND `niveau_user` < :niveau
+            AND `public_user` = 0
+    ;";
+>>>>>>> 862260d248c92b7344454935a96bd531a0fcb333
         
     $params = [
         "client" => $_SESSION["client"],
