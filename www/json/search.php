@@ -8,7 +8,7 @@ if (isset($_SESSION["niveau"])) {
     
     $liste = [];
     
-    if($_POST["all"] == false) {
+    if($_POST["all"] == "false") {
         $all = 0;
     } else {
         $all = 1;

@@ -5,12 +5,14 @@ body {
     font-size: 1.1em;
 }
 
-.document-img {
-    width: 95%;
-}
-
 img.nopreview {
     width: 50%;
+}
+
+#loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
 }
 
 a {

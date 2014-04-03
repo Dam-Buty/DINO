@@ -100,6 +100,7 @@ var affiche_valeur = function(reference, niveau, ul) {
                         "data-champ": monde.cascade[niveau + 1],
                         "data-niveau": niveau
                     })
+                    .css("margin-left", (((niveau + 1) * 4) - 4) + "%")
                     .append(
                         new_valeur
                         .css("margin-left", ((niveau + 1) * 4) + "%")

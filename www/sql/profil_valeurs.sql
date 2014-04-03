@@ -16,5 +16,6 @@ WHERE `fk_client` = :client1
     AND `fk_champ` = :champ1
 ORDER BY 
     `droits_valeur_champ` DESC,
-    `fk_parent` ASC
+    `fk_parent` ASC,
+    `label_valeur_champ` ASC
 ;
