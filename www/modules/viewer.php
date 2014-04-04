@@ -43,10 +43,10 @@ if (isset($_SESSION["user"])) {
         if (in_array($extension, $img_extensions)) {
             $image = "../do/doUnpack.php?document=" . $filename . "&display=" . $display;
         ?>
+                <img id="loader" src="../img/big_loader.gif"/>
                 <a href="<?php echo $lien; ?>">
                     <img class="document-img" src="<?php echo $image; ?>"/>
                 </a>
-                <img id="loader" src="../img/big_loader.gif"/>
         <?php
         } else {
             if (isset($_GET["download"])) {
@@ -67,7 +67,6 @@ if (isset($_SESSION["user"])) {
             }        
         }
         ?>
-     <a>
 
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="../js/viewer.js"></script>
