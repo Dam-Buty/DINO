@@ -530,11 +530,11 @@ var construit_table = function() {
                         marge = stack_champs.length * 2 + 2;
                     }
                     
-                    if (ligne.first && profil.niveau >= 10) {
+                    if (ligne.first) {
                         revision_type = "document";
                         libelle_type = type + " " + ligne.detail;
                         
-                        if (ligne.revision > 1) {
+                        if (ligne.revision > 1 && profil.niveau >= 10) {
                             img_revisions = $("<img></img>")
                                 .attr({
                                     src: "img/revision_15.png",
