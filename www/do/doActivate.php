@@ -1,7 +1,7 @@
 <?php
-include("includes/PDO.php");
-include("includes/status.php");
-include("includes/log.php");
+include("../includes/PDO.php");
+include("../includes/status.php");
+include("../includes/log.php");
 
 $params = [
     "mail" => $_POST["mail"],

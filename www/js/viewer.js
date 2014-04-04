@@ -39,4 +39,9 @@ resize_img = function() {
         width: x__,
         height: y__
     });
+    
+    $("#loader").fadeOut();
+    img.animate({
+        opacity: 1
+    });
 };

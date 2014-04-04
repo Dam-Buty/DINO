@@ -6,8 +6,9 @@
 www/cache/*/*.*
 www/cache/*/*/*.*
 www/img/branding/*.*
-www/log/*.*
 test_session.php
 key.php
 2014*.jpg
+www/img/branding/*.*
+www/log/*.csv
 

@@ -48,8 +48,14 @@ function dino_log($params) {
     array_push($tableau_log, $_SERVER['HTTP_REFERER']);
     array_push($tableau_log, $_SERVER['REMOTE_ADDR']);
     
-    $ligne_log = join("|", $tableau_log) . "\r\n";
+    $tableau_final = [];
     
+    foreach($tableau_log as $ligne) {
+        array_push($tableau_final, str_replace(PHP_EOL, "|", $ligne));
+    }
+    
+    $ligne_log = join("|", $tableau_final) . "\r\n";
+        
     $path = "../log/" . date("Y-m-d") . "_" . $client . ".csv";
     
     file_put_contents($path, $ligne_log, FILE_APPEND);

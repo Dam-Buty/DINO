@@ -1,28 +1,30 @@
 
-Timeworlds
-==========
+WOODSTOCK
+=========
 
-categorie_doc:
-+ time_categorie_doc (BOOL)
+Déploiement :
 
-type_doc:
-+ time_type_doc (BOOL)
+Créer le dossier log, le chowner sur correosolucion:psaserv
 
-OK sur baby OK sur my
 
-Cabinet
-=======
+MARK
+====
 
-demande:
-+ pk_demande
-+ monde_demande
-+ critere_demande
-+ documents_demande
-+ fk_user
-+ fk_client
+client:
++ branded_client
 
-OK sur baby OK sur my
+user:
++ public_user
 
+OK sur baby, OK sur my
+
+ACTIVATE
+========
+
+user:
++ activation_user
+
+OK sur baby, OK sur my
 
 SIGNUP
 ======
@@ -66,23 +68,27 @@ documentation:
 OK sur baby, OK sur my
 
 
-ACTIVATE
-========
+Cabinet
+=======
 
-user:
-+ activation_user
+demande:
++ pk_demande
++ monde_demande
++ critere_demande
++ documents_demande
++ fk_user
++ fk_client
 
-OK sur baby, OK sur my
+OK sur baby OK sur my
 
-MARK
-====
+Timeworlds
+==========
 
-client:
-+ branded_client
+categorie_doc:
++ time_categorie_doc (BOOL)
 
-user:
-+ public_user
+type_doc:
++ time_type_doc (BOOL)
 
-OK sur baby, OK sur my
-
+OK sur baby OK sur my
 

@@ -47,39 +47,15 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
     $result_user = dino_query($query_user, $params_user);
     
     if ($result_user["status"]) {
-        
-        // TODO on fait plus ça
-        $query_del_droits = "
-            DELETE FROM `user_monde`
-                WHERE 
-                    `fk_client` = :client
-                    AND `fk_user` = :login
-                    AND (
-                        ";
                         
         $params_del_droits = [
             "client" => $_SESSION["client"],
             "login" => $_POST["login"]
         ];
         
-        $first_droit = true;
-
-        foreach($_POST["droits"] as $key => $monde) {
-            if (!$first_droit) {
-                $query_del_droits .= "
-                        OR ";
-            } else {
-                $first_droit = false;
-            }
-            
-            $query_del_droits .= "`fk_monde` = :monde" . $key;
-            $params_del_droits["monde" . $key] = $monde;
-        }
-                       
-        $query_del_droits .=  "
-                );";
-        
-        $result_del_droits = dino_query($query_del_droits, $params_del_droits);
+        $result_del_droits = dino_query("user_droits_del_monde", $params_del_droits, [
+            "droits" => $_POST["droits"]
+        ]);
          
         if ($result_del_droits["status"]) {
             

@@ -1,6 +1,6 @@
 <?php
 
-function dino_query($query_name, $params = []) {
+function dino_query($query_name, $params = [], $substitutions = []) {
 #    $hostname = "127.0.0.1";
 #    $username = "dino_prod_root";
 #    $dbname = "dino_prod";
@@ -26,7 +26,13 @@ function dino_query($query_name, $params = []) {
     $message = array_shift($query_array);
     $query = implode("\n", $query_array);
     
-    $query_type = substr(trim(explode("\n", $query)[1]), 0, 6);
+    $query_type = substr(trim(explode("\n", $query)[0]), 0, 6);
+    
+    if (count($substitutions) > 0) {
+        foreach($substitutions as $key => $value) {
+            $query = str_replace("%" . $key . "%", $value, $query);
+        }
+    }
     
     try {
         $dbh = new PDO("mysql:host=" . $hostname . ";dbname=" . $dbname . ";charset=utf8", $username, $password,[ 
@@ -74,7 +80,7 @@ function dino_query($query_name, $params = []) {
                 "query" => $query_name,
                 "errno" => $stmt->errorCode(),
                 "errinfo" => $stmt->errorInfo()[2],
-                "params" => json_encode($params)
+                "params" => json_encode($params) . "," . json_encode($substitutions)
             ]);
             
             $return = [

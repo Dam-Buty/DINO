@@ -39,35 +39,39 @@
 $("#container-loading").show();
 $("#container-signup").hide();
 
-var arguments = {};
+var _arguments = {};
 
 $.each(window.location.search.replace("?", "").split("&"), function(i, param) {
     var name = param.split("=")[0];
     var value = param.split("=")[1];
     
-    arguments[name] = value;
+    _arguments[name] = value;
 })
 
 $.ajax({
     url: "do/doActivate.php",
+    type: "POST",
     data: {
-        key: arguments.key,
-        mail: arguments.mail
+        key: _arguments.key,
+        mail: _arguments.mail
     },
     statusCode: {
         200: function() {
             $("#container-loading").hide();
             $("#container-OK").show();
+            $("#container-KO").hide();
             $("#container-signup").show();
         },
         204: function() {
             $("#container-loading").hide();
             $("#container-KO").show();
+            $("#container-OK").hide();
             $("#container-signup").show();
         },
         500: function() {
             $("#container-loading").hide();
             $("#container-KO").show();
+            $("#container-OK").hide();
             $("#container-signup").show();
         }
     }

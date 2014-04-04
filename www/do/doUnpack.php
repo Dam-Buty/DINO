@@ -49,6 +49,11 @@ if (isset($_SESSION["niveau"])) {
 
         if ($return_value == 0) {
             status(200);
+            dino_log([
+                "niveau" => "I",
+                "message" => "UNPACK document",
+                "query" => $commande_log
+            ]);
             header("Cache-Control: must-revalidate, post-check=0, pre-check=0"); 
             header("Pragma: public");
             
