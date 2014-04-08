@@ -22,6 +22,8 @@ var Monde = {
     label: "",
     champs: [],
     graveyard: [],
+    templates: [],
+    modif: false,
     
     saving: false,
     
@@ -41,7 +43,7 @@ var Monde = {
         var images = {
             time: img.clone()
                     .attr("src", "img/date_black_20.png")
-                    .attr("title", "Documento mensuale"),
+                    .attr("title", "Documento mensual"),
             niveau: {
                 0: img.clone()
                     .attr("src", "img/niveau_0_20.png")
@@ -76,12 +78,6 @@ var Monde = {
                     .attr("title", "Agregar un tipo de documento")
                     .addClass("profil-toggle-type")
                     .click(designer_toggle_type)
-                ).append(
-                    $("<img/>")
-                    .attr("src", "img/categorie_20.png")
-                    .attr("title", "Agregar una categorie de documentos")
-                    .addClass("profil-toggle-categorie")
-                    .click(designer_toggle_categorie)
                 ).append(
                     $("<div></div>")
                     .attr("title", "Editar " + champ.label)
@@ -198,65 +194,121 @@ var Monde = {
         var documents = 0;
         var titre = "", message = "", bouton = "";
         
-        var ajax_save = function() {
-            $.ajax({
-                url: "do/doSaveMonde.php",
-                type: "POST",
-                data: {
-                    label: Monde.label,
-                    pk: Monde.pk,
-                    champs: Monde.champs,
-                    graveyard: Monde.graveyard
-                },
-                statusCode: {
-                    200: function() {
-                        $("#bouton-save-monde").fadeOut();
-                        if (Monde.pk === undefined) {
-                            Monde.saving = true;
+        this.saving = true;
+        
+        if ($("#bouton-save-monde").hasClass("save-monde-OK")) {
+            var ajax_save = function() {
+                $.ajax({
+                    url: "do/doSaveMonde.php",
+                    type: "POST",
+                    data: {
+                        label: Monde.label,
+                        pk: Monde.pk,
+                        champs: Monde.champs,
+                        graveyard: Monde.graveyard
+                    },
+                    statusCode: {
+                        200: function() {
+                            $("#bouton-save-monde").fadeOut();
+                            if (Monde.pk === undefined) {
+                                window.location.replace("index.php");
+                            } else {
+                                _profil(function() {});
+                            }
+                        },
+                        403: function() {
                             window.location.replace("index.php");
-                        } else {
-                            _profil(function() {});
+                        },
+                        500: function() {
+                            popup("Erreur!", "error");
                         }
-                    },
-                    403: function() {
-                        window.location.replace("index.php");
-                    },
-                    500: function() {
-                        popup("Erreur!", "error");
                     }
-                }
-            });
-        };
-        
-        if (Monde.label == "") {
-            $("#nom-monde").focus().addClass("KO").tooltipster({
-                content: "Tu mundo debe tener un nombre!",
-                position: "bottom",
-                timer: 1400
-            }).tooltipster("show");
-        } else {
-            $.each(Monde.graveyard, function(i, element) {
-                documents += element.bilan.documents || 0;
-            });
+                });
+            };
             
-            if (Monde.pk === undefined) {
-                titre = "Creacion del mundo <b>" + Monde.label + "</b>";
-                message = "Gracias por confirmar la creacion del mundo <b>" + Monde.label + "</b>";
+            if (Monde.label == "") {
+                $("#nom-monde").focus().addClass("KO").tooltipster({
+                    content: "Tu mundo debe tener un nombre!",
+                    position: "bottom",
+                    timer: 1400
+                }).tooltipster("show");
             } else {
-                titre = "Modificacion del mundo <b>" + Monde.label + "</b>";
-                message = "Gracias por confirmar la modificacion del mundo <b>" + Monde.label + "</b>";
-            }
-            
-            if (documents > 0) {
-                bouton = " (<i>Declasificar</i>)";
+                $.each(Monde.graveyard, function(i, element) {
+                    documents += element.bilan.documents || 0;
+                });
+                
+                if (Monde.pk === undefined) {
+                    titre = "Creacion del mundo <b>" + Monde.label + "</b>";
+                    message = "Gracias por confirmar la creacion del mundo <b>" + Monde.label + "</b>";
+                } else {
+                    titre = "Modificacion del mundo <b>" + Monde.label + "</b>";
+                    message = "Gracias por confirmar la modificacion del mundo <b>" + Monde.label + "</b>";
+                }
+                
+                if (documents > 0) {
+                    bouton = " (<i>Declasificar</i>)";
 
-                message += "<pre><b>" + documents + "</b> documentos relacionados seran <b class='with-tip' title='Los documentos declasificados NO son borrados del sistema. Los encontraras en tu fila de espera para volver a clasificarlos.'>declasificados.</b></pre>";
+                    message += "<pre><b>" + documents + "</b> documentos relacionados seran <b class='with-tip' title='Los documentos declasificados NO son borrados del sistema. Los encontraras en tu fila de espera para volver a clasificarlos.'>declasificados.</b></pre>";
+                }
+                
+                popup_confirmation(message, titre, "Confirmar" + bouton, ajax_save);
             }
-            
-            popup_confirmation(message, titre, "Confirmar" + bouton, ajax_save);
         }
-        
+    },
+    
+    _clear: function() {
+        popup_designer(function() {
+            _bootstrap_designer("new");
+        });
     }
+};
+
+var bootstrap_templates = function() {
+    $("#container-action").hide();
+    $("#container-templates").show();
+    $("#list-templates").empty().append(
+        $("<option></option>")
+        .attr("value", "")
+    );
+    
+    $.each(Monde.templates, function(i, template) {
+        $("#list-templates").append(
+            $("<option></option>")
+            .attr("value", i)
+            .text(template.titre)
+        );
+    });
+    
+    $("#list-templates")
+    .chosen({
+        inherit_select_classes: true,
+        skip_no_results: true
+    });
+};
+
+var load_template = function() {
+    var select = $(this);
+    var template = Monde.templates[select.val()];
+    
+    popup_designer(function() {
+        _load_template(template);
+    });
+};
+
+var _load_template = function(template) {
+    Monde.champs = template.champs;
+    Monde.label = template.titre.split(" ")[0];
+    Monde._refresh();
+    
+    $("#container-ou-champ").hide();
+    
+    $("#pre-templates").slideUp();
+    
+    $("#container-description")
+    .html(template.description)
+    .slideDown();
+    $("#post-description").slideDown();
+    $("#bouton-save-monde").removeClass("save-monde-KO").addClass("save-monde-OK");
 };
 
 var bootstrap_designer = function(action) {
@@ -275,6 +327,8 @@ var _bootstrap_designer = function(action) {
     $("#action-champ").show();
     
     $("#bouton-save-monde").unbind().click(Monde._save);
+    $("#bouton-clear-monde").unbind().click(Monde._clear);
+    $("#bouton-templates").unbind().click(bootstrap_templates);
     $("#bouton-save-champ").unbind().click(designer_save_champ);
     $("#bouton-save-type").unbind().click(designer_save_type);
     $("#bouton-save-categorie").unbind().click(designer_save_categorie);
@@ -294,8 +348,9 @@ var _bootstrap_designer = function(action) {
     })
     
     $(".designer-add-champ").unbind().click(designer_toggle_champ);
-    
-    $("#bouton-save-monde").hide();
+    $("#add-champ").unbind().click(designer_toggle_champ);
+    $("#add-champ-cat").unbind().click(designer_toggle_champ);
+    $("#add-champ-template").unbind().click(designer_toggle_champ);
     
     $("#designer-type-niveau").chosen({
         width: $("#new-login").outerWidth(),
@@ -329,6 +384,26 @@ var _bootstrap_designer = function(action) {
     Monde.label = "";
     Monde.champs = [];
     Monde.graveyard = [];
+    
+    $.ajax({
+        url: "json/templates.php",
+        type: "GET",
+        statusCode: {
+            200: function(templates) {
+                Monde.templates = templates;
+                $("#list-templates").unbind().change(load_template);
+                if (action != "edit") {
+                    bootstrap_templates();
+                }
+            },
+            403: function() {
+                window.location.replace("index.php");
+            },
+            500: function() {
+                popup("Erreur!", "error");
+            }
+        }
+    });
     
     if (action == "edit") {
         var pk_monde = $('#mondes-top li[data-selected="1"]').attr("data-monde");
@@ -378,13 +453,31 @@ var _bootstrap_designer = function(action) {
             });
             Monde.champs.push(champ_designer);
             $(".action").hide();
+            $("#bouton-clear-monde").hide();
             $("#designer>h1>span").text("Edicion del mundo ");
+    
+            Monde._refresh();
+            $("#container-action").show();
+            $("#action-welcome").show();
+            $("#container-templates").hide();
         });
     } else {
         $("#designer>h1>span").text("Creacion del mundo ");
+    
+        $("#pre-templates").slideDown();
+        $("#container-ou-champ").slideDown();
+        
+        $("#container-description")
+        .html("")
+        .slideUp();
+        
+        $("#post-description").slideUp();
+        $("#bouton-save-monde").removeClass("save-monde-OK").addClass("save-monde-KO");
+        $("#bouton-clear-monde").hide();
+        
+        Monde._refresh();
     }
-    $("#action-welcome").fadeIn();
-    Monde._refresh();
+    $("#bouton-save-monde").removeClass("save-monde-OK").addClass("save-monde-KO");
 };
 
 var designer_toggle_champ = function() {
@@ -393,9 +486,12 @@ var designer_toggle_champ = function() {
     var ul;
     var champ;
     
+    $(".designer-right").hide();
     $(".action").hide();
     $(".designer-ghost").remove();
     
+    $("#container-help").show();
+    $("#container-action").show();
     $("#action-champ").fadeIn();
 
     if (bouton.hasClass("designer-add-champ") || bouton.hasClass("option-add-champ")) {
@@ -435,8 +531,13 @@ var designer_toggle_type = function() {
     var action = $("#action-type");
     var type, li, ul;
     
+    $(".designer-right").hide();
     $(".action").hide();
     $(".designer-ghost").remove();
+    
+    $("#container-action").show();
+    
+    $("#container-help").show();
     
     if (bouton.hasClass("profil-toggle-type") || bouton.hasClass("option-help")) { // NOUVEAU DOCUMENT
         var champ, categorie;
@@ -524,9 +625,14 @@ var designer_toggle_categorie = function() {
     var label = $("#label-new-categorie");
     var niveau = $("#designer-categorie-niveau");
     var li;
-        
+    
+    $(".designer-right").hide();
     $(".action").hide();
     $(".designer-ghost").remove();
+    
+    $("#container-action").show();
+    
+    $("#container-help").show();
     
     if (bouton.hasClass("profil-toggle-categorie") || bouton.hasClass("option-help")) { // NOUVELLE CATEGORIE
         var ul;
@@ -1003,9 +1109,14 @@ var _remove_tree = function(element, criteres, bilan) {
 }
 
 var check_bouton_save = function() {
+    Monde.modif = true;
     if (Monde.champs.length > 0) {
-        $("#bouton-save-monde").fadeIn();
+        $("#bouton-save-monde").removeClass("save-monde-KO").addClass("save-monde-OK");
+        if (Monde.pk === undefined) {
+            $("#bouton-clear-monde").show();
+        }
     } else {
-        $("#bouton-save-monde").fadeOut();
+        $("#bouton-save-monde").removeClass("save-monde-OK").addClass("save-monde-KO");
+        $("#bouton-clear-monde").hide();
     }
 };

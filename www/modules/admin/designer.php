@@ -3,14 +3,15 @@ session_start();
 ?>
 <!--LOCALISATION-->
 <div id="designer" class="admin">
-    <div class="boutons" id="bouton-save-monde">Publicar</div>
+    <div class="boutons save-monde-KO" id="bouton-save-monde">Publicar</div>
+    <div class="boutons" id="bouton-clear-monde">Borrar todo</div>
     <h1><span>Creacion del mundo </span><input type="text" id="nom-monde" placeholder="Nuevo mundo..."/></h1>
     <div id="container-map">
         <h2>Perfil documental<span class="designer-add-champ" title="Agregar un campo"></span></h2>
         <ul id="liste-map">
         </ul>
     </div>
-    <div id="container-action">
+    <div id="container-action" class="designer-right">
         <div class="action" id="action-welcome">
             <h2>Editar un mundo</h2>
             <p>Bienvenido en el editor de mundos documentales <b>DINO</b>.</p>
@@ -30,17 +31,11 @@ session_start();
         <div class="action" id="action-post-champ">
             <h2>Campo <b class="option-help-champ"></b></h2>
             <p></p>
-            <div class="designer-option option-help" id="add-cat-to-champ">
-                <h1>Categoria</h1>
-                <p>Agregar una categoria de documentos al campo <b class="option-help-champ"></b></p>
-            </div>
             <div class="designer-option option-help" id="add-doc-to-champ">
                 <h1>Documento</h1>
                 <p>Agregar un tipo de documento al campo <b class="option-help-champ"></b></p>
             </div>
-            <div style="clear: right;"></div>
-            <p class="container-o">- O -</p>
-            <div class="designer-option option-help option-add-champ">
+            <div class="designer-option option-help" id="add-champ">
                 <h1>Campo</h1>
                 <p>Agregar un <b>nuevo Campo</b></p>
             </div>
@@ -98,22 +93,34 @@ session_start();
         <div class="action" id="action-post-categorie">
             <h2>Categoria <b class="option-help-categorie"></b></h2>
             <p></p>
-            <div class="designer-option option-help" id="add-cat-to-champ2">
-                <h1>Categoria</h1>
-                <p>Agregar otra categoria de documentos al campo <b class="option-help-champ"></b></p>
-            </div>
             <div class="designer-option option-help" id="add-doc-to-cat">
                 <h1>Documento</h1>
                 <p>Agregar un tipo de documento a la categoria <b class="option-help-categorie"></b></p>
             </div>
-            <div style="clear: right;"></div>
-            <p class="container-o">- O -</p>
-            <div class="designer-option option-help option-add-champ">
+            <div class="designer-option option-help" id="add-champ-cat">
                 <h1>Campo</h1>
                 <p>Agregar un <b>nuevo Campo</b></p>
             </div>
             <div style="clear: right;"></div>
         </div>
     </div>
-    <div id="container-help">Si tienes alguna duda, te invitamos a consultar<br/><a href="http://prezi.com/i1z9x8l-77l7/" target="_blank">3 ejemplos de mundos documentales</a> o <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">8 tips para un perfil perfecto</a></div>
+    <div id="container-templates" class="designer-right">
+        <h2>Creacion de mundo</h2>
+        <p id="pre-templates">Puedes utilizar uno de nuestros mundos pre-configurados</p>
+        <select id="list-templates" class="select-templates" data-placeholder="Seleccione una plantilla">
+        </select>
+        <div id="container-ou-champ">
+            <p class="container-o">- O -</p>
+            <p>Crear tu mundo a partir del primer campo</p>
+            <div class="designer-option option-help" id="add-champ-template">
+                <h1>Campo</h1>
+                <p>Agregar un <b>nuevo Campo</b></p>
+            </div>
+            <div style="clear: right;"></div>
+        </div>
+        <div id="container-description">
+        </div>
+        <p id="post-description">Puedes <b>modificar tu mundo</b> o dar click en <b>PUBLICAR</b> si te conviene.</p>
+    </div>
+    <div id="container-help" class="designer-right">Si tienes alguna duda, te invitamos a consultar<br/><a href="http://prezi.com/i1z9x8l-77l7/" target="_blank">3 ejemplos de mundos documentales</a> o <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">8 tips para un perfil perfecto</a></div>
 </div>

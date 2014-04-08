@@ -62,11 +62,32 @@
 }
 
 #bouton-save-monde {
-    display: none;
-    width: 33%;
+    width: 20%;
     float: right;
+}
+
+#bouton-save-monde-template {
+    width: 30%;
+}
+
+.save-monde-OK {
     background-color: #56D4EB;
     border-color: #48AFC2;
+}
+
+.save-monde-KO {
+    cursor: default;
+    background-color: #A0A0A0;
+    border-color: #AAAAAA;
+}
+
+#bouton-clear-monde {
+    display: none;
+    background-color: #eb911f;
+    border-color: #db7f1a;
+    width: 20%;
+    float: right;
+    margin-right: 5px;
 }
 
 #bouton-save-champ {

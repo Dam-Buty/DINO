@@ -141,7 +141,7 @@ var popup_tuto = function(callback) {
 }
 
 var popup_designer = function(callback) {
-    if ($("#bouton-save-monde").is(":visible")) {
+    if (Monde.modif && $("#bouton-save-monde").hasClass("save-monde-OK")) {
         $.Zebra_Dialog(
             "Tu mundo tiene modificacions que no publicaste. Si dejas esta pagina tus modificaciones seran perdidas.", {
             'type':     'question',
