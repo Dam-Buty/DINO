@@ -542,7 +542,7 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
 #        Action
 #######################################*/
 
-#container-action {
+.designer-right {
     padding: 10px;
     width: 55%;
     margin-left: 43%;
@@ -561,21 +561,37 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
 }
 
 #container-help {
-    padding: 10px;
-    width: 55%;
-    margin-left: 43%;
     margin-top: 5px;
-    
-    box-shadow: 0 0 1px 1px #A9A9A9;
-    
-    background-color: #E7E9F0;
     
     font-size: 0.9em;
     font-style: italic;
     text-align: right;
 }
 
+#container-templates {
+    display: none;
+}
+
+#container-templates p {
+    font-size: 0.9em;
+}
+
+#container-description {
+    display: none;
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
 .action {
+    display: none;
+}
+
+.select-templates {
+    margin-top: 10px;
+    width: 95%;
+}
+
+#post-description {
     display: none;
 }
 
@@ -666,12 +682,12 @@ div.option-ko:hover {
     background-color: #8ECB32;
 }
 
-.option-add-champ {
-    margin-right: 27%;
-}
-
 .container-o {
     text-align: center;
+}
+
+#add-champ-template {
+    margin-right: 27%;
 }
 
 /*#####################################
