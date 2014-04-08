@@ -49,7 +49,7 @@ if ($result_client["status"]) {
         dinomail($_POST["mail"], $mail, [], [
             "user" => $_POST["login"],
             "pass" => $_POST["pass"],
-            "mail" => $_POST["mail"],
+            "mail" => urlencode($_POST["mail"]),
             "clef" => $activation_user
         ], true);
         

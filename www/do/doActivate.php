@@ -4,7 +4,7 @@ include("../includes/status.php");
 include("../includes/log.php");
 
 $params = [
-    "mail" => $_POST["mail"],
+    "mail" => urldecode($_POST["mail"]),
     "activation" => $_POST["key"]
 ];
 
