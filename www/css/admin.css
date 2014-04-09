@@ -561,7 +561,7 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
 }
 
 #container-help {
-    margin-top: 5px;
+    margin-top: 10px;
     
     font-size: 0.9em;
     font-style: italic;
@@ -582,6 +582,12 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
     margin-top: 10px;
 }
 
+#container-ou-champ {
+    display: none;
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
 .action {
     display: none;
 }
@@ -591,8 +597,9 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
     width: 95%;
 }
 
-#post-description {
+#pre-description {
     display: none;
+    font-style: italic;
 }
 
 /*#####################################

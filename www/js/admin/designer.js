@@ -185,9 +185,9 @@ var Monde = {
         // On efface le bouton supprimer du premier champ
         $("#liste-map>li:first-child span.tag-delete").remove();
         
-        if (this.champs.length == 0) {
-            $(".designer-add-champ").click();
-        }
+//        if (this.champs.length == 0) {
+//            $(".designer-add-champ").click();
+//        }
     },
     
     _save: function() {
@@ -300,6 +300,8 @@ var _load_template = function(template) {
     Monde.label = template.titre.split(" ")[0];
     Monde._refresh();
     
+    Tuto.flag(1);
+    
     $("#container-ou-champ").hide();
     
     $("#pre-templates").slideUp();
@@ -307,7 +309,8 @@ var _load_template = function(template) {
     $("#container-description")
     .html(template.description)
     .slideDown();
-    $("#post-description").slideDown();
+    
+    $("#pre-description").slideDown();
     $("#bouton-save-monde").removeClass("save-monde-KO").addClass("save-monde-OK");
 };
 
@@ -471,7 +474,7 @@ var _bootstrap_designer = function(action) {
         .html("")
         .slideUp();
         
-        $("#post-description").slideUp();
+        $("#pre-description").slideUp();
         $("#bouton-save-monde").removeClass("save-monde-OK").addClass("save-monde-KO");
         $("#bouton-clear-monde").hide();
         
@@ -707,7 +710,6 @@ var designer_save_champ = function() {
                     categories: []
                 }));
                 id = Monde.champs.length - 1;
-                Tuto.flag(1);
             } else {
                 id = action.attr("data-id");
                 Monde.champs[id] = $.extend(true, Monde.champs[id], champ);
