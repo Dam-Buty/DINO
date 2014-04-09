@@ -145,7 +145,7 @@ var refresh_liste = function() {
         $("#files-list").append(queue[i].li.attr("data-position", i));
     });
     
-    $(".bouton-edit-li").unbind().click(store_document);
+    $("#files-list li").unbind().click(store_document);
     $(".bouton-del-li").unbind().click(remove_document);
 };
 

@@ -801,7 +801,7 @@ var _store_document = function(position) {
 };
 
 var store_document = function() {
-    var li = $(this).closest("li");
+    var li = $(this);
     _store_document(li.attr("data-position"));
 };
 

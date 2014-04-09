@@ -20,6 +20,7 @@ var Mentorial = function(Scenarios, options) {
         },
         flag_value: undefined,
         bootstrapped: false,
+        alternative: false,
         
         // Données locales d'étape
         highlights: [ ],
@@ -100,6 +101,15 @@ var Mentorial = function(Scenarios, options) {
             var current = this.Scenarios[this.scenario].stages[this.stage];
             var stage = $("#" + this.css_prefix + "-" + this.scenario + "-" + this.stage);
             
+            if (this.alternative) {
+                var alt = $("#" + this.css_prefix + "-" + this.scenario + "-" + this.stage + "-alt");
+                
+                if (alt.length > 0) {
+                    stage = alt;
+                }
+            }
+            
+            
             if (current.stage_css !== undefined) {
                 stage
                 .css(current.stage_css);
@@ -154,7 +164,7 @@ var Mentorial = function(Scenarios, options) {
         },
         
         // Gestion du flag
-        flag: function(action) {
+        flag: function(action, scenario) {
             switch(action) {
                 case "raise":
                     this.flag_value = this.stage;
@@ -164,8 +174,15 @@ var Mentorial = function(Scenarios, options) {
                     break;
                 default:
                     if (this.flag_value === this.stage && action == this.stage) {
-                        this.flag("drop");
-                        this._next();
+                        if (scenario !== undefined) {
+                            if (this.scenario == scenario) {
+                                this.flag("drop");
+                                this._next();
+                            }
+                        } else {
+                            this.flag("drop");
+                            this._next();
+                        }
                     }
             }
             return this.flag_value;

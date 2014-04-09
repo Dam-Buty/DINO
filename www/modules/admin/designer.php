@@ -7,29 +7,26 @@ session_start();
     <div class="boutons" id="bouton-clear-monde">Borrar todo</div>
     <h1><span>Creacion del mundo </span><input type="text" id="nom-monde" placeholder="Nuevo mundo..."/></h1>
     <div id="container-map">
-        <h2>Perfil documental<span class="designer-add-champ" title="Agregar un campo"></span></h2>
+        <h2 class="designer-header">Perfil documental<span class="designer-add-champ" title="Agregar un campo"></span></h2>
         <ul id="liste-map">
         </ul>
     </div>
     <div id="container-action" class="designer-right">
         <div class="action" id="action-welcome">
-            <h2>Editar un mundo</h2>
+            <h2 class="designer-header">Editar un mundo</h2>
             <p>Bienvenido en el editor de mundos documentales <b>DINO</b>.</p>
             <p> En la parte de izquierda se encuentra tu mundo actual.</p>
             <p>Puedes agregar o modificar campos, categorias y tipos de documentos para adaptarlos a tus necesidades.</p>
         </div>
         <div class="action" id="action-champ">
-            <h2>Nuevo campo</h2>
+            <h2 class="designer-header">Nuevo campo</h2>
             <p>
-                <label>Nombre : <input type="text" id="label-new-champ" placeholder="Cliente, Proyecto, Producto"/></label>
-            </p>
-            <p>
-                <label>Plural : <input type="text" id="pluriel-new-champ" placeholder="Clientes, Proyectos, Productos"/></label>
+                <label>Nombre : <input type="text" id="label-new-champ" placeholder="'Cliente', 'Proyecto', 'Producto'"/></label>
             </p>
             <div class="boutons bouton-designer" id="bouton-save-champ">Guardar</div>
         </div>
         <div class="action" id="action-post-champ">
-            <h2>Campo <b class="option-help-champ"></b></h2>
+            <h2 class="designer-header">Campo <b class="option-help-champ"></b></h2>
             <p></p>
             <div class="designer-option option-help" id="add-doc-to-champ">
                 <h1>Documento</h1>
@@ -42,7 +39,7 @@ session_start();
             <div style="clear: right;"></div>
         </div>
         <div class="action" id="action-type">
-            <h2>Nuevo tipo de documento</h2>
+            <h2 class="designer-header">Nuevo tipo de documento</h2>
             <p>
                 <label>Nombre : <input type="text" id="label-new-type" placeholder="Contrato, Factura, Comprobante..."/></label>
             </p>
@@ -70,7 +67,7 @@ session_start();
             <div class="boutons bouton-designer" id="bouton-save-type">Guardar</div>
         </div>
         <div class="action" id="action-categorie">
-            <h2>Nueva categoria</h2>
+            <h2 class="designer-header">Nueva categoria</h2>
             <p>
                 <label>Nombre : <input type="text" id="label-new-categorie" placeholder="Contable, Operacional, Fiscal"/></label>
             </p>
@@ -91,7 +88,7 @@ session_start();
             <div class="boutons bouton-designer" id="bouton-save-categorie">Guardar</div>
         </div>
         <div class="action" id="action-post-categorie">
-            <h2>Categoria <b class="option-help-categorie"></b></h2>
+            <h2 class="designer-header">Categoria <b class="option-help-categorie"></b></h2>
             <p></p>
             <div class="designer-option option-help" id="add-doc-to-cat">
                 <h1>Documento</h1>
@@ -105,7 +102,7 @@ session_start();
         </div>
     </div>
     <div id="container-templates" class="designer-right">
-        <h2>Creacion de mundo</h2>
+        <h2 class="designer-header">Creacion de mundo</h2>
         <p id="pre-templates">Puedes utilizar uno de nuestros mundos pre-configurados ...</p>
         <select id="list-templates" class="select-templates" data-placeholder="Seleccione una plantilla">
         </select>

@@ -16,7 +16,7 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
                 }
                 $("#lien-zero").click(function() {
                     Tuto.exit();
-                    Tuto.run();
+                    Tuto.run(1);
                 });
             }
         }, {
@@ -48,66 +48,9 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
         }]
     }, {////////////////////// 2
         stage_css: {
-            left: "0",
-            width: "40%",
-            top: "30%"
-        },
-        raises_flag: true,
-        animations: [{
-            type: "highlight",
-            selector: "#add-doc-to-champ",
-            force: true,
-            delay: 400
-        }, {
-            type: "code",
-            code: function() {
-                $("#add-doc-to-champ h1").css({
-                    "font-size": "1.2em"
-                });
-                $("#add-doc-to-champ").css({
-                    "background-color": "#E7E9F0"
-                });
-            }
-        }, {
-            type: "tooltip",
-            selector: "#add-doc-to-champ",
-            options: {
-                content: 'Click!',
-                autoClose: false,
-                position: "top"
-            }
-        }],
-        clean: function() {
-            $("#add-doc-to-champ h1").css({
-                "font-size": ""
-            });
-            $("#add-doc-to-champ").css({
-                "background-color": ""
-            });
-        },
-        substitutions: function() {
-            return {
-                champ: Monde.champs[0].label
-            };
-        }
-    }, {////////////////////// 3
-        stage_css: {
-            left: "0",
-            width: "40%",
-            top: "30%"
-        },
-        raises_flag: true,
-        animations: [{
-            type: "highlight",
-            selector: "#container-action",
-            force: true,
-            delay: 400
-        }]
-    }, {////////////////////// 4
-        stage_css: {
             right: "0",
             width: "40%",
-            top: "30%"
+            bottom: "0"
         },
         raises_flag: true,
         animations: [{
@@ -119,30 +62,124 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             type: "highlight",
             selector: "#bouton-save-monde",
             force: true
-        }, {
-            type: "code",
-            code: function() {
-                $(".designer-option h1").css({
-                    "font-size": "1.2em"
-                });
-            }
-        }, {
-            type: "tooltip",
-            selector: "#bouton-tuto",
-            options: {
-                content: 'Puedes encontrar toda la documentacion sobre el uso de DINO aqui!',
-                autoClose: false,
-                position: "top"
-            }
         }],
-        clean: function() {
-            $(".designer-option h1").css({
-                "font-size": ""
-            });
+        substitutions: function() {
+            return {
+                monde: Monde.label
+            };
         }
     }]
 }, { ////////////////////// SCENARIO 1
-    id: 1,
+    titre: "Créer un monde de zéro",
+    description: "",
+    stages: [{ ///////////////////////0
+        stage_css: {
+            width: "50%",
+            left: "25%",
+        },
+        animations: [{
+            type: "code",
+            code: function() {
+                if ($("#backoffice").is(":visible")) {
+                    $("#menu-retour").click();
+                } else {
+                    if (!$("#liste").is(":visible")) {
+                        $('#mondes-top li[data-selected="1"]').click();
+                    }
+                }
+            }
+        }]
+    }, { ///////////////////////1
+        raises_flag: true,
+        stage_css: {
+            width: "40%",
+            top: "20%",
+            right: "0",
+        },
+        animations: [{
+            type: "highlight",
+            force: true,
+            selector: "#menu-designer"
+        }, {
+            type: "tooltip",
+            selector: '#menu-designer',
+            options: {
+                content: 'Aqui para crear un mundo !',
+                autoClose: false,
+                position: "right"
+            },
+            delay: 400
+        }]
+    }, { ///////////////////////2
+        raises_flag: true,
+        stage_css: {
+            width: "40%",
+            bottom: "20%",
+            right: "0"
+        },
+        animations: [{
+            type: "highlight",
+            force: true,
+            selector: "#container-map",
+            delay: 400
+        }, {
+            type: "tooltip",
+            selector: '#container-map span.designer-add-champ',
+            options: {
+                content: 'Aqui para crear un campo !',
+                autoClose: false,
+                position: "bottom"
+            }
+        }]
+    }, { ////////////////////// 3
+        raises_flag: true,
+        stage_css: {
+            width: "40%",
+            top: "20%",
+            left: "0"
+        },
+        animations: [{
+            type: "highlight",
+            force: true,
+            selector: "#container-action",
+            delay: 400
+        }, {
+            type: "tooltip",
+            selector: "#bouton-save-champ",
+            options: {
+                content: 'Aqui para guardar tu campo !',
+                autoClose: false,
+                position: "bottom"
+            }
+        }]
+    }, { ////////////////////// 4
+        raises_flag: true,
+        stage_css: {
+            width: "40%",
+            bottom: "20%",
+            right: "0"
+        },
+        animations: [{
+            type: "highlight",
+            force: true,
+            selector: "#container-map",
+            delay: 400
+        }, {
+            type: "tooltip",
+            selector: "#liste-map li:first-child() img.profil-toggle-type",
+            options: {
+                content: 'Aqui para agregar un tipo de documento !',
+                autoClose: false,
+                position: "bottom"
+            }
+        }],
+        substitutions: function() {
+            return {
+                champ: Monde.champs[0].label
+            };
+        }
+    }]
+}, { ////////////////////// SCENARIO 2
     titre: "Charger un document",
     description: "Es un muy bueno tutorial!",
     stages: [{////////////////////// 0
@@ -219,10 +256,10 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             selector: '#container-queue'
         }, {
             type: "border",
-            selector: "#files-list li:first() .bouton-edit-li"
+            selector: "#files-list li:first()"
         }, {
             type: "tooltip",
-            selector: "#files-list li:first() .bouton-edit-li",
+            selector: "#files-list li:first()",
             options: {
                 content: 'Da click aqui para clasificar tu documento',
                 position: "right",
@@ -344,8 +381,7 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             $("#menu-queue").click();
         }
     }]
-}, {
-    id: 2,
+}, { ////////////////////// SCENARIO 3
     titre: "Chercher un document",
     description: "Es un muy bueno tutorial!",
     stages: [{ ////////////////////// 0
@@ -434,8 +470,7 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
         }]
     }]
     
-}, {
-    id: 3,
+}, { ////////////////////// SCENARIO 4
     titre: "Admin utilisateurs",
     description: "",
     stages: [{ ////////////////////// 0
@@ -539,7 +574,7 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             $("#regles-new-user ul").css("list-style-type", "");
         }
     }]
-}, {
+}, { ////////////////////// SCENARIO 5
     titre: "Administration des listes",
     description: "",
     stages: [{
@@ -804,6 +839,12 @@ var bootstrap_tuto = function() {
         liste.append(li);
     });
     
+    // Pour le deuxième login du gestionnaire (après avoir créé son premier monde), on lui propose d'emblée le tutorial de chargement
+    if (profil.niveau == 30 && profil.tutos[0].done == "1" && profil.tutos[2].done != "1" && Object.keys(profil.mondes).length > 0) {
+        startup = $('li.ligne-tuto[data-pk="2"]');
+        Tuto.alternative = true;
+    }
+    
     $.each(profil.documentations, function(i, documentation) {
         var li = $("<li></li>")
             .addClass("ligne-tuto")
@@ -863,8 +904,8 @@ var bootstrap_tuto = function() {
     });
     
     if (startup !== false) {
-        startup.click();
         Tuto.bootstrapped = true;
+        startup.click();
     } else {
         $("#bouton-tuto").tooltipster("show");
     }

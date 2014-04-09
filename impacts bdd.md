@@ -2,15 +2,21 @@
 TEMPLAR
 =======
 
-Remettre les user_tuto à niveau pour ajout du nouveau n°1
+Remettre les tuto et user_tuto à niveau pour ajout du nouveau n°1
 
 ````sql
 UPDATE `user_tuto`
 SET
-	`fk_tuto` = `fk_tuto` + + 1
+	`fk_tuto` = `fk_tuto` + 1
 WHERE
 	`fk_tuto` != 0
-ORDER BY `fk_tuto` DESC
+ORDER BY `fk_tuto` DESC;
+UPDATE `tuto`
+SET
+	`pk_tuto` = `pk_tuto` + 1
+WHERE
+	`pk_tuto` != 0
+ORDER BY `pk_tuto` DESC;
 ````
 
 WOODSTOCK
