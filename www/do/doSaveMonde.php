@@ -199,7 +199,7 @@ if ($_SESSION["niveau"] >= 30) {
                 "client" => $_SESSION["client"],
                 "monde" => $pk_monde,
                 "label" => $champ["label"],
-                "pluriel" => $champ["pluriel"]
+                "pluriel" => $champ["label"] . "(s)"
             ];
             
             if (!isset($champ["pk"])) {

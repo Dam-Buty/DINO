@@ -1039,6 +1039,11 @@ html, body {
     list-style-type: none;
     border-bottom: 2px solid white;
     padding: 10px;
+    cursor: pointer;
+}
+
+#tiroir-queue li:hover {
+    background-color: #E9E9E9 !important;
 }
 
 #tiroir-queue li>img {
@@ -1046,10 +1051,6 @@ html, body {
     cursor: pointer;
     
     display: none;
-}
-
-.bouton-edit-li:hover {
-    content: url(../img/edit_hover_30.png);
 }
 
 .bouton-del-li:hover {

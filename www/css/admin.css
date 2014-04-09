@@ -519,7 +519,7 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
     box-sizing: border-box;
 }
 
-#designer h2 {
+.designer-header {
     font-family: "Courier New", Courier, monospace;
     font-weight: bold;
     font-size: 1.2em;

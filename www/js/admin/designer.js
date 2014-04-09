@@ -193,8 +193,11 @@ var Monde = {
     _save: function() {
         var documents = 0;
         var titre = "", message = "", bouton = "";
+        var tuto_on_exit = false;
         
         this.saving = true;
+        
+        Tuto.flag(2, 0);
         
         if ($("#bouton-save-monde").hasClass("save-monde-OK")) {
             var ajax_save = function() {
@@ -254,6 +257,10 @@ var Monde = {
                 popup_confirmation(message, titre, "Confirmar" + bouton, ajax_save);
             }
         }
+        
+        if (tuto_on_exit) {
+            Tuto.run(2);
+        }
     },
     
     _clear: function() {
@@ -300,7 +307,7 @@ var _load_template = function(template) {
     Monde.label = template.titre.split(" ")[0];
     Monde._refresh();
     
-    Tuto.flag(1);
+    Tuto.flag(1, 0);
     
     $("#container-ou-champ").hide();
     
@@ -321,7 +328,8 @@ var bootstrap_designer = function(action) {
 };
 
 var _bootstrap_designer = function(action) {
-    Tuto.flag(0);
+    Tuto.flag(0, 0);
+    Tuto.flag(1, 1);
     
     $("#liste").slideUp();   
     $(".admin").slideUp();
@@ -420,7 +428,6 @@ var _bootstrap_designer = function(action) {
             var champ_designer = {
                 pk: i,
                 label: champ.label,
-                pluriel: champ.pluriel,
                 types: [],
                 categories: []
             };
@@ -496,6 +503,8 @@ var designer_toggle_champ = function() {
     $("#container-help").show();
     $("#container-action").show();
     $("#action-champ").fadeIn();
+    
+    Tuto.flag(2, 1);
 
     if (bouton.hasClass("designer-add-champ") || bouton.hasClass("option-add-champ")) {
         if (Monde.champs.length == 0) {
@@ -505,7 +514,6 @@ var designer_toggle_champ = function() {
         }
         $("#label-new-champ").val("");
         $("#action-champ").attr("data-id", "");
-        $("#pluriel-new-champ").val("");
         $("#action-champ>h2").text("Nuevo campo"); // LOCALISATION
         $(".designer-ghost").remove();
         ul.append(
@@ -518,7 +526,6 @@ var designer_toggle_champ = function() {
         champ = Monde.champs[li.attr("data-id")];
         $("#action-champ").attr("data-id", li.attr("data-id"));
         $("#label-new-champ").val(champ.label);
-        $("#pluriel-new-champ").val(champ.pluriel);
         $("#action-champ>h2").html("Campo <b>" + champ.label + "</b>"); // LOCALISATION
     }
     
@@ -541,6 +548,9 @@ var designer_toggle_type = function() {
     $("#container-action").show();
     
     $("#container-help").show();
+    
+    Tuto.flag(2, 0);
+    Tuto.flag(4, 1);
     
     if (bouton.hasClass("profil-toggle-type") || bouton.hasClass("option-help")) { // NOUVEAU DOCUMENT
         var champ, categorie;
@@ -591,7 +601,6 @@ var designer_toggle_type = function() {
         label.removeClass("KO").val("");
         niveau.removeClass("KO").val("0").trigger("chosen:updated");
         detail.prop("checked", false).change();
-        Tuto.flag(2);
     } else { // EDIT DOCUMENT
         li = bouton.closest("li");
         
@@ -636,6 +645,8 @@ var designer_toggle_categorie = function() {
     $("#container-action").show();
     
     $("#container-help").show();
+    
+    Tuto.flag(2, 0);
     
     if (bouton.hasClass("profil-toggle-categorie") || bouton.hasClass("option-help")) { // NOUVELLE CATEGORIE
         var ul;
@@ -686,47 +697,41 @@ var designer_toggle_categorie = function() {
 
 var designer_save_champ = function() {
     var label = $("#label-new-champ");
-    var pluriel = $("#pluriel-new-champ");
     var action = $("#action-champ");
     var champ, id;
     
     if (label.val() == "") {
         label.addClass("KO");
     } else {
-        if (pluriel.val() == "") {
-            pluriel.addClass("KO");
+        label.removeClass("KO");
+        
+        champ = {
+            label: label.val()
+        };
+        
+        if (action.attr("data-id") === undefined || action.attr("data-id") === "") {
+            Monde.champs.push($.extend(champ, {
+                types: [],
+                categories: []
+            }));
+            id = Monde.champs.length - 1;
         } else {
-            label.removeClass("KO");
-            pluriel.removeClass("KO");
-            
-            champ = {
-                label: label.val(),
-                pluriel: pluriel.val()
-            };
-            
-            if (action.attr("data-id") === undefined || action.attr("data-id") === "") {
-                Monde.champs.push($.extend(champ, {
-                    types: [],
-                    categories: []
-                }));
-                id = Monde.champs.length - 1;
-            } else {
-                id = action.attr("data-id");
-                Monde.champs[id] = $.extend(true, Monde.champs[id], champ);
-            }
-            
-            label.val("");
-            pluriel.val("");
-            $("#action-champ").attr("data-id", "");
-            $("#action-champ>h2").text("Nuevo campo");
-            $(".option-help-champ").text(champ.label);
-            $(".option-help").attr("data-champ", id);
-            $(".option-help").attr("data-categorie", "");
-            $("#action-champ").hide();
-            $("#action-post-champ").show();
-            check_bouton_save();
-            Monde._refresh();
+            id = action.attr("data-id");
+            Monde.champs[id] = $.extend(true, Monde.champs[id], champ);
         }
+        
+        label.val("");
+        $("#action-champ").attr("data-id", "");
+        $("#action-champ>h2").text("Nuevo campo");
+        $(".option-help-champ").text(champ.label);
+        $(".option-help").attr("data-champ", id);
+        $(".option-help").attr("data-categorie", "");
+        $("#action-champ").hide();
+        $("#action-post-champ").show();
+        check_bouton_save();
+        Monde._refresh();
+    
+        Tuto.flag(3, 1);
     }
 };
 
@@ -781,7 +786,6 @@ var designer_save_type = function() {
             $("#action-type").hide();
             $("#action-post-" + post).show();
             check_bouton_save();
-            Tuto.flag(3);
             Monde._refresh();
         }
     }
