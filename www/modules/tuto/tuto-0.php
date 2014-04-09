@@ -1,17 +1,13 @@
 <div class="etape" id="etape-0-0">
     <h1><b>1</b>/<b>5</b> - Bienvenido en <b>DINO</b></h1>
-    <p>Hola, soy Dam el arquitecto de <b>DINO</b>.</p>
-    <p>Juntos vamos a configurar tu primer <b>mundo documental</b> para adaptarlo a tus necesidades.</p>
-    <p>Antes de empezar, te aconsejo leer nuestros <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">8 tips para un perfil perfecto</a>.</p>
-    <iframe src="http://prezi.com/embed/7rblvsge3xfs/?bgcolor=ffffff&amp;lock_to_path=0&amp;autoplay=0&amp;autohide_ctrls=0&amp;features=undefined&amp;disabled_features=undefined" width="100%" height="300" frameBorder="0" webkitAllowFullScreen mozAllowFullscreen allowfullscreen></iframe>
-    <p>Da click en "Nuevo Mundo" para empezar a configurar tu perfil.</p>
+    <p>Hola, soy Dam el arquitecto de <b>DINO</b>. Te voy a acompaniar durante la <b>configuracion de tu perfil</b>.</p>
+    <p>Da click en "<b>Nuevo Mundo</b>" para empezar!</p>
 </div>
 <div class="etape" id="etape-0-1">
-    <h1><b>2</b>/<b>5</b> - Primer campo</h1>
-    <p>En DINO, un <b>mundo</b> debe tener a lo menos un <b>nombre</b> y un <b>campo de clasificacion</b>.</p>
-    <p>Un <b>campo de clasificacion</b> es como una caja donde organizas tus documentos.</p>
-    <p>Por ejemplo, puedes organizar tus documentos por <b>Cliente</b>, <b>Proyecto</b>, <b>Empleado</b>...</p>
-    <p><i>Si tienes una duda, puedes consultar nuestros <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">8 tips para un perfil perfecto</a> o nuestros <a href="http://prezi.com/i1z9x8l-77l7/" target="_blank">3 ejemplos de mundos documentales</a>.</i></p>
+    <h1><b>2</b>/<b>5</b> - Bienvenido en <b>DINO</b></h1>
+    <p>En <b>DINO</b>, tus documentos estan organizados por mundos documentales. Cada <b>mundo</b> corresponde con un ramo de tu empresa, como <b>Ventas</b>, <b>Recursos humanos</b>, etc...</p>
+    <p>Si es tu primera vez en <b>DINO</b>, te aconsejo escoger uno de nuestros mundos pre-configurados, seguro hay uno que te corresponde!</p>
+    <p><i><a href="#" id="lien-zero">Da click aqui si prefieres empezar tu mundo de zero.</a></i></p>
 </div>
 <div class="etape" id="etape-0-2">
     <h1><b>3</b>/<b>5</b> - Primer documento</h1>

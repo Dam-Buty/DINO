@@ -1,4 +1,18 @@
 
+TEMPLAR
+=======
+
+Remettre les user_tuto à niveau pour ajout du nouveau n°1
+
+````sql
+UPDATE `user_tuto`
+SET
+	`fk_tuto` = `fk_tuto` + 1
+WHERE
+	`fk_tuto` != 0
+ORDER BY `fk_tuto` DESC
+````
+
 WOODSTOCK
 =========
 

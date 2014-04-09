@@ -106,21 +106,20 @@ session_start();
     </div>
     <div id="container-templates" class="designer-right">
         <h2>Creacion de mundo</h2>
-        <p id="pre-templates">Puedes utilizar uno de nuestros mundos pre-configurados</p>
+        <p id="pre-templates">Puedes utilizar uno de nuestros mundos pre-configurados ...</p>
         <select id="list-templates" class="select-templates" data-placeholder="Seleccione una plantilla">
         </select>
-        <div id="container-ou-champ">
-            <p class="container-o">- O -</p>
-            <p>Crear tu mundo a partir del primer campo</p>
-            <div class="designer-option option-help" id="add-champ-template">
-                <h1>Campo</h1>
-                <p>Agregar un <b>nuevo Campo</b></p>
-            </div>
-            <div style="clear: right;"></div>
-        </div>
+        <p id="pre-description">Puedes <b>modificar tu mundo</b> o dar click en <b>PUBLICAR</b> si te conviene.</p>
         <div id="container-description">
         </div>
-        <p id="post-description">Puedes <b>modificar tu mundo</b> o dar click en <b>PUBLICAR</b> si te conviene.</p>
+    </div>
+    <div id="container-ou-champ" class="designer-right">
+        <p>... o crear tu mundo a partir del primer campo</p>
+        <div class="designer-option option-help" id="add-champ-template">
+            <h1>Campo</h1>
+            <p>Agregar un <b>nuevo Campo</b></p>
+        </div>
+        <div style="clear: right;"></div>
     </div>
     <div id="container-help" class="designer-right">Si tienes alguna duda, te invitamos a consultar<br/><a href="http://prezi.com/i1z9x8l-77l7/" target="_blank">3 ejemplos de mundos documentales</a> o <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">8 tips para un perfil perfecto</a></div>
 </div>

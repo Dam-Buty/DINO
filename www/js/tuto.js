@@ -14,6 +14,10 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
                 if ($("#backoffice").is(":visible")) {
                     $("#menu-retour").click();
                 }
+                $("#lien-zero").click(function() {
+                    Tuto.exit();
+                    Tuto.run();
+                });
             }
         }, {
             type: "highlight",
@@ -38,29 +42,9 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
         raises_flag: true,
         animations: [{
             type: "highlight",
-            selector: "#nom-monde",
+            selector: "#container-templates",
             force: true,
             delay: 400
-        }, {
-            type: "tooltip",
-            selector: "#nom-monde",
-            options: {
-                content: 'Aqui viene el nombre de tu mundo',
-                autoClose: false,
-                position: "top"
-            }
-        }, {
-            type: "highlight",
-            selector: "#container-action",
-            force: true
-        }, {
-            type: "tooltip",
-            selector: "#container-action",
-            options: {
-                content: 'Crea tu primer campo aqui',
-                autoClose: false,
-                position: "bottom"
-            }
         }]
     }, {////////////////////// 2
         stage_css: {
