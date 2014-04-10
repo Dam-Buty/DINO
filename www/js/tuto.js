@@ -193,6 +193,13 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             selector: "#container-action",
             delay: 400
         }, {
+            type: "code",
+            code: function() {
+                $("#action-type div.designer-option h1").css({
+                    "font-size": "1.2em"
+                });
+            }
+        }, {
             type: "tooltip",
             selector: "#bouton-save-type",
             options: {
@@ -200,7 +207,12 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
                 autoClose: false,
                 position: "bottom"
             }
-        }]
+        }],
+        clean: function() {
+            $("#action-type div.designer-option h1").css({
+                "font-size": ""
+            });
+        }
     }, { ////////////////////// 6
         stage_css: {
             width: "50%",

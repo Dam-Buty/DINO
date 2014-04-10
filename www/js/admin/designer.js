@@ -378,9 +378,9 @@ var _bootstrap_designer = function(action) {
     });
     
     Switch($("#detail-new-type"), {
-        title: "detalle",
-        OK_text: '<b>Se puede</b> agregar un detalle a este tipo de documento.<br/>',
-        KO_text: '<b>No se puede</b> agregar un detalle a este tipo de documento.<br/>',
+        title: "Comentario",
+        OK_text: '<b>Se puede</b> agregar un comentario a este tipo de documento.<br/>',
+        KO_text: '<b>No se puede</b> agregar un comentario a este tipo de documento.<br/>',
         tip: "Por ejemplo, contrato 'anual' o contrato 'de servicio'."
     });
     

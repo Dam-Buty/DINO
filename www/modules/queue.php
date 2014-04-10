@@ -42,7 +42,7 @@
             </div>
             <div class="ligne-details" id="container-detail">
                 <div class="cell-details">
-                    Detalle : 
+                    Comentario : 
                 </div>
                 <div class="cell-details">
                     <input type="text" id="detail-store"/>
