@@ -62,21 +62,33 @@ var Mentorial = function(Scenarios, options) {
             
             var self = this;
             
-            $(this.stages_container).fadeIn();
-            $("#quit-tuto").unbind().click(function() {
-                self.exit();
-            });
+            $.ajax({
+                url: "modules/tuto/tuto-" + scenario + ".php",
+                statusCode: {
+                    200: function(tuto) {
+                        $(self.stages_container).html(tuto);
             
-            if (this.exit_on_opaque) {
-                $("#opak-tuto").unbind().click(function() {
-                    self.exit();
-                });
-            }
-            
-            $(this.button_next).unbind().click(function() {
-                self._next();
+                        $(self.stages_container).fadeIn();
+                        $("#quit-tuto").unbind().click(function() {
+                            self.exit();
+                        });
+                        
+                        if (self.exit_on_opaque) {
+                            $("#opak-tuto").unbind().click(function() {
+                                self.exit();
+                            });
+                        }
+                        
+                        $(self.button_next).unbind().click(function() {
+                            self._next();
+                        });
+                        self._show();
+                    },                
+                    404: function() {
+                        popup('No se pudo cargar el tutorial. Gracias por intentar otra vez.', 'error'); // LOCALISATION
+                    }
+                }
             });
-            this._show();
         },
         
         // Sortie du tutorial

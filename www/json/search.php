@@ -50,7 +50,7 @@ if (isset($_SESSION["niveau"])) {
     if (count($_POST["recherche"]) > 0) {
         $search = "";
         foreach($_POST["recherche"] as $i => $valeur) {
-            $search .= ", " . $valeur;
+            $search .= ", " . $valeur["valeur"];
         }
     }
     
