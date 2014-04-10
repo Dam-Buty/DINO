@@ -787,6 +787,8 @@ var designer_save_type = function() {
             $("#action-post-" + post).show();
             check_bouton_save();
             Monde._refresh();
+            
+            Tuto.flag(5, 1);
         }
     }
 };

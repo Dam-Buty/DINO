@@ -22,6 +22,19 @@
 </div>
 <div class="etape" id="etape-1-4">
     <h1><b>4</b>/<b>8</b> - Primer campo</h1>
-    <p>A cada momento, puedes ver la estructura de tu <b>perfil documental</b> en la parte de izquierda.</p>
+    <p>En cada momento, puedes ver la estructura de tu <b>perfil documental</b> en la parte de izquierda.</p>
     <p>Da click en el boton <img src="img/add_20.png" style="vertical-align: middle;"/> para agregar un primer <b>tipo de documento</b> al campo <b class="tuto-champ"></b>.</p>
+</div>
+<div class="etape" id="etape-1-5">
+    <h1><b>5</b>/<b>8</b> - Primer documento</h1>
+    <p>Ingresa el nombre de un <b>tipo de documento</b> que quieres asociar a tus <b class="tuto-champ"></b>(s).</p>
+    <p>El <a href="http://www.dino.mx/university/los-diferentes-niveles-de-usuarios-dino/" target="_blank"><b>nivel de seguridad</b></a> determina quiene puede consultar los <b>documentos</b>. Si tienes una duda, puedes dejar el nivel "<b>Visitante</b>".</p>
+    <p>Un documento tambien puede ser <a href="http://www.dino.mx/university/los-diferentes-atributos-disponibles-para-un-documento/" target="_blank"><b>mensual</b></a> o tomar un <a href="http://www.dino.mx/university/los-diferentes-atributos-disponibles-para-un-documento/" target="_blank"><b>detalle</b></a>.</p>
+</div>
+<div class="etape" id="etape-1-6">
+    <h1><b>6</b>/<b>8</b> - Nivel Experto!</h1>
+    <p>Perfecto! Ahora que sabes todo de los <b>campos</b> y <b>tipos de documentos</b>, te dejo experimentar con la creacion de tu <b>perfil</b>.</p>
+    <p>Puedes probar las funcionalidades, y cuando tu perfil te satisfece picar en el boton "<b>Publicar</b>". Podras modificar tu perfil en cualquier momento dando click en el boton <img src="img/profil_hover_30.png" style="vertical-align: middle; width: 20px;"/>.</p>
+    <p><i>Si tienes una duda, te invito a consultar nuestros <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">8 tips para un perfil perfecto</a> y nuestros <a href="http://prezi.com/i1z9x8l-77l7/" target="_blank">3 ejemplos de mundos documentales</a>.</i></p>
+    <div class="boutons next">Hasta luego!</div>
 </div>

@@ -16,7 +16,9 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
                 }
                 $("#lien-zero").click(function() {
                     Tuto.exit();
-                    Tuto.run(1);
+                    setTimeout(function() {
+                        Tuto.run(1);
+                    }, 800);
                 });
             }
         }, {
@@ -178,6 +180,48 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
                 champ: Monde.champs[0].label
             };
         }
+    }, { ////////////////////// 5
+        raises_flag: true,
+        stage_css: {
+            width: "40%",
+            top: "20%",
+            left: "0"
+        },
+        animations: [{
+            type: "highlight",
+            force: true,
+            selector: "#container-action",
+            delay: 400
+        }, {
+            type: "tooltip",
+            selector: "#bouton-save-type",
+            options: {
+                content: 'No olvides de guardar!',
+                autoClose: false,
+                position: "bottom"
+            }
+        }]
+    }, { ////////////////////// 6
+        stage_css: {
+            width: "50%",
+            left: "25%",
+            top: "20%",
+        },
+        animations: [{
+            type: "highlight",
+            force: true,
+            selector: "#bouton-save-monde",
+            delay: 400
+        }, {
+            type: "tooltip",
+            selector: "#bouton-save-monde",
+            options: {
+                content: 'Aqui para publicar tu mundo!',
+                autoClose: false,
+                position: "bottom"
+            }
+        }]
+        
     }]
 }, { ////////////////////// SCENARIO 2
     titre: "Charger un document",
@@ -876,24 +920,11 @@ var bootstrap_tuto = function() {
     $("#list-tutos .ligne-tuto").click(function() {
         var pk = $(this).attr("data-pk");
         
-        $.ajax({
-            url: "modules/tuto/tuto-" + pk + ".php",
-            statusCode: {
-                200: function(tuto) {
-                    $("#container-tuto").html(tuto);
-                    //toggle_tutos();
-                    Tuto.run(pk);
-                    if ($("#container-list-tutos").css("bottom") == "35px") {
-                        $("#bouton-tuto").click();
-                    }
-                    
-                },                
-                404: function() {
-                    popup('No se pudo cargar el tutorial. Gracias por intentar otra vez.', 'error'); // LOCALISATION
-                }
-            }
-        });
+        if ($("#container-list-tutos").css("bottom") == "35px") {
+            $("#bouton-tuto").click();
+        }
         
+        Tuto.run(pk);
     });
     
     $("#bouton-tuto")
