@@ -48,7 +48,7 @@ var check_signup = function() {
     if ($("#login").hasClass("OK") && $("#pass").hasClass("OK") && $("#pass2").hasClass("OK") && $("#mail").hasClass("OK")) {
         $('#submit-page-1').show();
         $("#container-tips").html(
-            "<h1>LISTO <img src='img/like_45.png'/></h1>"
+            "<h1>LISTO <img src='img/like_20.png'/></h1>"
         );
     } else {
         $('#submit-page-1').hide();

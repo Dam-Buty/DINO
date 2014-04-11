@@ -16,7 +16,8 @@
 <div class="dialog-box etape" id="etape-2-1">
     <h1>Primer documento</h1>
     <div class="popup-ligne"><div class="popup-jauge jauge-25"></div></div>
-    <p>En DINO, cada historia empeza con un <b>documento</b>. Escoge cualquier documento en tu disco duro y cargalo en <b>DINO</b>!</p>
+    <p>En DINO, cada historia empeza con un <b>documento</b>.<p>
+    </p>Escoge cualquier documento en tu disco duro y cargalo en <b>DINO</b>!</p>
 </div>
 <div class="dialog-box etape" id="etape-2-2">
     <h1>Fila de espera</h1>
