@@ -18,35 +18,28 @@ var bootstrap_signup = function() {
     
     $(".submit-signup").unbind().click(save_page);
     
-//    $(".plan").mouseover(function() {
-//        $(this).css("box-shadow", "0 0 1px 2px #5B8020");
-//    }).mouseout(function() {
-//        $(this).css("box-shadow", "");
-//    }).click(save_plan);
 };
 
 var tip_mail = function() {
-    $("#container-tips").html("<p>DINO odia el SPAM! Tu correo electronico esta en seguridad con nosotros.</p>");
-    tip_champ($("#mail"), $("#container-tips"));
+    $("#container-tips").html("<p><i>No compartimos tu informacion</i>.</p>");
+    tip_champ($("#mail"), $("#container-tips"), false, true);
 };
 
 var tip_login = function() {
-    $("#container-tips").html("<p>Entre un nombre de usuario <b>entre 8 y 32 caracteres</b>.</p>");
+    $("#container-tips").html("<p>Ingresa tu Nombre de usuario</p><p><i>(min. 8 caracteres)</i></p>");
     tip_champ($("#login"), $("#container-tips"));
 };
 
 var tip_pass = function() {
     $("#container-tips").html(
-        "Su contrasena es la pieza clave de la seguridad de sus datos.<br/>" +
-        "Una contrasena robusta contiene a lo menos 8 caracteres, incluyendo :<br/>" +
+        "<p>Tus archivos son importantes.</p>" +
+        "<p>Para una seguridad optima, tu contrasena debe tener :" +
         "<ul>" +
-            "<li>una <b>minuscula</b>,</li>" +
-            "<li>una <b>MAYUSCULA</b>,</li>" + 
-            "<li>un <b>numero</b></li>" + 
-            "<li>y uno de esos <b>caracteres especiales</b> :</li>" + 
-            "<ul><li>!@#$%^&*?_~</li></ul>" + 
+            "<li>min. 8 caracteres</li>" +
+            "<li>una mayuscula y una minuscula</li>" + 
+            "<li>un caracter especial</li>" + 
         "</ul>" +
-        "Por ejemplo : <b>Bacon_2013</b> es una deliciosa contrasena."
+        "<p><i><b>Pizza_2013</b> es una deliciosa contrasena.</i></p>"
     );
     tip_champ($("#pass"), $("#container-tips"));
 };
@@ -55,37 +48,11 @@ var check_signup = function() {
     if ($("#login").hasClass("OK") && $("#pass").hasClass("OK") && $("#pass2").hasClass("OK") && $("#mail").hasClass("OK")) {
         $('#submit-page-1').show();
         $("#container-tips").html(
-            "<h1>Listo!</h1>" +
-                "<p>Da click para crear tu cuenta DINO!</p>"
+            "<h1>LISTO <img src='img/like_45.png'/></h1>"
         );
     } else {
         $('#submit-page-1').hide();
     }
-};
-
-var tip_page = function(page) {
-    switch(page) {
-        case 2:
-            $("#container-tips").html(
-                "<h1>Casi listo !</h1>" +
-                "<p>Por favor dinos un poco mas sobre tu y tu empresa antes de <b>elegir tu plan</b>.</p>" +
-                "<p>Estos datos <b>no son obligatorios</b>, pero nos permiten proporcionarte el servicio mas adecuado con tus necesidades.</p>"
-            );
-            $("#submit-page-2").fadeIn();
-            break;
-//        case 3:
-//            $("#container-tips").hide();
-//            $("#container-signup").animate({
-//                width: "90%",
-//                "margin-left": "5%"
-//            });
-//            $("body").animate({
-//                "padding-top": "0"
-//            });
-//            $("#submit-page-3").fadeIn();
-//            break;
-    };
-    $("#container-tips").css("top", "");
 };
 
 var save_page = function() {
@@ -119,7 +86,6 @@ var save_page = function() {
                 } else {
                     current.fadeOut(function() {
                         next.fadeIn();
-                        tip_page(page + 1);
                     });                
                 }
             },
@@ -131,8 +97,4 @@ var save_page = function() {
             }
         }
     })
-};
-
-var save_plan = function() {
-    
 };
