@@ -1,7 +1,7 @@
 # Activation 1/2 : vérif de la clef
-SELECT `login_user`
+SELECT `login_user`, `activation_user`
 FROM `user`
 WHERE 
-    `mail_user` = :mail
-    AND `activation_user` = :activation
+    `login_user` = :login
+    AND `mail_user` = :mail
 ;

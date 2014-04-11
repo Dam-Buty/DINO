@@ -3,7 +3,7 @@ session_start();
 ?>
 <!--LOCALISATION-->
 <div id="designer" class="admin">
-    <div class="boutons save-monde-KO" id="bouton-save-monde">Publicar</div>
+    <div class="boutons save-monde-KO" id="bouton-save-monde">Guardar</div>
     <div class="boutons" id="bouton-clear-monde">Borrar todo</div>
     <h1><span>Creacion del mundo </span><input type="text" id="nom-monde" placeholder="Nuevo mundo..."/></h1>
     <div id="container-map">
@@ -23,7 +23,7 @@ session_start();
             <p>
                 <label>Nombre : <input type="text" id="label-new-champ" placeholder="'Cliente', 'Proyecto', 'Producto'"/></label>
             </p>
-            <div class="boutons bouton-designer" id="bouton-save-champ">Guardar</div>
+            <div class="boutons bouton-designer" id="bouton-save-champ"></div>
         </div>
         <div class="action" id="action-post-champ">
             <h2 class="designer-header">Campo <b class="option-help-champ"></b></h2>
@@ -56,7 +56,7 @@ session_start();
                     <option value="30">Gerente</option>
     <?php } ?>
                 </select>
-                <i style="display: block;">Aqui decides <a href="http://www.dino.mx/university/los-diferentes-niveles-de-usuarios-dino/">quien puede acceder a tu documento</a>.</i>
+                <i style="display: block;">Aqui decides <a href="http://www.dino.mx/university/los-diferentes-niveles-de-usuarios-dino/" target="_blank">quien puede acceder a tu documento</a>.</i>
             </p>
             <h3>Opciones</h3>
             <p>
@@ -64,7 +64,7 @@ session_start();
                 <input type="checkbox" id="time-new-type"/>
                 <div style="clear: right;"></div>
             </p>
-            <div class="boutons bouton-designer" id="bouton-save-type">Guardar</div>
+            <div class="boutons bouton-designer" id="bouton-save-type"></div>
         </div>
         <div class="action" id="action-categorie">
             <h2 class="designer-header">Nueva categoria</h2>
@@ -85,7 +85,7 @@ session_start();
                 </select>
                 <i>Aqui decides <a href="http://www.dino.mx">quien puede acceder a tu categoria</a>.</i>
             </p>
-            <div class="boutons bouton-designer" id="bouton-save-categorie">Guardar</div>
+            <div class="boutons bouton-designer" id="bouton-save-categorie"></div>
         </div>
         <div class="action" id="action-post-categorie">
             <h2 class="designer-header">Categoria <b class="option-help-categorie"></b></h2>

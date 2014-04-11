@@ -8,9 +8,8 @@
 <meta content="Damien BUTY" name="author" />
 <meta content="La revolucion documental" name="description" />
 <link href='css/Oswald-Bold.ttf' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="css/signup.css" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/login.css" media="screen" type="text/css"/>
-<link rel="stylesheet" href="css/boutons.css" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/global.css" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/util.css" media="screen" type="text/css"/>
 <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 </head>
 
@@ -20,17 +19,10 @@
     <img src="img/big_loader.gif"/>
 </div>
 
-<div id="container-signup">
-    <div id="container-OK">
-        <h1>Tu cuenta esta activada!</h1>
-        <p>Ahora solo necesitas conectarte en DINO para empezar a mejorar tu vida documental!</p>
-        <a href="index.php"><div class="boutons" id="bouton-activate">ENTRAR EN DINO</div></a>
-    </div>
-    <div id="container-KO">
-        <h1>Error de activacion!</h1>
-        <p>Tal vez tu cuenta ya ha sido activada, o tal vez hay una error en la direccion que entraste.</p>
-        <p>Si encuentras problemas activando tu cuenta <b>DINO</b>, nos puedes contactar en <a href="mailto:beta@dino.mx">beta@dino.mx</a>!</p>
-    </div>
+<div id="container-KO" class="dialog-box">
+    <h1>Error de activacion</h1>
+    <div class="popup-ligne"><div class="popup-jauge jauge-KO"></div></div>
+    <p style="text-align: center; font-size: 1.1em;">Contactanos : <a href="mailto:beta@dino.mx">beta@dino.mx</a></p>
 </div>     
         
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
@@ -52,15 +44,13 @@ $.ajax({
     url: "do/doActivate.php",
     type: "POST",
     data: {
+        user: _arguments.user,
         key: _arguments.key,
         mail: _arguments.mail
     },
     statusCode: {
         200: function() {
-            $("#container-loading").hide();
-            $("#container-OK").show();
-            $("#container-KO").hide();
-            $("#container-signup").show();
+            window.location.replace("index.php?activated");
         },
         204: function() {
             $("#container-loading").hide();

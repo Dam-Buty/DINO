@@ -2,7 +2,7 @@ Hola %user%
 
 Tu cuenta DINO ha sido creada!
     
-Para activar tu cuenta y empezar a administrar los documentos de tu empresa, solo necesitas dar click en http://my.dino.mx/activate.php?key=%clef%&mail=%mail%.
+Para activar tu cuenta y empezar a administrar los documentos de tu empresa, solo necesitas dar click en http://my.dino.mx/activate.php?user=%user%&key=%clef%&mail=%mail%.
     
 Te recordamos los datos de conexion que eligiste :
     

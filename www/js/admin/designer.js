@@ -522,11 +522,15 @@ var designer_toggle_champ = function() {
             .addClass("designer-ghost")
             .text("Nuevo campo...")
         );
+        
+        $("#bouton-save-champ").text("Crear");
     } else {
         champ = Monde.champs[li.attr("data-id")];
         $("#action-champ").attr("data-id", li.attr("data-id"));
         $("#label-new-champ").val(champ.label);
         $("#action-champ>h2").html("Campo <b>" + champ.label + "</b>"); // LOCALISATION
+        
+        $("#bouton-save-champ").text("Modificar");
     }
     
     $("#label-new-champ").focus();
@@ -554,6 +558,8 @@ var designer_toggle_type = function() {
     
     if (bouton.hasClass("profil-toggle-type") || bouton.hasClass("option-help")) { // NOUVEAU DOCUMENT
         var champ, categorie;
+        
+        $("#bouton-save-type").text("Crear");
         
         if (bouton.hasClass("profil-toggle-type")) {
             li = bouton.closest("li");
@@ -603,6 +609,8 @@ var designer_toggle_type = function() {
         detail.prop("checked", false).change();
     } else { // EDIT DOCUMENT
         li = bouton.closest("li");
+        
+        $("#bouton-save-type").text("Modificar");
         
         action
         .fadeIn()

@@ -18,29 +18,10 @@
     display: none;
     
     position: absolute;
-    z-index: 701;
+    box-shadow: 0 0 3px 3px #8ECB32 !important;
+    margin: 10px !important;
     
-    background-color: #8ecb32;
-    
-    border: 2px solid #558011;
-    
-    padding: 20px;
-
-    margin: 10px;
-}
-
-.etape h1 {
-    color: white;
-    
-    padding-left: 50px;
-    background-image: url(../img/dino_40.png);
-    background-position: 5px 50%;
-    background-repeat: no-repeat;
-    
-    height: 50px;
-    
-    display: table-cell;
-    vertical-align: middle;
+    z-index: 701 !important;
 }
 
 .etape p {
@@ -53,65 +34,11 @@
     font-size: 0.9em;
 }
 
-#etape-4 {
-    top: 10%;
-    left: 0;
-    width: 40%;
-}
-
-#etape-5 {
-    top: 20%;
-    left: 0;
-    width: 40%;
-}
-
-#etape-6 {
-    top: 30%;
-    left: 0;
-    width: 40%;
-}
-
-#etape-7 {
-    top: 60%;
-    right: 0;
-    width: 40%;
-    
-    background-color: #56d4eb;
-    z-index: 705;
-}
-
-#etape-8 {
-    width: 50%;
-    left: 25%;
-}
-
-#etape-9 {
-    width: 50%;
-    left: 25%;
-    top: 25%;
-}
-
-#etape-10 {
-    width: 50%;
-    left: 25%;
-    top: 25%;
-}
-
-#etape-11 {
-    width: 50%;
-    left: 25%;
-    top: 25%;
-}
-
-#etape-13 {
-    width: 50%;
-    left: 25%;
-    top: 25%;
-}
-
 .next {
     width: 50%;
     margin-left: 25%;
+    
+    background-color: #8ecb32;
 }
 
 #quit-tuto {

@@ -10,13 +10,14 @@
 <link href='css/Oswald-Bold.ttf' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/signup.css" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/inputs.css" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/util.css" media="screen" type="text/css"/>
 <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 
 </head>
 
 <body>
 
-<div id="container-signup">
+<div id="container-signup" class="dialog-box">
     <div id="container-tips">
         <h1>Bienvenido a DINO</h1>
         <p>Ingresa tus datos para ser parte de nuestra comunidad.</p>
