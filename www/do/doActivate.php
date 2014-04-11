@@ -5,7 +5,7 @@ include("../includes/log.php");
 
 $params = [
     "login" => $_POST["user"],
-    "mail" => $_POST["mail"]
+    "mail" => urldecode($_POST["mail"])
 ];
 
 $result = dino_query("activate_select", $params);
