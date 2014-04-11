@@ -107,7 +107,7 @@ session_start();
         <select id="list-templates" class="select-templates" data-placeholder="Seleccione una plantilla">
         </select>
         <p id="pre-description">Puedes <b>modificar tu mundo</b> o dar click en <b>PUBLICAR</b> si te conviene.</p>
-        <div id="container-description">
+        <div id="container-description" class="dialog-box">
         </div>
     </div>
     <div id="container-ou-champ" class="designer-right">

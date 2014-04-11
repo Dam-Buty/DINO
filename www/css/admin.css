@@ -802,6 +802,16 @@ div.option-ko:hover {
     background-image: url(../img/del_15.png);
 }
 
+#container-description ul {
+    font-size: 0.9em;
+    list-style-type: circle;
+    list-style-position: inside;
+}
+
+#container-description p {
+    margin-top: 0;
+}
+
 /*#####################################
 #        Arbre
 #######################################*/

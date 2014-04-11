@@ -61,7 +61,7 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
     }, {////////////////////// 2
         stage_css: {
             right: "0",
-            width: "60%",
+            width: "50%",
             bottom: "0"
         },
         raises_flag: true,
