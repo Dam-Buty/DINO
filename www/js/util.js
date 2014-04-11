@@ -136,11 +136,16 @@ var collapse_liste = function(liste, default_state) {
     }
 };
 
-var tip_champ = function(field, tip, ignore_KO) {
+var tip_champ = function(field, tip, ignore_KO, no_higher) {
     var delay = 1200;
+    var top;
     
     if (ignore_KO === undefined) {
         ignore_KO = false;
+    }
+    
+    if (no_higher === undefined) {
+        no_higher = false;
     }
     
     // Si le champ est en premier affichage ou en erreur
@@ -149,8 +154,14 @@ var tip_champ = function(field, tip, ignore_KO) {
         
         tip.show().css({ opacity: 0 });
         
+        top = (field.offset().top + (field.outerHeight() / 2)) - (tip.outerHeight() / 2);
+        
+        if (no_higher) {
+            top = Math.max(top, field.offset().top);
+        }
+        
         tip.offset({
-            top: (field.offset().top + (field.outerHeight() / 2)) - (tip.outerHeight() / 2)
+            top: top
         });
         
         tip.css({
@@ -162,8 +173,14 @@ var tip_champ = function(field, tip, ignore_KO) {
         }
     } else { // Si le champ vient de passer OK, on le repositionne
              // parceque le texte a changé
+        top = (field.offset().top + (field.outerHeight() / 2)) - (tip.outerHeight() / 2);
+        
+        if (no_higher) {
+            top = Math.max(top, field.offset().top);
+        }
+        
         tip.offset({
-            top: (field.offset().top + (field.outerHeight() / 2)) - (tip.outerHeight() / 2)
+            top: top
         });
         
         // Et on le passe en vert
@@ -211,16 +228,16 @@ var check_mail = function() {
     }
     
     if (re.test(mail)) {
-        tip.html("El nombre de usuario y la contrasena seran enviados a esta direccion.");
+        tip.html("<p><i>No compartimos tu informacion</i>.</p>");
         field.removeClass("KO").addClass("OK");
-        tip_champ(field, tip, true); 
+        tip_champ(field, tip, true, true); 
         if (tip.attr("id") == "container-tips") {
             check_signup();
         }
     } else {
-        tip.html("DINO nunca haria nada para lastimar un buzon inocente!");
+        tip.html("<p><i>No compartimos tu informacion</i>.</p>");
         field.removeClass("OK").addClass("KO");
-        tip_champ(field, tip, true);
+        tip_champ(field, tip, true, true);
         if (tip.attr("id") == "container-tips") {
             check_signup();
         }
@@ -249,7 +266,7 @@ var check_login = function() {
     } else {
         if (login.length < 8) {
             field.removeClass("OK").addClass("KO");
-            tip.html("Su nombre de usuario debe ser un poco mas largo... (<b>8 caracteres minimum</b>)");
+            tip.html("<p>Tu nombre de usuario debe ser mas largo...</p><p> <i>(min. 8 caracteres)</i></p>");
             tip_champ(field, tip);  
             if (tip.attr("id") == "container-tips") {
                 check_signup();
@@ -257,7 +274,7 @@ var check_login = function() {
         } else {
             if (login.length > 32) {
                 field.removeClass("OK").addClass("KO");
-                tip.html("No tenemos lugar por tanto nombre de usuario! (<b>32 caracteres maximum</b>)");
+                tip.html("<p>No tenemos lugar para tanto nombre de usuario!</p><p> <i>(32 caracteres maximum)</i></p>");
                 tip_champ(field, tip);  
                 if (tip.attr("id") == "container-tips") {
                     check_signup();
@@ -272,7 +289,7 @@ var check_login = function() {
                     statusCode: {
                         200: function() {
                             field.removeClass("OK").addClass("KO");
-                            tip.html("<b>" + login + "</b> es un excelente nombre, pero no esta disponible :(");
+                            tip.html("<b>" + login + "</b> es un excelente nombre, pero ya es de otra persona :(");
                             tip_champ(field, tip);   
                             if (tip.attr("id") == "container-tips") {
                                 check_signup();
@@ -325,7 +342,7 @@ var check_pass = function() {
     } else {
         if (pass.length < 8) {
             field.removeClass("OK").addClass("KO");
-            tip.html("Su contrasena debe ser un poco mas larga... (<b>8 caracteres minimum</b>)");
+            tip.html("<p>Tu contrasena debe ser mas larga...</p><p> <i>(min. 8 caracteres)</i></p>");
             tip_champ(field, tip);  
             if (tip.attr("id") == "container-tips") {
                 check_signup();
@@ -341,7 +358,7 @@ var check_pass = function() {
             } else {
                 if (countContain(pass, m_strUpperCase) == 0) {
                     field.removeClass("OK").addClass("KO");
-                    tip.html("Su contrasena debe contener a lo menos una mayuscula!");
+                    tip.html("Tu contrasena debe tener una mayuscula!");
                     tip_champ(field, tip);  
                     if (tip.attr("id") == "container-tips") {
                         check_signup();
@@ -349,7 +366,7 @@ var check_pass = function() {
                 } else {
                     if (countContain(pass, m_strLowerCase) == 0) {
                         field.removeClass("OK").addClass("KO");
-                        tip.html("Su contrasena debe contener a lo menos una minuscula!");
+                        tip.html("Tu contrasena debe tener una minuscula!");
                         tip_champ(field, tip);  
                         if (tip.attr("id") == "container-tips") {
                             check_signup();
@@ -357,7 +374,7 @@ var check_pass = function() {
                     } else {
                         if (countContain(pass, m_strNumber) == 0) {
                             field.removeClass("OK").addClass("KO");
-                            tip.html("Su contrasena debe contener a lo menos un numero!");
+                            tip.html("Tu contrasena debe tener un numero!");
                             tip_champ(field, tip);  
                             if (tip.attr("id") == "container-tips") {
                                 check_signup();
@@ -365,7 +382,7 @@ var check_pass = function() {
                         } else {
                             if (countContain(pass, m_strCharacters) == 0) {
                                 field.removeClass("OK").addClass("KO");
-                                tip.html("Su contrasena debe contener a lo menos un caracter especial!");
+                                tip.html("Tu contrasena debe tener un caracter especial!");
                                 tip_champ(field, tip);    
                                 if (tip.attr("id") == "container-tips") {
                                     check_signup();
