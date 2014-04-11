@@ -2,7 +2,7 @@
     <h1>Bienvenido en <b>DINO</b></h1>
     <div class="popup-ligne"><div class="popup-jauge jauge-33"></div></div>
     <p>Hola, soy Dam el arquitecto de <b>DINO</b>.</p>
-    <p>Te voy a acompaniar durante la configuracion de tu <b>primer mundo documental</b>.</p>
+    <p>Te voy a acompañar durante la configuracion de tu <b>primer mundo documental</b>.</p>
     <p>En la comunidad <b>DINO</b>, llamamos <b>mundos documentales</b> los archiveros de tu empresa <i>(Ventas, Contabilidad, Recursos Humanos...)</i>.</p>
     <p><b><center>Sigue la flecha naranja!</center></b></p>
 </div>
