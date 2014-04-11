@@ -21,7 +21,7 @@ session_start();
                     <li>
                         <select id="new-niveau" class="select-new-niveau" data-placeholder="Nivel de usuario...">
                             <option value=""></option>
-                            <option value="0">Visitor</option>
+                            <option value="0">Visitante</option>
                             <option value="10">Archivista</option>
             <?php if ($_SESSION["niveau"] >= 30) { ?>
                             <option value="20">Administrador</option>

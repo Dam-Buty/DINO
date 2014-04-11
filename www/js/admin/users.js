@@ -87,7 +87,7 @@ var refresh_users = function() {
                                 .append(
                                     $("<option></option>")
                                     .attr("value", 0)
-                                    .text("Visitor")
+                                    .text("Visitante")
                                 )
                                 .append(
                                     $("<option></option>")
@@ -105,7 +105,7 @@ var refresh_users = function() {
                     }
                           
                      if (user.niveau >= 0 && user.niveau < 10) {
-                        niveau = "Visitor";
+                        niveau = "Visitante";
                      } else if (user.niveau >= 10 && user.niveau < 20) {
                         niveau = "Archivista";
                      } else if (user.niveau >= 20 && user.niveau < 30) {
@@ -332,7 +332,7 @@ var reset_tips = function() {
     $("#tip-niveau").html(
         "El nivel de usuario determine las acciones disponibles para el usuario :<br/>" + 
             "<ul>" +
-                "<li>Un <b>Visitor</b> solo puede <b>consultar</b> documentos.</li>" +
+                "<li>Un <b>Visitante</b> solo puede <b>consultar</b> documentos.</li>" +
                 "<li>Un <b>Archivista</b> puede <b>consultar</b> y <b>cargar</b> documentos.</li>" +
                 "<li>Un <b>Administrator</b> puede <b>consultar</b> y <b>cargar</b> documentos, <b>crear usuarios</b> y <b>administrar</b> los datos documentales.</li>" +
             "</ul>"

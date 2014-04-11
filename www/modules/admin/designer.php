@@ -47,7 +47,7 @@ session_start();
             <p>
                 Este documento es visible a partir del nivel :<br/>
                 <select id="designer-type-niveau" class="select-new-niveau" data-placeholder="Nivel de usuario...">
-                    <option value="0">Visitor</option>
+                    <option value="0">Visitante</option>
                     <option value="10">Archivista</option>
     <?php if ($_SESSION["niveau"] >= 20) { ?>
                     <option value="20">Administrador</option>
@@ -74,7 +74,7 @@ session_start();
             <h3>Seguridad</h3>
             <p>Esta categoria es visible a partir del nivel :
                 <select id="designer-categorie-niveau" class="select-new-niveau" data-placeholder="Nivel de usuario...">
-                    <option value="0">Visitor</option>
+                    <option value="0">Visitante</option>
                     <option value="10">Archivista</option>
     <?php if ($_SESSION["niveau"] >= 20) { ?>
                     <option value="20">Administrador</option>
