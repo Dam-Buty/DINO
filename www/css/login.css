@@ -1,16 +1,16 @@
 
 body {
-    background-color: #8ecb32;
-    font-family: 'Oswald', sans-serif;
+    background-color: #F3F0EB;
+    font-family: 'Arial', sans-serif;
     padding-top: 50px;
     
     color: white;
 }
 
 .login-box {
-    background-color: #99c951;
+    background-color: #8ecb32 !important;
     
-    box-shadow: 0 0 5px 5px #5b8020;
+    box-shadow: 0 0 5px 5px #5b8020 !important;
     
     padding: 30px;
 }
@@ -55,28 +55,18 @@ body {
     border: none;
 }
 
-#container-loading {
-    display: none;
-    
-    background-image: url(../img/dino_title_400.png);
-    background-position: 30px 30px;
-    
-    width: 460px;
-    height: 207px;
-    
-    margin: auto;
-    
-    background-repeat: no-repeat;
-    
-    box-sizing: border-box;
-}
-
-#container-loading img {
-    margin-top: 41px;
-    margin-left: 42px;
-}
-
 .phrase-login {
     text-align: center;
     padding-top: 20px;
+}
+
+#container-activated {
+    background-color: #FFDF8C;
+    text-align: center;
+    font-style: italic;
+    font-size: 0.9em;
+    color: black;
+    padding: 5px;
+    border-radius: 3px;
+    color: #727272;
 }

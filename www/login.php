@@ -10,6 +10,7 @@
 <link href='css/Oswald-Bold.ttf' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/login.css" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/inputs.css" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/util.css" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/zebra_dialog_custom.css?v=7" media="screen" type="text/css"/>
 <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 
@@ -17,9 +18,17 @@
 
 <body>
 
-<div id="container-login" class="login-box">
+<div id="container-login" class="login-box dialog-box">
 <form name="form-login" id="form-login">
-    <img src="img/dino_title_400.png"/>
+    <img src="img/dino_title_270.png"/>
+    <?php
+    if (isset($_GET["activated"])) {
+    
+    ?>
+    <div id="container-activated">Tu cuenta esta activada.</div>
+    <?php
+    }
+    ?>
     <div class="champ-login">
         <input type="text" name="login" id="login" placeholder="Nombre de usuario"/>
     </div>
@@ -28,7 +37,8 @@
     </div>
     <input type="submit" value="Ingresar"/>
     <div class="phrase-login">
-        Todavia no tienes tu cuenta GRATIS DINO? <a href="signup.php">Inscribete aqui!</a>
+        No tienes tu <b>DINO</b>?<br/>
+        <a href="signup.php">Tu cuenta es gratuita</a>
     </div>
 </form>
 </div>

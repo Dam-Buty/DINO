@@ -10,7 +10,7 @@ var Mentorial = function(Scenarios, options) {
         exit_on_opaque: true,
         exit_callback: function() {},
         z_opaque: 700,
-        z_highlight: 701,
+        z_highlight: 702,
         css_border: "2px solid #DB7F1A",
         
         // Données persistentes entre les étapes

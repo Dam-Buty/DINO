@@ -4,6 +4,7 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
     description: "Es un muy bueno tutorial!",
     stages: [{////////////////////// 0
         stage_css: {
+            top: "20%",
             width: "50%",
             left: "25%",
         },
@@ -37,9 +38,9 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
         }]
     }, {////////////////////// 1
         stage_css: {
-            left: "0",
+            right: "0",
             width: "40%",
-            top: "30%"
+            bottom: "0"
         },
         raises_flag: true,
         animations: [{
@@ -47,6 +48,15 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             selector: "#container-templates",
             force: true,
             delay: 400
+        }, {
+            type: "tooltip",
+            selector: '#list_templates_chosen',
+            options: {
+                content: 'Elige un mundo pre-dise&ntilde;ado',
+                autoClose: false,
+                position: "top-right",
+                contentAsHTML: true
+            }
         }]
     }, {////////////////////// 2
         stage_css: {
@@ -64,6 +74,15 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             type: "highlight",
             selector: "#bouton-save-monde",
             force: true
+        }, {
+            type: "tooltip",
+            selector: '#bouton-save-monde',
+            options: {
+                content: 'Guarda tu mundo',
+                autoClose: false,
+                position: "bottom",
+                contentAsHTML: true
+            }
         }],
         substitutions: function() {
             return {
@@ -442,8 +461,8 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
     description: "Es un muy bueno tutorial!",
     stages: [{ ////////////////////// 0
         stage_css: {
-            width: "40%",
-            left: "25%",
+            width: "60%",
+            left: "20%",
             top: "20%"
         },
         animations: [{

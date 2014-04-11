@@ -4,7 +4,7 @@ html, body {
     padding: 0;
     
     overflow-x: hidden;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Arial', sans-serif;
 }
 
 /*#####################################
@@ -716,6 +716,7 @@ html, body {
     background-image: url(../img/client_20.png);
     cursor: pointer;
     color: white;
+    text-transform: capitalize;
 }
 
 #liste li[data-type="champ"] span {
@@ -1643,4 +1644,34 @@ ul.ui-autocomplete {
 
 .with-tip:hover {
     background-color: #FFEAB3;
+}
+
+/* PAGE DE WELCOME */
+
+/* Il s'agit du fond invisible quand une adresse mail n'est pas validée'*/
+#no-touchy-feely {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5000;
+}
+
+#container-KO {
+    display: none;
+    
+    position: absolute;
+    top: 30%;
+    width: 50%;
+    left: 25%;
+}
+
+#popup-welcome {
+    display: none;
+    
+    position: absolute;
+    top: 30%;
+    width: 50%;
+    left: 25%;
 }

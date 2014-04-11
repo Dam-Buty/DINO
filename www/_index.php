@@ -17,6 +17,7 @@ if (isset($_SESSION)) {
 <link rel="stylesheet" href="css/global.css?v=7" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/arrows.css?v=7" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/tuto.css?v=7" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/util.css?v=7" media="screen" type="text/css"/>
 
 <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
 
