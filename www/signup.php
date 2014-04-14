@@ -17,6 +17,10 @@
 
 <body>
 
+<div id="container-loading" class="dialog-box">
+    <img src="img/big_loader.gif"/>
+</div>
+
 <div id="container-signup" class="dialog-box">
     <div id="container-tips">
         <h1>Bienvenido a DINO</h1>

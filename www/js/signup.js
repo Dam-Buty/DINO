@@ -73,6 +73,9 @@ var save_page = function() {
             break;    
     };
     
+    $("#container-signup").hide();
+    $("#container-loading").show();
+    
     $.ajax({
         url: "do/doSignup.php",
         type: "POST",
