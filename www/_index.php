@@ -263,13 +263,30 @@ if ($_SESSION["niveau"] >= 20) {
     var profil = undefined;
 </script>
 
+<?php
+    $sub = array_shift(explode(".",$_SERVER['HTTP_HOST']));
+    $ga = "";
+    
+    switch($sub) {
+        case "baby":
+            $ga = "UA-46251879-2";
+            break;
+        case "my":
+            $ga = "UA-46251879-3";
+            break;
+        case "bym":
+            $ga = "UA-49915836-1";
+            break;
+    }
+?>
+
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
   m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-46251879-3', 'dino.mx');
+  ga('create', '<?php echo $ga; ?>', 'dino.mx');
   ga('send', 'pageview');
 
 </script>
