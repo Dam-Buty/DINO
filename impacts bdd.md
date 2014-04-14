@@ -9,7 +9,7 @@ UPDATE `user_tuto`
 SET
 	`fk_tuto` = `fk_tuto` + 1
 WHERE
-	`fk_tuto` != 0
+	`fk_tuto` != 0 
 ORDER BY `fk_tuto` DESC;
 UPDATE `tuto`
 SET
