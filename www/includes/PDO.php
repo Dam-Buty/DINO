@@ -7,15 +7,13 @@ function dino_query($query_name, $params = [], $substitutions = []) {
 #    $password = "G00D_2-e4t-1000_yrz!"; 
 #header("Content-Type: text/html; charset=UTF-8");
 
-    global $queries;
-
     $hostname = "localhost";
     $username = "root";
     $dbname = "dino";
     $password = "C4dillac5";
     
-#    echo $query;
-#    var_dump($params);
+    echo $query;
+    var_dump($params);
 
 #    echo "<br/>======<br/>" . $query . "<br/><br/>";
 #    var_dump($params);

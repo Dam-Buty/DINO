@@ -21,6 +21,8 @@ function dino_log($params) {
     ];
     
     switch($params["niveau"]) {
+        case "D": array_push($tableau_log, $params["message"]);
+            break;
         case "I":
             array_push($tableau_log, $params["query"]);
             array_push($tableau_log, $params["message"]);
@@ -59,5 +61,12 @@ function dino_log($params) {
     $path = "../log/" . date("Y-m-d") . "_" . $client . ".csv";
     
     file_put_contents($path, $ligne_log, FILE_APPEND);
+}
+
+function debug($message) {
+    dino_log([
+        "niveau" => "D",
+        "message" => $message
+    ]);
 }
 ?>
