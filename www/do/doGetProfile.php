@@ -135,9 +135,6 @@ function gestion_tutos($niveau) {
 function gestion_documentation($niveau) {
     $documentations = [ ];
     
-    $query_documentations = "
-    ";
-    
     $result_documentations = dino_query("profil_documentations",[
         "niveau" => $niveau
     ]);
@@ -157,6 +154,56 @@ function gestion_documentation($niveau) {
         status(500);
     }
 }
+
+function gestion_tokens() {
+    $tokens = [ ];
+    
+    $result_tokens = dino_query("profil_tokens",[
+        "client" => $_SESSION["client"]
+    ]);
+    
+    if ($result_tokens["status"]) {
+        foreach($result_tokens["result"] as $row_token) {
+            $expired = $row_token["expired"];
+            
+            // Selon le produit
+            switch($row_token["fk_produit"]) {
+                case 1: // USERS
+                    if (!$expired) {
+                        
+                    } else {
+                        if ($row_token["cible_token"] != 0) {
+                            // expire le user concerné puis son token
+                        }
+                    }
+                    break;
+                case 2: // Visitors
+                    if (!$expired) {
+                        $profil["visitor"] = 1;
+                    }
+                    break;
+                case 3: // Espace
+                    if (!$expired) {
+                        $profil["espace"] += $row_token["quantite_token"];
+                    }
+                    break;
+                case 4: // Monde
+                    if (!$expired) {
+                        
+                    } else {
+                        if ($row_token["cible_token"] != 0) {
+                            // expire le monde concerné puis son token
+                        }
+                    }
+                    break;
+            };
+        } // FIN WHILE TUTOS
+        return $tokens;
+        
+    } else {
+        status(500);
+    }
+}
   
 
 if (isset($_SESSION["user"])) {
@@ -170,6 +217,8 @@ if (isset($_SESSION["user"])) {
         "public" => 0,
         "client" => 0,
         "convert" => 0,
+        "espace" => 0,
+        "visitor" => 0,
         "tutos" => [],
         "documentations" => [],
         "mondes" => []
