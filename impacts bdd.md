@@ -1,4 +1,33 @@
 
+ILLUMINATI
+==========
+
+combo:
++ + pk_combo
++ + label_combo
+
+produit:
++ + pk_produit
++ + label_produit
+
+token:
++ + pk_token
++ + quantite_token
++ + expire_token
++ + expired_token
++ + cible_token
++ + fk_produit
++ + fk_combo
++ + fk_client
+
+monde:
++ + fk_token
++ + expired_monde
+
+user:
++ + fk_token
++ + expired_user
+
 TEMPLAR
 =======
 

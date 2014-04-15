@@ -53,7 +53,50 @@ if ($result_client["status"]) {
             "clef" => $activation_user
         ], true);
         
-        status(200);
+        // Création des tokens du compte Starter  
+        $err = false;
+        
+        // 1 - User      
+        if (!dino_query("token_insert", [
+            "client" => $idclient,
+            "produit" => 1,
+            "combo" => 0,
+            "quantite" => 1,
+            "expire" => "3014-01-01"
+        ])) { $err = true; }
+        
+        // 3 - Espace 
+        if (!dino_query("token_insert", [
+            "client" => $idclient,
+            "produit" => 3,
+            "combo" => 0,
+            "quantite" => 2000,
+            "expire" => "3014-01-01"
+        ])) { $err = true; }
+        
+        // 4 - Mondes 
+        if (!dino_query("token_insert", [
+            "client" => $idclient,
+            "produit" => 4,
+            "combo" => 0,
+            "quantite" => 1,
+            "expire" => "3014-01-01"
+        ])) { $err = true; }
+        
+        if (!dino_query("token_insert", [
+            "client" => $idclient,
+            "produit" => 4,
+            "combo" => 0,
+            "quantite" => 1,
+            "expire" => "3014-01-01"
+        ])) { $err = true; }
+        
+        if ($err) {
+            status(500);
+        } else {
+            status(200);
+        }
+        
         echo $idclient;
     } else {
         status(500);
