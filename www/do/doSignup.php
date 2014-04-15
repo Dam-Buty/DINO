@@ -7,6 +7,8 @@ include("../includes/crypt.php");
 include("../includes/mail.php");
 include("../includes/status.php");
 
+debug("test");
+
 // Génération et cryptage de la clef de sécurité avec le login, le mdp et le mail_client
 
 $clef_user = custom_hash($_POST["login"] . $_POST["pass"] . $_POST["mail"]);
@@ -38,13 +40,20 @@ if ($result_client["status"]) {
         "activation" => $activation_user
     ]);
     
+    debug(var_export($result_user, true));
+    
     if ($result_user["status"]) {
+        debug("bite");
         chdir("../cache/"); // TODO : plutôt le faire à l'activation :)
         mkdir($idclient);
         chdir($idclient);
         mkdir("temp");
         
+        debug("cul");
+        
         $mail = "signup";
+        
+        debug("baaaa");
         
         dinomail($_POST["mail"], $mail, [], [
             "user" => $_POST["login"],
@@ -53,43 +62,53 @@ if ($result_client["status"]) {
             "clef" => $activation_user
         ], true);
         
+        debug("bouuuh");
+        
         // Création des tokens du compte Starter  
         $err = false;
         
-        // 1 - User      
-        if (!dino_query("token_insert", [
+        // 1 - User             
+        $result = dino_query("token_insert", [
             "client" => $idclient,
             "produit" => 1,
             "combo" => 0,
             "quantite" => 1,
             "expire" => "3014-01-01"
-        ])) { $err = true; }
+        ]);
+        
+        if (!$result["status"]) { $err = true; }
         
         // 3 - Espace 
-        if (!dino_query("token_insert", [
+        $result = dino_query("token_insert", [
             "client" => $idclient,
             "produit" => 3,
             "combo" => 0,
             "quantite" => 2000,
             "expire" => "3014-01-01"
-        ])) { $err = true; }
+        ]);
+        
+        if (!$result["status"]) { $err = true; }
         
         // 4 - Mondes 
-        if (!dino_query("token_insert", [
+        $result = dino_query("token_insert", [
             "client" => $idclient,
             "produit" => 4,
             "combo" => 0,
             "quantite" => 1,
             "expire" => "3014-01-01"
-        ])) { $err = true; }
+        ]);
         
-        if (!dino_query("token_insert", [
+        if (!$result["status"]) { $err = true; }
+        
+        $result = dino_query("token_insert", [
             "client" => $idclient,
             "produit" => 4,
             "combo" => 0,
             "quantite" => 1,
             "expire" => "3014-01-01"
-        ])) { $err = true; }
+        ]);
+        
+        if (!$result["status"]) { $err = true; }
         
         if ($err) {
             status(500);
