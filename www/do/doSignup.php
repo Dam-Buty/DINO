@@ -7,8 +7,6 @@ include("../includes/crypt.php");
 include("../includes/mail.php");
 include("../includes/status.php");
 
-debug("test");
-
 // Génération et cryptage de la clef de sécurité avec le login, le mdp et le mail_client
 
 $clef_user = custom_hash($_POST["login"] . $_POST["pass"] . $_POST["mail"]);
@@ -40,20 +38,14 @@ if ($result_client["status"]) {
         "activation" => $activation_user
     ]);
     
-    debug(var_export($result_user, true));
-    
     if ($result_user["status"]) {
-        debug("bite");
         chdir("../cache/"); // TODO : plutôt le faire à l'activation :)
         mkdir($idclient);
         chdir($idclient);
         mkdir("temp");
-        
-        debug("cul");
+        chdir("..");
         
         $mail = "signup";
-        
-        debug("baaaa");
         
         dinomail($_POST["mail"], $mail, [], [
             "user" => $_POST["login"],
@@ -61,8 +53,6 @@ if ($result_client["status"]) {
             "mail" => urlencode($_POST["mail"]),
             "clef" => $activation_user
         ], true);
-        
-        debug("bouuuh");
         
         // Création des tokens du compte Starter  
         $err = false;

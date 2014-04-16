@@ -2,6 +2,9 @@
 session_start();
 ?>
 <!--LOCALISATION-->
+<div id="sell_designer" class="admin">
+    
+</div>
 <div id="designer" class="admin">
     <div class="boutons save-monde-KO" id="bouton-save-monde">Guardar</div>
     <div class="boutons" id="bouton-clear-monde">Borrar todo</div>
