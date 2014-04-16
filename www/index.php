@@ -2,7 +2,11 @@
 session_start();
 
 if (isset($_SESSION["user"])) {
-    include("_index.php");
+    if ($_SESSION["niveau"] == 999) {
+        include("_superadmin.php");
+    } else {
+        include("_index.php");
+    }
 } else {
     include("login.php");
 }

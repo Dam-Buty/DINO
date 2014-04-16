@@ -11,9 +11,6 @@ function dino_query($query_name, $params = [], $substitutions = []) {
     $username = "root";
     $dbname = "dino";
     $password = "C4dillac5";
-    
-    echo $query;
-    var_dump($params);
 
 #    echo "<br/>======<br/>" . $query . "<br/><br/>";
 #    var_dump($params);

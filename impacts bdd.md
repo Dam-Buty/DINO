@@ -19,6 +19,8 @@ token:
 + + fk_produit
 + + fk_combo
 + + fk_client
++ + cadeau_token
++ + date_token
 
 monde:
 + + fk_token
