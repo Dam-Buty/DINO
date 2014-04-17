@@ -36,9 +36,50 @@ header {
     margin-bottom: 10px;
 }
 
+table {
+    width: 80%;
+}
+
+thead tr th {
+    border-bottom: 2px solid black;
+}
+
+.cell-int {
+    text-align: right;
+}
+
+.delete {
+    color: red;
+    cursor: pointer;
+}
+
+.unused {
+    background-color: #B2B2B2;
+}
+
+article ul li {
+    cursor: pointer;
+}
+
+article span {
+    cursor: pointer;
+}
+
 /* ///////////////////////
   //////////TOKENS       */
 
 #container-cadeau {
     display: none;
+}
+
+#list-tokens-client td[colspan] {
+    font-weight: bold;
+}
+
+.entete-cadeau {
+    background-color: #D8FF84;
+}
+
+.entete-expired {
+    background-color: #8CD692;
 }

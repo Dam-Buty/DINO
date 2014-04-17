@@ -39,18 +39,28 @@ if ($_SESSION["niveau"] == 999) {
         <p>1 - Un client chanceux : <span id="tag-client-tokens"></span></p>
         <div id="container-client-tokens">
             <input type="test" id="search-tokens" placeholder="Search..."/>
-            <ul id="list-clients-tokens" class="list-client"></ul>
+            <ul id="list-clients-tokens" class="list-clients"></ul>
         </div>
         <div id="container-cadeau">
-            <p>2 - Les cadeaux d'avant :</p>
-            <ul id="list-tokens-client"></ul>
+            <p>2 - Les cadeaux et les emplettes :</p>
+            <table id="list-tokens-client">
+                <thead>
+                    <th>Date</th>
+                    <th>Combo</th>
+                    <th>Produit</th>
+                    <th>Qte</th>
+                    <th>Expiration</th>
+                    <th>X</th>
+                </thead>
+                <tbody></tbody>
+            </table>
             <p>3 - Le cadeau d'aujourd'hui</p>
-            <p><select id="list-produits-tokens"></select></p>
+            <p><select id="list-produits-tokens" class="list-produits"></select></p>
             <p>
                 <label>Quantité : <input type="text" id="qte-cadeau"/></label><br/>
                 <label>Mois : <input type="text" id="duree-cadeau"/></label><br/>
             </p>
-            <p><input type="submit" value="Fais peter"/></p>
+            <p><input type="submit" value="Fais peter" id="submit-token"/></p>
         </div>
     </article>
     <article id="container-messages">
@@ -61,15 +71,18 @@ if ($_SESSION["niveau"] == 999) {
     </article>
     <article id="container-activate">
         <header>A la mano</header>
-        <input type="test" id="search-tokens" placeholder="Search..."/>
-        <ul id="list-users-tokens" class="list-users"></ul>
-        <p><input type="submit" value="Debugge le client"/></p>
+        <input type="test" id="search-activate" placeholder="Search..."/>
+        <ul id="list-users-activate"></ul>
     </article>
     <article id="container-moulinette">
         <header>Benny est un faignant</header>
-        <textarea id="csv" rows="10" cols="80"></textarea>
+        <p>1 - Un client chanceux : <span id="tag-client-moulinette"></span></p>
+        <ul id="list-clients-moulinette" class="list-clients"></ul>
+        <p>2 - Des trucs à mouliner</p>
+        <textarea id="moulinage" rows="10" cols="80"></textarea>
+        <p><label>MDP Gestionnaire : <input type="text" id="pass-moulinette"/></label></p>
         <p>Format : <b>Username</b>;<b>Mail</b>;<b>Monde</b>,<b>Monde</b>,...</p>
-        <p><input type="submit" value="Mouline mouline"/></p>
+        <p><input type="submit" value="Mouline mouline" id="submit-moulinette"/></p>
     </article>
 </section>
 
