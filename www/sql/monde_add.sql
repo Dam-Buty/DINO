@@ -1,11 +1,9 @@
 # Sauvegarde de monde : ajout du monde
 INSERT INTO `monde` (
     `label_monde`,
-    `fk_client`,
-    `fk_token`
+    `fk_client`
 ) VALUES (
     :label,
-    :client,
-    :token
+    :client
 )
 ;

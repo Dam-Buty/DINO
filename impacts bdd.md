@@ -2,6 +2,11 @@
 ILLUMINATI
 ==========
 
+message:
++ + pk_message
++ + titre_message (30)
++ + html_message
+
 combo:
 + + pk_combo
 + + label_combo

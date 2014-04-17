@@ -61,7 +61,7 @@ if ($result_client["status"]) {
         $result = dino_query("token_insert", [
             "client" => $idclient,
             "produit" => 1,
-            "combo" => 0,
+            "combo" => 1,
             "quantite" => 1,
             "expire" => "3014-01-01"
         ]);
@@ -72,7 +72,7 @@ if ($result_client["status"]) {
         $result = dino_query("token_insert", [
             "client" => $idclient,
             "produit" => 3,
-            "combo" => 0,
+            "combo" => 1,
             "quantite" => 2000,
             "expire" => "3014-01-01"
         ]);
@@ -83,7 +83,7 @@ if ($result_client["status"]) {
         $result = dino_query("token_insert", [
             "client" => $idclient,
             "produit" => 4,
-            "combo" => 0,
+            "combo" => 1,
             "quantite" => 1,
             "expire" => "3014-01-01"
         ]);
@@ -93,7 +93,7 @@ if ($result_client["status"]) {
         $result = dino_query("token_insert", [
             "client" => $idclient,
             "produit" => 4,
-            "combo" => 0,
+            "combo" => 1,
             "quantite" => 1,
             "expire" => "3014-01-01"
         ]);

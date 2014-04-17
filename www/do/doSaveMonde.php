@@ -179,7 +179,7 @@ if ($_SESSION["niveau"] >= 30) {
     if (!isset($_POST["pk"])) {
         // On va chercher un token et on l'affecte
         $query = "monde_add";
-        $params["token"] = $_POST["token"];
+#        $params["token"] = $_POST["token"];
     } else {
         $query = "monde_change";
         $params["pk"] = $_POST["pk"];
