@@ -2,7 +2,7 @@ Hola %user%,
 
 Tienes documentos compartidos en DINO!
 
-Para consultarlos, solo necesitas dar click en http://my.dino.mx/activate.php?key=%clef%&mail=%mail%.
+Para consultarlos, solo necesitas dar click en http://my.dino.mx/activate.php?user=%user%&key=%clef%&mail=%mail%.
 
 Abajo encontraras tus datos de conexion :
 

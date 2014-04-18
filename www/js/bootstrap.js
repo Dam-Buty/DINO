@@ -123,7 +123,7 @@ var bootstrap = function() {
                     }
                 });
                 
-                $("#container-viewer-global").draggable({ handle: "div" }).resizable();
+                $("#container-viewer-global").draggable({ handle: "#poignee-viewer-global" });
         
                 $("#bouton-store").click(archive_document);
                 $("#del-doc-store").click(remove_document_store);

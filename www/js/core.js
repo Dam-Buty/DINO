@@ -304,6 +304,29 @@ var affiche_document = function() {
         download = "";
     }
     
+    $.ajax({
+        url: "do/doCheckPDF.php",
+        type: "POST",
+        data: {
+            filename: filename
+        },
+        statusCode: {
+            200: function(data) {
+                download = "";
+                _affiche_document(filename, display, download);
+            },
+            404: function() {
+                _affiche_document(filename, display, download);
+            },
+            500: function() {
+                popup("Erreur!", "error");
+            }
+        }
+    });
+    
+}
+
+var _affiche_document = function(filename, display, download) {
     $("#viewer-global").attr({
         "data-document": li.attr("data-position"),
         src: "modules/viewer.php?document=" + filename + "&display=" + encodeURIComponent(display) + download
@@ -311,19 +334,10 @@ var affiche_document = function() {
     
     if (download == "") {
         $("#container-viewer-global").fadeIn();
-        
-//        $("#poignee-viewer-global").html(
-//            li.find("span.document").html() + 
-//            '<img id="bouton-close-viewer" src="img/del_20.png">'
-//        );
-        
+                
         $("#opak")
         .fadeIn()
         .unbind().click(cancel_view);
-    }
-    
-    if (Tuto.etape == 7) {
-        Tuto.next();
     }
 };
 

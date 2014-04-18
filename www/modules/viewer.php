@@ -6,6 +6,52 @@ if (isset($_SESSION["user"])) {
     $display = $_GET["display"];
     $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
     
+    $doc_extensions = [
+        "doc",
+        "dot",
+        "odt",
+        "ott",
+        "sxw",
+        "stw",
+        "docx",
+        "dotx",
+        "xls",
+        "xlt",
+        "ods",
+        "ots",
+        "sxc",
+        "stc",
+        "xlsx",
+        "xltx",
+        "csv",
+        "odp",
+        "otp",
+        "sxi",
+        "sti",
+        "pps",
+        "ppt",
+        "ppsx",
+        "pptx"
+    ];
+    
+    $img_extensions =  [
+        "jpg",
+        "png",
+        "gif",
+        "jpeg",
+        "psd",
+        "ai"
+    ];
+    
+    // Si c'est un doc convertible et qu'il a une version PDF
+    // On reroute vers le PDF
+    if (in_array($extension, $doc_extensions)) {
+        if (file_exists("../cache/" . $_SESSION["client"] . "/" . $filename . "-pdf.dino")) {
+            $filename = $filename . "-pdf";
+            $extension = "pdf";
+        }
+    }
+    
     if ($extension == "pdf") {
 #        echo $display;
 #        echo urlencode("../../do/doUnpack.php?document=" . $filename . "&display=" . $display);
@@ -31,15 +77,6 @@ if (isset($_SESSION["user"])) {
     <?php
         $lien = "../do/doUnpack.php?document=" . $filename . "&display=" . $display . "&download";
         
-        $img_extensions =  [
-            "jpg",
-            "png",
-            "gif",
-            "jpeg",
-            "psd",
-            "ai"
-        ];
-
         if (in_array($extension, $img_extensions)) {
             $image = "../do/doUnpack.php?document=" . $filename . "&display=" . $display;
         ?>

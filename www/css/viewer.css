@@ -1,8 +1,8 @@
 
 body {
-    background-color: #DBDBDB;
     text-align: center;
     font-size: 1.1em;
+    margin: 0;
 }
 
 img.nopreview {
@@ -22,4 +22,25 @@ a {
 
 pre {
     border: 1px solid #4b4b4b;
+}
+
+/*#####################################
+#
+#        Scrollbars (webkit only!)
+#
+#######################################*/
+
+::-webkit-scrollbar {
+    width: 7px;
+    background-color: rgba(0,0,0,0);
+}
+
+::-webkit-scrollbar-track {
+    width: 3px;
+    background-color: #d6dcea;
+}   
+
+::-webkit-scrollbar-thumb {
+    width: 5px;
+    background-color: rgba(235, 84, 84, 1);
 }

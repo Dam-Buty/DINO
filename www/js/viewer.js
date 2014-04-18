@@ -40,8 +40,10 @@ resize_img = function() {
         height: y__
     });
     
-    $("#loader").fadeOut();
-    img.animate({
-        opacity: 1
+    
+    $("#loader").fadeOut( function() {
+        img.animate({
+            opacity: 1
+        });
     });
 };

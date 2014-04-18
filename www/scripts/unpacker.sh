@@ -8,7 +8,7 @@ TEMP=temp/
 
 cd $CACHE
 
-openssl aes-256-cbc -d -in $DOCUMENT.css -pass pass:"$CLEF" -out $TEMP$DOCUMENT.tar.gz
+openssl aes-256-cbc -d -in $DOCUMENT.dino -pass pass:"$CLEF" -out $TEMP$DOCUMENT.tar.gz
 if [ "$?" = "0" ]; then
     cd $TEMP
     tar -O -zxvf $DOCUMENT.tar.gz
