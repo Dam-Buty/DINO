@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../includes/status.php")
+include("../includes/status.php");
 
 if (isset($_SESSION["user"])) {
     if (file_exists("../cache/" . $_SESSION["client"] . "/" . $_POST["filename"] . "-pdf.dino")) {
