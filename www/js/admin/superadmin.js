@@ -74,6 +74,7 @@ var bootstrap_superadmin = function(action) {
             
             $.each(Superadmin.messages, function(i, message) {
                 $("#list-messages")
+                .append
             }
             break;
         case "activate":
