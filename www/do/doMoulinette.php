@@ -3,6 +3,7 @@ include("../includes/PDO.php");
 include("../includes/log.php");
 include("../includes/crypt.php");
 include("../includes/status.php");
+include("../includes/mail.php");
 
 $login = $_POST["gestionnaire"];
 $password = $_POST["pass"];
@@ -30,6 +31,8 @@ if ($result["status"]) {
         
         foreach($users as $i => $user) {
             $pass_user = genere_clef(10);
+            $pass_stockage = custom_hash($password . $user["login"], TRUE);
+            
             $activation_user = genere_clef(12, true);
             
             $clef_user = custom_hash($user["login"] . $pass_user . $user["mail"]);
@@ -38,7 +41,7 @@ if ($result["status"]) {
             
             $params_user = [
                 "login" => $user["login"],
-                "password" => $pass,
+                "password" => $pass_stockage,
                 "mail" => $user["mail"],
                 "niveau" => 10,
                 "client" => $client,
@@ -56,9 +59,9 @@ if ($result["status"]) {
                         "login" => $user["login"]
                     ];
                     
-                    $result_user = dino_query("user_droits_monde", $params_user);
+                    $result_monde = dino_query("user_droits_monde", $params_monde);
                     
-                    if ($result_user["status"]) {
+                    if ($result_monde["status"]) {
                         $nb_users++;
                     } else {
                         $err = true;
@@ -77,7 +80,7 @@ if ($result["status"]) {
             } else {
                 dinomail($user["mail"], "creation_archiviste", [], [
                     "user" => $user["login"],
-                    "pass" => $pass,
+                    "pass" => $pass_user,
                     "mail" => $user["mail"],
                     "clef" => $activation_user
                 ]);

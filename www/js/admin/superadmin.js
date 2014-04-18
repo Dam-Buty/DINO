@@ -70,7 +70,11 @@ var bootstrap_superadmin = function(action) {
             });
             break;
         case "messages":
+            $("#list-messages").empty();
             
+            $.each(Superadmin.messages, function(i, message) {
+                $("#list-messages")
+            }
             break;
         case "activate":
             $("#list-users-activate").empty();
