@@ -16,7 +16,7 @@
     <ul id="list-champs"></ul>
     <div id="container-nav">
         <div id="prev-store" class="nav-store"></div>
-        <img id="del-doc-store" src="img/del_back_30.png" title="Borrar documento"/>
+        <img id="del-doc-store" src="img/trash_15.png" title="Borrar documento"/>
         <div id="next-store" class="nav-store"></div>
     </div>
     <div id="nom-doc-store"></div>

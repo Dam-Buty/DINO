@@ -1224,9 +1224,11 @@ html, body {
     position: absolute;
     top: 0;
     left: 48%;
-    width: 4%;
-    
     cursor: pointer;
+}
+
+#del-doc-store:hover {
+    content: url(../img/del_15.png);
 }
 
 #viewer-store {
