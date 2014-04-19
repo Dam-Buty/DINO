@@ -12,7 +12,7 @@ cd $TEMP
 
 # conversion en PDF si format gere par Libre Office et si client convertit
 if [ $CONVERT = "1" ]; then
-    if [ $EXTENSION = 'doc' -o $EXTENSION = 'dot' -o $EXTENSION = 'odt' -o $EXTENSION = 'ott' -o $EXTENSION = 'sxw' -o $EXTENSION = 'stw' -o $EXTENSION = 'dotx' -o $EXTENSION = 'docx' -o $EXTENSION = 'xls' -o $EXTENSION = 'xlt' -o $EXTENSION = 'ods' -o $EXTENSION = 'ots' -o $EXTENSION = 'sxc' -o $EXTENSION = 'stc' -o $EXTENSION = 'xlsx' -o $EXTENSION = 'xltx' -o $EXTENSION = 'odp' -o $EXTENSION = 'otp' -o $EXTENSION = 'sxi' -o $EXTENSION = 'sti' -o $EXTENSION = 'pps' -o $EXTENSION = 'ppt' -o $EXTENSION = 'ppsx' -o $EXTENSION = 'pptx' ]; then
+    if [ $EXTENSION = 'doc' -o $EXTENSION = 'dot' -o $EXTENSION = 'odt' -o $EXTENSION = 'ott' -o $EXTENSION = 'sxw' -o $EXTENSION = 'stw' -o $EXTENSION = 'dotx' -o $EXTENSION = 'docx' -o $EXTENSION = 'odp' -o $EXTENSION = 'otp' -o $EXTENSION = 'sxi' -o $EXTENSION = 'sti' -o $EXTENSION = 'pps' -o $EXTENSION = 'ppt' -o $EXTENSION = 'ppsx' -o $EXTENSION = 'pptx' ]; then
         lowriter --headless --convert-to pdf $DOCUMENT
         
         if [ "$?" = '0' ]; then
