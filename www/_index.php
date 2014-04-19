@@ -196,6 +196,7 @@ if ($_SESSION["niveau"] >= 20) {
 
 <div id="container-viewer-global">
     <div id="poignee-viewer-global">
+        <div id="label-convert">Este documento fue convertido automaticamente en PDF. <a id="lien-original">Descargar el original</a>.</div>
         <img id="bouton-close-viewer" src="img/del_20.png"/>
     </div>
     <iframe id="viewer-global"></iframe>

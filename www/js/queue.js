@@ -188,7 +188,8 @@ var upload = function(list_element, uploader, queue_position) {
                     url: "do/doPack.php",
                     type: "POST",
                     data: {
-                        document: queue[queue_position].filename
+                        document: queue[queue_position].filename,
+                        convert: profil.convert
                     },
                     statusCode: {
                         200: function() {
@@ -250,8 +251,10 @@ var handle_uploads = function() {
     });
 };
 
-var remove_document = function() {
+var remove_document = function(event) {
     var position = $(this).closest("li").attr("data-position");
+    
+    event.stopPropagation();
     
     confirm_remove_document(position);    
 };

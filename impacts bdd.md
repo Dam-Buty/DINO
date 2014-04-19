@@ -5,11 +5,15 @@ BABEL
 Renommer tous les documents en .dino !
 >> pas oublier quand on supprime un doc de supprimer le -pdf!
 sudo find . -name "*.css" -exec rename -v 's/\.css$/\.dino/i' {} \;
+---- OK sur BABY, 
 
 Libre office command line :
 - Java framework pb : créer un dossier nommé var/www/.config/libreoffice et le chowner sur le user apache2
+---- OK sur BABY, MY
 
-
+client:
++ + convert_client
+---- OK sur BABY, MY
 
 TEMPLAR
 =======

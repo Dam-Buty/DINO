@@ -8,6 +8,7 @@ if ($_SESSION["niveau"] >= 10) {
     
     $client = $_SESSION["client"];
     $document = $_POST["document"];
+    $convert = $_POST["convert"];
     $clef = $_SESSION["clef"];
     
     $descriptorspec = array(
@@ -19,7 +20,7 @@ if ($_SESSION["niveau"] >= 10) {
     $cwd = NULL;
     $env = array();
     
-    $commande = "../scripts/packer.sh " . $client . " " . $document . ' "' . $clef . '"';
+    $commande = "../scripts/packer.sh " . $client . " " . $document . ' "' . $clef . '" ' . $convert;
     
     $process = proc_open($commande, $descriptorspec, $pipes, $cwd, $env);
     

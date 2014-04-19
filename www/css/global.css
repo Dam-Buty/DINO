@@ -130,9 +130,7 @@ html, body {
 }
 
 #poignee-viewer-global {
-    width: 30%;
     height: 20px;
-    margin-left: 35%;
     padding-right: 5px;
     
     text-align: center;
@@ -155,6 +153,21 @@ html, body {
 
 #poignee-viewer-global img {
     cursor: pointer;
+}
+
+#poignee-viewer-global.pdfview img {
+    float: right;
+    margin-right: 5px;
+}
+
+#label-convert {
+    display: none;
+    float: left;
+    
+    line-height: 20px;
+    margin-left: 20px;
+    
+    font-size: 0.8em;
 }
 
 #viewer-global {

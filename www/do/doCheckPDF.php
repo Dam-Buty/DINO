@@ -3,10 +3,16 @@ session_start();
 include("../includes/status.php");
 
 if (isset($_SESSION["user"])) {
-    if (file_exists("../cache/" . $_SESSION["client"] . "/" . $_POST["filename"] . "-pdf.dino")) {
-        status(200);
+    $extension = strtolower(pathinfo($_POST["filename"], PATHINFO_EXTENSION));
+    
+    if ($extension == "pdf") {
+        status(201);
     } else {
-        status(404);
+        if (file_exists("../cache/" . $_SESSION["client"] . "/" . $_POST["filename"] . "-pdf.dino")) {
+            status(200);
+        } else {
+            status(404);
+        }
     }
 } else {
     dino_log([

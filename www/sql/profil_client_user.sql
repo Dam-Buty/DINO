@@ -4,6 +4,7 @@ SELECT
     `public_user`, 
     `fk_client`, 
     `printer_client`, 
+    `convert_client`,
     `entreprise_client`, 
     `branded_client` 
 FROM 

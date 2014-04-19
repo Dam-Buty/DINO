@@ -169,6 +169,7 @@ if (isset($_SESSION["user"])) {
         "branded" => 0,
         "public" => 0,
         "client" => 0,
+        "convert" => 0,
         "tutos" => [],
         "documentations" => [],
         "mondes" => []
@@ -198,6 +199,7 @@ if (isset($_SESSION["user"])) {
             $profil["documentations"] = gestion_documentation($profil["niveau"]);
             
             $profil["branded"] = $row["branded_client"];
+            $profil["convert"] = $row["convert_client"];
             $profil["public"] = $row["public_user"];
                
             //////////////////////////

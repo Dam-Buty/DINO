@@ -6,7 +6,7 @@ body {
 }
 
 img.nopreview {
-    width: 50%;
+    margin-top: 50px;
 }
 
 #loader {

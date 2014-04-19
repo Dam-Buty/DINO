@@ -53,8 +53,6 @@ if (isset($_SESSION["user"])) {
     }
     
     if ($extension == "pdf") {
-#        echo $display;
-#        echo urlencode("../../do/doUnpack.php?document=" . $filename . "&display=" . $display);
         header("Location: ../pdfjs/web/viewer.html?file=" . urlencode("../../do/doUnpack.php?document=" . $filename . "&display=" . $display . "&v=1"));
     } else {
     ?>
@@ -89,14 +87,13 @@ if (isset($_SESSION["user"])) {
             if (isset($_GET["download"])) {
                 header("Location: ../do/doUnpack.php?document=" . $filename . "&display=" . $display . "&download");
             } else {
-                $image = "../img/dino_head.png";
+                $image = "../img/download_250.png";
             ?>
                     
                 <a href="<?php echo $lien; ?>">
                     <img class="nopreview" src="<?php echo $image; ?>"/>
                     <p>
-                        No hay previsualisacion por los archivos de tipo <b><?php echo $extension; ?></b>.<br/><br/>
-                        Puedes descargar el archivo <pre><b><?php echo $display; ?></b></pre> dando click en el DINO.
+                        Descargar <b><?php echo $display; ?></b>.
                     </p>
                 </a>
         

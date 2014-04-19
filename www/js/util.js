@@ -12,14 +12,14 @@ var allowed_extensions = {
     "zip": 1,
     "rar": 1,
     "odt": 1,
-}
-
-var pdf_extensions =  {
-    "pdf": 1,
     "ps": 1,
     "eps": 1,
     "epub": 1,
     "mobi": 1
+}
+
+var pdf_extensions =  {
+    "pdf": 1
 };
 
 var img_extensions =  {

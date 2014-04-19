@@ -298,11 +298,18 @@ var affiche_document = function() {
     
     if (extension in img_extensions) {
         download = "";
+        $("#poignee-viewer-global").css({
+            width: "20%",
+            "margin-left": "40%"
+        }).removeClass("pdfview");
     }
     
-    if (extension in pdf_extensions) {
+    var affiche_pdf = function() {
         download = "";
-    }
+        _affiche_document(filename, display, download, extension);
+    };
+    
+    $("#label-convert").hide();
     
     $.ajax({
         url: "do/doCheckPDF.php",
@@ -311,12 +318,18 @@ var affiche_document = function() {
             filename: filename
         },
         statusCode: {
-            200: function(data) {
-                download = "";
-                _affiche_document(filename, display, download);
+            200: function() {
+                $("#label-convert").show();
+                $("#label-convert a").attr("href", "do/doUnpack.php?document=" + filename + "&display=" + display + "&download");
+                $("#poignee-viewer-global").css({
+                    width: "",
+                    "margin-left": ""
+                }).addClass("pdfview");
+                affiche_pdf();
             },
+            201: affiche_pdf,
             404: function() {
-                _affiche_document(filename, display, download);
+                _affiche_document(filename, display, download, extension);
             },
             500: function() {
                 popup("Erreur!", "error");
