@@ -67,7 +67,7 @@ if ($_SESSION["niveau"] == 999) {
         <header>Everyday i'm hustlin'</header>
         <p><select id="list-messages"></select></p>
         <textarea id="message"></textarea>
-        <p><input type="submit" value="Envoie du lourd"/></p>
+        <p><input type="submit" value="Envoie du lourd" id="submit-message"/></p>
     </article>
     <article id="container-activate">
         <header>A la mano</header>
@@ -90,6 +90,7 @@ if ($_SESSION["niveau"] == 999) {
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 
 <script src="vendor/ckeditor/ckeditor.js"></script>
+<script src="vendor/ckeditor/adapters/jquery.js"></script>
 
 <script src="js/admin/superadmin.js?v=7"></script>
 

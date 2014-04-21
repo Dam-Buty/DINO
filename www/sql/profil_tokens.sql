@@ -8,5 +8,6 @@ SELECT
     (`expire_token` < NOW()) as `expired`
 FROM `token`
 WHERE
-    `fk_client` <= :client
+    `fk_client` = :client
     AND `expired_token` = 0
+;

@@ -7,21 +7,23 @@ if ($_SESSION["niveau"] == 999) {
     include("../includes/PDO.php");
     
     $params = [
-        "pk" => $_POST["pk"]
+        "pk" => $_POST["message"],
+        "html" => $_POST["html"]
     ];
     
-    $result = dino_query("superadmin_revoke_token", $params);
+    $result = dino_query("superadmin_update_message", $params);
     
     if ($result["status"]) {
         status(200);
     } else {
         status(500);
     }
+    
 } else {
     dino_log([
         "niveau" => "Z",
-        "query" => "Petit pédé se prend pour un superadmin!"
+        "query" => "Alors petit pédé on se prend pour le superadmin?"
     ]);
-    header("Location: ../index.php");
+    status(403);
 }
 ?>

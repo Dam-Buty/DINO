@@ -67,8 +67,8 @@ if ($_SESSION["niveau"] == 999) {
             
                 foreach($result_messages["result"] as $row_messages) {
                     $messages[$row_messages["pk_message"]] = [
-                        "titre" => $row_messages["pk_titre"],
-                        "message" => $row_messages["texte_message"]
+                        "titre" => $row_messages["titre_message"],
+                        "html" => $row_messages["html_message"]
                     ];
                 }
                 

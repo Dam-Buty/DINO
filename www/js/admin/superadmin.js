@@ -2,7 +2,7 @@
 var Superadmin = {};
 
 $(document).ready(function(){
-    CKEDITOR.replace( 'message' );
+    $("#message").ckeditor();
     
     // Bind
     $("nav li").click(toggle_action);
@@ -11,6 +11,8 @@ $(document).ready(function(){
     $("#search-tokens").keyup(search_tokens);
     $("#submit-token").click(save_token);
     $("#submit-moulinette").click(moulinette);
+    $("#list-messages").change(toggle_message);
+    $("#submit-message").click(submit_message);
     
     // Récupère les listes à l'avance
     $.ajax({
@@ -70,12 +72,20 @@ var bootstrap_superadmin = function(action) {
             });
             break;
         case "messages":
-            $("#list-messages").empty();
+            $("#list-messages").empty().append(
+                $("<option></option>")
+                .attr("value", "")
+            );
             
             $.each(Superadmin.messages, function(i, message) {
                 $("#list-messages")
-                .append
-            }
+                .append(
+                    $("<option></option>")
+                    .attr("value", i)
+                    .text(message.titre)
+                );
+            });
+            
             break;
         case "activate":
             $("#list-users-activate").empty();
@@ -373,6 +383,35 @@ var moulinette = function() {
             },
             500: function() {
                 alert("T'as tout casse!");
+            }
+        }
+    });
+};
+
+var toggle_message = function() {
+    var select = $(this);
+    var message = select.val();
+    
+    $("#message").val(Superadmin.messages[message].html);
+};
+
+var submit_message = function() {
+    var message = $("#list-messages").val();
+    var html = $("#message").val();
+    
+    $.ajax({
+        url: "do/doSaveMessage.php",
+        type: "POST",
+        data: {
+            message: message,
+            html: html
+        },
+        statusCode: {
+            200: function(data) {
+                alert("YEAH");
+            },
+            500: function() {
+                alert("Benny il a tout pété!");
             }
         }
     });
