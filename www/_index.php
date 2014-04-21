@@ -45,13 +45,12 @@ if (isset($_SESSION)) {
 
 <div id="front">
     <div id="laterale-front" class="barre-laterale">
-        <a href="index.php"><h1>DINO</h1></a>
+        <a href="index.php"><h1></h1></a>
         <ul class="menu-lateral" id="menu-front">
     <?php
     if ($_SESSION["niveau"] >= 10) {
         ?>
-            <li id="menu-queue" class="element-menu-front">
-                <h1>CARGAR</h1>
+            <li id="menu-queue" class="element-menu-front" title="Cargar documentos">
             </li>
         <?php
     }
@@ -59,8 +58,7 @@ if (isset($_SESSION)) {
     <?php
     if ($_SESSION["niveau"] >= 20) {
         ?>
-            <li id="menu-admin" class="element-menu-front">
-                <h1>USUARIOS</h1>
+            <li id="menu-admin" class="element-menu-front" title="Administrar usuarios">
             </li>
         <?php
     }
@@ -68,17 +66,12 @@ if (isset($_SESSION)) {
     <?php
     if ($_SESSION["niveau"] >= 30) {
         ?>
-            <li id="menu-designer" class="element-menu-front">
-                <h1>NUEVO MUNDO</h1>
+            <li id="menu-designer" class="element-menu-front" title="Crear un mundo">
             </li>
         <?php
     }
     ?>
         </ul>
-        <div class="container-powered">
-            <i>Powered by</i><br/>
-            <div><a href="http://www.dino.mx" target="_blank">DINO</a></div>
-        </div>
     </div>
 
     <div id="top-front" class="barre-top">
@@ -91,6 +84,23 @@ if (isset($_SESSION)) {
         </div>
     </div>
     
+    <?php
+    if ($_SESSION["niveau"] >= 20) {
+    ?>
+    <div id="container-icones-admin">
+        <img src="img/liste_30.png" id="bouton-admin-liste"/>
+        <?php
+        if ($_SESSION["niveau"] >= 30) {
+        ?>
+        <img src="img/profil_30.png" id="bouton-admin-profil" title="Perfil documental"/>
+        <?php
+        }
+        ?>
+    </div>
+
+    <?php
+    }
+    ?>
 </div>
 
 <?php
@@ -99,23 +109,18 @@ if ($_SESSION["niveau"] >= 20) {
         
 <div id="back">
     <div id="laterale-back" class="barre-laterale">
-        <a href="index.php"><h1>DINO</h1></a>
+        <a href="index.php"><h1></h1></a>
         <ul class="menu-lateral" id="menu-back">
             <li id="menu-retour">
-                <h1>Mis documentos</h1>
             </li>
         </ul>
-        <div class="container-powered">
-            Powered by<br/>
-            <div><a href="http://www.dino.mx" target="_blank">DINO</a></div>
-        </div>
     </div>
     
     <div id="top-back" class="barre-top">
         <ul class="list-mondes" id="mondes-top-back"></ul>
     </div>
     
-    <div id="backoffice"></div>
+    <div id="backoffice" class="principal"></div>
 </div>
 
 <?php
@@ -135,6 +140,9 @@ if ($_SESSION["niveau"] >= 20) {
 
 <div class="barre-bottom">
     <div id="container-notification">DINO esta en fase Beta, si encuentras algun bug o tienes cualquier pregunta, nos puedes contactar <a href="mailto:beta@dino.mx">aqui</a>.</div>
+    <div class="container-powered">
+        <i>Powered by</i> <a href="http://www.dino.mx" target="_blank">DINO</a>
+    </div>
     <img id="logout" src="img/logout_20.png" title="Desconectar">
     <img id="bouton-pass" src="img/pass_20.png" title="Cambiar tu contrasena">
     <img id="bouton-mail" src="img/mail_20.png" title="Cambiar tu correo electronico">
@@ -204,23 +212,6 @@ if ($_SESSION["niveau"] >= 20) {
 
 <div id="container-tuto"></div>
 
-<?php
-if ($_SESSION["niveau"] >= 20) {
-?>
-<div id="container-icones-admin">
-    <img src="img/liste_30.png" id="bouton-admin-liste"/>
-    <?php
-    if ($_SESSION["niveau"] >= 30) {
-    ?>
-    <img src="img/profil_30.png" id="bouton-admin-profil" title="Perfil documental"/>
-    <?php
-    }
-    ?>
-</div>
-
-<?php
-}
-?>
 
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>

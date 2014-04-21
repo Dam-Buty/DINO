@@ -1,7 +1,7 @@
 <?php
 session_start();
 ?>
-<div id="core">
+<div id="core" class="principal">
     <div id="liste">
         
     </div>

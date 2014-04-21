@@ -71,6 +71,7 @@ var bootstrap = function() {
             }).text("");
             
             $(".container-powered").show();
+            $("#container-notification").hide();
         }
         
         if (profil.public == "1") {

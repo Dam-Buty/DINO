@@ -33,36 +33,19 @@ html, body {
 /*::-webkit-resizer  */
 
 
-#core::-webkit-scrollbar {
+.principal::-webkit-scrollbar {
     width: 7px;
     background-color: rgba(0,0,0,0);
 }
 
-#core::-webkit-scrollbar-track {
+.principal::-webkit-scrollbar-track {
     width: 3px;
     background-color: #d6dcea;
-    margin-top: 80px;
-    margin-bottom: 40px;
+    margin-top: 75px;
+    margin-bottom: 35px;
 }   
 
-#core::-webkit-scrollbar-thumb {
-    width: 5px;
-    background-color: rgba(235, 84, 84, 1);
-}
-
-#backoffice::-webkit-scrollbar {
-    width: 7px;
-    background-color: rgba(0,0,0,0);
-}
-
-#backoffice::-webkit-scrollbar-track {
-    width: 3px;
-    background-color: #d6dcea;
-    margin-top: 80px;
-    margin-bottom: 40px;
-}   
-
-#backoffice::-webkit-scrollbar-thumb {
+.principal::-webkit-scrollbar-thumb {
     width: 5px;
     background-color: rgba(235, 84, 84, 1);
 }
@@ -75,15 +58,15 @@ html, body {
     display: none;    
 }
 
-#core {
+.principal {
     position: fixed;
-    left: 10%;
-    width: 90%;
-    height: 98%;
+    width: 100%;
+    height: 100%;
     background-color: #e7e9f0;
     
     padding-top: 75px;
     padding-bottom: 35px;
+    padding-left: 50px;
     
     overflow-y: scroll;
     box-sizing: border-box;
@@ -101,20 +84,6 @@ html, body {
 
 #back {
     display: none;
-}
-
-#backoffice {
-    position: fixed;
-    left: 15%;
-    width: 85%;
-    height: 98%;
-    background-color: #e7e9f0;
-    
-    padding-top: 75px;
-    padding-bottom: 35px;
-    
-    overflow-y: scroll;
-    box-sizing: border-box;
 }
 
 #container-viewer-global {
@@ -253,9 +222,10 @@ html, body {
 }
 
 .barre-laterale>a h1 {
-    background-image: url(../img/dino_100.png);
+    background-image: url(../img/dino_top.png);
     background-repeat: no-repeat;
     background-position: top center;
+    background-size: 100%;
 
     text-align: center;
     text-decoration: none;
@@ -275,40 +245,30 @@ html, body {
 
 #laterale-front {
     background-color: #8ecb32;
-    width: 10%;
+    width: 50px;
 }
 
 #laterale-back {
     background-color: #514985;
-    width: 15%;
+    width: 50px;
 }
 
 .container-powered {
     display: none;
+    float: left;
     
-    position: absolute;
-    bottom: 10px;
+    background-image: url(../img/dino_20.png);
+    background-position: 5px 50%;
+    background-repeat: no-repeat;
+    
+    padding-left: 30px;
+    line-height: 31px;
+    
+    vertical-align: middle;
     
     font-size: 0.9em;
     text-transform: uppercase;
-    text-align: center;
-    color: #FFF;
-    
-    width: 100%;
-}
-
-.container-powered div {
-    background-image: url(../img/dino_20.png);
-    background-position: 1px 1px;
-    background-repeat: no-repeat;
-    
-    height: 22px;
-        
-    padding-left: 25px;
-    padding-right: 25px;
-    padding-top: 5px;
-    
-    font-weight: bold;
+    color: black;
 }
 
 /*###########################
@@ -335,8 +295,7 @@ html, body {
 #############################*/
 
 .element-menu-front {
-    padding-top: 75px;
-    padding-bottom: 7px;
+    padding-top: 35px;
     background-color: #83bc2f;
     text-align: center;
     border-top: 1px dotted #558011;
@@ -359,15 +318,15 @@ html, body {
 }
 
 #menu-queue {
-    background-image: url(../img/upload_100.png);
+    background-image: url(../img/upload_50.png);
 }
 
 #menu-admin {
-    background-image: url(../img/users_100.png);
+    background-image: url(../img/users_50.png);
 }
 
 #menu-designer {
-    background-image: url(../img/designer_100.png);
+    background-image: url(../img/designer_50.png);
 }
 
 .inactive {
@@ -391,16 +350,8 @@ html, body {
     border-bottom: 1px solid #a9a9a9;
     
     z-index: 100;
-}
-
-#top-front {
-    left: 10%;
-    width: 90%;
-}
-
-#top-back {
-    left: 15%;
-    width: 85%;
+    width: 100%;
+    padding-left: 50px;
 }
 
 .busquedor {
@@ -545,15 +496,14 @@ html, body {
 .barre-bottom {
     position: fixed;
     bottom: 0;
-    left: 10%;
-    width: 90%;
+    width: 100%;
     height: 30px;
     
     background-color: #d6dcea;
     
     border-top: 1px solid #a9a9a9;
     
-    z-index: 100;
+    z-index: 103;
 }
 
 #container-notification {
@@ -1000,10 +950,10 @@ html, body {
     position: fixed;
     
     height: 70%;
-    width: 25%;
+    width: 0;
     
     top: 77px;
-    left: -18%;
+    left: 36px; /* 50px - padding (5px) * 2 - border (2px) * 2 */
     
     padding: 5px;
     
