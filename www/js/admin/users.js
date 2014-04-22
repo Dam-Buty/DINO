@@ -15,17 +15,6 @@ var bootstrap_users = function() {
     $("#new-mail").focus(tip_mail);
     $("#new-mail").keyup(check_mail).change(check_mail);
     
-    // Selon les tokens disponibles
-    if (profil.tokens.paid.users.length > 0) {
-        $("#nb-paid-users").text(profil.tokens.paid.users.length);
-        $("#tokens-OK").fadeIn();
-    } else {
-        $("#new-niveau").change(buy_users);
-        if (profil.tokens.visitor) {
-            $("#tokens-visitor").fadeIn();
-        }
-    }
-    
     if (profil.tokens.unpaid.users.length > 0) {
         $("#nb-unpaid-users").text(profil.tokens.unpaid.users.length);
         $("#unpaid-users").fadeIn();
@@ -54,8 +43,6 @@ var bootstrap_users = function() {
 
 
 var refresh_users = function() {
-    $("#mondes-top-back").empty();
-    
     $("#new-user")
     .find("input")
         .removeClass()
@@ -78,6 +65,22 @@ var refresh_users = function() {
     $("#toggle-new-user").text("Crear usuario");
     
     reset_tips();
+    
+    // Selon les tokens disponibles
+    if (profil.tokens.paid.users.length > 0) {
+        $("#nb-paid-users").text(profil.tokens.paid.users.length);
+        $("#tokens-OK").fadeIn();
+        $("#tokens-visitor").fadeOut();
+        if (profil.tokens.visitor != 0) {
+            $("#tokens-users-visitors").fadeIn();
+        }
+    } else {
+        $("#new-niveau").change(buy_users);
+        if (profil.tokens.visitor != 0) {
+            $("#tokens-visitor").fadeIn();
+            $("#tokens-OK").fadeOut();
+        }
+    }
     
     // Récupère la liste des users
     $.ajax({
@@ -158,7 +161,8 @@ var refresh_users = function() {
                             .attr({
                                 "data-user": login,
                                 "data-mail": user.mail,
-                                "data-state": "closed"
+                                "data-state": "closed",
+                                "data-token": user.token
                             })
                             .append(
                                 $("<img/>")
@@ -553,8 +557,13 @@ var del_user = function() {
     var click = $(this);
     var li = click.closest("li");
     var login = li.attr("data-user");
+    var token = li.attr("data-token");
     
     var message = "Estas seguro de querer borrar el usuario <b>" + login + "</b>? <br/>Esta accion es <b>irreversible</b>!";
+    
+    if (token != 0) {
+        message += " <br/> <i>(Te devolvara <b>1</b> credito de <b>Usuario</b>)</i>";
+    }
     
     var title = "Supresion de usuario";
     
@@ -565,12 +574,13 @@ var del_user = function() {
             url: "do/doDelUser.php",
             type: "POST",
             data: {
-                login: login
+                login: login,
+                token: token
             },
             statusCode : {
                 204: function() {
                     popup("El usuario <b>" + login + "</b> fue borrado con exito.", "confirmation");
-                    bootstrap_users();
+                    _profil(bootstrap_users);
                 },
                 403: function() {
                     window.location.replace("index.php");
@@ -649,8 +659,61 @@ var tip_mail = function(field, tip) {
 var save_user = function() {
     var div = $(this);
     var pk = div.attr("data-user");
+    var token = 0, solde = 0;
+    var niveau_source, niveau_cible, niveau;
+    var li;
+    
+    if (pk == "new") {
+        niveau = $("#new-niveau").val();
+        
+        if (profil.tokens.visitor != 0 && niveau == 0) {
+            token = profil.tokens.visitor;
+        } else {
+            token = profil.tokens.paid.users[0];
+            solde = -1;
+        }
+    } else {
+        li = div.closest("li");
+        
+        niveau_source = Core.users[pk].niveau;
+        niveau_cible = li.find(".edit-niveau").val();
+        token = li.attr("data-token");
+        
+        // Consommation de tokens sur édition :
+        // - Si on monte de niveau sur un user qui n'a pas de token
+        //   >> - 1
+        // - Si on baisse à visiteur un user qui a un token et que les visiteurs sont illimités
+        //   >> + 1
+        
+        if (niveau_cible != niveau_source) {
+            if (niveau_cible > niveau_source) {
+                if (token == 0) {
+                    solde = -1;
+                    token = profil.tokens.paid.users[0];
+                }
+            } else {
+                if (niveau_cible == 0) {
+                    if (profil.tokens.visitor != 0 && token != 0) {
+                        solde = 1;
+                    }
+                }
+            }
+        }
+    }
+    
+    if (solde == 0) {
+        _save_user(div, token, solde);
+    } else {
+        popup_transaction(solde, "user", function() {
+            _save_user(div, token, solde);
+        });
+    }
+};
+
+var _save_user = function(div, token, solde) {
+    var pk = div.attr("data-user");
     var message;
-    var login, pass, mail, niveau, mondes, token;
+    var login, pass, mail, niveau, mondes;
     var all_ok, error;
     var div_user, list_user;
     mondes = {};
@@ -665,8 +728,6 @@ var save_user = function() {
         message = "El usuario " + login + " ha sido creado con exito!";
         error = $("#error-new-user");
         liste_user = $("#regles-new-user li[data-monde]");
-        
-        token = profil.tokens.paid.users[0];
     } else {
         div_user = div.parent("div");
         all_ok = true;
@@ -677,7 +738,6 @@ var save_user = function() {
         niveau = div_user.find(".edit-niveau").val();
         message = "El usuario " + login + " ha sido modificado con exito!";
         liste_user = div_user.find("li[data-monde]");
-        token = 0;
     }
     
     // On récupère les champs sélectionnés
@@ -713,13 +773,32 @@ var save_user = function() {
                 niveau: niveau,
                 mondes: mondes,
                 token: token,
+                solde: solde,
                 droits: mondes_droits.join(",")
             },
             statusCode : {
                 200: function() {
+                    var splice_token;
+                    
                     popup(message, "confirmation");
+                    
+                    if (solde != 0) {
+                        // Supprime le token en mémoire
+                        $.each(profil.tokens.paid.users, function(i, _token) {
+                            if (_token == token) {
+                                splice_token = i;
+                                return false;
+                            }
+                        });
+                        
+                        profil.tokens.paid.users.splice(splice_token, 1);
+                    }
+                    
                     toggle_new_user();
-                    refresh_users();
+                    _profil(refresh_users);
+                },
+                402: function() {
+                    popup_buy_users($());
                 },
                 403: function() {
                     window.location.replace("index.php");

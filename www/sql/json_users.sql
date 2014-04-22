@@ -2,7 +2,8 @@
 SELECT 
     `login_user`, 
     `mail_user`, 
-    `niveau_user` 
+    `niveau_user`,
+    `fk_token`
 FROM `user` 
 WHERE 
     `fk_client` = :client

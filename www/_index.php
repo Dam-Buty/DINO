@@ -116,10 +116,6 @@ if ($_SESSION["niveau"] >= 20) {
         </ul>
     </div>
     
-    <div id="top-back" class="barre-top">
-        <ul class="list-mondes" id="mondes-top-back"></ul>
-    </div>
-    
     <div id="backoffice" class="principal"></div>
 </div>
 

@@ -22,7 +22,7 @@ token:
 + + quantite_token
 + + expire_token
 + + expired_token
-+ + cible_token
++ + used_token
 + + fk_produit
 + + fk_combo
 + + fk_client

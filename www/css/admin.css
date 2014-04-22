@@ -899,7 +899,6 @@ ul.designer-categorie {
     height: 70px;
     padding: 10px;
     padding-left: 70px;
-    width: 30%;
     
     box-shadow: 0 0 1px 1px #A9A9A9;
     background-color: #E7E9F0;
@@ -919,6 +918,25 @@ ul.designer-categorie {
     box-sizing: border-box;
 }
 
+.container-tokens {
+    float: left;
+}
+
+#achat-users {
+    float: left;
+    
+    margin-left: 15px;
+    padding: 10px;
+    
+    box-shadow: 0 0 3px 3px #eb911f;
+    
+    cursor: pointer;
+}
+
+#achat-users:hover {
+    box-shadow: 0 0 6px 6px #8ecb32;
+}
+
 #tokens-OK {
     background-image: url(../img/user_add_50.png);
 }
@@ -935,4 +953,8 @@ ul.designer-categorie {
     display: none;
     font-size: 0.9em;
     margin-top: 5px;
+}
+
+#tokens-users-visitors {
+    display: none;
 }

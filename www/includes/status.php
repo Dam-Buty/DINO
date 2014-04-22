@@ -5,6 +5,7 @@ function status($code) {
         201 => "201 CREATED",
         204 => "204 NO CONTENT",
         400 => "400 BAD REQUEST",
+        402 => "402 PAYMENT REQUIRED",
         403 => "403 FORBIDDEN",
         404 => "404 NOT FOUND",
         500 => "500 INTERNAL SERVER ERROR"

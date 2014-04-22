@@ -21,6 +21,7 @@ if ($_SESSION["niveau"] >= 20) {
             $users[$row["login_user"]] = [
                 "mail" => $row["mail_user"],
                 "niveau" => $row["niveau_user"],
+                "token" => $row["fk_token"],
                 "mondes" => []
             ];
             

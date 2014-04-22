@@ -5,7 +5,7 @@ SELECT
     `expire_token`,
     `date_token`,
     `expired_token`,
-    (`cible_token` != 0) AS `used`,
+    `used_token` AS `used`,
     `cadeau_token`,
     `fk_produit`,
     `fk_combo`

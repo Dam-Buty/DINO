@@ -4,7 +4,7 @@ SELECT
     `quantite_token`, 
     `expire_token`,  
     `fk_produit`,
-    `cible_token`,
+    `used_token`,
     (`expire_token` < NOW()) as `expired`,
     `paid_token`
 FROM `token`

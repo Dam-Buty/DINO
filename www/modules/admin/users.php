@@ -6,7 +6,7 @@ session_start();
 <div id="users">
     <div class="container-tokens">
         <div id="tokens-OK" class="dialog-users">
-            <p>Puedes crear <b id="nb-paid-users"/></b> <b>Usuario</b>(s).</p>
+            <p>Puedes crear <b id="nb-paid-users"/></b> <b>Usuario</b>(s)<span id="tokens-users-visitors"><br/><i><b>Visitantes</b> illimitados</i></span>.</p>
         </div>
         <div id="tokens-visitor" class="dialog-users">
             <p>Solo puedes crear usuarios "<b>Visitantes</b>".</p>
@@ -14,6 +14,7 @@ session_start();
         <div id="unpaid-users"><i>(<b id="nb-unpaid-users"></b> en espera de pago...)</i></div>
     </div>
     <div id="achat-users" class="bouton-achat">Comprar mas usuarios</div>
+    <div style="clear: left;"></div>
     <div id="container-new-user">
         <div id="regles-new-user" style="display: none;">
             <div></div>

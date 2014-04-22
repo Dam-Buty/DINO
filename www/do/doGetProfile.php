@@ -190,19 +190,21 @@ function gestion_tokens($niveau) {
             switch($row_token["fk_produit"]) {
                 case 1: //////////////////////// USERS
                     if (!$expired) {
-                        if ($row_token["cible_token"] == 0) {
-                            if ($row_token["paid_token"]) {
-                                // Met le token dans la besace du user
-                                array_push($tokens["paid"]["users"], $row_token["pk_token"]);
-                            } else {
-                                array_push($tokens["unpaid"]["users"], $row_token["pk_token"]);
+                        if ($_SESSION["niveau"] >= 20) {
+                            if ($row_token["used_token"] == 0) {
+                                if ($row_token["paid_token"]) {
+                                    // Met le token dans la besace du user
+                                    array_push($tokens["paid"]["users"], $row_token["pk_token"]);
+                                } else {
+                                    array_push($tokens["unpaid"]["users"], $row_token["pk_token"]);
+                                }
                             }
                         }
                     } else {
-                        if ($row_token["cible_token"] != 0) {
+                        if ($row_token["used_token"] != 0) {
                             // expire le user concerné
                             $params_expire_user = [
-                                "pk" => $row_token["cible_token"]
+                                "pk" => $row_token["pk_token"]
                             ];
                             
                             $result_expire_user = dino_query("expire_user", $params_expire_user);
@@ -217,7 +219,21 @@ function gestion_tokens($niveau) {
                     break;
                 case 2: //////////////////////////// Visitors
                     if (!$expired) {
-                        $tokens["visitor"] = 1;
+                        $tokens["visitor"] = $row_token["pk_token"];
+                    } else {
+                        // Expire les visiteurs
+                        $params_expire_visiteurs = [
+                            "client" => $_SESSION["client"]
+                        ];
+                            
+                        $result_expire_visiteurs = dino_query("expire_visiteurs", $params_expire_visiteurs);
+
+                        if ($result_expire_visiteurs["status"]) {
+                            $tokens["visitor"] = $result_expire_visiteurs["result"] * -1;
+                        } else {
+                            status(500);
+                            $err = true;
+                        }
                     }
                     break;
                 case 3: /////////////////////////////// Espace
@@ -230,7 +246,7 @@ function gestion_tokens($niveau) {
                 case 4: //////////////////////////////////// Monde
                     if (!$expired) {
                         if ($niveau >= 30) {
-                            if ($row_token["cible_token"] == 0) {
+                            if ($row_token["used_token"] == 0) {
                                 if ($row_token["paid_token"]) {
                                     // Met le token dans la besace du user
                                     array_push($tokens["paid"]["mondes"], $row_token["pk_token"]);
@@ -240,10 +256,10 @@ function gestion_tokens($niveau) {
                             }
                         }
                     } else {
-                        if ($row_token["cible_token"] != 0) {
+                        if ($row_token["used_token"] != 0) {
                             // expire le monde concerné
                             $params_expire_monde = [
-                                "pk" => $row_token["cible_token"]
+                                "pk" => $row_token["pk_token"]
                             ];
                             
                             $result_expire_monde = dino_query("expire_monde", $params_expire_monde);
@@ -329,9 +345,7 @@ if (isset($_SESSION["user"])) {
             $profil["convert"] = $row["convert_client"];
             $profil["public"] = $row["public_user"];
             
-            if ($profil["niveau"] >= 20) {
-                $profil["tokens"] = gestion_tokens($profil["niveau"]);
-            }
+            $profil["tokens"] = gestion_tokens($profil["niveau"]);
             
                
             //////////////////////////

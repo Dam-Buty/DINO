@@ -203,3 +203,31 @@ popup_buy_users = function(select) {
         }
     );
 };
+
+popup_transaction = function(sens, type, callback) {
+    var message;
+    
+    switch(type) {
+        case "user":
+            if (sens == -1) {
+                message = "Esta accion te costara <b>1</b> credito de <b>Usuario</b>. Puedes comprar mas <b>Usuarios</b> en el <b>DINO Store</b>.";
+            } else {
+                message = "Esta accion te devolvara <b>1</b> credito de <b>Usuario</b>.";
+            }
+            break;
+    };
+    
+    dialogue = new $.Zebra_Dialog(
+        message, {
+            type: "question",
+            overlay_close: false,
+            'buttons':  [ {
+                caption: 'Confirmar', 
+                callback: callback
+            }, {
+                caption: 'Cancelar', 
+                callback: function() { }
+            } ]
+        }
+    );
+};
