@@ -63,7 +63,8 @@ if ($result_client["status"]) {
             "produit" => 1,
             "combo" => 1,
             "quantite" => 1,
-            "expire" => "3014-01-01"
+            "expire" => "3014-01-01",
+            "paid" => 1
         ]);
         
         if (!$result["status"]) { $err = true; }
@@ -74,7 +75,8 @@ if ($result_client["status"]) {
             "produit" => 3,
             "combo" => 1,
             "quantite" => 2000,
-            "expire" => "3014-01-01"
+            "expire" => "3014-01-01",
+            "paid" => 1
         ]);
         
         if (!$result["status"]) { $err = true; }
@@ -85,7 +87,8 @@ if ($result_client["status"]) {
             "produit" => 4,
             "combo" => 1,
             "quantite" => 1,
-            "expire" => "3014-01-01"
+            "expire" => "3014-01-01",
+            "paid" => 1
         ]);
         
         if (!$result["status"]) { $err = true; }
@@ -95,7 +98,8 @@ if ($result_client["status"]) {
             "produit" => 4,
             "combo" => 1,
             "quantite" => 1,
-            "expire" => "3014-01-01"
+            "expire" => "3014-01-01",
+            "paid" => 1
         ]);
         
         if (!$result["status"]) { $err = true; }

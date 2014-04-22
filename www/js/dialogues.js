@@ -182,3 +182,24 @@ popup_activate = function() {
         }
     );
 };
+
+popup_buy_users = function(select) {
+    dialogue = new $.Zebra_Dialog(
+        "Necesitas creditos para hacer esta operacion. Puedes comprar creditos en el <b>DINO Store</b>.", {
+            type: "question",
+            overlay_close: false,
+            'buttons':  [ {
+                caption: 'Comprar creditos', 
+                callback: function() {
+                    // Envoyer sur le store
+                }
+            }, {
+                caption: 'Cancelar', 
+                callback: function() {
+                    select.val("0");
+                    select.trigger("chosen:updated");
+                }
+            } ]
+        }
+    );
+};

@@ -228,7 +228,7 @@ img.bouton-save-back:hover {
 #container-new-user {
     display: none;
     position: relative;
-    border: 1px solid #838383;
+    border-bottom: 1px solid #838383;
     padding: 10px;
     margin-bottom: 10px;
 }
@@ -882,4 +882,57 @@ ul.designer-champ {
 
 ul.designer-categorie {
     border-left: 2px solid #A1A1A1 !important;
+}
+
+/*#####################################
+#        Gestion des achats
+#######################################*/
+
+
+.dialog-users {
+    display: none;
+    box-sizing: border-box;
+    
+    background-position: 10px 10px;
+    background-repeat: no-repeat;
+    
+    height: 70px;
+    padding: 10px;
+    padding-left: 70px;
+    width: 30%;
+    
+    box-shadow: 0 0 1px 1px #A9A9A9;
+    background-color: #E7E9F0;
+    
+    font-size: 0.9em;
+    
+    cursor: pointer;
+}
+
+.dialog-users:hover, .dialog-users.active {    
+    box-shadow: 0 0 3px 3px #8ECB32;
+}
+
+.dialog-users p {
+    height: 35px;
+    vertical-align: middle;
+    box-sizing: border-box;
+}
+
+#tokens-OK {
+    background-image: url(../img/user_add_50.png);
+}
+
+#tokens-visitor {
+    background-image: url(../img/user_visitor_50.png);
+}
+
+#tokens-none {
+    background-image: url(../img/user_none_50.png);
+}
+
+#unpaid-users {
+    display: none;
+    font-size: 0.9em;
+    margin-top: 5px;
 }

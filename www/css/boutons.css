@@ -30,12 +30,6 @@
     background-color: #514985;
 }
 
-#toggle-new-user {
-    font-size: 0.7em;
-    float: left;
-    width: 20%;
-}
-
 #save-new-user {
     font-size: 0.7em;
     display: none;

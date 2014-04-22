@@ -15,6 +15,7 @@ WHERE
     `fk_client` = :client
 ORDER BY
     `cadeau_token` ASC,
+    `paid_token` ASC,
     `fk_combo` DESC,
     `expired_token` ASC,
     `used` DESC,

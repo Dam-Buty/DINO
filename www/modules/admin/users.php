@@ -4,6 +4,16 @@ session_start();
 <!--LOCALISATION-->
 <h1 id="titre-users">Administracion de los usuarios</h1>
 <div id="users">
+    <div class="container-tokens">
+        <div id="tokens-OK" class="dialog-users">
+            <p>Puedes crear <b id="nb-paid-users"/></b> <b>Usuario</b>(s).</p>
+        </div>
+        <div id="tokens-visitor" class="dialog-users">
+            <p>Solo puedes crear usuarios "<b>Visitantes</b>".</p>
+        </div>
+        <div id="unpaid-users"><i>(<b id="nb-unpaid-users"></b> en espera de pago...)</i></div>
+    </div>
+    <div id="achat-users" class="bouton-achat">Comprar mas usuarios</div>
     <div id="container-new-user">
         <div id="regles-new-user" style="display: none;">
             <div></div>
@@ -43,7 +53,7 @@ session_start();
         </div>
         <div style="clear: both;"></div>
     </div>
-    <div id="toggle-new-user" class="boutons back">Crear usuario</div><div id="save-new-user" class="boutons back" data-user="new">Guardar usuario</div>
+    <div id="save-new-user" class="boutons back" data-user="new">Guardar usuario</div>
     <div style="clear: both;"></div>
     <ul id="liste-users"></ul>
 </div>

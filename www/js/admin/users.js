@@ -15,6 +15,22 @@ var bootstrap_users = function() {
     $("#new-mail").focus(tip_mail);
     $("#new-mail").keyup(check_mail).change(check_mail);
     
+    // Selon les tokens disponibles
+    if (profil.tokens.paid.users.length > 0) {
+        $("#nb-paid-users").text(profil.tokens.paid.users.length);
+        $("#tokens-OK").fadeIn();
+    } else {
+        $("#new-niveau").change(buy_users);
+        if (profil.tokens.visitor) {
+            $("#tokens-visitor").fadeIn();
+        }
+    }
+    
+    if (profil.tokens.unpaid.users.length > 0) {
+        $("#nb-unpaid-users").text(profil.tokens.unpaid.users.length);
+        $("#unpaid-users").fadeIn();
+    }
+    
     // Style le combo
     $("#new-niveau").chosen({
         width: $("#new-login").outerWidth(),
@@ -27,7 +43,8 @@ var bootstrap_users = function() {
     $("#new-niveau").change(kill_tip_niveau);
     $("#new-niveau").change(toggle_niveau);
     
-    $("#toggle-new-user").unbind().click(toggle_new_user);
+    $("#tokens-OK").unbind().click(toggle_new_user);
+    $("#tokens-visitor").unbind().click(toggle_new_user);
     $("#save-new-user").unbind().click(save_user);
     
     Tuto.flag(0);
@@ -571,12 +588,12 @@ var del_user = function() {
 var toggle_new_user = function() {
     if ($("#container-new-user").is(":visible")) {
         $("#container-new-user").slideUp();
-        $("#container-new-user").slideUp();
+        $("#tokens-OK").removeClass("active");
         $("#toggle-new-user").text("Crear usuario"); // LOCALISATION
         $("#save-new-user").fadeOut();
     } else {
         $("#container-new-user").slideDown();
-        
+        $("#tokens-OK").addClass("active");
         // boutons
         $("#toggle-new-user").text("Cancelar creacion");
         if ($("#regles-new-user").is(":visible")) {
@@ -633,7 +650,7 @@ var save_user = function() {
     var div = $(this);
     var pk = div.attr("data-user");
     var message;
-    var login, pass, mail, niveau, mondes;
+    var login, pass, mail, niveau, mondes, token;
     var all_ok, error;
     var div_user, list_user;
     mondes = {};
@@ -649,6 +666,7 @@ var save_user = function() {
         error = $("#error-new-user");
         liste_user = $("#regles-new-user li[data-monde]");
         
+        token = profil.tokens.paid.users[0];
     } else {
         div_user = div.parent("div");
         all_ok = true;
@@ -659,6 +677,7 @@ var save_user = function() {
         niveau = div_user.find(".edit-niveau").val();
         message = "El usuario " + login + " ha sido modificado con exito!";
         liste_user = div_user.find("li[data-monde]");
+        token = 0;
     }
     
     // On récupère les champs sélectionnés
@@ -693,6 +712,7 @@ var save_user = function() {
                 mail: mail,
                 niveau: niveau,
                 mondes: mondes,
+                token: token,
                 droits: mondes_droits.join(",")
             },
             statusCode : {
@@ -714,4 +734,13 @@ var save_user = function() {
         tip_champ(div, error);
     }
     
+};
+
+var buy_users = function() {
+    var select = $(this);
+    var niveau = select.val();
+    
+    if (niveau > 0 && profil.tokens.paid.users.length == 0) {
+        popup_buy_users(select);
+    }
 };

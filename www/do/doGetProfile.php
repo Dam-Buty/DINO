@@ -159,7 +159,14 @@ function gestion_tokens($niveau) {
     $tokens = [
         "espace" => 0,
         "visitor" => 0,
-        "valides" => []
+        "paid" => [
+            "mondes" => [],
+            "users" => []
+        ],
+        "unpaid" => [
+            "mondes" => [],
+            "users" => []
+        ]
     ];
     
     $result_tokens = dino_query("profil_tokens",[
@@ -178,16 +185,18 @@ function gestion_tokens($niveau) {
         foreach($result_tokens["result"] as $row_token) {
             $expired = $row_token["expired"];
             
+            
             // Selon le produit
             switch($row_token["fk_produit"]) {
                 case 1: //////////////////////// USERS
                     if (!$expired) {
                         if ($row_token["cible_token"] == 0) {
-                            // Met le token dans la besace du user
-                            array_push($tokens, [
-                                "pk" => $row_token["pk_token"],
-                                "produit" => $row_token["fk_produit"]
-                            ]);
+                            if ($row_token["paid_token"]) {
+                                // Met le token dans la besace du user
+                                array_push($tokens["paid"]["users"], $row_token["pk_token"]);
+                            } else {
+                                array_push($tokens["unpaid"]["users"], $row_token["pk_token"]);
+                            }
                         }
                     } else {
                         if ($row_token["cible_token"] != 0) {
@@ -222,11 +231,12 @@ function gestion_tokens($niveau) {
                     if (!$expired) {
                         if ($niveau >= 30) {
                             if ($row_token["cible_token"] == 0) {
-                                // Met le token dans la besace du user
-                                array_push($tokens, [
-                                    "pk" => $row_token["pk_token"],
-                                    "produit" => $row_token["fk_produit"]
-                                ]);
+                                if ($row_token["paid_token"]) {
+                                    // Met le token dans la besace du user
+                                    array_push($tokens["paid"]["mondes"], $row_token["pk_token"]);
+                                } else {
+                                    array_push($tokens["unpaid"]["mondes"], $row_token["pk_token"]);
+                                }
                             }
                         }
                     } else {

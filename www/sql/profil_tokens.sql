@@ -5,9 +5,11 @@ SELECT
     `expire_token`,  
     `fk_produit`,
     `cible_token`,
-    (`expire_token` < NOW()) as `expired`
+    (`expire_token` < NOW()) as `expired`,
+    `paid_token`
 FROM `token`
 WHERE
     `fk_client` = :client
     AND `expired_token` = 0
+ORDER BY `paid_token` ASC
 ;

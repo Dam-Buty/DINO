@@ -10,30 +10,55 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
     
     
     if ($_POST["pk"] == "new") {
-        // Génération et cryptage de la clef de sécurité avec le login, le mdp et le mail_client
-        
-        $clef_user = custom_hash($_POST["login"] . $_POST["pass"] . $_POST["mail"]);
-        $clef_stockage = $_SESSION["clef"];
-        $clef_cryptee = crypte($clef_user, $clef_stockage);
-        
-        $password = custom_hash($_POST["pass"] . $_POST["login"], TRUE);
-
-    #    echo "User : " . $clef_user . "<br/>";
-    #    echo "Clef : <pre>" . $clef_stockage . "</pre>";
-    
-        $activation_user = genere_clef(12, true);
-        
-        $query_user = "user_add";     
+        // On vérifie la validité du token
+        if ($_POST["token"] != 0) {
             
-        $params_user = [
-            "login" => $_POST["login"],
-            "password" => $password,
-            "mail" => $_POST["mail"],
-            "niveau" => $_POST["niveau"],
-            "client" => $_SESSION["client"],
-            "activation" => $activation_user,
-            "clef" => $clef_cryptee
-        ];
+            $params_token = [
+                "pk" => $_POST["token"],
+                "produit" => 1
+            ];
+            
+            $result_token = dino_query("token_check", $params_token);
+            
+            if ($result_user["status"]) {
+                if (count($result_user["result"]) > 0) {
+                    // Génération et cryptage de la clef de sécurité avec le login, le mdp et le mail_client
+                    
+                    $clef_user = custom_hash($_POST["login"] . $_POST["pass"] . $_POST["mail"]);
+                    $clef_stockage = $_SESSION["clef"];
+                    $clef_cryptee = crypte($clef_user, $clef_stockage);
+                    
+                    $password = custom_hash($_POST["pass"] . $_POST["login"], TRUE);
+
+                #    echo "User : " . $clef_user . "<br/>";
+                #    echo "Clef : <pre>" . $clef_stockage . "</pre>";
+                
+                    $activation_user = genere_clef(12, true);
+                    
+                    $query_user = "user_add";     
+                        
+                    $params_user = [
+                        "login" => $_POST["login"],
+                        "password" => $password,
+                        "mail" => $_POST["mail"],
+                        "niveau" => $_POST["niveau"],
+                        "client" => $_SESSION["client"],
+                        "activation" => $activation_user,
+                        "token" => $_POST["token"],
+                        "clef" => $clef_cryptee
+                    ];
+                } else {
+                    status(402);
+                    $err = true;
+                }
+            } else {
+                status(500);
+                $err = true;
+            }
+        } else {
+            status(402);
+            $err = true;
+        }
             
     } else {
         $query_user = "user_change";
@@ -44,61 +69,67 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
         ];
     }
     
-    $result_user = dino_query($query_user, $params_user);
-    
-    if ($result_user["status"]) {
-                        
-        $params_del_droits = [
-            "client" => $_SESSION["client"],
-            "login" => $_POST["login"]
-        ];
+    if (!$err) {
+        $result_user = dino_query($query_user, $params_user);
         
-        $result_del_droits = dino_query("user_droits_del_monde", $params_del_droits, [
-            "droits" => $_POST["droits"]
-        ]);
-         
-        if ($result_del_droits["status"]) {
+        if ($result_user["status"]) {
+                            
+            $params_del_droits = [
+                "client" => $_SESSION["client"],
+                "login" => $_POST["login"]
+            ];
             
-            $err = false;
-            
-            foreach($_POST["mondes"] as $monde => $valeurs) {     
-                $params_insert_droits = [
-                    "client" => $_SESSION["client"],
-                    "monde" => $monde,
-                    "login" => $_POST["login"]
-                ];
-                
-                $result_insert_droits = dino_query("user_droits_monde", $params_insert_droits);
+            $result_del_droits = dino_query("user_droits_del_monde", $params_del_droits, [
+                "droits" => $_POST["droits"]
+            ]);
              
-                if ($result_insert_droits["status"]) {                        
-                    $params_del_vc = [
+            if ($result_del_droits["status"]) {
+                
+                $err = false;
+                
+                foreach($_POST["mondes"] as $monde => $valeurs) {     
+                    $params_insert_droits = [
                         "client" => $_SESSION["client"],
                         "monde" => $monde,
-                        "champ" => $valeurs["champ"],
                         "login" => $_POST["login"]
                     ];
                     
-                    $result_del_vc = dino_query("user_droits_del_valeurs", $params_del_vc);
+                    $result_insert_droits = dino_query("user_droits_monde", $params_insert_droits);
                  
-                    if ($result_del_vc["status"]) {
-                        foreach($valeurs["valeurs"] as $i => $valeur) {
-                            $params_insert_vc = [
-                                "client" => $_SESSION["client"],
-                                "monde" => $monde,
-                                "champ" => $valeurs["champ"],
-                                "login" => $_POST["login"],
-                                "valeur" => $valeur
-                            ];
-                            
-                            $result_insert_vc = dino_query("user_droits_add_valeurs", $params_insert_vc);
-                 
-                            if (!$result_insert_vc["status"]) {
-                                status(500);
-                                $err = true;
+                    if ($result_insert_droits["status"]) {                        
+                        $params_del_vc = [
+                            "client" => $_SESSION["client"],
+                            "monde" => $monde,
+                            "champ" => $valeurs["champ"],
+                            "login" => $_POST["login"]
+                        ];
+                        
+                        $result_del_vc = dino_query("user_droits_del_valeurs", $params_del_vc);
+                     
+                        if ($result_del_vc["status"]) {
+                            foreach($valeurs["valeurs"] as $i => $valeur) {
+                                $params_insert_vc = [
+                                    "client" => $_SESSION["client"],
+                                    "monde" => $monde,
+                                    "champ" => $valeurs["champ"],
+                                    "login" => $_POST["login"],
+                                    "valeur" => $valeur
+                                ];
+                                
+                                $result_insert_vc = dino_query("user_droits_add_valeurs", $params_insert_vc);
+                     
+                                if (!$result_insert_vc["status"]) {
+                                    status(500);
+                                    $err = true;
+                                    break;
+                                }
+                            } // FIN FOREACH VALEURS
+                            if ($err) {
                                 break;
                             }
-                        } // FIN FOREACH VALEURS
-                        if ($err) {
+                        } else {
+                            status(500);
+                            $err = true;
                             break;
                         }
                     } else {
@@ -106,42 +137,38 @@ if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau
                         $err = true;
                         break;
                     }
-                } else {
-                    status(500);
-                    $err = true;
-                    break;
-                }
-            } // FIN FOREACH MONDES
-            
-            if (!$err) {
-                if ($_POST["pk"] == "new") {
-                    switch($_POST["niveau"]) {
-                        case "0": 
-                            $mail = "creation_visiteur";
-                            break;
-                        case "10":
-                            $mail = "creation_archiviste";
-                            break;
-                        case "20":
-                            $mail = "creation_admin";
-                            break;
-                    }
+                } // FIN FOREACH MONDES
+                
+                if (!$err) {
+                    if ($_POST["pk"] == "new") {
+                        switch($_POST["niveau"]) {
+                            case "0": 
+                                $mail = "creation_visiteur";
+                                break;
+                            case "10":
+                                $mail = "creation_archiviste";
+                                break;
+                            case "20":
+                                $mail = "creation_admin";
+                                break;
+                        }
 
-                    dinomail($_POST["mail"], $mail, [], [
-                        "user" => $_POST["login"],
-                        "pass" => $_POST["pass"],
-                        "mail" => $_POST["mail"],
-                        "clef" => $activation_user
-                    ]);
+                        dinomail($_POST["mail"], $mail, [], [
+                            "user" => $_POST["login"],
+                            "pass" => $_POST["pass"],
+                            "mail" => $_POST["mail"],
+                            "clef" => $activation_user
+                        ]);
+                    }
                 }
+                        
+                status(200);
+            } else {
+                status(500);
             }
-                    
-            status(200);
         } else {
             status(500);
         }
-    } else {
-        status(500);
     }
 } else {
     dino_log([

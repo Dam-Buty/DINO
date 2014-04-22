@@ -28,6 +28,7 @@ token:
 + + fk_client
 + + cadeau_token
 + + date_token
++ + paid_token
 
 monde:
 + + fk_token
