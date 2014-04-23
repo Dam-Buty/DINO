@@ -28,6 +28,9 @@ $(document).ready(function() {
                         200: function() {
                             window.location.replace("index.php");
                         },
+                        402: function() {
+                            window.location.replace("welcome.php?token");
+                        },
                         403: function(retour) {
                             if (retour.responseJSON.error == "login") {
                                 $("#login").addClass("KO");

@@ -15,6 +15,8 @@ var bootstrap_users = function() {
     $("#new-mail").focus(tip_mail);
     $("#new-mail").keyup(check_mail).change(check_mail);
     
+    $("#achat-users").unbind().click(popup_dinostore);
+    
     if (profil.tokens.unpaid.users.length > 0) {
         $("#nb-unpaid-users").text(profil.tokens.unpaid.users.length);
         $("#unpaid-users").fadeIn();

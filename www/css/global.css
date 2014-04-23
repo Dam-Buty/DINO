@@ -1651,7 +1651,25 @@ ul.ui-autocomplete {
     left: 25%;
 }
 
-#popup-welcome {
+#popup-welcome-activate {
+    display: none;
+    
+    position: absolute;
+    top: 30%;
+    width: 50%;
+    left: 25%;
+}
+
+#popup-welcome-token {
+    display: none;
+    
+    position: absolute;
+    top: 30%;
+    width: 50%;
+    left: 25%;
+}
+
+#popup-dinostore {
     display: none;
     
     position: absolute;

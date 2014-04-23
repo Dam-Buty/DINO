@@ -191,6 +191,9 @@ popup_buy_users = function(select) {
             'buttons':  [ {
                 caption: 'Comprar creditos', 
                 callback: function() {
+                    select.val("0");
+                    select.trigger("chosen:updated");
+                    popup_dinostore();
                     // Envoyer sur le store
                 }
             }, {
@@ -231,3 +234,14 @@ popup_transaction = function(sens, type, callback) {
         }
     );
 };
+
+var popup_dinostore = function() {
+    var close_dinostore = function() {
+        $("#opak").fadeOut();
+        $("#popup-dinostore").fadeOut();
+    };
+    
+    $("#opak").fadeIn().click(close_dinostore);
+    $("#popup-dinostore").fadeIn();
+    $("#quit-dinostore").click(close_dinostore);
+}

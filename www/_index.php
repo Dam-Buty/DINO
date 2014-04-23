@@ -208,6 +208,13 @@ if ($_SESSION["niveau"] >= 20) {
 
 <div id="container-tuto"></div>
 
+<div id="popup-dinostore" class="dialog-box">
+    <h1>DINO Store</h1>
+    <div class="popup-ligne"><div class="popup-jauge jauge-100"></div></div>
+    <p>Por el momento, el <b>DINO store</b> esta en obras!</p>
+    <p>Si necesitas comprar mas usuarios y opciones, no dudes en contactarnos en <a href="mailto:sales@dino.mx">sales@dino.mx</a>. Te garantizamos una respuesta en menos de 24 horas!</p>
+    <div class="boutons next" id="quit-dinostore">OK</div>
+</div>
 
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>

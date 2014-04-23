@@ -200,41 +200,26 @@ function gestion_tokens($niveau) {
                                 }
                             }
                         }
-                    } else {
-                        if ($row_token["used_token"] != 0) {
-                            // expire le user concerné
-                            $params_expire_user = [
-                                "pk" => $row_token["pk_token"]
-                            ];
-                            
-                            $result_expire_user = dino_query("expire_user", $params_expire_user);
-    
-                            if (!$result_expire_user["status"]) {
-                                status(500);
-                                $err = true;
-                            }
-                            
-                        }
                     }
                     break;
                 case 2: //////////////////////////// Visitors
                     if (!$expired) {
                         $tokens["visitor"] = $row_token["pk_token"];
-                    } else {
-                        // Expire les visiteurs
-                        $params_expire_visiteurs = [
-                            "client" => $_SESSION["client"]
-                        ];
-                            
-                        $result_expire_visiteurs = dino_query("expire_visiteurs", $params_expire_visiteurs);
+                    }# else {
+#                        // Expire les visiteurs
+#                        $params_expire_visiteurs = [
+#                            "client" => $_SESSION["client"]
+#                        ];
+#                            
+#                        $result_expire_visiteurs = dino_query("expire_visiteurs", $params_expire_visiteurs);
 
-                        if ($result_expire_visiteurs["status"]) {
-                            $tokens["visitor"] = $result_expire_visiteurs["result"] * -1;
-                        } else {
-                            status(500);
-                            $err = true;
-                        }
-                    }
+#                        if ($result_expire_visiteurs["status"]) {
+#                            $tokens["visitor"] = $result_expire_visiteurs["result"] * -1;
+#                        } else {
+#                            status(500);
+#                            $err = true;
+#                        }
+#                    }
                     break;
                 case 3: /////////////////////////////// Espace
                     if (!$expired) {
@@ -244,52 +229,52 @@ function gestion_tokens($niveau) {
                     }
                     break;
                 case 4: //////////////////////////////////// Monde
-                    if (!$expired) {
-                        if ($niveau >= 30) {
-                            if ($row_token["used_token"] == 0) {
-                                if ($row_token["paid_token"]) {
-                                    // Met le token dans la besace du user
-                                    array_push($tokens["paid"]["mondes"], $row_token["pk_token"]);
-                                } else {
-                                    array_push($tokens["unpaid"]["mondes"], $row_token["pk_token"]);
-                                }
-                            }
-                        }
-                    } else {
-                        if ($row_token["used_token"] != 0) {
-                            // expire le monde concerné
-                            $params_expire_monde = [
-                                "pk" => $row_token["pk_token"]
-                            ];
-                            
-                            $result_expire_monde = dino_query("expire_monde", $params_expire_monde);
-    
-                            if (!$result_expire_monde["status"]) {
-                                status(500);
-                                $err = true;
-                            }
-                        }
-                    }
+#                    if (!$expired) {
+#                        if ($niveau >= 30) {
+#                            if ($row_token["used_token"] == 0) {
+#                                if ($row_token["paid_token"]) {
+#                                    // Met le token dans la besace du user
+#                                    array_push($tokens["paid"]["mondes"], $row_token["pk_token"]);
+#                                } else {
+#                                    array_push($tokens["unpaid"]["mondes"], $row_token["pk_token"]);
+#                                }
+#                            }
+#                        }
+#                    } else {
+#                        if ($row_token["used_token"] != 0) {
+#                            // expire le monde concerné
+#                            $params_expire_monde = [
+#                                "pk" => $row_token["pk_token"]
+#                            ];
+#                            
+#                            $result_expire_monde = dino_query("expire_monde", $params_expire_monde);
+#    
+#                            if (!$result_expire_monde["status"]) {
+#                                status(500);
+#                                $err = true;
+#                            }
+#                        }
+#                    }
                     break;
             };
             
             // On expire le token le cas échéant
-            if ($expired) {
-                $params_expire_token = [
-                    "pk" => $row_token["pk_token"]
-                ];
-                
-                $result_expire_token = dino_query("expire_token", $params_expire_token);
-                if (!$result_expire_token["status"]) {
-                    status(500);
-                    $err = true;
-                }
-            }
+#            if ($expired) {
+#                $params_expire_token = [
+#                    "pk" => $row_token["pk_token"]
+#                ];
+#                
+#                $result_expire_token = dino_query("expire_token", $params_expire_token);
+#                if (!$result_expire_token["status"]) {
+#                    status(500);
+#                    $err = true;
+#                }
+#            }
             
             if ($err) {
                 break;
             }
-        } // FIN WHILE TUTOS
+        } // FIN WHILE TOKENS
         return $tokens;
         
     } else {

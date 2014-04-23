@@ -17,10 +17,9 @@
 <body>
 <div id="front">
     <div id="laterale-front" class="barre-laterale">
-        <a href="index.php"><h1>DINO</h1></a>
+        <a href="index.php"><h1></h1></a>
         <ul class="menu-lateral" id="menu-front">
             <li id="menu-queue" class="element-menu-front">
-                <h1>CARGAR</h1>
             </li>
         </ul>
     </div>
@@ -44,11 +43,18 @@
     
 </div>
 
-<div id="popup-welcome" class="dialog-box">
+<div id="popup-welcome-activate" class="dialog-box">
     <h1>Activa tu cuenta DINO</h1>
     <div class="popup-ligne"><div class="popup-jauge jauge-50"></div></div>
     <p>Has recibido un <b>mensaje de activacion</b> a <b><?php echo $_GET["mail"]; ?></b>.</p>
     <p>Da <u>click</u> en el enlace incluido y puedes comenzar a explorar DINO.</p>
+</div>
+
+<div id="popup-welcome-token" class="dialog-box">
+    <h1>Tu usuario ha expirado</h1>
+    <div class="popup-ligne"><div class="popup-jauge jauge-50"></div></div>
+    <p>Contacta tu administrador para reactivar tu cuenta.</p>
+    <p><i>Si recibes este mensaje por error, no dudes en contactarnos en <a href="mailto:support@dino.mx">support@dino.mx</a>.</i></p>
 </div>
 
 <script>
@@ -93,8 +99,9 @@ $("#front").fadeIn(function() {
                         );
                     }
                 });
+                var popup = $("#popup-welcome-" + location.search.replace("?", ""));
                 
-                $("#popup-welcome").fadeIn();
+                popup.fadeIn();
             }
         })
     );

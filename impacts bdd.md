@@ -3,6 +3,7 @@ ILLUMINATI
 ==========
 
 >> Donner tous les tokens des users actuels!
+>> créer le token 0 pour les requêtes jointures!
 
 message:
 + + pk_message
