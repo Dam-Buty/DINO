@@ -28,6 +28,7 @@ if ($_SESSION["niveau"] == 999) {
         <li id="tokens">Tokens</li>
         <li id="activate">Activation manuelle</li>
         <li id="moulinette">Moulinette users</li>
+        <li id="teuf">C'est la teuf</li>
     </ul>
 </nav>
 <div style="clear: left;"></div>

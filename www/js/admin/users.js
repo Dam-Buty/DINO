@@ -233,7 +233,7 @@ var refresh_users = function() {
                     $("#users").fadeIn();
                     
                     // Bind d'events
-                    $(".edit-niveau").unbind().change(toggle_niveau);
+                    $(".edit-niveau").unbind().change(buy_users).change(toggle_niveau);
     
                     $(".edit-niveau").on("chosen:showing_dropdown", tip_niveau);
                     $(".edit-niveau").on("chosen:hiding_dropdown", kill_tip_niveau);

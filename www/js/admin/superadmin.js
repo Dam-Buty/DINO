@@ -99,6 +99,21 @@ var bootstrap_superadmin = function(action) {
                 );
             });
             break;
+        case "teuf":
+            $.ajax({
+                url: "do/doTeuf.php",
+                type: "POST",
+                data: {
+                },
+                statusCode: {
+                    200: function(data) {
+                        alert("YEAH");
+                    },
+                    500: function() {
+                        alert("Hum hum...");
+                    }
+                }
+            });
     };
 };
 
