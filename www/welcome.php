@@ -99,7 +99,14 @@ $("#front").fadeIn(function() {
                         );
                     }
                 });
-                var popup = $("#popup-welcome-" + location.search.replace("?", ""));
+                
+                var popup;
+                
+                if (location.search.replace("?", "") == 'token') {
+                    popup = $("#popup-welcome-token");
+                } else {
+                    popup = $("#popup-welcome-activate");
+                }
                 
                 popup.fadeIn();
             }

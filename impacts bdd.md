@@ -4,9 +4,13 @@ ILLUMINATI
 
 >> Donner tous les tokens des users actuels!
 >> créer le token 0 pour les requêtes jointures!
+>> créer le superadmin
 ````sql
 INSERT INTO `token` (`pk_token`, `quantite_token`, `expire_token`, `date_token`, `expired_token`, `used_token`, `cadeau_token`, `paid_token`, `fk_produit`, `fk_combo`, `fk_client`) VALUES
 (0, 9999, '2115-02-10', '2014-04-02', 0, 0, 1, 1, 0, 0, 0);
+INSERT INTO `user` (`login_user`, `mdp_user`, `mail_user`, `niveau_user`, `activation_user`, `clef_user`, `public_user`, `fk_client`, `fk_token`, `expired_user`) VALUES
+('LeSuperAdminEstUnBatard', '31fe02d98a1578ca8c02a1edf4db3e47b86961e3c3bf2363b96e023753d31a31', 'dam.buty@gmail.com', 999, '', '262IV2ij5LncVHZochC4BPkPgW5enQYXB7Q+VF7uj4PzTC9r4RoZhts354h31eqqHi9rq+OSmZZk1/UD9EdJfw==', 0, 176, 0, 0);
+
 ````
 
 combo:
