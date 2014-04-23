@@ -11,8 +11,7 @@ if ($_SESSION["niveau"] == 999) {
         "client" => 0,
         "clients" => [],
         "produits" => [],
-        "combos" => [],
-        "messages" =>  [],
+        "combos" => []
     ];
     
     $result_users = dino_query("superadmin_users", []);
@@ -58,42 +57,23 @@ if ($_SESSION["niveau"] == 999) {
             }
             
             $retour["produits"] = $produits;
-            
-            $result_messages = dino_query("superadmin_messages", []);
 
-            if ($result_messages["status"]) {
+            $result_combos = dino_query("superadmin_combos", []);
+
+            if ($result_combos["status"]) {
             
-                $messages = [];
+                $combos = [];
             
-                foreach($result_messages["result"] as $row_messages) {
-                    $messages[$row_messages["pk_message"]] = [
-                        "titre" => $row_messages["titre_message"],
-                        "html" => $row_messages["html_message"]
-                    ];
+                foreach($result_combos["result"] as $row_combos) {
+                    $combos[$row_combos["pk_combo"]] = $row_combos["label_combo"];
                 }
                 
-                $retour["messages"] = $messages;
+                $retour["combos"] = $combos;
         
-                $result_combos = dino_query("superadmin_combos", []);
-
-                if ($result_combos["status"]) {
-                
-                    $combos = [];
-                
-                    foreach($result_combos["result"] as $row_combos) {
-                        $combos[$row_combos["pk_combo"]] = $row_combos["label_combo"];
-                    }
-                    
-                    $retour["combos"] = $combos;
-            
-                    $json = json_encode($retour);
-                    status(200);
-                    header('Content-Type: application/json');
-                    echo $json;
-                    
-                } else {
-                    status(500);
-                }
+                $json = json_encode($retour);
+                status(200);
+                header('Content-Type: application/json');
+                echo $json;
                 
             } else {
                 status(500);

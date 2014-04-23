@@ -26,7 +26,6 @@ if ($_SESSION["niveau"] == 999) {
 <nav>
     <ul>
         <li id="tokens">Tokens</li>
-        <li id="messages">Messages commerciaux</li>
         <li id="activate">Activation manuelle</li>
         <li id="moulinette">Moulinette users</li>
     </ul>
@@ -63,12 +62,6 @@ if ($_SESSION["niveau"] == 999) {
             <p><input type="submit" value="Fais peter" id="submit-token"/></p>
         </div>
     </article>
-    <article id="container-messages">
-        <header>Everyday i'm hustlin'</header>
-        <p><select id="list-messages"></select></p>
-        <textarea id="message"></textarea>
-        <p><input type="submit" value="Envoie du lourd" id="submit-message"/></p>
-    </article>
     <article id="container-activate">
         <header>A la mano</header>
         <input type="test" id="search-activate" placeholder="Search..."/>
@@ -88,9 +81,6 @@ if ($_SESSION["niveau"] == 999) {
 
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-
-<script src="vendor/ckeditor/ckeditor.js"></script>
-<script src="vendor/ckeditor/adapters/jquery.js"></script>
 
 <script src="js/admin/superadmin.js?v=7"></script>
 

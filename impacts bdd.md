@@ -4,11 +4,10 @@ ILLUMINATI
 
 >> Donner tous les tokens des users actuels!
 >> créer le token 0 pour les requêtes jointures!
-
-message:
-+ + pk_message
-+ + titre_message (30)
-+ + html_message
+````sql
+INSERT INTO `token` (`pk_token`, `quantite_token`, `expire_token`, `date_token`, `expired_token`, `used_token`, `cadeau_token`, `paid_token`, `fk_produit`, `fk_combo`, `fk_client`) VALUES
+(0, 9999, '2115-02-10', '2014-04-02', 0, 0, 1, 1, 0, 0, 0);
+````
 
 combo:
 + + pk_combo
@@ -22,14 +21,14 @@ token:
 + + pk_token
 + + quantite_token
 + + expire_token
++ + date_token
 + + expired_token
 + + used_token
++ + cadeau_token
++ + paid_token
 + + fk_produit
 + + fk_combo
 + + fk_client
-+ + cadeau_token
-+ + date_token
-+ + paid_token
 
 monde:
 + + fk_token
@@ -38,6 +37,8 @@ monde:
 user:
 + + fk_token
 + + expired_user
+
+>> OK sur baby
 
 BABEL
 ======
