@@ -81,6 +81,8 @@ var refresh_users = function() {
         if (profil.tokens.visitor != 0) {
             $("#tokens-visitor").fadeIn();
             $("#tokens-OK").fadeOut();
+        } else {
+            $("#tokens-OK").fadeOut();
         }
     }
     
