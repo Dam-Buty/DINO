@@ -4,24 +4,25 @@ include("../includes/status.php");
 include("../includes/log.php");  
 
 if ($_SESSION["niveau"] == 999) {
-    include("../includes/PDO.php");  
+    include("../includes/DINOSQL.php");  
     
-    $retour = [ 
-        "action" => "",
-        "client" => 0,
-        "clients" => [],
-        "produits" => [],
-        "combos" => []
-    ];
-    
-    $result_users = dino_query("superadmin_users", []);
-    
-    if ($result_users["status"]) {
+    try {
+        $dino = new DINOSQL();
         
+        $retour = [ 
+            "action" => "",
+            "client" => 0,
+            "clients" => [],
+            "produits" => [],
+            "combos" => []
+        ];
+        
+        $result_users = $dino->query("superadmin_users", []);
+            
         $clients = [];
         $client = 0;
         
-        foreach($result_users["result"] as $row_users) {
+        foreach($result_users as $row_users) {
             if ($client != $row_users["pk_client"]) {
                 $clients[$row_users["pk_client"]] = [
                     "pk" => $row_users["pk_client"],
@@ -46,46 +47,34 @@ if ($_SESSION["niveau"] == 999) {
         
         $retour["clients"] = $clients;
         
-        $result_produits = dino_query("superadmin_produits", []);
-    
-        if ($result_produits["status"]) {
-        
-            $produits = [];
-        
-            foreach($result_produits["result"] as $row_produits) {
-                $produits[$row_produits["pk_produit"]] = $row_produits["label_produit"];
-            }
-            
-            $retour["produits"] = $produits;
+        $result_produits = $dino->query("superadmin_produits", []);
 
-            $result_combos = dino_query("superadmin_combos", []);
+        $produits = [];
 
-            if ($result_combos["status"]) {
-            
-                $combos = [];
-            
-                foreach($result_combos["result"] as $row_combos) {
-                    $combos[$row_combos["pk_combo"]] = $row_combos["label_combo"];
-                }
-                
-                $retour["combos"] = $combos;
-        
-                $json = json_encode($retour);
-                status(200);
-                header('Content-Type: application/json');
-                echo $json;
-                
-            } else {
-                status(500);
-            }
-            
-            
-        } else {
-            status(500);
+        foreach($result_produits as $row_produits) {
+            $produits[$row_produits["pk_produit"]] = $row_produits["label_produit"];
         }
-    } else {
+        
+        $retour["produits"] = $produits;
+
+        $result_combos = $dino->query("superadmin_combos", []);
+
+        $combos = [];
+
+        foreach($result_combos as $row_combos) {
+            $combos[$row_combos["pk_combo"]] = $row_combos["label_combo"];
+        }
+        
+        $retour["combos"] = $combos;
+
+        $json = json_encode($retour);
+        status(200);
+        header('Content-Type: application/json');
+        echo $json;
+    } catch (Exception $e) {
         status(500);
     }
+    
 } else {
     dino_log([
         "niveau" => "Z",

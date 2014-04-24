@@ -4,24 +4,22 @@ include("../includes/status.php");
 include("../includes/log.php");  
 
 if (isset($_SESSION["niveau"])) {
-    include("../includes/PDO.php");
+    include("../includes/DINOSQL.php");
             
-    $params = [
-        "client" => $_SESSION["client"],
-        "user" => $_SESSION["user"],
-        "niveau" => $_SESSION["niveau"]
-    ];
-    
-    $result = dino_query("json_queue", $params);
-    
-    if ($result["status"]) {
-        status(200);
-        $queue = [
-            "status" => "OK",
-            "queue" => []
+    try {
+        $dino = new DINOSQL();
+        
+        $params = [
+            "client" => $_SESSION["client"],
+            "user" => $_SESSION["user"],
+            "niveau" => $_SESSION["niveau"]
         ];
         
-        foreach($result["result"] as $row) {
+        $result = $dino->query("json_queue", $params);
+        
+        $queue = [ ];
+        
+        foreach($result as $row) {
         
             $date = substr($row["date_doc"], 8, 2) . "/" . substr($row["date_doc"], 5, 2);
 
@@ -31,7 +29,7 @@ if (isset($_SESSION["niveau"])) {
                 $user = $row["fk_user"];
             }
             
-            array_push($queue["queue"], [
+            array_push($queue, [
                 "document" => "",
                 "status" => 1,
                 "size" => $row["taille_document"],
@@ -50,9 +48,10 @@ if (isset($_SESSION["niveau"])) {
                 ]
             ]);
         }
+        status(200);
         header('Content-Type: application/json');
         echo json_encode($queue);
-    } else {
+    } catch (Exception $e) {
         status(500);
     }
 } else {

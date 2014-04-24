@@ -4,19 +4,20 @@ include("../includes/status.php");
 include("../includes/log.php");  
 
 if ($_SESSION["niveau"] == 999) {
-    include("../includes/PDO.php");  
+    include("../includes/DINOSQL.php");  
     
     $retour = [];
     
-    $result_cadeaux = dino_query("superadmin_cadeaux", [
-        "client" => $_POST["client"]
-    ]);
-    
-    if ($result_cadeaux["status"]) {
+    try {
+        $dino = new DINOSQL();
         
+        $result_cadeaux = $dino->query("superadmin_cadeaux", [
+            "client" => $_POST["client"]
+        ]);
+            
         $cadeaux = [];
         
-        foreach($result_cadeaux["result"] as $row_cadeaux) {            
+        foreach($result_cadeaux as $row_cadeaux) {            
             array_push($cadeaux, [
                 "pk" => $row_cadeaux["pk_token"],
                 "quantite" => $row_cadeaux["quantite_token"],
@@ -30,12 +31,11 @@ if ($_SESSION["niveau"] == 999) {
             ]);
         }
         
-        
         $json = json_encode($cadeaux);
         status(200);
         header('Content-Type: application/json');
         echo $json;
-    } else {
+    } catch (Exception $e) {
         status(500);
     }
 } else {

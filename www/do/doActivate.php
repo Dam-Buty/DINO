@@ -1,18 +1,20 @@
 <?php
-include("../includes/PDO.php");
+include("../includes/DINOSQL.php");
 include("../includes/status.php");
 include("../includes/log.php");
 
-$params = [
-    "login" => $_POST["user"],
-    "mail" => urldecode($_POST["mail"])
-];
+try {
+    $dino = new DINOSQL();
 
-$result = dino_query("activate_select", $params);
+    $params = [
+        "login" => $_POST["user"],
+        "mail" => urldecode($_POST["mail"])
+    ];
 
-if ($result["status"]) {
-    if (count($result["result"]) > 0) {        
-        $row = $result["result"][0];
+    $result = $dino->query("activate_select", $params);
+    
+    if (count($result) > 0) {
+        $row = $result[0];
         
         if ($row["activation_user"] == "") {
             status(200);
@@ -24,11 +26,11 @@ if ($result["status"]) {
                     "login" => $login
                 ];
                 
-                if (dino_query("activate_final", $params_activate)) {
-                    status(200);
-                } else {
-                    status(500);
-                }
+                $dino->query("activate_final", $params_activate);
+                
+                $dino->commit();
+                
+                status(200);
             } else {
                 status(204);
             }
@@ -36,7 +38,8 @@ if ($result["status"]) {
     } else {
         status(204);
     }
-} else {
+    
+} catch (Exception $e) {
     status(500);
 }
 

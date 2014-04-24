@@ -3,7 +3,7 @@ session_start();
 include("../includes/status.php");
 include("../includes/log.php");
 
-function delete_type($champ, $categorie, $pk) {    
+function delete_type($dino, $champ, $categorie, $pk) {   
     $params_base = [
         "client" => $_SESSION["client"],
         "monde" => $_POST["pk"],
@@ -11,13 +11,7 @@ function delete_type($champ, $categorie, $pk) {
         "categorie" => $categorie,
         "pk" => $pk
     ];
-    
-    // Déclassifie les documents
-    // - met à NULL le niveau et la date
-    // - DELETE les liens avec des valeurs de champs
-    // - Suppression des associations à ce type de doc
-    // Suppression du type de doc
-    
+
     $params_null_docs = $params_base;
     unset($params_null_docs["client"]);
     $params_null_docs = array_merge($params_null_docs, [
@@ -38,27 +32,23 @@ function delete_type($champ, $categorie, $pk) {
     $params_del_doc_type = $params_base;
     
     $params_del_type = $params_base;
-    
-    if (dino_query("del_type_documents", $params_null_docs)) {
-        if (dino_query("del_type_valeurs", $params_del_doc_val)) {
-            if (dino_query("del_type_types", $params_del_doc_type)) {
-                if (dino_query("del_type_final", $params_del_type)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    } else {
-        return false;
+
+    try {
+        // Déclassifie les documents
+        // - met à NULL le niveau et la date
+        // - DELETE les liens avec des valeurs de champs
+        // - Suppression des associations à ce type de doc
+        // - Suppression du type de doc
+        $dino->query("del_type_documents", $params_null_docs);
+        $dino->query("del_type_valeurs", $params_del_doc_val);
+        $dino->query("del_type_types", $params_del_doc_type);
+        $dino->query("del_type_final", $params_del_type); 
+    } catch (Exception $e) {
+        throw new Exception("Erreur de suppression recursive", 3);
     }
 }
 
-function delete_categorie($champ, $pk) {
+function delete_categorie($dino, $champ, $pk) {
     $params_base = [
         "client" => $_SESSION["client"],
         "monde" => $_POST["pk"],
@@ -72,32 +62,21 @@ function delete_categorie($champ, $pk) {
     // DELETE LA CATEGORIE
     $params_del_cat = $params_base;
     
-    $result_sel_types = dino_query("del_categorie_types", $params_sel_types);
     
-    $err = false;
-    
-    if ($result_sel_types["status"]) {
+    try {
+        $result_sel_types = $dino->query("del_categorie_types", $params_sel_types);
         
-        foreach($result_sel_types["result"] as $row) {
-            if (!delete_type($champ, $pk, $row["pk_type_doc"])) {
-                $err = true;
-                break;
-            }
+        foreach($result_sel_types as $row) {
+            delete_type($champ, $pk, $row["pk_type_doc"]);
         }
         
-        if (!$err) {
-            if (!dino_query("del_categorie_final", $params_del_cat)) {
-                $err = true;
-            }
-        }
-    } else {
-        $err = true;
+        $dino->query("del_categorie_final", $params_del_cat);
+    } catch (Exception $e) {
+        throw new Exception("Erreur de suppression recursive", 3);
     }
-    
-    return !$err;
 }
 
-function delete_champ($pk) {
+function delete_champ($dino, $pk) {
     $params_base = [
         "client" => $_SESSION["client"],
         "monde" => $_POST["pk"],
@@ -119,83 +98,60 @@ function delete_champ($pk) {
     
     $err = false;
     
-    // Suppression des types 
-    $result_sel_types = dino_query("del_champ_types", $params_sel_types);
-    
-    if ($result_sel_types["status"]) {
+    try {
+        // Suppression des types 
+        $result_sel_types = $dino->query("del_champ_types", $params_sel_types);
+            
+        foreach($result_sel_types as $row) {
+            delete_type($pk, 0, $row["pk_type_doc"]);
+        }
         
-        foreach($result_sel_types["result"] as $row) {
-            if (!delete_type($pk, 0, $row["pk_type_doc"])) {
-                $err = true;
-                break;
-            }
+        // Suppression des catégories   
+        $result_sel_cat = $dino->query("del_champ_categories", $params_sel_cat);
+        
+        foreach($result_sel_cat as $row) {
+            delete_categorie($pk, $row["pk_categorie_doc"]);
         }
-    } else {
-        $err = true;
-    }   
-    
-    // Suppression des catégories   
-    $result_sel_cat = dino_query("del_champ_categories", $params_sel_cat);
-    
-    if (!$err) {
-        if ($result_sel_cat["status"]) {
-            foreach($result_sel_cat["result"] as $row) {
-                if (!delete_categorie($pk, $row["pk_categorie_doc"])) {
-                    $err = true;
-                    break;
-                }
-            }
-        } else {
-            $err = true;
-        }
-    } else {
-        return false;
+        
+        // Suppression des valeurs de champ et du champ
+        dino_query("del_champ_valeurs", $params_del_val);
+        dino_query("del_champ_final", $params_del_champ);
+    } catch (Exception $e) {
+        throw new Exception("Erreur de suppression recursive", 3);
     }
     
-    // Suppression des valeurs de champ et du champ
-    if (!$err) {
-        if (dino_query("del_champ_valeurs", $params_del_val)) {
-            if (dino_query("del_champ_final", $params_del_champ)) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-    } else {
-        return false;
-    }
 }
 
 if ($_SESSION["niveau"] >= 30) {
-    include("../includes/PDO.php");
+    include("../includes/DINOSQL.php");
     
-    $params = [
-        "client" => $_SESSION["client"],
-        "label" => $_POST["label"]
-    ];
-    
-    if (!isset($_POST["pk"])) {
-        // On va chercher un token et on l'affecte
-        $query = "monde_add";
-#        $params["token"] = $_POST["token"];
-    } else {
-        $query = "monde_change";
-        $params["pk"] = $_POST["pk"];
-    }
-      
-    $result = dino_query($query,$params);
-    
-    if ($result["status"]) {
-        $err = false;
+    try {
+        $dino = new DINOSQL();
         
+        $params = [
+            "client" => $_SESSION["client"],
+            "label" => $_POST["label"]
+        ];
+
         if (!isset($_POST["pk"])) {
-            $pk_monde = $result["result"];
+            // On va chercher un token et on l'affecte
+            $query = "monde_add";
+        #        $params["token"] = $_POST["token"];
+        } else {
+            $query = "monde_change";
+            $params["pk"] = $_POST["pk"];
+        }
+              
+        $result = $dino->query($query,$params);
+
+        $err = false;
+
+        if (!isset($_POST["pk"])) {
+            $pk_monde = $result;
         } else {
             $pk_monde = $_POST["pk"];
         }
-    
+
         foreach($_POST["champs"] as $i => $champ) {
             $params_champ = [
                 "client" => $_SESSION["client"],
@@ -211,139 +167,115 @@ if ($_SESSION["niveau"] >= 30) {
                 
                 $params_champ["pk"] = $champ["pk"];
             }
-      
-            $result_champ = dino_query($query_champ,$params_champ);
-    
-            if ($result_champ["status"]) {
-                
-                if (!isset($champ["pk"])) {
-                    $pk_champ = $result_champ["result"];
-                } else {
-                    $pk_champ = $champ["pk"];
-                }
-                
-                if (isset($champ["types"])) {
-                    foreach($champ["types"] as $j => $type) {
-                        if ($type["detail"] == "true") {
-                            $type_detail = 1;
-                        } else {
-                            $type_detail = 0;
-                        }
-                        
-                        if ($type["time"] == "true") {
-                            $type_time = 1;
-                        } else {
-                            $type_time = 0;
-                        }
-                    
-                        $params_type = [
-                            "client" => $_SESSION["client"],
-                            "monde" => $pk_monde,
-                            "champ" => $pk_champ,
-                            "label" => $type["label"],
-                            "detail" => $type_detail,
-                            "time" => $type_time,
-                            "categorie" => 0,
-                            "niveau" => $type["niveau"]
-                        ];
-                        
-                        if (!isset($type["pk"])) {
-                            $query_type = "monde_type_add";
-                        } else {
-                            $query_type = "monde_type_change";
-                            $params_type["pk"] = $type["pk"];
-                        }
-                        
-                        $result_type = dino_query($query_type,$params_type);
-        
-                        if (!$result_type["status"]) {
-                            $err = true;
-                            break;
-                        }
-                    } // FIN WHILE TYPES
-                }
-                
-                if (isset($champ["categories"])) {
-                    foreach($champ["categories"] as $j => $categorie) {
-                        $params_categorie = [
-                            "client" => $_SESSION["client"],
-                            "monde" => $pk_monde,
-                            "champ" => $pk_champ,
-                            "label" => $categorie["label"],
-                            "niveau" => $categorie["niveau"]
-                        ];
-                        
-                        if (!isset($categorie["pk"])) {
-                            $query_categorie = "monde_categorie_add";
-                        } else {
-                            $query_categorie = "monde_categorie_change";
-                            $params_categorie["pk"] = $categorie["pk"];
-                        }
-          
-                        $result_categorie = dino_query($query_categorie, $params_categorie);
-                
-                        if ($result_categorie["status"]) {
-                            
-                            if (!isset($categorie["pk"])) {
-                                $pk_categorie = $result_categorie["result"];
-                            } else {
-                                $pk_categorie = $categorie["pk"];
-                            }
-                            
-                            if (isset($categorie["types"])) {
-                            
-                                foreach($categorie["types"] as $k => $type) {
-                                    if ($type["detail"] == "true") {
-                                        $type_detail = 1;
-                                    } else {
-                                        $type_detail = 0;
-                                    }
-                                    
-                                    if ($type["time"] == "true") {
-                                        $type_time = 1;
-                                    } else {
-                                        $type_time = 0;
-                                    }
-                                    
-                                    $params_type = [
-                                        "client" => $_SESSION["client"],
-                                        "monde" => $pk_monde,
-                                        "champ" => $pk_champ,
-                                        "categorie" => $pk_categorie,
-                                        "label" => $type["label"],
-                                        "detail" => $type_detail,
-                                        "time" => $type_time,
-                                        "niveau" => $type["niveau"]
-                                    ];
-                        
-                                    if (!isset($type["pk"])) {
-                                        $query_type = "monde_type_add";
-                                    } else {
-                                        $query_type = "monde_type_change";
-                                        $params_type["pk"] = $type["pk"];
-                                    }
-                                    
-                                    $result_type = dino_query($query_type,$params_type);
 
-                                    if (!$result_type["status"]) {
-                                        $err = true;
-                                        break;
-                                    }
-                                } // FIN WHILE TYPES
-                            }
-                        } else {
-                            $err = true;
-                            break;
-                        }
-                        
-                    } // FIN WHILE CATEGORIES
-                }
+            $result_champ = $dino->query($query_champ,$params_champ);
+                
+            if (!isset($champ["pk"])) {
+                $pk_champ = $result_champ;
             } else {
-                $err = true;
-                break;
+                $pk_champ = $champ["pk"];
+            }
+            
+            if (isset($champ["types"])) {
+                foreach($champ["types"] as $j => $type) {
+                    if ($type["detail"] == "true") {
+                        $type_detail = 1;
+                    } else {
+                        $type_detail = 0;
+                    }
+                    
+                    if ($type["time"] == "true") {
+                        $type_time = 1;
+                    } else {
+                        $type_time = 0;
+                    }
+                
+                    $params_type = [
+                        "client" => $_SESSION["client"],
+                        "monde" => $pk_monde,
+                        "champ" => $pk_champ,
+                        "label" => $type["label"],
+                        "detail" => $type_detail,
+                        "time" => $type_time,
+                        "categorie" => 0,
+                        "niveau" => $type["niveau"]
+                    ];
+                    
+                    if (!isset($type["pk"])) {
+                        $query_type = "monde_type_add";
+                    } else {
+                        $query_type = "monde_type_change";
+                        $params_type["pk"] = $type["pk"];
+                    }
+                    
+                    $result_type = $dino->query($query_type,$params_type);
+                } // FIN WHILE TYPES
+            }
+            
+            if (isset($champ["categories"])) {
+                foreach($champ["categories"] as $j => $categorie) {
+                    $params_categorie = [
+                        "client" => $_SESSION["client"],
+                        "monde" => $pk_monde,
+                        "champ" => $pk_champ,
+                        "label" => $categorie["label"],
+                        "niveau" => $categorie["niveau"]
+                    ];
+                    
+                    if (!isset($categorie["pk"])) {
+                        $query_categorie = "monde_categorie_add";
+                    } else {
+                        $query_categorie = "monde_categorie_change";
+                        $params_categorie["pk"] = $categorie["pk"];
+                    }
+
+                    $result_categorie = $dino->query($query_categorie, $params_categorie);
+                        
+                    if (!isset($categorie["pk"])) {
+                        $pk_categorie = $result_categorie;
+                    } else {
+                        $pk_categorie = $categorie["pk"];
+                    }
+                    
+                    if (isset($categorie["types"])) {
+                        foreach($categorie["types"] as $k => $type) {
+                            if ($type["detail"] == "true") {
+                                $type_detail = 1;
+                            } else {
+                                $type_detail = 0;
+                            }
+                            
+                            if ($type["time"] == "true") {
+                                $type_time = 1;
+                            } else {
+                                $type_time = 0;
+                            }
+                            
+                            $params_type = [
+                                "client" => $_SESSION["client"],
+                                "monde" => $pk_monde,
+                                "champ" => $pk_champ,
+                                "categorie" => $pk_categorie,
+                                "label" => $type["label"],
+                                "detail" => $type_detail,
+                                "time" => $type_time,
+                                "niveau" => $type["niveau"]
+                            ];
+                
+                            if (!isset($type["pk"])) {
+                                $query_type = "monde_type_add";
+                            } else {
+                                $query_type = "monde_type_change";
+                                $params_type["pk"] = $type["pk"];
+                            }
+                            
+                            $dino->query($query_type,$params_type);
+                        } // FIN WHILE TYPES
+                    }
+                } // FIN WHILE CATEGORIES
             }
         } // FIN WHILE CHAMPS
-        
+
         if (!isset($_POST["pk"])) {
             // Injection des droits pour le créateur et les gérants
             $params_select_droits = [
@@ -351,63 +283,50 @@ if ($_SESSION["niveau"] >= 30) {
                 "login" => $_SESSION["user"]
             ];
             
-            $result_select_droits = dino_query("droits_users", $params_select_droits);
-
-            if ($result_select_droits["status"]) {
+            $result_select_droits = $dino->query("droits_users", $params_select_droits);
                 
-                $valeurs = [];
-                
-                foreach($result_select_droits["result"] as $row) {
-                    $params_insert_droits = [
-                        "client" => $_SESSION["client"],
-                        "monde" => $pk_monde,
-                        "login" => $row["login_user"]
-                    ];
+            $valeurs = [];
             
-                    $result_insert_droits = dino_query("droits_final", $params_insert_droits);
-                    
-                    if (!$result_insert_droits["status"]) {
-                        $err = true;
-                        break;
-                    }
-                }
-            } else {
-                $err = true;
+            foreach($result_select_droits as $row) {
+                $params_insert_droits = [
+                    "client" => $_SESSION["client"],
+                    "monde" => $pk_monde,
+                    "login" => $row["login_user"]
+                ];
+
+                $dino->query("droits_final", $params_insert_droits);
             }
         }
-        
+
         if (isset($_POST["graveyard"])) {
             foreach($_POST["graveyard"] as $i => $element) {
-                switch($element["type"]) {
-                    case "champ":
-                        $err = !delete_champ($element["pk"]);
-                        break;
-                    case "categorie":
-                        $err = !delete_categorie($element["champ"], $element["pk"]);
-                        break;
-                    case "type":
-                        if (isset($element["categorie"])) {
-                            $categorie = $element["categorie"];
-                        } else {
-                            $categorie = 0;
-                        }
-                        
-                        $err = !delete_type($element["champ"], $categorie, $element["pk"]);
-                        break;
-                }
-                
-                if ($err) {
-                    break;
+                try {
+                    switch($element["type"]) {
+                        case "champ":
+                            delete_champ($dino, $element["pk"]);
+                            break;
+                        case "categorie":
+                            delete_categorie($dino, $element["champ"], $element["pk"]);
+                            break;
+                        case "type":
+                            if (isset($element["categorie"])) {
+                                $categorie = $element["categorie"];
+                            } else {
+                                $categorie = 0;
+                            }
+                            delete_type($dino, $element["champ"], $categorie, $element["pk"]);
+                            break;
+                    }
+                } catch (Exception $e) {
+                    throw new Exception("Erreur de suppression recursive", 3);
                 }
             }
         }
         
-        if (!$err) {
-            status(200);
-        } else {
-            status(500);
-        }
-    } else {
+        $dino->commit();
+        status(200);
+    } catch (Exception $e) {
+        $dino->rollback();
         status(500);
     }
 } else {

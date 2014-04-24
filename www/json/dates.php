@@ -4,20 +4,21 @@ include("../includes/status.php");
 include("../includes/log.php");  
 
 if (isset($_SESSION["niveau"])) {
-    include("../includes/PDO.php"); 
-        
-    $params = [
-        "client" => $_SESSION["client"],
-        "monde" => $_POST["monde"]
-    ];
+    include("../includes/DINOSQL.php"); 
     
-    $result = dino_query("json_dates", $params);
-    
-    if ($result["status"]) {
+    try {
+        $dino = new DINOSQL();
         
+        $params = [
+            "client" => $_SESSION["client"],
+            "monde" => $_POST["monde"]
+        ];
+        
+        $result = $dino->query("json_dates", $params);
+            
         $dates = [];
         
-        $row = $result["result"][0];
+        $row = $result[0];
         
         $dates["mini"] = $row["min"];
         $dates["maxi"] = $row["max"];
@@ -34,7 +35,7 @@ if (isset($_SESSION["niveau"])) {
         status(200);
         header('Content-Type: application/json');
         echo $json;
-    } else {
+    } catch (Exception $e) {
         status(500);
     }
 } else {

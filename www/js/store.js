@@ -200,9 +200,9 @@ var add_value = function(term) {
             parent: parent
         },
         statusCode: {
-            200: function(retour) {
+            200: function(pk) {
                 // On sauvegarde la nouvelle valeur dans le profil
-                profil.mondes[store.monde].champs[champ].liste[retour.pk] = term;
+                profil.mondes[store.monde].champs[champ].liste[pk] = term;
                 
                 if (profil.mondes[store.monde].references[parent] !== undefined) {
                     if (profil.mondes[store.monde].references[parent].length == 0) {
@@ -212,11 +212,11 @@ var add_value = function(term) {
                     profil.mondes[store.monde].references[parent] = {};
                 }
                 
-                profil.mondes[store.monde].references[parent][retour.pk] = [];
+                profil.mondes[store.monde].references[parent][pk] = [];
                 
-                document.store.champs[champ] = retour.pk;
+                document.store.champs[champ] = pk;
                 document.store.last_champ = champ;
-                Store.champs[champ] = retour.pk;
+                Store.champs[champ] = pk;
                 Store.last_champ = champ;
                 
                 $("#container-details").slideUp();

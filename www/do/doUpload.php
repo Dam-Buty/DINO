@@ -4,7 +4,7 @@ include("../includes/status.php");
 include("../includes/log.php");
 
 if ($_SESSION["niveau"] >= 10) {
-    include("../includes/PDO.php");
+    include("../includes/DINOSQL.php");
     include("../includes/crypt.php");
     
     $filename = genere_clef(12, TRUE);
@@ -12,20 +12,22 @@ if ($_SESSION["niveau"] >= 10) {
     
     $filesize = filesize($_FILES['document']['tmp_name']);
     
-    $params = [
-        "filename" => $filename . "." . $extension,
-        "taille" => $filesize,
-        "display" =>$_FILES['document']['name'],
-        "client" =>$_SESSION["client"],
-        "user" => $_SESSION["user"],
-        "date" =>  date("Y-m-d H:i:s")
-    ];
-    
-    $result = dino_query("document_add", $params);
-    
-    if ($result["status"]) {
+    try {
+        $dino = new DINOSQL();
         
+        $params = [
+            "filename" => $filename . "." . $extension,
+            "taille" => $filesize,
+            "display" =>$_FILES['document']['name'],
+            "client" =>$_SESSION["client"],
+            "user" => $_SESSION["user"],
+            "date" =>  date("Y-m-d H:i:s")
+        ];
+        
+        $dino->query("document_add", $params);
+            
         if (move_uploaded_file($_FILES['document']['tmp_name'], "../cache/" . $_SESSION["client"] . "/temp/" . $filename . "." . $extension)) {
+            $dino->commit();
             status(201);
             dino_log([
                 "niveau" => "I",
@@ -36,6 +38,7 @@ if ($_SESSION["niveau"] >= 10) {
             header('Content-Type: application/json');
             echo $json;
         } else {
+            $dino->rollback();
             status(500);
             dino_log([
                 "niveau" => "E",
@@ -44,8 +47,9 @@ if ($_SESSION["niveau"] >= 10) {
                 "errinfo" => "Copie impossible",
                 "params" => json_encode($filename . "." . $extension)
             ]);
-        }
-    } else {
+        } 
+    } catch (Exception $e) {
+        $dino->rollback();
         status(500);
     }
 } else {

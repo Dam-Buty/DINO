@@ -4,19 +4,21 @@ include("../includes/status.php");
 include("../includes/log.php");
 
 if ($_SESSION["niveau"] >= 10) {
-    include("../includes/PDO.php");
+    include("../includes/DINOSQL.php");
     
     $path = "../cache/" . $_SESSION["client"] . "/" . $_POST["filename"] . ".dino";
     $pdfpath = "../cache/" . $_SESSION["client"] . "/" . $_POST["filename"] . "-pdf.dino";
     
-
-    $result = dino_query("remove_document",[
-        "filename" => $_POST["filename"]
-    ]);
-    
-    if ($result["status"]) {
+    try {
+        $dino = new DINOSQL();
         
+        $result = $dino->query("remove_document",[
+            "filename" => $_POST["filename"]
+        ]);
+            
         if (unlink($path)) {
+            $dino->commit();
+            
             if (file_exists($pdfpath)) {
                 if (unlink($pdfpath)) {
                     status(204);
@@ -44,7 +46,7 @@ if ($_SESSION["niveau"] >= 10) {
                 ]);
             }
         } else {
-            status(204);
+            status(500);
             dino_log([
                 "niveau" => "E",
                 "query" => "unlink " . $path,
@@ -53,7 +55,7 @@ if ($_SESSION["niveau"] >= 10) {
                 "params" => json_encode($_POST["filename"])
             ]);
         }
-    } else {
+    } catch (Exception $e) {
         status(500);
     }
 } else {

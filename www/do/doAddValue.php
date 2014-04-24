@@ -3,25 +3,26 @@ session_start();
 include("../includes/log.php");
 
 if ($_SESSION["niveau"] >= 10) {  
-    include("../includes/PDO.php");
+    include("../includes/DINOSQL.php");
     include("../includes/status.php"); 
     
-    $result = dino_query("insert_valeur_champ", [
-        "client" => $_SESSION["client"],
-        "monde" => $_POST["monde"],
-        "champ" => $_POST["champ"],
-        "parent" => $_POST["parent"],
-        "valeur" => $_POST["valeur"]
-    ]);
+    try {
+        $dino = new DINOSQL();
         
-    if ($result["status"]) {
-        status(200);
+        $params = [
+            "client" => $_SESSION["client"],
+            "monde" => $_POST["monde"],
+            "champ" => $_POST["champ"],
+            "parent" => $_POST["parent"],
+            "valeur" => $_POST["valeur"]
+        ];
         
-        header('Content-Type: application/json');
-        echo json_encode([
-            "pk" => $result["result"]
-        ]);
-    } else {
+        $result = $dino->query("activate_final", $params);    
+        $dino->commit();
+        
+        status(200);        
+        echo $result;
+    } catch (Exception $e) {
         status(500);
     }
 } else {

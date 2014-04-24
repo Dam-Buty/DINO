@@ -2,7 +2,6 @@
 session_start();
 include("../includes/status.php");
 include("../includes/log.php");
-include("../includes/PDO.php");
 
 if (isset($_SESSION["niveau"])) {
     

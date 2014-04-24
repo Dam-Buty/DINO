@@ -1,15 +1,22 @@
 <?php
 include("../includes/log.php");
-include("../includes/PDO.php");
+include("../includes/DINOSQL.php");
 include("../includes/status.php");
 
-$result = dino_query("check_login",[
-    "login" => $_GET["login"]
-]);
+try {
+    $dino = new DINOSQL();
+    
+    $result = $dino->query("check_login",[
+        "login" => $_GET["login"]
+    ]);
 
-if (count($result["result"]) == 0) {
-    status(404);
-} else {
-    status(200);
+    if (count($result) == 0) {
+        status(404);
+    } else {
+        status(200);
+    }
+} catch (Exception $e) {
+    status(500);
 }
+
 ?>

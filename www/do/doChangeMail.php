@@ -1,22 +1,23 @@
 <?php
 session_start();
+include("../includes/status.php");
 
 if (isset($_SESSION["user"])) {
-    include("../includes/PDO.php");
+    include("../includes/DINOSQL.php");
     include("../includes/log.php");
     include("../includes/crypt.php");
-    include("../includes/status.php");
 
     $pass = $_POST["pass"];
     $new_mail = $_POST["mail"];
 
     $login = $_SESSION["user"];
-    
-    $result = dino_query("change_mail_select",[
-        "login" => $login
-    ]);
 
-    if ($result["status"]) {
+    try {
+        $dino = new DINOSQL();
+        
+        $result = $dino->query("change_mail_select",[
+            "login" => $login
+        ]);
     
         $row = $result["result"][0];
         
@@ -32,29 +33,21 @@ if (isset($_SESSION["user"])) {
             $new_clef = custom_hash($login . $pass . $new_mail);
             $clef_recryptee = crypte($new_clef, $clef_stockage);
             
-            $result_change = dino_query("change_mail_update",[
+            $dino->query("change_mail_update",[
                 "mail" => $new_mail,
                 "clef" => $clef_recryptee,
                 "login" => $login
             ]);
             
-            if ($result_change["status"]) {
-                status(200);
-            } else {
-                status(500);
-            }
+            $dino->commit();
+            status(200);
         } else {
             status(403);
-            $json = '{ "error": "pass" }';
         }
-    } else {
+    } catch (Exception $e) {
         status(500);
     }
-
-    header('Content-Type: application/json');
-    echo $json;
 } else {
     status(403);
-    $json = '{ "error": "pass" }';
 }
 ?>

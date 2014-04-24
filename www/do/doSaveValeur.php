@@ -2,33 +2,36 @@
 session_start();
 include("../includes/status.php");
 include("../includes/log.php");
+
 if ($_SESSION["niveau"] >= 20) {
-    include("../includes/PDO.php");
+    include("../includes/DINOSQL.php");
     
-    $params = [
-        "label" => $_POST["label"],
-        "champ" => $_POST["champ"],
-        "monde" => $_POST["monde"],
-        "client" => $_SESSION["client"],
-        "parent" => $_POST["parent"]
-    ];
-    
-    if ($_POST["pk"] == "new") {
-        $query = "valeur_add";
-    } else {
-        $query = "valeur_change";
+    try {
+        $dino = new DINOSQL();
         
-        $params["pk"] = $_POST["pk"];
-    }
-    
-    $result = dino_query($query, $params);
-    
-    if ($result["status"]) {
+        $params = [
+            "label" => $_POST["label"],
+            "champ" => $_POST["champ"],
+            "monde" => $_POST["monde"],
+            "client" => $_SESSION["client"],
+            "parent" => $_POST["parent"]
+        ];
+        
+        if ($_POST["pk"] == "new") {
+            $query = "valeur_add";
+        } else {
+            $query = "valeur_change";
+            
+            $params["pk"] = $_POST["pk"];
+        }
+        
+        $dino->query($query, $params);
+        
+        $dino->commit();
         status(200);
-    } else {
+    } catch (Exception $e) {
         status(500);
     }
-    
 } else {
     dino_log([
         "niveau" => "Z",

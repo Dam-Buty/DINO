@@ -1,57 +1,61 @@
 <?php
-include("../includes/PDO.php");
+session_start();
 include("../includes/log.php");
-include("../includes/crypt.php");
 include("../includes/status.php");
-include("../includes/mail.php");
 
-$login = $_POST["gestionnaire"];
-$password = $_POST["pass"];
-$mail = $_POST["mail"];
-$client = $_POST["client"];
+if ($_SESSION["niveau"] == 999) {
+    include("../includes/DINOSQL.php");
+    include("../includes/crypt.php");
+    include("../includes/mail.php");
 
-$users = $_POST["users"];
+    $login = $_POST["gestionnaire"];
+    $password = $_POST["pass"];
+    $mail = $_POST["mail"];
+    $client = $_POST["client"];
 
-$result = dino_query("login",[
-    "login" => $login
-]);
+    $users = $_POST["users"];
 
-if ($result["status"]) {
-    $row = $result["result"][0];
-    
-    if ($row["mdp_user"] == custom_hash($password . $login, TRUE)) {        
-        // On décrypte la clef
-        $clef_cryptee = $row["clef_user"];
-        $clef_user = custom_hash($login . $password . $mail);
+    try {
+        $dino = new DINOSQL();
         
-        $clef_stockage = decrypte($clef_user, $clef_cryptee);
-        
-        $err = false;
-        $nb_users = 0;
-        
-        foreach($users as $i => $user) {
-            $pass_user = genere_clef(10);
-            $pass_stockage = custom_hash($password . $user["login"], TRUE);
+        $result = $dino->query("login",[
+            "login" => $login
+        ]);
+
+        $row = $result[0];
+
+        if ($row["mdp_user"] == custom_hash($password . $login, TRUE)) {        
+            // On décrypte la clef
+            $clef_cryptee = $row["clef_user"];
+            $clef_user = custom_hash($login . $password . $mail);
             
-            $activation_user = genere_clef(12, true);
+            $clef_stockage = decrypte($clef_user, $clef_cryptee);
             
-            $clef_user = custom_hash($user["login"] . $pass_user . $user["mail"]);
+            $err = false;
+            $nb_users = 0;
             
-            $clef_cryptee = crypte($clef_user, $clef_stockage);
-            
-            $params_user = [
-                "login" => $user["login"],
-                "password" => $pass_stockage,
-                "mail" => $user["mail"],
-                "niveau" => 10,
-                "client" => $client,
-                "activation" => $activation_user,
-                "clef" => $clef_cryptee
-            ];
-            
-            $result_user = dino_query("user_add", $params_user);
-            
-            if ($result_user["status"]) {
+            foreach($users as $i => $user) {
+                $pass_user = genere_clef(10);
+                $pass_stockage = custom_hash($password . $user["login"], TRUE);
+                
+                $activation_user = genere_clef(12, true);
+                
+                $clef_user = custom_hash($user["login"] . $pass_user . $user["mail"]);
+                
+                $clef_cryptee = crypte($clef_user, $clef_stockage);
+                
+                $params_user = [
+                    "login" => $user["login"],
+                    "password" => $pass_stockage,
+                    "mail" => $user["mail"],
+                    "niveau" => 10,
+                    "client" => $client,
+                    "activation" => $activation_user,
+                    "clef" => $clef_cryptee
+                ];
+                
+                $dino->query("user_add", $params_user);
+                
                 foreach($user["mondes"] as $j => $monde) {
                     $params_monde = [
                         "client" => $client,
@@ -59,50 +63,33 @@ if ($result["status"]) {
                         "login" => $user["login"]
                     ];
                     
-                    $result_monde = dino_query("user_droits_monde", $params_monde);
+                    $result_monde = $dino->query("user_droits_monde", $params_monde);
+                    // TODO expos : aussi ajouter une valeur de champ à chaque monde avec le nom de l'exposant et lui donner les droits sur celle ci
+                    $nb_users++;
                     
-                    if ($result_monde["status"]) {
-                        $nb_users++;
-                    } else {
-                        $err = true;
-                    }
-            
-                    if ($err) {
-                        break;
-                    }
+                    dinomail($user["mail"], "creation_archiviste", [], [
+                        "user" => $user["login"],
+                        "pass" => $pass_user,
+                        "mail" => $user["mail"],
+                        "clef" => $activation_user
+                    ]);
                 }
-            } else {
-                $err = true;
             }
-            
-            if ($err) {
-                break;
-            } else {
-                dinomail($user["mail"], "creation_archiviste", [], [
-                    "user" => $user["login"],
-                    "pass" => $pass_user,
-                    "mail" => $user["mail"],
-                    "clef" => $activation_user
-                ]);
-            }
-        }
-        
-        if ($err) {
-            status(500);
+              
+            $dino->commit();
+            status(200);    
+            echo $nb_users;
         } else {
-            status(200);
+            status(403);
         }
-        
-        echo $nb_users;
-    } else {
-        status(403);
-        $json = json_encode([
-            "error" => "pass"
-        ]);
-        header('Content-Type: application/json');
-        echo $json;
+    } catch (Exception $e) {
+        status(500);
     }
 } else {
-    status(500);
+    dino_log([
+        "niveau" => "Z",
+        "query" => "Petit pédé se prend pour un superadmin!"
+    ]);
+    status(403);
 }
 ?>

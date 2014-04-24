@@ -14,16 +14,18 @@ function format_date($date) {
 $champs = array_filter($_POST["champs"]);
 
 if ($_SESSION["niveau"] >= 10) {
-    include("../includes/PDO.php");
+    include("../includes/DINOSQL.php");
         
-    $params_document = [
-        "date" => format_date($_POST["date"]),
-        "filename" => $_POST["filename"]
-    ];
-    
-    $result_document = dino_query("store_document", $params_document);
+    try {
+        $dino = new DINOSQL();
         
-    if ($result_document["status"]) {
+        $params_document = [
+            "date" => format_date($_POST["date"]),
+            "filename" => $_POST["filename"]
+        ];
+        
+        $dino->query("store_document", $params_document);
+            
         $params_type = [
             "type" => $_POST["type"],
             "categorie" => $_POST["categorie"],
@@ -43,7 +45,7 @@ if ($_SESSION["niveau"] >= 10) {
             "dvcChamp" => $_POST["maxchamp"],
             "dvcValeur" => $champs[$_POST["maxchamp"]]
         ];
-    
+
         if ($_POST["time"] != "000000") {
             $query_type .= "store_type_time";
             $params_type["time"] = $_POST["time"];
@@ -51,37 +53,24 @@ if ($_SESSION["niveau"] >= 10) {
             $query_type .= "store_type";
         }
         
-        $result_type = dino_query($query_type, $params_type);
+        $dino->query($query_type, $params_type);
+            
+        foreach($champs as $pk => $valeur) {
+            $params_champ = [
+                "filename" => $_POST["filename"],
+                "monde" => $_POST["monde"],
+                "client" => $_SESSION["client"],
+                "valeur" => $valeur,
+                "pk" => $pk
+            ];
+            
+            $dino->query("store_valeur", $params_champ);
+            
+        } // FIN FOREACH CHAMP
         
-        if ($result_type["status"]) {
-            
-            $err = false;
-            
-            foreach($champs as $pk => $valeur) {
-                $params_champ = [
-                    "filename" => $_POST["filename"],
-                    "monde" => $_POST["monde"],
-                    "client" => $_SESSION["client"],
-                    "valeur" => $valeur,
-                    "pk" => $pk
-                ];
-                
-                $result_champ = dino_query("store_valeur", $params_champ);
-                
-                if (!$result_champ["status"]) {
-                    status(500);
-                    $err = true;
-                    break;
-                }
-            } // FIN FOREACH CHAMP
-            
-            if (!$err) {
-                status(200);
-            }
-        } else {
-            status(500);
-        }   
-    } else {
+        $dino->commit();
+        status(200);
+    } catch (Exception $e) {
         status(500);
     }
 } else {

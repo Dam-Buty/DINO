@@ -19,19 +19,21 @@ class DINOSQL {
     private $dbname = "dino";
     private $password = "C4dillac5";
     
+    private $options = [
+        PDO::ATTR_PERSISTENT         => true,
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::MYSQL_ATTR_INIT_COMMAND => "SET time_zone = '-06:00'"
+    ];
+    
+    private $dsn;
     private $dbh;
     
     public function __construct() {
         try {
-            $dbh = new PDO("mysql:host=" . $hostname . ";dbname=" . $dbname . ";charset=utf8", $username, $password,[ 
-                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET time_zone = \'-06:00\''
-            ]);
+            $this->dsn = "mysql:host=" . $this->hostname . ";dbname=" . $this->dbname . ";charset=utf8";
+            $this->dbh = new PDO($this->dsn, $this->username, $this->password, $this->options);
             
-            var_dump($dbh);
             $this->dbh->beginTransaction();
-        
-            echo $this->dbh->getAttribute(PDO::ATTR_CONNECTION_STATUS) . "<br/>";
-            echo $this->dbh->getAttribute(PDO::ATTR_AUTOCOMMIT);
         } catch (PDOException $e) { // Erreur connection BdD
             dino_log([
                 "niveau" => "X",
@@ -59,9 +61,9 @@ class DINOSQL {
             
         $stmt = $this->dbh->prepare($query);
         
-        var_dump($this);
-        
-        if ($stmt->execute($params)) { // OK
+        try {
+            $stmt->execute($params);
+            
             dino_log([
                 "niveau" => "I",
                 "message" => $message,
@@ -70,19 +72,15 @@ class DINOSQL {
             
             switch($query_type) {
                 case "SELECT":
-                    $return = $stmt->fetchAll();
-                    break;
+                    return $stmt->fetchAll();
                 case "INSERT":
-                    $return = $this->dbh->lastInsertId();
-                    break;
+                    return $this->dbh->lastInsertId();
                 case "UPDATE":
-                    $return = $stmt->rowCount();
-                    break;
+                    return $stmt->rowCount();
                 case "DELETE":
-                    $return = $stmt->rowCount();
-                    break;
+                    return $stmt->rowCount();
             }
-        } else { // Erreur exécution query => on rollbacke la transaction
+        } catch (Exception $e) {
             $this->dbh->rollback();
             $this->dbh = null;
             
@@ -100,6 +98,11 @@ class DINOSQL {
     
     public function commit() {
         $this->dbh->commit();
+        $this->dbh = null;
+    }
+    
+    public function rollback() {
+        $this->dbh->rollback();
         $this->dbh = null;
     }
 }

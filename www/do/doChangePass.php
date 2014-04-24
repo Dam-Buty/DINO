@@ -2,7 +2,7 @@
 session_start();
 
 if (isset($_SESSION["user"])) {
-    include("../includes/PDO.php");
+    include("../includes/DINOSQL.php");
     include("../includes/log.php");
     include("../includes/crypt.php");
     include("../includes/status.php");
@@ -12,13 +12,15 @@ if (isset($_SESSION["user"])) {
 
     $login = $_SESSION["user"];
     
-    $result = dino_query("change_mdp_select",[
-        "login" => $login
-    ]);
-
-    if ($result["status"]) {
     
-        $row = $result["result"][0];
+    try {
+        $dino = new DINOSQL();
+        
+        $result = $dino->query("change_mdp_select",[
+            "login" => $login
+        ]);
+    
+        $row = $result[0];
         
         if ($row["mdp_user"] == custom_hash($old_pass . $login, TRUE)) {            
             // On décrypte la clef
@@ -32,31 +34,22 @@ if (isset($_SESSION["user"])) {
     
             $password = custom_hash($new_pass . $login, TRUE);
             
-            $result_change = dino_query("change_mdp_update", [
+            $dino->query("change_mdp_update", [
                 "pass" => $password,
                 "clef" => $clef_recryptee,
                 "login" => $login
             ]);
             
-            if ($result["status"]) {
-                status(200);
-            } else {
-                status(500);
-            }
+            $dino->commit();
+            status(200);
         } else {
             status(403);
-            $json = '{ "error": "pass" }';
-            header('Content-Type: application/json');
-            echo $json;
         }
-    } else {
+    } catch (Exception $e) {
         status(500);
     }
 } else {
     status(403);
-    $json = '{ "error": "pass" }';
-    header('Content-Type: application/json');
-    echo $json;
 }
 
 ?>

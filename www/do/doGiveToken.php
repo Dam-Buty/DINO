@@ -3,21 +3,24 @@ session_start();
 include("../includes/status.php");
 include("../includes/log.php");
 
-if ($_SESSION["niveau"] >= 20) {
-    include("../includes/PDO.php");
+if ($_SESSION["niveau"] == 999) {
+    include("../includes/DINOSQL.php");
     
-    $params = [
-        "client" => $_POST["client"],
-        "produit" => $_POST["produit"],
-        "qte" => $_POST["qte"],
-        "mois" => $_POST["mois"]
-    ];
-    
-    $result = dino_query("superadmin_give_token", $params);
-    
-    if ($result["status"]) {
+    try {
+        $dino = new DINOSQL();
+        
+        $params = [
+            "client" => $_POST["client"],
+            "produit" => $_POST["produit"],
+            "qte" => $_POST["qte"],
+            "mois" => $_POST["mois"]
+        ];
+        
+        $dino->query("superadmin_give_token", $params);
+        
+        $dino->commit();
         status(200);
-    } else {
+    } catch (Exception $e) {
         status(500);
     }
 } else {
@@ -25,6 +28,6 @@ if ($_SESSION["niveau"] >= 20) {
         "niveau" => "Z",
         "query" => "Petit pédé se prend pour un superadmin!"
     ]);
-    header("Location: ../index.php");
+    status(403);
 }
 ?>

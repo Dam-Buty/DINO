@@ -27,8 +27,8 @@ var bootstrap_queue = function() {
 var get_queue = function() {
     queue.length = 0;
     $.ajax({ url: "json/queue.php" })
-    .done(function (data) {
-        $.each(data.queue, function() {
+    .done(function (queue) {
+        $.each(queue, function() {
             var document_li = set_li_status(create_li(this.displayname, this.size, this.user, this.date), 1);
             this.li = document_li;
             queue.push(this);

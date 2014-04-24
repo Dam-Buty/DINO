@@ -4,20 +4,21 @@ include("../includes/status.php");
 include("../includes/log.php");  
 
 if ($_SESSION["niveau"] >= 20) {
-    include("../includes/PDO.php"); 
+    include("../includes/DINOSQL.php"); 
         
-    $params = [
-        "client" => $_SESSION["client"],
-        "niveau" => $_SESSION["niveau"]
-    ];
-    
-    $result = dino_query("json_users", $params);
-    
-    if ($result["status"]) {
+    try {
+        $dino = new DINOSQL();
         
+        $params = [
+            "client" => $_SESSION["client"],
+            "niveau" => $_SESSION["niveau"]
+        ];
+        
+        $result = $dino->query("json_users", $params);
+                
         $users = [];
         
-        foreach($result["result"] as $row) {
+        foreach($result as $row) {
             $users[$row["login_user"]] = [
                 "mail" => $row["mail_user"],
                 "niveau" => $row["niveau_user"],
@@ -31,41 +32,36 @@ if ($_SESSION["niveau"] >= 20) {
                 "user2" => $row["login_user"]
             ];
             
-            $result_mondes = dino_query("json_user_mondes", $params_mondes);
-            
-            if ($result_mondes["status"]) {
-            
-                foreach($result_mondes["result"] as $row_mondes) {
-                    if ($row_mondes["niveau_monde"] <= $row["niveau_user"]
-                        || $row_mondes["droit"] > 0 ) {
-                            $users[$row["login_user"]]["mondes"][$row_mondes["pk_monde"]] = [];
-                    }
+            $result_mondes = $dino->query("json_user_mondes", $params_mondes);
                     
-                    $params_champs = [
-                        "client" => $_SESSION["client"],
-                        "monde" => $row_mondes["pk_monde"],
-                        "user" => $row["login_user"]
-                    ];
-                    
-                    $result_champs = dino_query("json_user_valeurs", $params_champs);
-                    
-                    if ($result_champs["status"]) {
-                        
-                        foreach($result_champs["result"] as $row_champs) {
-                            array_push($users[$row["login_user"]]["mondes"][$row_mondes["pk_monde"]], $row_champs["fk_valeur_champ"]);
-                        }
-                    }
+            foreach($result_mondes as $row_mondes) {
+                if ($row_mondes["niveau_monde"] <= $row["niveau_user"]
+                    || $row_mondes["droit"] > 0 ) {
+                        $users[$row["login_user"]]["mondes"][$row_mondes["pk_monde"]] = [];
                 }
-            } 
+                
+                $params_champs = [
+                    "client" => $_SESSION["client"],
+                    "monde" => $row_mondes["pk_monde"],
+                    "user" => $row["login_user"]
+                ];
+                
+                $result_champs = $dino->query("json_user_valeurs", $params_champs);
+                                
+                foreach($result_champs as $row_champs) {
+                    array_push($users[$row["login_user"]]["mondes"][$row_mondes["pk_monde"]], $row_champs["fk_valeur_champ"]);
+                }
+            }
         }
         
         $json = json_encode($users);
         status(200);
         header('Content-Type: application/json');
         echo $json;
-    } else {
+    } catch (Exception $e) {
         status(500);
     }
+
 } else {
     dino_log([
         "niveau" => "Z",

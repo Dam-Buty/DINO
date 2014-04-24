@@ -4,24 +4,26 @@ include("../includes/status.php");
 include("../includes/log.php");
 
 if ($_SESSION["niveau"] == 999) {
-    include("../includes/PDO.php");
+    include("../includes/DINOSQL.php");
     
-    $params = [
-        "pk" => $_POST["pk"]
-    ];
-    
-    $result = dino_query("superadmin_revoke_token", $params);
-    
-    if ($result["status"]) {
+    try {
+        $dino = new DINOSQL();
+        
+        $dino->query("superadmin_revoke_token", [
+            "pk" => $_POST["pk"]
+        ]); 
+        
+        $dino->commit();
         status(200);
-    } else {
+    } catch (Exception $e) {
         status(500);
     }
+    
 } else {
     dino_log([
         "niveau" => "Z",
         "query" => "Petit pédé se prend pour un superadmin!"
     ]);
-    header("Location: ../index.php");
+    status(403);
 }
 ?>

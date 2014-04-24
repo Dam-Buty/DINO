@@ -4,19 +4,22 @@ include("../includes/status.php");
 include("../includes/log.php"); 
 
 if (isset($_SESSION["niveau"])) {
-    include("../includes/PDO.php");
+    include("../includes/DINOSQL.php");
     
-    $result = dino_query("request_document_select", [
-        "client" => $_SESSION["client"]
-    ]);
-    
-    $document = [];
-    
-    if ($result["status"]) {
-        if (count($result["result"]) == 0) {
+    try {
+        $dino = new DINOSQL();
+        
+        $result = $dino->query("request_document_select", [
+            "client" => $_SESSION["client"]
+        ]);
+        
+        $document = [];
+        
+        if (count($result) == 0) {
             status(204);
         } else {
-                
+            $row = $result[0];
+            
             $date = substr($row["date_doc"], 8, 2) . "/" . substr($row["date_doc"], 5, 2);
             $user = $row["fk_user"];
             
@@ -39,20 +42,17 @@ if (isset($_SESSION["niveau"])) {
                 ]
             ];
             
-            $result_update = dino_query("request_document_update", [
+            $result_update = $dino->query("request_document_update", [
                 "client" => $_SESSION["client"],
                 "filename" => $row["filename_document"]
             ]);
             
-            if ($result_update["status"]) {
-                status(200);
-                header('Content-Type: application/json');
-                echo json_encode($document);
-            } else {
-                status(500);
-            }
+            $dino->commit();
+            status(200);
+            header('Content-Type: application/json');
+            echo json_encode($document);
         }
-    } else {
+    } catch (Exception $e) {
         status(500);
     }
 } else {

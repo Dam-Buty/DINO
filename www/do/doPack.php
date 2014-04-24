@@ -1,6 +1,5 @@
 <?php
 session_start();
-include("../includes/PDO.php");
 include("../includes/log.php");
 include("../includes/status.php");
 
@@ -44,7 +43,6 @@ if ($_SESSION["niveau"] >= 10) {
         // proc_close in order to avoid a deadlock
         $return_value = proc_close($process);
 
-        
         $err_log = str_replace($clef, "%%CLEF%%", $err);
 
         if ($return_value == 0) {

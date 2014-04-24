@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../includes/PDO.php");
+include("../includes/DINOSQL.php");
 include("../includes/crypt.php");
 include("../includes/status.php");
 include("../includes/log.php");
@@ -25,16 +25,16 @@ if ($cave = opendir($cave_path)) {
 	            
 	            // On vérifie qu'il n'a pas encore été pris en compte
 	            // (via son numéro de job)
-	            
-                $result_check = dino_query("check_cave_select",[
-                    "client" => $_SESSION["client"],
-                    "job" => $elements[1]
-                ]);
-	            
-	            if ($result_check["status"]) {
-	                if (count($result_check["result"]) == 0) {
+                try {
+                    $dino = new DINOSQL();
+                    $result_check = $dino->query("check_cave_select",[
+                        "client" => $_SESSION["client"],
+                        "job" => $elements[1]
+                    ]);
+	                
+                    if (count($result_check["result"]) == 0) {
                         
-                        $result = dino_query("check_cave_insert",[
+                        $result = $dino->query("check_cave_insert",[
                             "filename" => $filename. ".pdf",
                             "job" => $elements[1],
                             "taille" => $filesize,
@@ -43,41 +43,36 @@ if ($cave = opendir($cave_path)) {
                             "user" => $_SESSION["printer"],
                             "date" => date("Y-m-d H:i:s")
                         ]);
-                        
-                        if ($result["status"]) {        
-                            if (copy($cave_path . $file, "../cache/" . $_SESSION["client"] . "/temp/" . $filename . ".pdf")) {
-                                dino_log([
-                                    "niveau" => "I",
-                                    "message" => "Document décavé vers ../cache/" . $_SESSION["client"] . "/temp/" . $filename . ".pdf",
-                                    "query" => $cave_path . $file
-                                ]);
-                            } else {
-                                status(500);
-                                dino_log([
-                                    "niveau" => "E",
-                                    "message" => "Impossible de décaver vers ../cache/" . $_SESSION["client"] . "/temp/" . $filename . ".pdf",
-                                    "query" => $cave_path . $file
-                                ]);
-                                $err = true;
-                                break;
-                            }
+                              
+                        if (copy($cave_path . $file, "../cache/" . $_SESSION["client"] . "/temp/" . $filename . ".pdf")) {
+                            dino_log([
+                                "niveau" => "I",
+                                "message" => "Document décavé vers ../cache/" . $_SESSION["client"] . "/temp/" . $filename . ".pdf",
+                                "query" => $cave_path . $file
+                            ]);
                         } else {
                             status(500);
+                            dino_log([
+                                "niveau" => "E",
+                                "message" => "Impossible de décaver vers ../cache/" . $_SESSION["client"] . "/temp/" . $filename . ".pdf",
+                                "query" => $cave_path . $file
+                            ]);
                             $err = true;
-                            break;
                         }
-	                }
-	            } else {
+                    }
+                } catch (Exception $e) {
                     status(500);
-                    $err = true;
-                    break;
                 }
-	            
             }       
         }
-    }
+        
+        if ($err) {
+            break;
+        }
+    } // FIN WHILE LISTE FICHIERS
     
     if (!$err) {
+        $dino->commit();
         status(201);
     }
 } else {

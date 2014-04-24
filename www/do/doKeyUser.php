@@ -1,10 +1,11 @@
 <?php
 session_start();
 include("../includes/log.php");
+include("../includes/status.php");
+
 if ($_SESSION["niveau"] >= 20) {
-    include("../includes/PDO.php");
+    include("../includes/DINOSQL.php");
     include("../includes/crypt.php");
-    include("../includes/status.php");
     include("../includes/mail.php");
     
     // On génère un nouveau mot de passe
@@ -16,44 +17,33 @@ if ($_SESSION["niveau"] >= 20) {
 
     $password_stockable = custom_hash($pass . $_POST["login"], TRUE);
     
-    $result_user = dino_query("key_user", [
-        "pass" => $password_stockable,
-        "clef" => $clef_cryptee,
-        "client" => $_SESSION["client"],
-        "niveau" => $_SESSION["niveau"],
-        "login" => $_POST["login"]
-    ]);
-    
-    if ($result_user["status"]) {
-        $retour = dinomail($_POST["mail"], "reset_pass", [], [
+        
+    try {
+        $dino = new DINOSQL();
+        
+        $dino->query("key_user", [
+            "pass" => $password_stockable,
+            "clef" => $clef_cryptee,
+            "client" => $_SESSION["client"],
+            "niveau" => $_SESSION["niveau"],
+            "login" => $_POST["login"]
+        ]);
+        $dino->commit();
+        
+        dinomail($_POST["mail"], "reset_pass", [], [
             "user" => $_POST["login"],
             "pass" => $pass
-        ]);
-        
-                    
-        if ($retour != "") {
-            dino_log([
-                "niveau" => "E",
-                "query" => "mail reset_pass",
-                "errno" => "",
-                "errinfo" => $retour,
-                "params" => json_encode([
-                    "user" => $_POST["login"],
-                    "pass" => $pass
-                ])
-            ]);
-        }
+        ]);   
         
         status(200);
-    } else {
+    } catch (Exception $e) {
         status(500);
     }
-    
 } else {
     dino_log([
         "niveau" => "Z",
         "query" => "Key user : droits insuffisants"
     ]);
-    header("Location: ../index.php");
+    status(403);
 }
 ?>

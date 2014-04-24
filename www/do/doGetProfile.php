@@ -27,17 +27,17 @@ function convertBytes( $value ) {
 
 function recupere_types($monde, $champ, $categorie) {
     $types = [];
-            
-    $result_types = dino_query("profil_types",[
-        "client" => $_SESSION["client"],
-        "monde" => $monde,
-        "champ" => $champ,
-        "categorie" => $categorie,
-        "niveau" => $_SESSION["niveau"] 
-    ]);
     
-    if ($result_types["status"]) {
-        foreach($result_types["result"] as $row_types) {
+    try {
+        $result_types = $dino->query("profil_types",[
+            "client" => $_SESSION["client"],
+            "monde" => $monde,
+            "champ" => $champ,
+            "categorie" => $categorie,
+            "niveau" => $_SESSION["niveau"] 
+        ]);
+
+        foreach($result_types as $row_types) {
             
             $types[$row_types["pk_type_doc"]] = [
                 "label" => $row_types["label_type_doc"],
@@ -53,43 +53,38 @@ function recupere_types($monde, $champ, $categorie) {
                 
                 $query_details = "";
                 
-                $result_details = dino_query("profil_type_details",[
+                $result_details = $dino->query("profil_type_details",[
                     "client" => $_SESSION["client"],
                     "monde" => $monde,
                     "champ" => $champ,
                     "categorie" => $categorie,
                     "type" => $row_types["pk_type_doc"]
                 ]);
-                
-                if ($result_details["status"]) {
-                    foreach($result_details["result"] as $row_details) {
-                        array_push($types[$row_types["pk_type_doc"]]["details"], $row_details["detail_type_doc"]);
-                    } // FIN WHILE DETAILS
-                    
-                } else {
-                    status(500);
-                }
+            
+                foreach($result_details as $row_details) {
+                    array_push($types[$row_types["pk_type_doc"]]["details"], $row_details["detail_type_doc"]);
+                } // FIN WHILE DETAILS   
             }
         } // FIN WHILE TYPES
-        
-        return $types;        
-    } else {
-        status(500);
+
+        return $types;  
+    } catch (Exception $e) {
+        throw new Exception("Erreur de recuperation recursive", 3);
     }
 }
 
 function recupere_categories($monde, $champ) {    
     $categories = [];
-
-    $result_categories = dino_query("profil_categories",[
-        "client" => $_SESSION["client"],
-        "monde" => $monde,
-        "champ" => $champ,
-        "niveau" => $_SESSION["niveau"] 
-    ]);
     
-    if ($result_categories["status"]) {
-        foreach($result_categories["result"] as $row_categories) {
+    try {
+        $result_categories = $dino->query("profil_categories",[
+            "client" => $_SESSION["client"],
+            "monde" => $monde,
+            "champ" => $champ,
+            "niveau" => $_SESSION["niveau"] 
+        ]);
+        
+        foreach($result_categories as $row_categories) {
             
             $categories[$row_categories["pk_categorie_doc"]] = [
                 "label" => $row_categories["label_categorie_doc"],
@@ -102,22 +97,21 @@ function recupere_categories($monde, $champ) {
         } // FIN WHILE CATEGORIES
         
         return $categories;
-        
-    } else {
-        status(500);
+    } catch (Exception $e) {
+        throw new Exception("Erreur de recuperation recursive", 3);
     }
 }
 
 function gestion_tutos($niveau) {
     $tutos = [ ];
     
-    $result_tutos = dino_query("profil_tutos",[
-        "user" => $_SESSION["user"],
-        "niveau" => $niveau
-    ]);
-    
-    if ($result_tutos["status"]) {
-        foreach($result_tutos["result"] as $row_tutos) {
+    try {
+        $result_tutos = $dino->query("profil_tutos",[
+            "user" => $_SESSION["user"],
+            "niveau" => $niveau
+        ]);
+        
+        foreach($result_tutos as $row_tutos) {
             array_push($tutos, [
                 "pk" => $row_tutos["pk_tuto"],
                 "titre" => $row_tutos["titre_tuto"],
@@ -126,21 +120,20 @@ function gestion_tutos($niveau) {
             ]);
         } // FIN WHILE TUTOS
         return $tutos;
-        
-    } else {
-        status(500);
+    } catch (Exception $e) {
+        throw new Exception("Erreur de recuperation recursive", 3);
     }
 }
 
 function gestion_documentation($niveau) {
     $documentations = [ ];
     
-    $result_documentations = dino_query("profil_documentations",[
-        "niveau" => $niveau
-    ]);
-    
-    if ($result_documentations["status"]) {
-        foreach($result_documentations["result"] as $row_documentation) {
+    try {
+        $result_documentations = $dino->query("profil_documentations",[
+            "niveau" => $niveau
+        ]);
+        
+        foreach($result_documentations as $row_documentation) {
             array_push($documentations, [
                 "pk" => $row_documentation["pk_documentation"],
                 "titre" => $row_documentation["titre_documentation"],
@@ -149,9 +142,8 @@ function gestion_documentation($niveau) {
             ]);
         } // FIN WHILE TUTOS
         return $documentations;
-        
-    } else {
-        status(500);
+    } catch (Exception $e) {
+        throw new Exception("Erreur de recuperation recursive", 3);
     }
 }
 
@@ -169,22 +161,19 @@ function gestion_tokens($niveau) {
         ]
     ];
     
-    $result_tokens = dino_query("profil_tokens",[
-        "client" => $_SESSION["client"]
-    ]);
-    
-    if ($result_tokens["status"]) {
-        $err = false;
-        
+    try {
+        $result_tokens = $dino->query("profil_tokens",[
+            "client" => $_SESSION["client"]
+        ]);
+            
         // On parcourt les tokens :
         // - On ignore les expirés (SQL)
         // - On met dans la besace les valides pas utilisés
         // - On expire les éléments et les tokens qui viennent de passer leur validité
         // - On stocke dans le profil les options (visitors, espace...)
         
-        foreach($result_tokens["result"] as $row_token) {
+        foreach($result_tokens as $row_token) {
             $expired = $row_token["expired"];
-            
             
             // Selon le produit
             switch($row_token["fk_produit"]) {
@@ -206,20 +195,20 @@ function gestion_tokens($niveau) {
                     if (!$expired) {
                         $tokens["visitor"] = $row_token["pk_token"];
                     }# else {
-#                        // Expire les visiteurs
-#                        $params_expire_visiteurs = [
-#                            "client" => $_SESSION["client"]
-#                        ];
-#                            
-#                        $result_expire_visiteurs = dino_query("expire_visiteurs", $params_expire_visiteurs);
+    #                        // Expire les visiteurs
+    #                        $params_expire_visiteurs = [
+    #                            "client" => $_SESSION["client"]
+    #                        ];
+    #                            
+    #                        $result_expire_visiteurs = dino_query("expire_visiteurs", $params_expire_visiteurs);
 
-#                        if ($result_expire_visiteurs["status"]) {
-#                            $tokens["visitor"] = $result_expire_visiteurs["result"] * -1;
-#                        } else {
-#                            status(500);
-#                            $err = true;
-#                        }
-#                    }
+    #                        if ($result_expire_visiteurs["status"]) {
+    #                            $tokens["visitor"] = $result_expire_visiteurs * -1;
+    #                        } else {
+    #                            status(500);
+    #                            $err = true;
+    #                        }
+    #                    }
                     break;
                 case 3: /////////////////////////////// Espace
                     if (!$expired) {
@@ -229,89 +218,85 @@ function gestion_tokens($niveau) {
                     }
                     break;
                 case 4: //////////////////////////////////// Monde
-#                    if (!$expired) {
-#                        if ($niveau >= 30) {
-#                            if ($row_token["used_token"] == 0) {
-#                                if ($row_token["paid_token"]) {
-#                                    // Met le token dans la besace du user
-#                                    array_push($tokens["paid"]["mondes"], $row_token["pk_token"]);
-#                                } else {
-#                                    array_push($tokens["unpaid"]["mondes"], $row_token["pk_token"]);
-#                                }
-#                            }
-#                        }
-#                    } else {
-#                        if ($row_token["used_token"] != 0) {
-#                            // expire le monde concerné
-#                            $params_expire_monde = [
-#                                "pk" => $row_token["pk_token"]
-#                            ];
-#                            
-#                            $result_expire_monde = dino_query("expire_monde", $params_expire_monde);
-#    
-#                            if (!$result_expire_monde["status"]) {
-#                                status(500);
-#                                $err = true;
-#                            }
-#                        }
-#                    }
+    #                    if (!$expired) {
+    #                        if ($niveau >= 30) {
+    #                            if ($row_token["used_token"] == 0) {
+    #                                if ($row_token["paid_token"]) {
+    #                                    // Met le token dans la besace du user
+    #                                    array_push($tokens["paid"]["mondes"], $row_token["pk_token"]);
+    #                                } else {
+    #                                    array_push($tokens["unpaid"]["mondes"], $row_token["pk_token"]);
+    #                                }
+    #                            }
+    #                        }
+    #                    } else {
+    #                        if ($row_token["used_token"] != 0) {
+    #                            // expire le monde concerné
+    #                            $params_expire_monde = [
+    #                                "pk" => $row_token["pk_token"]
+    #                            ];
+    #                            
+    #                            $result_expire_monde = dino_query("expire_monde", $params_expire_monde);
+    #    
+    #                            if (!$result_expire_monde["status"]) {
+    #                                status(500);
+    #                                $err = true;
+    #                            }
+    #                        }
+    #                    }
                     break;
             };
             
             // On expire le token le cas échéant
-#            if ($expired) {
-#                $params_expire_token = [
-#                    "pk" => $row_token["pk_token"]
-#                ];
-#                
-#                $result_expire_token = dino_query("expire_token", $params_expire_token);
-#                if (!$result_expire_token["status"]) {
-#                    status(500);
-#                    $err = true;
-#                }
-#            }
-            
-            if ($err) {
-                break;
-            }
+    #        if ($expired) {
+    #            $params_expire_token = [
+    #                "pk" => $row_token["pk_token"]
+    #            ];
+    #            
+    #            $result_expire_token = dino_query("expire_token", $params_expire_token);
+    #            if (!$result_expire_token["status"]) {
+    #                status(500);
+    #                $err = true;
+    #            }
+    #        }
         } // FIN WHILE TOKENS
         return $tokens;
-        
-    } else {
-        status(500);
+    } catch (Exception $e) {
+        throw new Exception("Erreur de recuperation recursive", 3);
     }
 }
   
-
 if (isset($_SESSION["user"])) {
-    include("../includes/PDO.php");
+    include("../includes/DINOSQL.php");
     
     $maxFileSize = convertBytes( ini_get( 'upload_max_filesize' ) );
     
-    $profil = [
-        "maxfilesize" => $maxFileSize,
-        "branded" => 0,
-        "public" => 0,
-        "client" => 0,
-        "convert" => 0,
-        "espace" => 0,
-        "visitor" => 0,
-        "tutos" => [],
-        "documentations" => [],
-        "mondes" => []
-    ];
-    
-    ////////////////////////
-    // Récupération des informations générales de l'user
-    ////////////////////////
-    
-    $result = dino_query("profil_client_user",[
-        "login" => $_SESSION["user"]
-    ]);
-    
-    if ($result["status"]) {
-        if (count($result["result"]) > 0) {
-            $row = $result["result"][0];
+    try {
+        $dino = new DINOSQL();
+        
+        $profil = [
+            "maxfilesize" => $maxFileSize,
+            "branded" => 0,
+            "public" => 0,
+            "client" => 0,
+            "convert" => 0,
+            "espace" => 0,
+            "visitor" => 0,
+            "tutos" => [],
+            "documentations" => [],
+            "mondes" => []
+        ];
+        
+        ////////////////////////
+        // Récupération des informations générales de l'user
+        ////////////////////////
+        
+        $result = $dino->query("profil_client_user",[
+            "login" => $_SESSION["user"]
+        ]);
+        
+        if (count($result) > 0) {
+            $row = $result[0];
             
             $_SESSION["client"] = $row["fk_client"];
             $_SESSION["printer"] = $row["printer_client"];
@@ -323,141 +308,121 @@ if (isset($_SESSION["user"])) {
             $profil["branded"] = $row["branded_client"];
             $profil["public"] = $row["public_user"];
             
-            $profil["tutos"] = gestion_tutos($profil["niveau"]);
-            $profil["documentations"] = gestion_documentation($profil["niveau"]);
+            $profil["tutos"] = gestion_tutos($dino, $profil["niveau"]);
+            $profil["documentations"] = gestion_documentation($dino, $profil["niveau"]);
             
             $profil["branded"] = $row["branded_client"];
             $profil["convert"] = $row["convert_client"];
             $profil["public"] = $row["public_user"];
             
-            $profil["tokens"] = gestion_tokens($profil["niveau"]);
+            $profil["tokens"] = gestion_tokens($dino, $profil["niveau"]);
             
                
             //////////////////////////
             // Récupération des mondes sur lesquels l'user a des droits
             //////////////////////////
             
-            $result_mondes = dino_query("profil_mondes",[
+            $result_mondes = $dino->query("profil_mondes",[
                 "client" => $row["fk_client"],
                 "user" => $_SESSION["user"]
             ]);
-            
-            if ($result_mondes["status"]) {
                 
-                foreach($result_mondes["result"] as $row_mondes) {
-                    $profil["mondes"][$row_mondes["pk_monde"]] = [
-                        "label" => $row_mondes["label_monde"],
-                        "niveau" => $row_mondes["niveau_monde"],
-                        "all" => "bogus",
-                        "champs" => [],
-                        "cascade" => [],
-                        "references" => [
-                            0 => []
-                        ]
+            foreach($result_mondes as $row_mondes) {
+                $profil["mondes"][$row_mondes["pk_monde"]] = [
+                    "label" => $row_mondes["label_monde"],
+                    "niveau" => $row_mondes["niveau_monde"],
+                    "all" => "bogus",
+                    "champs" => [],
+                    "cascade" => [],
+                    "references" => [
+                        0 => []
+                    ]
+                ];
+                
+                //////////////////////////
+                // Récupération des champs
+                //////////////////////////
+                
+                $result_champs = $dino->query("profil_champs",[
+                    "client" => $_SESSION["client"],
+                    "monde" => $row_mondes["pk_monde"]
+                ]);
+                    
+                foreach($result_champs as $row_champs) {
+                    $profil["mondes"][$row_mondes["pk_monde"]]["champs"][$row_champs["pk_champ"]] = [
+                        "label" => $row_champs["label_champ"],
+                        "pluriel" => $row_champs["pluriel_champ"],
+                        "categories" => [],
+                        "types" => [],
+                        "liste" => []
                     ];
                     
-                    //////////////////////////
-                    // Récupération des champs
-                    //////////////////////////
+                    array_push($profil["mondes"][$row_mondes["pk_monde"]]["cascade"], $row_champs["pk_champ"]);
                     
-                    $result_champs = dino_query("profil_champs",[
+                    //////////////////////////
+                    // Récupération des valeurs de champ sur lesquelles
+                    // l'user a des droits
+                    //////////////////////////
+                      
+                    $result_liste = $dino->query("profil_valeurs",[
                         "client" => $_SESSION["client"],
-                        "monde" => $row_mondes["pk_monde"]
-                    ]);
+                        "monde" => $row_mondes["pk_monde"],
+                        "champ" => $row_champs["pk_champ"],
+                        "user" => $_SESSION["user"],
+                        "client1" => $_SESSION["client"],
+                        "monde1" => $row_mondes["pk_monde"],
+                        "champ1" => $row_champs["pk_champ"]
+                    ]);     
                     
-                    if ($result_champs["status"]) {
-                        
-                        foreach($result_champs["result"] as $row_champs) {
-                            $profil["mondes"][$row_mondes["pk_monde"]]["champs"][$row_champs["pk_champ"]] = [
-                                "label" => $row_champs["label_champ"],
-                                "pluriel" => $row_champs["pluriel_champ"],
-                                "categories" => [],
-                                "types" => [],
-                                "liste" => []
-                            ];
+                    $all = false;
+                    $first = true;
                             
-                            array_push($profil["mondes"][$row_mondes["pk_monde"]]["cascade"], $row_champs["pk_champ"]);
-                            
-                            //////////////////////////
-                            // Récupération des valeurs de champ sur lesquelles
-                            // l'user a des droits
-                            //////////////////////////
-                              
-                            $result_liste = dino_query("profil_valeurs",[
-                                "client" => $_SESSION["client"],
-                                "monde" => $row_mondes["pk_monde"],
-                                "champ" => $row_champs["pk_champ"],
-                                "user" => $_SESSION["user"],
-                                "client1" => $_SESSION["client"],
-                                "monde1" => $row_mondes["pk_monde"],
-                                "champ1" => $row_champs["pk_champ"]
-                            ]);     
-                            
-                            $all = false;
-                            $first = true;
-                            
-                            if ($result_liste["status"]) {
-                                    
-                                foreach($result_liste["result"] as $row_liste) {
-                                    if ($first) {
-                                        if ($row_liste["droits_valeur_champ"] == 0) {
-                                            $all = true;
-                                            if ($profil["mondes"][$row_mondes["pk_monde"]]["all"] == "bogus") {
-                                                $profil["mondes"][$row_mondes["pk_monde"]]["all"] = true;   
-                                            }
-                                        } else {
-                                            if ($profil["mondes"][$row_mondes["pk_monde"]]["all"] == "bogus") {
-                                                $profil["mondes"][$row_mondes["pk_monde"]]["all"] = false;   
-                                            }
-                                        }
-                                        $first = false;
-                                    }
-                                    
-                                    if ($_SESSION["niveau"] >= 20 or $row_liste["droits_valeur_champ"] or $all) {
-                                    $profil["mondes"][$row_mondes["pk_monde"]]["champs"][$row_champs["pk_champ"]]["liste"][$row_liste["pk_valeur_champ"]] = $row_liste["label_valeur_champ"];
-                                    
-                                    // construction de la cascade de références
-                                    $profil["mondes"][$row_mondes["pk_monde"]]["references"][$row_liste["fk_parent"]][$row_liste["pk_valeur_champ"]] = [];
-                                    }
-                                } // FIN WHILE LISTE
+                    foreach($result_liste as $row_liste) {
+                        if ($first) {
+                            if ($row_liste["droits_valeur_champ"] == 0) {
+                                $all = true;
+                                if ($profil["mondes"][$row_mondes["pk_monde"]]["all"] == "bogus") {
+                                    $profil["mondes"][$row_mondes["pk_monde"]]["all"] = true;   
+                                }
                             } else {
-                                status(500);
-                                break;
+                                if ($profil["mondes"][$row_mondes["pk_monde"]]["all"] == "bogus") {
+                                    $profil["mondes"][$row_mondes["pk_monde"]]["all"] = false;   
+                                }
                             }
-                            
-                            // Récupération des types de document en racine
-                            $types = recupere_types($row_mondes["pk_monde"], $row_champs["pk_champ"], 0);
-                            
-                            $profil["mondes"][$row_mondes["pk_monde"]]["champs"][$row_champs["pk_champ"]]["types"] = $types;
-                            
-                            // Récupération des catégories/typedoc en racine
-                            $categories = recupere_categories($row_mondes["pk_monde"], $row_champs["pk_champ"]);
-                            $profil["mondes"][$row_mondes["pk_monde"]]["champs"][$row_champs["pk_champ"]]["categories"] = $categories;
-                            
-                        } // FIN WHILE CHAMPS
-                    } else {
-                        status(500);
-                        break;
-                    }
+                            $first = false;
+                        }
+                        
+                        if ($_SESSION["niveau"] >= 20 or $row_liste["droits_valeur_champ"] or $all) {
+                        $profil["mondes"][$row_mondes["pk_monde"]]["champs"][$row_champs["pk_champ"]]["liste"][$row_liste["pk_valeur_champ"]] = $row_liste["label_valeur_champ"];
+                        
+                        // construction de la cascade de références
+                        $profil["mondes"][$row_mondes["pk_monde"]]["references"][$row_liste["fk_parent"]][$row_liste["pk_valeur_champ"]] = [];
+                        }
+                    } // FIN WHILE LISTE
                     
-                } // FIN WHILE MONDES
+                    // Récupération des types de document en racine
+                    $types = recupere_types($dino, $row_mondes["pk_monde"], $row_champs["pk_champ"], 0);
+                    
+                    $profil["mondes"][$row_mondes["pk_monde"]]["champs"][$row_champs["pk_champ"]]["types"] = $types;
+                    
+                    // Récupération des catégories/typedoc en racine
+                    $categories = recupere_categories($dino, $row_mondes["pk_monde"], $row_champs["pk_champ"]);
+                    $profil["mondes"][$row_mondes["pk_monde"]]["champs"][$row_champs["pk_champ"]]["categories"] = $categories;
+                    
+                } // FIN WHILE CHAMPS
                 
-                status(200);
-                $json = json_encode($profil);
-                
-#                var_dump( json_last_error() );
-##                var_dump( $profil );
-#                var_dump( utf8_decode($profil) );
-                header('Content-Type: application/json');
-                echo $json;
-            } else {
-                status(500);
-                break;
-            }
+            } // FIN WHILE MONDES
+            
+            dino->commit();
+            status(200);
+            $json = json_encode($profil);
+            header('Content-Type: application/json');
+            echo $json;
         } else {
             status(403);
         }
-    } else {
+    } catch (Exception $e) {
+        $dino->rollback();
         status(500);
     }
 } else {

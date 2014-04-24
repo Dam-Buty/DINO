@@ -4,16 +4,19 @@ include("../includes/status.php");
 include("../includes/log.php");  
 
 if (isset($_SESSION["niveau"])) {
-    include("../includes/PDO.php");
+    include("../includes/DINOSQL.php");
     
-    $result_update = dino_query("release_document",[
-        "client" => $_SESSION["client"],
-        "filename" => $_POST["document"]
-    ]);
-    
-    if ($result_update["status"]) {
+    try {
+        $dino = new DINOSQL();
+        
+        $dino->query("release_document",[
+            "client" => $_SESSION["client"],
+            "filename" => $_POST["document"]
+        ]);
+        
+        $dino->commit();
         status(200);
-    } else {
+    } catch (Exception $e) {
         status(500);
     }
 } else {
