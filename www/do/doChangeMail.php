@@ -19,7 +19,7 @@ if (isset($_SESSION["user"])) {
             "login" => $login
         ]);
     
-        $row = $result["result"][0];
+        $row = $result[0];
         
         if ($row["mdp_user"] == custom_hash($pass . $login, TRUE)) {  
             $old_mail = $row["mail_user"];

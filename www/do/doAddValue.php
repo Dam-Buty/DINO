@@ -17,10 +17,10 @@ if ($_SESSION["niveau"] >= 10) {
             "valeur" => $_POST["valeur"]
         ];
         
-        $result = $dino->query("activate_final", $params);    
+        $result = $dino->query("insert_valeur_champ", $params);    
         $dino->commit();
         
-        status(200);        
+        status(200);     
         echo $result;
     } catch (Exception $e) {
         status(500);

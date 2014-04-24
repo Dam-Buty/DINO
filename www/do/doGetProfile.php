@@ -25,7 +25,7 @@ function convertBytes( $value ) {
     }
 }
 
-function recupere_types($monde, $champ, $categorie) {
+function recupere_types($dino, $monde, $champ, $categorie) {
     $types = [];
     
     try {
@@ -73,7 +73,7 @@ function recupere_types($monde, $champ, $categorie) {
     }
 }
 
-function recupere_categories($monde, $champ) {    
+function recupere_categories($dino, $monde, $champ) {    
     $categories = [];
     
     try {
@@ -93,7 +93,7 @@ function recupere_categories($monde, $champ) {
                 "types" => []
             ];
             
-            $categories[$row_categories["pk_categorie_doc"]]["types"] = recupere_types($monde, $champ, $row_categories["pk_categorie_doc"]);
+            $categories[$row_categories["pk_categorie_doc"]]["types"] = recupere_types($dino, $monde, $champ, $row_categories["pk_categorie_doc"]);
         } // FIN WHILE CATEGORIES
         
         return $categories;
@@ -102,7 +102,7 @@ function recupere_categories($monde, $champ) {
     }
 }
 
-function gestion_tutos($niveau) {
+function gestion_tutos($dino, $niveau) {
     $tutos = [ ];
     
     try {
@@ -125,7 +125,7 @@ function gestion_tutos($niveau) {
     }
 }
 
-function gestion_documentation($niveau) {
+function gestion_documentation($dino, $niveau) {
     $documentations = [ ];
     
     try {
@@ -147,7 +147,7 @@ function gestion_documentation($niveau) {
     }
 }
 
-function gestion_tokens($niveau) {
+function gestion_tokens($dino, $niveau) {
     $tokens = [
         "espace" => 0,
         "visitor" => 0,
@@ -413,7 +413,7 @@ if (isset($_SESSION["user"])) {
                 
             } // FIN WHILE MONDES
             
-            dino->commit();
+            $dino->commit();
             status(200);
             $json = json_encode($profil);
             header('Content-Type: application/json');
