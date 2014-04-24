@@ -3,6 +3,8 @@ var queue = [];
 var uploading = [undefined, undefined, undefined];
 
 var bootstrap_queue = function() {
+    $("#files-handler").unbind().change(handle_files);
+    
     if (profil.printer != "") {
         $.ajax({
             url: "do/doCheckCave.php",
@@ -26,18 +28,27 @@ var bootstrap_queue = function() {
 
 var get_queue = function() {
     queue.length = 0;
-    $.ajax({ url: "json/queue.php" })
-    .done(function (queue) {
-        $.each(queue, function() {
-            var document_li = set_li_status(create_li(this.displayname, this.size, this.user, this.date), 1);
-            this.li = document_li;
-            queue.push(this);
-        });
-        refresh_liste();
-        clean_cave();
+    $.ajax({
+        url: "json/queue.php",
+        statusCode: {
+            200: function(queue_list) {
+                $.each(queue_list, function(i, document) {
+                    var document_li = set_li_status(create_li(document.displayname, document.size, document.user, document.date), 1);
+                    document.li = document_li;
+                    queue.push(document);
+                });
+                
+                refresh_liste();
+                clean_cave();
+            },
+            403: function() {
+                window.location.replace("index.php");
+            },
+            500: function() {
+                popup("Erreur!", "error");
+            }
+        }
     });
-    
-    $("#files-handler").unbind().change(handle_files);
 }
 
 // - Demande un document dans la cave.
