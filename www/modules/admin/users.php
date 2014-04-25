@@ -1,6 +1,7 @@
 <?php
 session_start();
 ?>
+
 <!--LOCALISATION-->
 <h1 id="titre-users">Administracion de los usuarios</h1>
 <div id="users">

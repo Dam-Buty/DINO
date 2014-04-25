@@ -564,8 +564,9 @@ html, body {
 #######################################*/
 
 #liste {
-   margin-right: 20px;
-   margin-left: 20px;
+    margin: 10px;   
+    margin-right: 20px;
+    margin-left: 20px;
 }
 
 #liste>ul {
