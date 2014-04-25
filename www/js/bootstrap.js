@@ -153,6 +153,13 @@ var bootstrap = function() {
                             });
                             
                             if (niveau >= 30) {
+                            
+                                $.ajax({ url: "modules/admin/mondes_suppr.php" })
+                                .done(function(mondes_suppr) {
+                                    $("#core").append(mondes_suppr);
+                                    $("#bouton-suppr").click(bootstrap_mondes_suppr);
+                                });
+                                
                                 $.ajax({ url: "modules/admin/designer.php" })
                                 .done(function(designer) {
                                     $("#core").append(designer); 

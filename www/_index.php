@@ -140,6 +140,7 @@ if ($_SESSION["niveau"] >= 20) {
         <i>Powered by</i> <a href="http://www.dino.mx" target="_blank">DINO</a>
     </div>
     <img id="logout" src="img/logout_20.png" title="Desconectar">
+    <img id="bouton-suppr" src="img/apocalypse_20.png" title="Borrar un mundo">
     <img id="bouton-pass" src="img/pass_20.png" title="Cambiar tu contrasena">
     <img id="bouton-mail" src="img/mail_20.png" title="Cambiar tu correo electronico">
     <img id="help-printer" src="img/printer_20.png">
@@ -258,6 +259,7 @@ if ($_SESSION["niveau"] >= 20) {
     if ($_SESSION["niveau"] >= 30) {
     ?>
 <script src="js/admin/designer.js?v=7"></script>
+<script src="js/admin/mondes_suppr.js?v=7"></script>
     <?php
     }
 ?>

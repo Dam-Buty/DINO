@@ -7,6 +7,9 @@
 
 .admin {
     display: none;
+    margin: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 #backoffice ul {
@@ -371,12 +374,6 @@ img.bouton-save-back:hover {
 #
 #######################################*/
 
-#mondes {
-    margin: 10px;
-    margin-left: 20px;
-    margin-right: 20px;
-}
-
 #mondes ul {
     padding-top: 10px;
     padding-bottom: 10px;
@@ -503,15 +500,6 @@ li.valeur[data-niveau="3"]:nth-of-type(even) {
 
 .help {
     display: none;
-}
-
-#designer {
-    display: none;
-    margin: 10px;
-    margin-left: 20px;
-    margin-right: 20px;
-    
-    height: 90%;
 }
 
 #designer h1 {
@@ -957,4 +945,31 @@ ul.designer-categorie {
 
 #tokens-users-visitors {
     display: none;
+}
+
+
+/*#####################################
+#        Suppression de monde
+#######################################*/
+
+#action-mondes-suppr {
+    display: none;
+}
+
+#liste-mondes-suppr li {
+    background-color: #EB9856;
+}
+
+.warning {
+    display: inline-block;
+    
+    font-size: 0.9em;
+    
+    box-shadow: 0 0 1px 1px #EB5454;
+    background-color: #FFF8AD;
+    border: 1px solid #EB5454;
+    border-radius: 5px;
+    
+    padding: 5px;
+    margin-bottom: 10px;
 }
