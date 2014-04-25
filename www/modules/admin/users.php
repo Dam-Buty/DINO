@@ -52,9 +52,9 @@ session_start();
                 </div>
             </div>
         </div>
+        <div id="save-new-user" class="boutons back" data-user="new">Guardar usuario</div>
         <div style="clear: both;"></div>
     </div>
-    <div id="save-new-user" class="boutons back" data-user="new">Guardar usuario</div>
     <div style="clear: both;"></div>
     <ul id="liste-users"></ul>
 </div>
