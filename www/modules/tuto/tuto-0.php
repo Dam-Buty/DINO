@@ -17,6 +17,5 @@
     <h1>Bienvenido en <b>DINO</b></h1>
     <div class="popup-ligne"><div class="popup-jauge jauge-100"></div></div>
     <p>Perfecto!</p>
-    <p>Puedes revisar y editar tu <b>mundo documental</b>.</p>
-    <p>Cuando estes listo, pica "<b>Guardar</b>"</p>
+    <p>Puedes revisar y editar tu <b>mundo documental</b>. Cuando estes listo, pica "<b>Guardar</b>"</p>
 </div>

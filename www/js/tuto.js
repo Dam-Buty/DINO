@@ -72,6 +72,10 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             delay: 400
         }, {
             type: "highlight",
+            selector: "#list_templates_chosen",
+            force: true
+        }, {
+            type: "highlight",
             selector: "#bouton-save-monde",
             force: true
         }, {
@@ -80,7 +84,7 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             options: {
                 content: 'Guarda tu mundo',
                 autoClose: false,
-                position: "bottom",
+                position: "left",
                 contentAsHTML: true
             }
         }],
