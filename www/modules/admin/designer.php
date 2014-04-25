@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+if ($_SESSION["niveau"] >= 30) {
 ?>
 <!--LOCALISATION-->
 <div id="sell_designer" class="admin">
@@ -52,12 +54,8 @@ session_start();
                 <select id="designer-type-niveau" class="select-new-niveau" data-placeholder="Nivel de usuario...">
                     <option value="0">Visitante</option>
                     <option value="10">Archivista</option>
-    <?php if ($_SESSION["niveau"] >= 20) { ?>
                     <option value="20">Administrador</option>
-    <?php } ?>
-    <?php if ($_SESSION["niveau"] >= 30) { ?>
                     <option value="30">Gerente</option>
-    <?php } ?>
                 </select>
                 <i style="display: block;">Aqui decides <a href="http://www.dino.mx/university/los-diferentes-niveles-de-usuarios-dino/" target="_blank">quien puede acceder a tu documento</a>.</i>
             </p>
@@ -79,12 +77,8 @@ session_start();
                 <select id="designer-categorie-niveau" class="select-new-niveau" data-placeholder="Nivel de usuario...">
                     <option value="0">Visitante</option>
                     <option value="10">Archivista</option>
-    <?php if ($_SESSION["niveau"] >= 20) { ?>
                     <option value="20">Administrador</option>
-    <?php } ?>
-    <?php if ($_SESSION["niveau"] >= 30) { ?>
                     <option value="30">Gerente</option>
-    <?php } ?>
                 </select>
                 <i>Aqui decides <a href="http://www.dino.mx">quien puede acceder a tu categoria</a>.</i>
             </p>
@@ -123,3 +117,6 @@ session_start();
     </div>
     <div id="container-help" class="designer-right">Si tienes alguna duda, te invitamos a consultar<br/><a href="http://prezi.com/i1z9x8l-77l7/" target="_blank">3 ejemplos de mundos documentales</a> o <a href="http://prezi.com/7rblvsge3xfs/" target="_blank">8 tips para un perfil perfecto</a></div>
 </div>
+<?php
+}
+?>

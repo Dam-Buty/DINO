@@ -1,9 +1,6 @@
-<?php
-session_start();
-?>
 <!--LOCALISATION-->
 <div id="mondes" class="admin">
-    <h1>Administracion de mundos</h1>
+    <h1>Supresion de mundo</h1>
     <ul id="liste-valeurs">
         <li id="new-valeur" class="add-valeur">
             <input type="text" placeholder="Agregar un " class="input-new-valeur"/>
