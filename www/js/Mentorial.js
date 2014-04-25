@@ -112,37 +112,46 @@ var Mentorial = function(Scenarios, options) {
         _show: function() {
             var current = this.Scenarios[this.scenario].stages[this.stage];
             var stage = $("#" + this.css_prefix + "-" + this.scenario + "-" + this.stage);
+            var skip = false;
             
-            if (this.alternative) {
-                var alt = $("#" + this.css_prefix + "-" + this.scenario + "-" + this.stage + "-alt");
-                
-                if (alt.length > 0) {
-                    stage = alt;
+            if (current.skip_clause !== undefined) {
+                skip = current.skip_clause();
+            }
+            
+            if (!skip) {
+                if (this.alternative) {
+                    var alt = $("#" + this.css_prefix + "-" + this.scenario + "-" + this.stage + "-alt");
+                    
+                    if (alt.length > 0) {
+                        stage = alt;
+                    }
                 }
-            }
-            
-            
-            if (current.stage_css !== undefined) {
-                stage
-                .css(current.stage_css);
-            }
-            stage.fadeIn();
-            
-            if (current.raises_flag) {
-                this.flag("raise");
+                
+                if (current.stage_css !== undefined) {
+                    stage
+                    .css(current.stage_css);
+                }
+                stage.fadeIn();
+                
+                if (current.raises_flag) {
+                    this.flag("raise");
+                } else {
+                    this.flag("drop");
+                }
+                
+                this.highlights = [ ];
+                this.borders = [ ];
+                this.tooltips = [ ];
+                this.delay = 200;
+                
+                this._animations($.merge([], current.animations));
+                
+                if (current.substitutions !== undefined) {
+                    this._substitutions(current.substitutions());
+                }
             } else {
-                this.flag("drop");
-            }
-            
-            this.highlights = [ ];
-            this.borders = [ ];
-            this.tooltips = [ ];
-            this.delay = 200;
-            
-            this._animations($.merge([], current.animations));
-            
-            if (current.substitutions !== undefined) {
-                this._substitutions(current.substitutions());
+                this.stage = this.stage + 1;
+                this._show();
             }
         },
         _clean: function() {

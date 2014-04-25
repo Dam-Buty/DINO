@@ -348,6 +348,9 @@ var Scenarios = [{ ////////////////////// SCENARIO 0
             right: "0",
             width: "40%",
         },
+        skip_clause: function() {
+            return ($("#mondes-top li").length == 1);
+        },
         animations: [{
             type: "highlight",
             selector: "#mondes-store",

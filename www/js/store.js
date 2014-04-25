@@ -737,8 +737,6 @@ var _store_document = function(position) {
     var li = queue[position].li;
     var ul = li.closest("ul");
 
-    Tuto.flag(2);
-
     ul.find("li").attr("data-editing", "0");
     li.removeClass("done").attr("data-editing", "1");
     
@@ -796,6 +794,8 @@ var _store_document = function(position) {
     
     // on déclenche le redimensionnement de la fenêtre
     $(window).trigger('resize');
+
+    Tuto.flag(2);
     
     reload_champs();
 };
