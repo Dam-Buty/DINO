@@ -228,8 +228,8 @@ html, body {
 .barre-laterale>a h1 {
     background-image: url(../img/dino_top.png);
     background-repeat: no-repeat;
-    background-position: top center;
-    background-size: 100%;
+    background-position: center 12px;
+    background-size: 75%;
 
     text-align: center;
     text-decoration: none;
@@ -300,9 +300,8 @@ html, body {
 
 .element-menu-front {
     padding-top: 35px;
-    background-color: #83bc2f;
+    margin-bottom: 15px;
     text-align: center;
-    border-top: 1px dotted #558011;
     
     background-repeat: no-repeat;
     background-position: top center;

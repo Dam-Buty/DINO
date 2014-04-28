@@ -42,10 +42,10 @@ user:
 + + fk_token
 + + expired_user
 
->> OK sur baby
-
 client:
 + + contact_client
+
+>> OK sur baby, OK sur my
 
 BABEL
 ======
