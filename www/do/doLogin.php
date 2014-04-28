@@ -72,6 +72,7 @@ try {
     }    
     
 } catch (Exception $e) {
+    $dino->rollback();
     status(500);
 }
 

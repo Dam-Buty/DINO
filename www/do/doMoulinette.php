@@ -83,6 +83,7 @@ if ($_SESSION["niveau"] == 999) {
             status(403);
         }
     } catch (Exception $e) {
+        $dino->rollback();
         status(500);
     }
 } else {

@@ -56,6 +56,7 @@ if ($_SESSION["niveau"] >= 10) {
             ]);
         }
     } catch (Exception $e) {
+        $dino->rollback();
         status(500);
     }
 } else {

@@ -15,6 +15,7 @@ try {
     
     status(200);
 } catch (Exception $e) {
+    $dino->rollback();
     status(500);
 }
 ?>

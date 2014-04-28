@@ -46,6 +46,7 @@ if (isset($_SESSION["user"])) {
             status(403);
         }
     } catch (Exception $e) {
+        $dino->rollback();
         status(500);
     }
 } else {

@@ -2,17 +2,13 @@
 require 'vendor/autoload.php';
 use Mailgun\Mailgun;
 
-function dinomail($adresse, $mail, $attach = [], $subst = [], $root = false) {
+function dinomail($adresse, $mail, $attach = [], $subst = []) {
 
     # Instantiate the client.
     $mgClient = new Mailgun('key-8mwfyrfwzmam66qe-20my2lqcmt-o6k4');
     $domain = "dino.mx";
     
-    if ($root) {
-        $path = "../../mails/";
-    } else {
-        $path = "../mails/";
-    }
+    $path = "../mails/";
     
     // Récupère le contenu du mail
     $text = file_get_contents($path . $mail . ".txt");
@@ -24,10 +20,16 @@ function dinomail($adresse, $mail, $attach = [], $subst = [], $root = false) {
         $html = str_replace("%" . $key . "%", $value, $html);
     }
     
+    debug($adresse);
+    debug($sujet);
+    debug($text);
+    debug($html);
+    debug($attach);
+    
     # Make the call to the client.
     try {
         $mgClient->sendMessage(
-            "$domain", [
+            $domain, [
                 'from'    => 'DINO <mailgun@dino.mx>',
                 'to'      => $adresse,
                 'subject' => $sujet,
@@ -37,10 +39,14 @@ function dinomail($adresse, $mail, $attach = [], $subst = [], $root = false) {
                 'attachment' => $attach
             ]
         );
-        return "";
     } catch (Exception $e ) {
-        var_dump($e);
-        return $e->getMessage();
+        dino_log([
+            "niveau" => "E",
+            "query" => $mail,
+            "errno" => $e->getCode(),
+            "errinfo" => $e->getMessage(),
+            "params" => $adresse
+        ]);
     }
 }
 ?>

@@ -27,6 +27,7 @@ if ($_SESSION["niveau"] >= 10) {
         $dino->commit();        
         status(200);
     } catch (Exception $e) {
+        $dino->rollback();
         status(500);
     }
 } else {

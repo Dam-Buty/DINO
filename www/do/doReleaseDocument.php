@@ -17,6 +17,7 @@ if (isset($_SESSION["niveau"])) {
         $dino->commit();
         status(200);
     } catch (Exception $e) {
+        $dino->rollback();
         status(500);
     }
 } else {

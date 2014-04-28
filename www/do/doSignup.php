@@ -47,15 +47,18 @@ try {
     chdir("..");
 
     $mail = "signup";
+    
+#    debug($_POST["mail"]);
+#    debug($mail);
 
     $return = dinomail($_POST["mail"], $mail, [], [
         "user" => $_POST["login"],
         "pass" => $_POST["pass"],
         "mail" => urlencode($_POST["mail"]),
         "clef" => $activation_user
-    ], true);
+    ]);
     
-    var_dump($return);
+#    debug($return);
 
     // Création des tokens du compte Starter          
     // 1 - User             
@@ -102,6 +105,7 @@ try {
 
     echo $idclient;
 } catch (Exception $e) {
+    $dino->rollback();
     status(500);
 }
 ?>

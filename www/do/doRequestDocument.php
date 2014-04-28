@@ -53,6 +53,7 @@ if (isset($_SESSION["niveau"])) {
             echo json_encode($document);
         }
     } catch (Exception $e) {
+        $dino->rollback();
         status(500);
     }
 } else {

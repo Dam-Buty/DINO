@@ -58,7 +58,7 @@ function dino_log($params) {
     
     $ligne_log = join("|", $tableau_final) . "\r\n";
         
-    $path = "../log/" . date("Y-m-d") . "_" . $client . ".csv";
+    $path = "../log/" . date("Y-m-d") . ".csv";
     
     file_put_contents($path, $ligne_log, FILE_APPEND);
 }
