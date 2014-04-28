@@ -241,7 +241,26 @@ var popup_dinostore = function() {
         $("#popup-dinostore").fadeOut();
     };
     
-    $("#opak").fadeIn().click(close_dinostore);
+    $("#opak").fadeIn().unbind().click(close_dinostore);
     $("#popup-dinostore").fadeIn();
-    $("#quit-dinostore").click(close_dinostore);
-}
+    $("#quit-dinostore").text("Cancelar").unbind().click(close_dinostore);
+    $("#contacted-dinostore").hide();
+    $("#contact-dinostore").fadeIn();
+    $("#contact-dinostore").unbind().click(contact_dinostore);
+};
+
+var contact_dinostore = function() {
+    $.ajax({
+        url: "do/doContact.php",
+        statusCode: {
+            200: function(data) {
+                $("#quit-dinostore").text("OK").addClass("next");
+                $("#contact-dinostore").hide();
+                $("#contacted-dinostore").fadeIn();
+            },
+            500: function() {
+                popup("Erreur!", "error");
+            }
+        }
+    });
+};

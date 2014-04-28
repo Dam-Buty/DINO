@@ -121,3 +121,27 @@
 #bouton-activate a {
     text-decoration: none;
 }
+
+#quit-dinostore {
+    width: 50%;
+    margin-left: 25%;
+    
+    background-color: #eb911f;
+}
+
+#contacted-dinostore {
+    display: none;
+    width: 80%;
+    margin-left: 10%;
+    font-family: "Courier New", Courier, monospace;
+    
+    background-color: #FFDF8C;
+    color: #000;
+    
+    cursor: default;
+    
+    border: none;
+    
+    box-shadow: 0 0 3px #000;
+    border-radius: 3px;
+}

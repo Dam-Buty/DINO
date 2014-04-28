@@ -38,7 +38,7 @@
     width: 50%;
     margin-left: 25%;
     
-    background-color: #8ecb32;
+    background-color: #8ecb32 !important;
 }
 
 #quit-tuto {
