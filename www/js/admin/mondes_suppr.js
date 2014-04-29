@@ -1,10 +1,13 @@
 
 var bootstrap_mondes_suppr = function() {
-    var liste = $("#liste-mondes-suppr");
+    var liste = $("#liste-mondes-suppr").empty();
     
     $("#liste").slideUp();   
     $(".admin").slideUp();
     $("#mondes-suppr").fadeIn();
+    $("#tag-mondes-suppr").unbind().click(remove_monde_suppr);
+    $("#option-supprimer").unbind().click(switch_option);
+    $("#option-declass").unbind().click(switch_option);
     
     // Charge la liste des mondes
     $.each(profil.mondes, function(i, monde) {
@@ -12,14 +15,15 @@ var bootstrap_mondes_suppr = function() {
             $("<li></li>")
             .attr("data-pk", i)
             .text(monde.label)
-            .click(suppr_monde)
+            .click(toggle_monde_suppr)
         );
     });
 };
 
-var suppr_monde = function() {
+var toggle_monde_suppr = function() {
     var li = $(this);
     var monde = li.attr("data-pk");
+    var label = profil.mondes[monde].label;
     
     $.ajax({
         url: "do/doCountDocuments.php",
@@ -29,6 +33,7 @@ var suppr_monde = function() {
         },
         statusCode: {
             200: function(bilan) {
+                $(".nom-monde").text(label);
                 $("#choix-mondes-suppr").slideUp();
                 $("#action-mondes-suppr").slideDown();
             },
@@ -40,5 +45,20 @@ var suppr_monde = function() {
             }
         }
     });
+};
+
+var remove_monde_suppr = function() {
+    $("#choix-mondes-suppr").slideDown();
+    $("#action-mondes-suppr").slideUp();
+};
+
+var switch_option = function() {
+    var option_supprimer = $(this);
+    
+    if (option.hasClass("option-OK")) {
+        option.removeClass("option")
+    } else {
+        
+    }
 };
 
