@@ -1,8 +1,5 @@
 <?php
-include("../includes/DINOSQL.php");
-include("../includes/log.php");
-include("../includes/crypt.php");
-include("../includes/status.php");
+include("../includes/functions.php");
 
 $login = $_POST["login"];
 $password = $_POST["password"];

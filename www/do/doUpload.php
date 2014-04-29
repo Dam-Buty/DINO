@@ -1,11 +1,8 @@
 <?php
 session_start();
-include("../includes/status.php");
-include("../includes/log.php");
+include("../includes/functions.php");
 
 if ($_SESSION["niveau"] >= 10) {
-    include("../includes/DINOSQL.php");
-    include("../includes/crypt.php");
     
     $filename = genere_clef(12, TRUE);
     $extension = pathinfo($_FILES['document']['name'], PATHINFO_EXTENSION);

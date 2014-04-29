@@ -1,10 +1,8 @@
 <?php
 session_start();
-include("../includes/status.php");  
-include("../includes/log.php");  
+include("../includes/functions.php");  
 
 if ($_SESSION["niveau"] == 999) {
-    include("../includes/DINOSQL.php");  
     
     try {
         $dino = new DINOSQL();

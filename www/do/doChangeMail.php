@@ -1,11 +1,8 @@
 <?php
 session_start();
-include("../includes/status.php");
+include("../includes/functions.php");
 
 if (isset($_SESSION["user"])) {
-    include("../includes/DINOSQL.php");
-    include("../includes/log.php");
-    include("../includes/crypt.php");
 
     $pass = $_POST["pass"];
     $new_mail = $_POST["mail"];

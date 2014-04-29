@@ -1,7 +1,6 @@
 <?php
 session_start();
-include("../includes/status.php");
-include("../includes/log.php");
+include("../includes/functions.php");
 
 function delete_type($dino, $champ, $categorie, $pk) {   
     $params_base = [
@@ -123,7 +122,6 @@ function delete_champ($dino, $pk) {
 }
 
 if ($_SESSION["niveau"] >= 30) {
-    include("../includes/DINOSQL.php");
     
     try {
         $dino = new DINOSQL();

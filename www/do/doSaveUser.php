@@ -1,13 +1,9 @@
 <?php
 session_start();
-include("../includes/status.php");
-include("../includes/log.php");
+include("../includes/functions.php");
 
 
 if (isset($_SESSION["niveau"]) && $_SESSION["niveau"] >= 20 && $_SESSION["niveau"] > $_POST["niveau"]) {
-    include("../includes/DINOSQL.php");
-    include("../includes/crypt.php");
-    include("../includes/mail.php");
     
     try {
         $dino = new DINOSQL();

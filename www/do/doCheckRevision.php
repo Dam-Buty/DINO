@@ -1,12 +1,10 @@
 <?php
 session_start();
-include("../includes/status.php");
-include("../includes/log.php");
+include("../includes/functions.php");
 
 $champs = array_filter($_POST["champs"]);
 
 if ($_SESSION["niveau"] >= 10) {
-    include("../includes/DINOSQL.php");
     
     try {
         $dino = new DINOSQL();

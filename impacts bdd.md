@@ -1,4 +1,14 @@
 
+APOCALYPSE
+==========
+
+monde:
++ + demande_suppr_monde
+
+
+
+
+
 ILLUMINATI
 ==========
 

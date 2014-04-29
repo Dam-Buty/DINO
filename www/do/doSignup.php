@@ -1,11 +1,7 @@
 <?php
 session_start();
 
-include("../includes/DINOSQL.php");
-include("../includes/log.php");
-include("../includes/crypt.php");
-include("../includes/mail.php");
-include("../includes/status.php");
+include("../includes/functions.php");
 
 // Génération et cryptage de la clef de sécurité avec le login, le mdp et le mail_client
 

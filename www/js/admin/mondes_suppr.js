@@ -8,6 +8,7 @@ var bootstrap_mondes_suppr = function() {
     $("#tag-mondes-suppr").unbind().click(remove_monde_suppr);
     $("#option-supprimer").unbind().click(switch_option);
     $("#option-declass").unbind().click(switch_option);
+    $("#bouton-mondes-suppr").unbind().click(popup_suppr_monde);
     
     // Charge la liste des mondes
     $.each(profil.mondes, function(i, monde) {
@@ -33,9 +34,28 @@ var toggle_monde_suppr = function() {
         },
         statusCode: {
             200: function(bilan) {
-                $(".nom-monde").text(label);
+                var _space;
+                
+                $(".nom-monde").attr("data-pk", monde).text(label);
                 $("#choix-mondes-suppr").slideUp();
                 $("#action-mondes-suppr").slideDown();
+                
+                if (bilan.space < 1024) {
+                    _space = bilan.space + "B"
+                }
+                
+                if (bilan.space < 1048576) {
+                    _space = (bilan.space / 1024).toFixed(2) + "kB";
+                }
+                
+                if (bilan.space < 1073741824) {
+                    _space = (bilan.space / 1048576).toFixed(2) + "MB";
+                } else {
+                    _space = (bilan.space / 1073741824).toFixed(2) + "GB";
+                }
+                
+                $(".nb-docs-bilan").text(bilan.docs);
+                $(".space-bilan").text(_space);
             },
             403: function() {
                 window.location.replace("index.php");
@@ -53,12 +73,72 @@ var remove_monde_suppr = function() {
 };
 
 var switch_option = function() {
-    var option_supprimer = $(this);
+    var option = $(this);
     
-    if (option.hasClass("option-OK")) {
-        option.removeClass("option")
-    } else {
-        
-    }
+    $("#bouton-mondes-suppr").fadeIn();
+    
+    $("#action-mondes-suppr div.option-ok").removeClass("option-ok").addClass("option-ko");
+    option.removeClass("option-ko").addClass("option-ok");
 };
 
+popup_suppr_monde = function() {
+    var option = $("#action-mondes-suppr div.option-ok");
+    var para = option.find("p");
+    var tag = $("#tag-mondes-suppr b.nom-monde");
+    var pk = tag.attr("data-pk");
+    var label = tag.text();
+    var mode, url, callback;
+    var docs = $(".nb-docs-bilan").eq(0).text();
+    
+    if (option.attr("id") == "option-supprimer") {
+        mode = "delete";
+    } else {
+        mode = "declass";
+    }
+    
+    if (docs > 50) {
+        message = $("<p>Debido a la alta cantidad de documentos impactados, necesitamos una confirmacion para autorizar esta operacion. Nuestro servicio tecnico te contactara en los proximos 24 horas.</p>");
+        url = "do/doRequestDelMonde.php";
+    } else {
+        message = $("<p>Gracias por confirmar la supresion del mundo <b>" + label + "</b> y los pasos siguientes :</p>");
+        
+        message = message.append(para.clone());
+        url = "do/doDelMonde.php";
+    }
+    
+    // TODO si il y a plus de 50 documents!
+    
+    dialogue = new $.Zebra_Dialog(
+        message.html(), {
+            type: "information",
+            overlay_close: false,
+            'buttons':  [ {
+                caption: 'Confirmar', 
+                callback: function() {
+                    $.ajax({
+                        url: url,
+                        type: "POST",
+                        data: {
+                            monde: pk,
+                            mode: mode
+                        },
+                        statusCode: {
+                            200: function() {
+                                window.location.replace("index.php");
+                            },
+                            403: function() {
+                                window.location.replace("index.php");
+                            },
+                            500: function() {
+                                popup("Erreur!", "error");
+                            }
+                        }
+                    });
+                }
+            }, {
+                caption: 'Cancelar', 
+                callback: function() { }
+            } ]
+        }
+    );
+};
