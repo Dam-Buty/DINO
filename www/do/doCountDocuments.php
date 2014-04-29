@@ -17,7 +17,11 @@ if (isset($_SESSION["niveau"])) {
         
         $row = $result[0];
         
-        $json = json_encode($row);
+        $json = json_encode([
+            "docs" => $row["docs"],
+            "space" => $row["space"]
+        ]);
+        
         status(200);
         header('Content-Type: application/json');
         echo $json;

@@ -117,9 +117,7 @@ var change_monde = function() {
 };
 
 var _change_monde = function(ul, li) {
-    $("#profil").fadeOut();
-    $("#mondes").fadeOut();
-    $("#designer").fadeOut();
+    $(".admin").slideUp();
     $("#menu-queue").removeClass("inactive");
     
     ul.find("li").attr("data-selected", "0");
