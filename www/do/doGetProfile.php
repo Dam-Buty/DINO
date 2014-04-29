@@ -1,7 +1,6 @@
 <?php
 session_start();
-include("../includes/status.php");
-include("../includes/log.php");
+include("../includes/functions.php");
 
 function convertBytes( $value ) {
     if ( is_numeric( $value ) ) {
@@ -267,7 +266,6 @@ function gestion_tokens($dino, $niveau) {
 }
   
 if (isset($_SESSION["user"])) {
-    include("../includes/DINOSQL.php");
     
     $maxFileSize = convertBytes( ini_get( 'upload_max_filesize' ) );
     

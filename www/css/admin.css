@@ -952,6 +952,10 @@ ul.designer-categorie {
 #        Suppression de monde
 #######################################*/
 
+#mondes-suppr>h1 {
+    float: left;
+}
+
 #action-mondes-suppr {
     display: none;
 }
@@ -971,5 +975,33 @@ ul.designer-categorie {
     border-radius: 5px;
     
     padding: 5px;
+    margin-top: 0.5em;
     margin-bottom: 10px;
+    margin-left: 15px;
+}
+
+#option-supprimer {
+    float: left;
+    width: 20%;
+    margin-right: 10px;
+}
+
+#option-declass {
+    float: left;
+    width: 20%;
+    margin-left: 10%;
+}
+
+#option-supprimer:hover {
+    box-shadow: 0 0 3px 3px #8ECB32;
+}
+
+#option-declass:hover {
+    box-shadow: 0 0 3px 3px #8ECB32;
+}
+
+#bouton-mondes-suppr {
+    display: none;
+    width: 20%;
+    background-color: #56D4EB;
 }

@@ -4,11 +4,13 @@ include("../includes/functions.php");
 try {
     $dino = new DINOSQL();
     
-    $params_activate = [
-        "login" => $_POST["login"]
+    $params = [
+        "client" => $_SESSION["client"],
+        "monde" => $_POST["monde"],
+        "lemode" => $_POST["mode"]
     ];
     
-    $dino->query("activate_final", $params_activate);    
+    $dino->query("request_del_monde", $params);    
     $dino->commit();
     
     status(200);

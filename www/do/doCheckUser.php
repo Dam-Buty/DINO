@@ -1,7 +1,5 @@
 <?php
-include("../includes/log.php");
-include("../includes/DINOSQL.php");
-include("../includes/status.php");
+include("../includes/functions.php");
 
 try {
     $dino = new DINOSQL();

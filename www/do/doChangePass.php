@@ -1,11 +1,8 @@
 <?php
 session_start();
+include("../includes/functions.php");
 
 if (isset($_SESSION["user"])) {
-    include("../includes/DINOSQL.php");
-    include("../includes/log.php");
-    include("../includes/crypt.php");
-    include("../includes/status.php");
 
     $old_pass = $_POST["oldPass"];
     $new_pass = $_POST["newPass"];

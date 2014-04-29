@@ -1,10 +1,8 @@
 <?php
 session_start();
-include("../includes/log.php");
-if ($_SESSION["niveau"] >= 20) {
-    include("../includes/DINOSQL.php");
-    include("../includes/status.php");
-    
+include("../includes/functions.php");
+
+if ($_SESSION["niveau"] >= 20) {    
     
     try {
         $dino = new DINOSQL();

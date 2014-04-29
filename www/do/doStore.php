@@ -1,7 +1,6 @@
 <?php
 session_start();
-include("../includes/status.php");
-include("../includes/log.php");
+include("../includes/functions.php");
 
 function format_date($date) {
     $d = substr($date, 0, 2);
@@ -14,7 +13,6 @@ function format_date($date) {
 $champs = array_filter($_POST["champs"]);
 
 if ($_SESSION["niveau"] >= 10) {
-    include("../includes/DINOSQL.php");
         
     try {
         $dino = new DINOSQL();

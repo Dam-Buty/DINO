@@ -1,9 +1,6 @@
 <?php
 session_start();
-include("../includes/DINOSQL.php");
-include("../includes/crypt.php");
-include("../includes/status.php");
-include("../includes/log.php");
+include("../includes/functions.php");
 
 $cave_path = "/var/spool/cups-pdf/ANONYMOUS/";
 $temp_path = "../cache/" . $_SESSION["client"] . "/temp/";

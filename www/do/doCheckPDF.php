@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("../includes/status.php");
+include("../includes/functions.php");
 
 if (isset($_SESSION["user"])) {
     $extension = strtolower(pathinfo($_POST["filename"], PATHINFO_EXTENSION));

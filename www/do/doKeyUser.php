@@ -1,12 +1,8 @@
 <?php
 session_start();
-include("../includes/log.php");
-include("../includes/status.php");
+include("../includes/functions.php");
 
 if ($_SESSION["niveau"] >= 20) {
-    include("../includes/DINOSQL.php");
-    include("../includes/crypt.php");
-    include("../includes/mail.php");
     
     // On génère un nouveau mot de passe
     $pass = genere_clef(10);
