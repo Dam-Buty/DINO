@@ -833,12 +833,48 @@ ul.designer-categorie {
     float: left;
 }
 
+#choix-mondes-suppr {
+    font-size: 0.9em;
+    padding: 10px;
+    box-shadow: 0 0 1px 1px #A9A9A9;
+    display: inline-block;
+    margin-top: 20px;
+}
+
 #action-mondes-suppr {
-    display: none;
+    display: inline-block;
+    font-size: 0.9em;
+    padding: 10px;
+    box-shadow: 0 0 1px 1px #A9A9A9;
+    margin-top: 20px;
+}
+
+#no-action-suppr {
+    display: inline-block;
+    font-size: 0.9em;
+    padding: 10px;
+    box-shadow: 0 0 1px 1px #A9A9A9;
+    margin-top: 20px;
+}
+
+#liste-mondes-suppr {
+    margin-top: 10px !important;
 }
 
 #liste-mondes-suppr li {
     background-color: #EB9856;
+}
+
+.nom-monde {
+    padding: 5px;
+    border: 1px solid #EB9856;
+    border-radius: 3px;
+    cursor: pointer;
+    background-color: #FFF8AD;
+    background-image: url(../img/del_15.png);
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-size: 10px;
 }
 
 .warning {
@@ -859,14 +895,14 @@ ul.designer-categorie {
 
 #option-supprimer {
     float: left;
-    width: 20%;
+    width: 33%;
     margin-right: 10px;
 }
 
 #option-declass {
     float: left;
-    width: 20%;
-    margin-left: 10%;
+    width: 33%;
+    margin-left: 13%;
 }
 
 #option-supprimer:hover {
@@ -879,6 +915,13 @@ ul.designer-categorie {
 
 #bouton-mondes-suppr {
     display: none;
-    width: 20%;
+    width: 50%;
     background-color: #56D4EB;
+    margin-left: 25%;
+}
+
+#bouton-mondes-noaction {
+    width: 50%;
+    background-color: #56D4EB;
+    margin-left: 25%;
 }

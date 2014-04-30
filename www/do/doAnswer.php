@@ -2,16 +2,16 @@
 session_start();
 include("../includes/functions.php");
 
-if ($_SESSION["niveau"] >= 20) {
+if ($_SESSION["niveau"] == 999) {
     
     try {
         $dino = new DINOSQL();
         
         $params = [
-            "client" => $_SESSION["client"]
+            "client" => $_POST["client"]
         ];
         
-        $dino->query("contact", $params);
+        $dino->query("answer", $params);
         
         $dino->commit();
         status(200);
@@ -22,7 +22,7 @@ if ($_SESSION["niveau"] >= 20) {
 } else {
     dino_log([
         "niveau" => "Z",
-        "query" => "Petit pédé se prend pour un admin!"
+        "query" => "Petit pédé se prend pour un superadmin!"
     ]);
     status(403);
 }

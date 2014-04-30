@@ -5,10 +5,14 @@ var bootstrap_mondes_suppr = function() {
     $("#liste").slideUp();   
     $(".admin").slideUp();
     $("#mondes-suppr").fadeIn();
-    $("#tag-mondes-suppr").unbind().click(remove_monde_suppr);
+    $(".nom-monde").unbind().click(remove_monde_suppr);
     $("#option-supprimer").unbind().click(switch_option);
     $("#option-declass").unbind().click(switch_option);
     $("#bouton-mondes-suppr").unbind().click(popup_suppr_monde);
+    $("#bouton-mondes-noaction").unbind().click(popup_suppr_monde);
+    $("#no-action-suppr").hide();
+    $("#action-mondes-suppr").hide();
+    $("#choix-mondes-suppr").show();
     
     // Charge la liste des mondes
     $.each(profil.mondes, function(i, monde) {
@@ -37,25 +41,30 @@ var toggle_monde_suppr = function() {
                 var _space;
                 
                 $(".nom-monde").attr("data-pk", monde).text(label);
-                $("#choix-mondes-suppr").slideUp();
-                $("#action-mondes-suppr").slideDown();
+                $("#choix-mondes-suppr").hide();
                 
-                if (bilan.space < 1024) {
-                    _space = bilan.space + "B"
-                }
-                
-                if (bilan.space < 1048576) {
-                    _space = (bilan.space / 1024).toFixed(2) + "kB";
-                }
-                
-                if (bilan.space < 1073741824) {
-                    _space = (bilan.space / 1048576).toFixed(2) + "MB";
+                if (bilan.docs == 0) {
+                    $("#no-action-suppr").show();
                 } else {
-                    _space = (bilan.space / 1073741824).toFixed(2) + "GB";
+                    $("#action-mondes-suppr").show();
+                    
+                    if (bilan.space < 1024) {
+                        _space = bilan.space + "B"
+                    }
+                    
+                    if (bilan.space < 1048576) {
+                        _space = (bilan.space / 1024).toFixed(2) + "kB";
+                    }
+                    
+                    if (bilan.space < 1073741824) {
+                        _space = (bilan.space / 1048576).toFixed(2) + "MB";
+                    } else {
+                        _space = (bilan.space / 1073741824).toFixed(2) + "GB";
+                    }
+                    
+                    $(".nb-docs-bilan").text(bilan.docs);
+                    $(".space-bilan").text(_space);
                 }
-                
-                $(".nb-docs-bilan").text(bilan.docs);
-                $(".space-bilan").text(_space);
             },
             403: function() {
                 window.location.replace("index.php");
@@ -68,8 +77,9 @@ var toggle_monde_suppr = function() {
 };
 
 var remove_monde_suppr = function() {
-    $("#choix-mondes-suppr").slideDown();
-    $("#action-mondes-suppr").slideUp();
+    $("#choix-mondes-suppr").show();
+    $("#action-mondes-suppr").hide();
+    $("#no-action-suppr").hide();
 };
 
 var switch_option = function() {
@@ -81,7 +91,7 @@ var switch_option = function() {
     option.removeClass("option-ko").addClass("option-ok");
 };
 
-popup_suppr_monde = function() {
+var popup_suppr_monde = function() {
     var option = $("#action-mondes-suppr div.option-ok");
     var para = option.find("p");
     var tag = $("#tag-mondes-suppr b.nom-monde");
@@ -100,13 +110,19 @@ popup_suppr_monde = function() {
         message = $("<p>Debido a la alta cantidad de documentos impactados, necesitamos una confirmacion para autorizar esta operacion. Nuestro servicio tecnico te contactara en los proximos 24 horas.</p>");
         url = "do/doRequestDelMonde.php";
     } else {
-        message = $("<p>Gracias por confirmar la supresion del mundo <b>" + label + "</b> y los pasos siguientes :</p>");
-        
-        message = message.append(para.clone());
-        url = "do/doDelMonde.php";
+        if (docs > 0) {
+            message = $("<p>Gracias por confirmar la supresion del mundo <b>" + label + "</b> y los pasos siguientes :</p>");
+            
+            message = message.append(para.clone());
+            url = "do/doDelMonde.php";
+        } else {
+            message = $("<p>Gracias por confirmar la supresion del mundo <b>" + label + "</b>.</p>");
+            
+            message = message.append(para.clone());
+            url = "do/doDelMonde.php";
+            mode = "nada";
+        }
     }
-    
-    // TODO si il y a plus de 50 documents!
     
     dialogue = new $.Zebra_Dialog(
         message.html(), {

@@ -4,8 +4,11 @@ SELECT
     `mail_user`,
     `pk_client`,
     `mail_client`,
+    `inscription_client`,
+    `contact_client`,
     (`activation_user` = '') as `activated`,
-    (`niveau_user` >= 30) as `gestionnaire`
+    (`niveau_user` >= 30) as `gestionnaire`,
+    (`inscription_client` >= NOW() - INTERVAL 3 DAY) as `recent`
 FROM 
     `user`,
     `client`

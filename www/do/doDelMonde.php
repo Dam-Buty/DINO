@@ -5,8 +5,14 @@ if ($_SESSION["niveau"] >= 30) {
     try {
         $dino = new DINOSQL();
         
+        if (isset($_POST["client"])) {
+            $client = $_POST["client"];
+        } else {
+            $client = $_SESSION["client"];
+        }
+        
         $params = [
-            "client" => $_SESSION["client"],
+            "client" => $client,
             "monde" => $_POST["monde"]
         ];
         
@@ -17,7 +23,7 @@ if ($_SESSION["niveau"] >= 30) {
         foreach($liste_documents as $i => $row_document) {            
             if ($_POST["mode"] == "delete") {
                 $query = "remove_document";
-                dino_delete($row_document["filename_document"]);
+                dino_delete($row_document["filename_document"], $client);
             } else {
                 $query = "del_monde_declass_documents";
             }

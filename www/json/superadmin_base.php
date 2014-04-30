@@ -25,10 +25,26 @@ if ($_SESSION["niveau"] == 999) {
                 $clients[$row_users["pk_client"]] = [
                     "pk" => $row_users["pk_client"],
                     "mail" => $row_users["mail_client"],
+                    "inscription" => $row_users["inscription_client"],
+                    "contact" => $row_users["contact_client"],
                     "gestionnaire" => "",
-                    "users" => []
+                    "recent" => $row_users["recent"],
+                    "users" => [],
+                    "demandes" => []
                 ];
                 $client = $row_users["pk_client"];
+                
+                $demandes_mondes = $dino->query("demandes_mondes", [
+                    "client" => $client
+                ]);
+                
+                foreach($demandes_mondes as $i => $demande) {
+                    array_push($clients[$client]["demandes"], [
+                        "pk" => $demande["pk_monde"],
+                        "label" => $demande["label_monde"],
+                        "demande" => $demande["demande_suppr_monde"]
+                    ]);
+                }
             }
             
             if ($row_users["gestionnaire"] == 1) {

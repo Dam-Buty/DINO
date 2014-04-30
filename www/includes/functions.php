@@ -18,9 +18,13 @@ use Mailgun\Mailgun;
 ///// Dino Delete
 //////////////////////////
 
-function dino_delete($filename) {
-    $path = "../cache/" . $_SESSION["client"] . "/" . $filename . ".dino";
-    $pdfpath = "../cache/" . $_SESSION["client"] . "/" . $filename . "-pdf.dino";
+function dino_delete($filename, $client = "") {
+    if ($client == "") {
+        $client = $_SESSION["client"];
+    }
+    
+    $path = "../cache/" . $client . "/" . $filename . ".dino";
+    $pdfpath = "../cache/" . $client . "/" . $filename . "-pdf.dino";
     
     
     if (unlink($path)) {        

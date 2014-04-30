@@ -25,6 +25,7 @@ if ($_SESSION["niveau"] == 999) {
 
 <nav>
     <ul>
+        <li id="news">Les news</li>
         <li id="tokens">Tokens</li>
         <li id="activate">Activation manuelle</li>
         <li id="moulinette">Moulinette users</li>
@@ -34,6 +35,15 @@ if ($_SESSION["niveau"] == 999) {
 <div style="clear: left;"></div>
 
 <section>
+    <article id="container-news">
+        <header>Newsflash</header>
+        <p>1 - Dernières inscriptions</p>
+        <ul id="list-clients-recents" class="list-clients"></ul>
+        <p>2 - Demandes commerciales</p>
+        <ul id="list-clients-demandes" class="list-clients"></ul>
+        <p>3 - Demandes suppression mondes</p>
+        <ul id="list-clients-mondes" class="list-clients"></ul>
+    </article>
     <article id="container-tokens">
         <header>On fait des cadeaux</header>
         <p>1 - Un client chanceux : <span id="tag-client-tokens"></span></p>
