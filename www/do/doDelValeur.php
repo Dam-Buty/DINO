@@ -47,9 +47,7 @@ if ($_SESSION["niveau"] >= 20) {
         $dino->query("del_valeur_final",[
             "client" => $_SESSION["client"],
             "monde" => $_POST["monde"],
-            "champ" => $_POST["champ"],
             "pk" => $_POST["pk"],
-            "parent" => $_POST["parent"],
             "fkParent" => $_POST["pk"]
         ]);
         

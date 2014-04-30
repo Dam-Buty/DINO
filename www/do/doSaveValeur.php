@@ -2,26 +2,19 @@
 session_start();
 include("../includes/functions.php");
 
-if ($_SESSION["niveau"] >= 20) {
+if ($_SESSION["niveau"] >= 10) {
     
     try {
         $dino = new DINOSQL();
         
         $params = [
             "label" => $_POST["label"],
-            "champ" => $_POST["champ"],
             "monde" => $_POST["monde"],
             "client" => $_SESSION["client"],
-            "parent" => $_POST["parent"]
+            "pk" => $_POST["pk"]
         ];
         
-        if ($_POST["pk"] == "new") {
-            $query = "valeur_add";
-        } else {
-            $query = "valeur_change";
-            
-            $params["pk"] = $_POST["pk"];
-        }
+        $query = "valeur_change";
         
         $dino->query($query, $params);
         

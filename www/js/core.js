@@ -417,6 +417,24 @@ var construit_table = function() {
                     })
                     .click(toggle_line)
                     .append(
+                        $("<img/>")
+                        .attr("src", "img/del_15.png")
+                        .click(del_valeur)
+                    )
+                    .append(
+                        $("<img/>")
+                        .attr("src", "img/edit_15.png")
+                        .click(edit_valeur)
+                    )
+                    .append(
+                        $("<input/>")
+                        .attr("type", "text")
+                        .val(monde.champs[cascade[stack_champs.length - 1]].liste[ligne.pk])
+                        .click(function(e) {
+                            e.stopPropagation();
+                        })
+                    )
+                    .append(
                         $("<span></span>")
                         .addClass("champ")
                         .text(monde.champs[cascade[stack_champs.length - 1]].liste[ligne.pk])
@@ -694,3 +712,122 @@ var del_document = function() {
     popup_confirmation(message, title, bouton, callback);
 };
 
+var edit_valeur = function(e) {
+    var bouton = $(this);
+    var li = bouton.closest("li");
+    var span = li.find("span");
+    var input = li.find("input");
+    var pk = li.attr("data-pk");
+    var label = input.val();
+    
+    if (bouton.attr("src") == "img/option_OK_15.png") {    
+        $.ajax({
+            url: "do/doSaveValeur.php",
+            type: "POST",
+            data: {
+                monde: Core.monde,
+                pk: pk,
+                label: label
+            },
+            statusCode : {
+                200: function() {
+                    popup("Modificacion exitosa", "confirmation");
+                    input.hide();
+                    span.text(label).show();
+                    bouton.attr("src", "img/edit_15.png");
+                    _profil();
+                },
+                403: function() {
+                    window.location.replace("index.php");
+                },
+                500: function() {
+                    popup("Error! Gracias por intentar otra vez...", "error");
+                }
+            }
+        });
+    } else {
+        span.hide();
+        input.show();
+        bouton.attr("src", "img/option_OK_15.png");
+    }
+    
+    e.stopPropagation();
+};
+
+var del_valeur = function(e) {
+    var monde = profil.mondes[Core.monde];
+    var img = $(this);
+    var li = img.closest("li");
+    var champ = monde.cascade[li.attr("data-niveau")];
+    var pk = li.attr("data-pk");
+    
+    $.ajax({
+        url: "do/doCheckValeur.php",
+        type: "POST",
+        data: {
+            monde: Core.monde,
+            champ: champ,
+            pk: pk
+        },
+        statusCode : {
+            200: function(documents) {
+                var message = "";
+                var bouton = "";
+                var titre = "";
+                
+                if (documents > 0) {
+                    message = "<b>" + documents + "</b> documentos estan asociados al " + monde.champs[champ].label + " <b>" + monde.champs[champ].liste[pk] + "</b>.<br/>Si <b>confirmas</b>, el " + monde.champs[champ].label + " <b>" + monde.champs[champ].liste[pk] + "</b> sera borrado, los documentos relacionados seran declasificados y regresaran en tu fila de espera."; // LOCALISATION
+                    bouton = 'Confirmar <i>(Declasificar <b>' + documents + '</b> documentos)</i>';
+                    titre = 'Ojo, documentos orphanos!';
+                } else {
+                    message = "Gracias por confirmar la supresion del " + monde.champs[champ].label + " <b>" + monde.champs[champ].liste[pk] + "</b>";
+                    bouton = "Confirmar";
+                    titre = "Confirmar";
+                }
+                
+                var callback = function() {
+                    _del_valeur(Core.monde, champ, pk);
+                };
+                
+                popup_confirmation(message, titre, bouton, callback);
+            },
+            403: function() {
+                window.location.replace("index.php");
+            },
+            500: function() {
+                popup("Error! Gracias por intentar otra vez...", "error");
+            }
+        }
+    })
+    
+    e.stopPropagation();
+};
+
+
+
+var _del_valeur = function(monde, champ, pk) {
+    $.ajax({
+        url: "do/doDelValeur.php",
+        type: "POST",
+        data: {
+            monde: monde,
+            champ: champ,
+            pk: pk
+        },
+        statusCode : {
+            200: function() {
+                popup("El " + profil.mondes[monde].champs[champ].label + " <b>" + profil.mondes[monde].champs[champ].liste[pk] + "</b> fue borrado con exito!", "confirmation");
+                get_queue();
+                charge_documents();
+                _profil();
+            }
+            ,
+            403: function() {
+                window.location.replace("index.php");
+            },
+            500: function() {
+                popup("Error! Gracias por intentar otra vez...", "error");
+            }
+        }
+    });
+};
