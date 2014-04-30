@@ -392,6 +392,7 @@ var construit_table = function() {
     var current_ul = ul;
     var stack_ul = [ul];
     var current_level = 0;
+    var input = $(), img_del = $(), img_edit = $();
     
     $.each(Core.liste, function(i, ligne) {
         //console.log(ligne);
@@ -404,6 +405,23 @@ var construit_table = function() {
                 categorie = 0;
                 marge = ligne.niveau * 2;
                 
+                if (profil.niveau >= 10) {
+                    input = $("<input/>")
+                            .attr("type", "text")
+                            .val(monde.champs[cascade[stack_champs.length - 1]].liste[ligne.pk])
+                            .click(function(e) {
+                                e.stopPropagation();
+                            });
+                            
+                    img_del = $("<img/>")
+                            .attr("src", "img/del_15.png")
+                            .click(del_valeur);
+                            
+                    img_edit = $("<img/>")
+                            .attr("src", "img/edit_15.png")
+                            .click(edit_valeur);
+                }
+                
                 li = $("<li></li>")
                     .attr({
                         "data-type": ligne.type,
@@ -413,24 +431,9 @@ var construit_table = function() {
                         "data-state": "closed"
                     })
                     .click(toggle_line)
-                    .append(
-                        $("<img/>")
-                        .attr("src", "img/del_15.png")
-                        .click(del_valeur)
-                    )
-                    .append(
-                        $("<img/>")
-                        .attr("src", "img/edit_15.png")
-                        .click(edit_valeur)
-                    )
-                    .append(
-                        $("<input/>")
-                        .attr("type", "text")
-                        .val(monde.champs[cascade[stack_champs.length - 1]].liste[ligne.pk])
-                        .click(function(e) {
-                            e.stopPropagation();
-                        })
-                    )
+                    .append(img_del)
+                    .append(img_edit)
+                    .append(input)
                     .append(
                         $("<span></span>")
                         .addClass("champ")

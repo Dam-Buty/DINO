@@ -3,9 +3,9 @@
     <h1>Supresion de mundo</h1>
     <span class="warning">Borrar un mundo es una accion irreversible y de alto impacto!</span>
     <div id="choix-mondes-suppr">
-        <p>Elige un mundo
+        <div>Elige un mundo
             <ul class="list-mondes" id="liste-mondes-suppr"></ul>
-        </p>
+        </div>
     </div>
     <div id="action-mondes-suppr">
         <p id="tag-mondes-suppr">Mundo <b class="nom-monde"></b></p>
@@ -23,5 +23,8 @@
         <div style="clear: both;"></div>
         <p id="bouton-mondes-suppr" class="boutons">Confirmar</p>
     </div>
-    
+    <div id="no-action-suppr">
+        <p>El Mundo <b class="nom-monde"></b> <i>no tiene documentos relacionados</i>.</p>
+        <p id="bouton-mondes-noaction" class="boutons">Confirmar</p>
+    </div>
 </div>

@@ -1,5 +1,7 @@
 
-var Superadmin = {};
+var Superadmin = { };
+
+var waiter;
 
 $(document).ready(function(){
     
@@ -11,13 +13,33 @@ $(document).ready(function(){
     $("#submit-token").click(save_token);
     $("#submit-moulinette").click(moulinette);
     
+    _superadmin(function() {
+        $("#news").click();
+    });
+    
+    waiter = setInterval(_superadmin, 10000);
+    
+});
+
+var _superadmin = function(callback) {
+    console.log("-- Rafraichisement des infos --");
     // Récupère les listes à l'avance
     $.ajax({
         url: "json/superadmin_base.php",
         type: "GET",
         statusCode: {
             200: function(base) {
+                var action;
+                
+                if (Superadmin.action !== undefined) {
+                    action = Superadmin.action;
+                }
+                
                 Superadmin = base;
+                
+                Superadmin.action = action;
+                
+                $(".list-produits").empty();
                 
                 // Peuple les combos
                 $.each(Superadmin.produits, function(i, produit) {
@@ -27,16 +49,18 @@ $(document).ready(function(){
                         .attr("value", i)
                         .text(produit)
                     );
-                })
+                });
+                
+                if (callback !== undefined) {
+                    callback();
+                }
             },
             500: function() {
                 alert("T'as tout casse!");
             }
         }
     });
-    
-    
-});
+};
 
 var toggle_action = function() {
     var li = $(this);
@@ -45,7 +69,6 @@ var toggle_action = function() {
     
     $('nav li').attr("data-state", "");
     li.attr("data-state", "active");
-    
     
     $("article").hide();
     container.show();  
@@ -56,6 +79,50 @@ var bootstrap_superadmin = function(action) {
     Superadmin.action = action;
     
     switch(action) {
+        case "news":
+            $("#list-clients-recents").empty();
+            $("#list-clients-demandes").empty();
+            $("#list-clients-mondes").empty();
+            $.each(Superadmin.clients, function(i, client) {
+                if (client.recent == 1) {
+                    $("#list-clients-recents")
+                    .append(
+                        $("<li></li>")
+                        .attr("data-pk", client.pk)
+                        .html("<b>" + client.pk + "</b> : "+ client.mail + " (" + client.inscription + ")")
+                    );
+                }
+                if (client.contact == 1) {
+                    $("#list-clients-demandes")
+                    .append(
+                        $("<li></li>")
+                        .attr("data-pk", client.pk)
+                        .html("<b>" + client.pk + "</b> : "+ client.mail)
+                        .click(contact_client)
+                    );
+                }
+                if (client.demandes.length > 0) {
+                    $("#list-clients-mondes")
+                    .append(
+                        $("<li></li>")
+                        .html("<b>" + client.pk + "</b> : "+ client.mail)
+                    );
+                    
+                    $.each(client.demandes, function(j, demande) {
+                        $("#list-clients-mondes")
+                        .append(
+                            $("<li></li>")
+                            .addClass("demande-monde")
+                            .attr("data-client", client.pk)
+                            .attr("data-monde", demande.pk)
+                            .attr("data-demande", demande.demande)
+                            .html("<b>" + demande.label + "</b> : "+ demande.demande)
+                            .click(repondre_demande_monde)
+                        );
+                    });
+                }
+            });
+            break;
         case "tokens":
             $("#list-clients-tokens").empty();
             $.each(Superadmin.clients, function(i, client) {
@@ -382,4 +449,61 @@ var moulinette = function() {
             }
         }
     });
+};
+
+var repondre_demande_monde = function() {
+    var ligne = $(this);
+    var client = ligne.attr("data-client");
+    var monde = ligne.attr("data-monde");
+    var mode = ligne.attr("data-demande");
+    
+    if (confirm("Tu es sûr sûr certain que le client veut qu'on bazarde tous ses trucs?")) {
+        $.ajax({
+            url: "do/doDelMonde.php",
+            type: "POST",
+            data: {
+                client: client,
+                monde: monde,
+                mode: mode
+            },
+            statusCode: {
+                200: function() {
+                    ligne.hide();
+                    alert("C'est fait!");
+                },
+                403: function() {
+                    window.location.replace("index.php");
+                },
+                500: function() {
+                    alert("blaaaargh");
+                }
+            }
+        });
+    }
+};
+
+var contact_client = function() {
+    var ligne = $(this);
+    var pk = ligne.attr("data-pk");
+    
+    if (confirm("Tu as bien appele le client et tu lui as bien vendu la lune?")) {
+        $.ajax({
+            url: "do/doAnswer.php",
+            type: "POST",
+            data: {
+                client: pk
+            },
+            statusCode: {
+                200: function(data) {
+                    alert("YEAH");
+                },
+                403: function() {
+                    window.location.replace("index.php");
+                },
+                500: function() {
+                    alert("T'as tout pete");
+                }
+            }
+        });
+    }
 };

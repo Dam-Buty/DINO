@@ -130,7 +130,12 @@ if ($_SESSION["niveau"] >= 20) {
         <i>Powered by</i> <a href="http://www.dino.mx" target="_blank">DINO</a>
     </div>
     <img id="logout" src="img/logout_20.png" title="Desconectar">
+    <?php if ($_SESSION["niveau"] >= 30) {
+    ?>
     <img id="bouton-suppr" src="img/apocalypse_20.png" title="Borrar un mundo">
+    <?php
+    }
+    ?>
     <img id="bouton-pass" src="img/pass_20.png" title="Cambiar tu contrasena">
     <img id="bouton-mail" src="img/mail_20.png" title="Cambiar tu correo electronico">
     <img id="help-printer" src="img/printer_20.png">

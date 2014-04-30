@@ -83,3 +83,19 @@ article span {
 .entete-expired {
     background-color: #8CD692;
 }
+
+/* ///////////////////////
+  //////////NEWS       */
+  
+#container-news li {
+    cursor: default;
+}
+
+.demande-monde {
+    margin-left: 20px;
+    cursor: pointer !important;
+}
+
+#list-clients-demandes li {
+    cursor: pointer;
+}
