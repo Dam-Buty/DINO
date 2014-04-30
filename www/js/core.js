@@ -56,7 +56,7 @@ var load_search = function() {
         });
         
         $("#search").next("div").find('.search-field input[type="text"]').css({
-            height: "40px"
+            height: "24px"
         });
         
         $("#search").on("chosen:showing_dropdown", large_search);
@@ -129,9 +129,6 @@ var _change_monde = function(ul, li) {
     Core.champs.length = 0;
     Core.recherche.length = 0;
     
-    $("#bouton-admin-liste").attr("title", "Lista de los " + profil.mondes[Core.monde].champs[profil.mondes[Core.monde].cascade[0]].pluriel);
-    
-    $("#bouton-admin-liste").attr("data-selected", 0);
     $("#bouton-admin-profil").attr("data-selected", 0);
     
     charge_dates();
@@ -669,10 +666,6 @@ var construit_table = function() {
     .on("dragover", dragover)
     .on("dragleave", dragleave)
     .on("drop", drop);
-    
-    $("#container-icones-admin").animate({
-        left: $('#mondes-top li[data-monde="' + Core.monde + '"]').offset().left + "px"
-    });
 };
 
 var del_document = function() {
@@ -802,8 +795,6 @@ var del_valeur = function(e) {
     
     e.stopPropagation();
 };
-
-
 
 var _del_valeur = function(monde, champ, pk) {
     $.ajax({
