@@ -147,11 +147,6 @@ var bootstrap = function() {
                                 $("#backoffice").append(users);  
                             });
                             
-                            $.ajax({ url: "modules/admin/monde.php" })
-                            .done(function(monde) {
-                                $("#core").append(monde);  
-                            });
-                            
                             if (niveau >= 30) {
                             
                                 $.ajax({ url: "modules/admin/mondes_suppr.php" })

@@ -78,29 +78,19 @@ if (isset($_SESSION)) {
         <select class="busquedor" type="text" id="search" multiple="multiple" data-placeholder="Buscar en este mundo..." data-state="closed"></select>
         <div id="toggle-date"></div>
         <ul class="list-mondes" id="mondes-top"></ul>
+<?php
+if ($_SESSION["niveau"] >= 30) {
+?>
+            <img src="img/edit_monde_100.png" id="bouton-admin-profil" title="Configurar su mundo"/>
+<?php
+}
+?>
         <div id="container-dates">
             <div id="slider-date"></div>
             <div id="text-date"></div>
         </div>
     </div>
-    
-    <?php
-    if ($_SESSION["niveau"] >= 20) {
-    ?>
-    <div id="container-icones-admin">
-        <img src="img/liste_30.png" id="bouton-admin-liste"/>
-        <?php
-        if ($_SESSION["niveau"] >= 30) {
-        ?>
-        <img src="img/profil_30.png" id="bouton-admin-profil" title="Perfil documental"/>
-        <?php
-        }
-        ?>
-    </div>
 
-    <?php
-    }
-    ?>
 </div>
 
 <?php

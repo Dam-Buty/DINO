@@ -4,9 +4,6 @@ var bootstrap_admin = function() {
     $("#menu-admin").unbind().click(toggle_admin);
     
     $("#menu-retour").unbind().click(toggle_admin);
-    
-    $("#bouton-admin-liste").unbind()
-    .click(bootstrap_monde);
 };
 
 var change_admin = function() {
@@ -30,12 +27,10 @@ var _toggle_admin = function() {
     if (Core.admin) {
         $("#back").fadeOut();
         $("#front").fadeIn();
-//        $("#container-icones-admin").fadeIn();
         Core.admin = false;
     } else {
         $("#front").fadeOut();
         $("#back").fadeIn();
-//        $("#container-icones-admin").fadeOut();
         Core.admin = true;
         change_admin();
     }      

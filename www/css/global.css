@@ -64,7 +64,7 @@ html, body {
     height: 100%;
     background-color: #e7e9f0;
     
-    padding-top: 75px;
+    padding-top: 55px;
     padding-bottom: 35px;
     padding-left: 50px;
     
@@ -171,9 +171,12 @@ html, body {
 #######################################*/
 
 .list-mondes {
+    float: left;
+    
     padding-left: 0;
-    margin-top: 15px;
-    margin-left: 15px;
+    margin: 0;
+    margin-top: 10px;
+    margin-left: 10px;
 }
 
 .list-mondes li {
@@ -194,7 +197,7 @@ html, body {
     
     font-size: 0.7em;
     
-    margin-right: 1px;
+    margin-right: 5px;
     
     border-right: 3px solid #d6dcea;
 }
@@ -346,7 +349,7 @@ html, body {
 .barre-top {
     position: fixed;
     top: 0;
-    height: 70px;
+    height: 50px;
     
     background-color: #d6dcea;
     
@@ -360,7 +363,7 @@ html, body {
 .busquedor {
     float: right;
     width: 30%;
-    height: 50px;
+    height: 40px;
     margin-top: 5px;
     margin-right: 1%;
 }
@@ -373,31 +376,12 @@ html, body {
     background-image: url(../img/za.png);
 }
 
-#container-icones-admin {
-    position: absolute;
-    top: 48px;
-    z-index: 101;
-}
-
-#container-icones-admin img {
-    width: 20px;
+#bouton-admin-profil {
+    float: left;
+    width: 30px;
+    margin-left: 5px;
+    margin-top: 9px;
     cursor: pointer;
-}
-
-#bouton-admin-liste:hover {
-    content: url(../img/liste_hover_30.png);
-}
-
-#bouton-admin-liste[data-selected="1"] {
-    content: url(../img/liste_active_30.png);
-}
-
-#bouton-admin-profil:hover {
-    content: url(../img/profil_hover_30.png);
-}
-
-#bouton-admin-profil[data-selected="1"] {
-    content: url(../img/profil_active_30.png);
 }
 
 /*###########################
@@ -430,8 +414,8 @@ html, body {
     height: 40px;
     cursor: pointer;
     
-    margin-top: 1%;
-    margin-right: 1%;
+    margin-top: 3px;
+    margin-right: 5px;
 }
 
 #toggle-date:hover {
@@ -564,7 +548,7 @@ html, body {
 #######################################*/
 
 #liste {
-    margin: 10px;   
+    margin-top: -5px; 
     margin-right: 20px;
     margin-left: 20px;
 }
