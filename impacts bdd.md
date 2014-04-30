@@ -5,10 +5,10 @@ APOCALYPSE
 monde:
 + + demande_suppr_monde
 
+client:
++ + inscription_client
+
 supprimer tuto 5
-
-
-
 
 ILLUMINATI
 ==========
