@@ -610,6 +610,11 @@ html, body {
     height: inherit;
 }
 
+#liste li input {
+    display: none;
+    height: 15px;
+}
+
 .document {
     cursor: pointer;
 }

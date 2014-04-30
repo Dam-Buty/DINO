@@ -230,7 +230,9 @@ var _profil = function(callback) {
         statusCode: {
             200: function(data) {
                 profil = data;
-                callback();
+                if (callback !== undefined) {
+                    callback();
+                }
             }
         }
     })

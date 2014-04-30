@@ -250,7 +250,6 @@ if ($_SESSION["niveau"] >= 20) {
     ?>
 <script src="js/admin.js?v=7"></script>
 <script src="js/admin/users.js?v=7"></script>
-<script src="js/admin/mondes.js?v=7"></script>
     <?php
     }
 ?>

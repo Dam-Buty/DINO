@@ -139,10 +139,7 @@ class DINOSQL {
                 case "DELETE":
                     return $stmt->rowCount();
             }
-        } catch (Exception $e) {
-            $this->dbh->rollback();
-            $this->dbh = null;
-            
+        } catch (Exception $e) {            
             dino_log([
                 "niveau" => "E",
                 "query" => $query_name,
