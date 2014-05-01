@@ -204,7 +204,6 @@ if ($_SESSION["niveau"] >= 20) {
 
 <div id="container-tuto"></div>
 
-
 <?php
 if ($_SESSION["niveau"] >= 20) {
 ?>

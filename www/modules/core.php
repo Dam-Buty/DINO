@@ -3,7 +3,6 @@ session_start();
 ?>
 <div id="core" class="principal">
     <div id="liste">
-        
     </div>
 </div>
 
