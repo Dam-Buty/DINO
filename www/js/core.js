@@ -13,8 +13,6 @@ var bootstrap_list = function() {
             .click(change_monde)
         );
     });
-    
-    $("#mondes-top li").eq(0).click();
 };
 
 

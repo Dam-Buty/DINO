@@ -98,15 +98,18 @@ var bootstrap = function() {
         
         $("#bouton-close-viewer").click(cancel_view);
         
-        collapse_liste($("#edit-params"));
-        
         $.ajax({ url: "modules/core.php" })
         .done(function(core) {
             $("#front").append(core);
             
             $.ajax({ url: "modules/queue.php" })
             .done(function(queue) {
-                $("#front").append(queue);
+                $("#core").append(queue);
+                
+                $.ajax({ url: "modules/store.php" })
+                .done(function(store) {
+                    $("#front").append(store);
+                });
                 
                 // On style les éléments                
                 $("#date-store").datepicker({
