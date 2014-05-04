@@ -6,8 +6,29 @@ if ($_SESSION["niveau"] >= 10) {
     
     $client = $_SESSION["client"];
     $document = $_POST["document"];
-    $convert = $_POST["convert"];
+    $extension = pathinfo($_FILES['document']['name'], PATHINFO_EXTENSION);
     $clef = $_SESSION["clef"];
+    $action = $_POST["action"];
+    $script = "";
+    
+    switch($action) {
+        case "pack":
+            $script = "packer";
+            break;
+        case "convert":
+            $script = "converter";
+            break;
+        case "extract":
+            if ($extension == "pdf") {
+                $script = "pdfextractor";
+            } else {
+                $script = "loextractor";
+            }
+            break;
+        case "remove":
+            $script = "remove";
+            break;
+    }
     
     $descriptorspec = array(
        0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
@@ -18,7 +39,7 @@ if ($_SESSION["niveau"] >= 10) {
     $cwd = NULL;
     $env = array();
     
-    $commande = "../scripts/packer.sh " . $client . " " . $document . ' "' . $clef . '" ' . $convert;
+    $commande = "../scripts/" . $script . ".sh " . $client . " " . $document . ' "' . $clef . '"';
     
     $process = proc_open($commande, $descriptorspec, $pipes, $cwd, $env);
     
