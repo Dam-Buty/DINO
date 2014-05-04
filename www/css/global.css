@@ -68,7 +68,7 @@ html, body {
     padding-bottom: 35px;
     padding-left: 50px;
     
-    overflow-y: scroll;
+    overflow-y: auto;
     box-sizing: border-box;
 }
 
@@ -941,27 +941,28 @@ html, body {
 #
 #######################################*/
 
-#container-queue {
+#queue {
 }
 
-#container-uploader {
+#container-queue {
+    position: fixed;
+    right: 0;
+    top: 70px;
+    bottom: 70px;
+    
+    width: 20%;
     padding: 10px;
     border-radius: 5px;
     
     box-shadow: 0 0 1px 1px #8ECB32;
-    
-    width: 30%;
-    margin-left: 35%;
-    margin-top: 70px;
+}
+
+#container-uploader {
 }
 
 #tiroir-queue {
-    position: relative;
-    height: 100%;
     
     background-color: rgba(0,0,0,0.7);
-    
-    overflow-y: auto;
     z-index: 10;
 }
 
@@ -984,6 +985,8 @@ html, body {
     background-color: white;
     
     cursor: pointer;
+    
+    box-sizing: border-box;
 }
 
 #zone-dnd input {
@@ -1001,36 +1004,52 @@ html, body {
     cursor: pointer;
 }
 
+.cluster {
+    float: left;
+    width: 10%;
+    margin: 10px;
+    padding: 5px;
+    
+    box-shadow: 0 0 1px 1px #8ECB32;
+}
+
+.cluster h1 {
+    padding: 2px;
+    
+    background-color: #8ECB32;
+    
+    text-align: center;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 0.9em;
+}
+
 /*###########################
         Liste queue
 #############################*/
 
-#container-uploads {
-    float: right;
-    margin-right: 10px;
-    height: 60%;
-    
-    overflow-y: auto;
+#container-uploads {    
 }
 
 #files-list {
     padding-left: 0;
     margin-top: 0;
     border-top: 5px solid white;
+    
+    overflow-y: auto;
 }
 
-#files-list li {
+.queue_document {
     list-style-type: none;
     border-bottom: 2px solid white;
-    padding: 10px;
+    padding: 5px;
     cursor: pointer;
 }
 
-#files-list li:hover {
+.queue_document:hover {
     background-color: #E9E9E9 !important;
 }
 
-#files-list li>img {
+.queue_document>img {
     float: right;
     cursor: pointer;
     
@@ -1041,12 +1060,12 @@ html, body {
     content: url(../img/del_15.png);
 }
 
-#files-list .filename {
+.queue_document .filename {
     background-image: url(../img/queue_xxx_20.png);
     background-repeat: no-repeat;
     
     padding-left: 25px;
-    margin-right: 50px;
+    margin-right: 20px;
     
     font-size: 0.8em;
     
@@ -1054,44 +1073,45 @@ html, body {
     overflow: hidden;
 }
 
-#files-list li[data-filetype="doc"] .filename {
+.queue_document[data-filetype="doc"] .filename {
     background-image: url(../img/queue_doc_20.png);
 }
 
-#files-list li[data-filetype="img"] .filename {
+.queue_document[data-filetype="img"] .filename {
     background-image: url(../img/queue_img_20.png);
 }
 
-#files-list li[data-filetype="pdf"] .filename {
+.queue_document[data-filetype="pdf"] .filename {
     background-image: url(../img/queue_pdf_20.png);
 }
 
-#files-list li[data-filetype="vid"] .filename {
+.queue_document[data-filetype="vid"] .filename {
     background-image: url(../img/queue_vid_20.png);
 }
 
-#files-list .progressbar {
+.queue_document .progressbar {
     margin-top: 10px;
     height: 10px;
     
     display: none;
 }
 
-#files-list .details-queue {
+.queue_document .details-queue {
+    display: none;
     font-size: 0.6em;
     
     margin-top: 10px;
 }
 
-#files-list li:nth-child(odd) {
+.queue_document:nth-child(odd) {
     background-color: #bfbfbf;
 }
 
-#files-list li:nth-child(even) {
+.queue_document:nth-child(even) {
     background-color: #9b9b9b;
 }
 
-#del-all {
+.del-all {
     border-top: 5px solid #FFF;
     
     background-color: #9B9B9B;
@@ -1105,8 +1125,16 @@ html, body {
     cursor: pointer;
 }
 
-#del-all:hover {
+.del-all:hover {
     color: #646462;
+}
+
+.toobig {
+    color: red;
+}
+
+.processing {
+    background-image: url(../img/loader.gif);
 }
 
 /*#####################################

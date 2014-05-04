@@ -1,9 +1,481 @@
-var queue = [];
+var Queue = {
+    uploads: [ ],
+    uploaders: [undefined, undefined, undefined],
+    processers: [undefined, undefined, undefined],
+    blocked: false,
+    
+    clusters: {},
+    
+    refresh: function() {
+        var self = this;
+        
+        this.uploads.length = 0;
+        $.ajax({
+            url: "json/queue.php",
+            statusCode: {
+                200: function(files) {
+                    $.each(files, function(i, file) {
+                        var document = Document({
+                            size: file.size,
+                            filename: file.filename,
+                            displayname: file.displayname,
+                            user: file.user,
+                            date: file.date
+                        }).init().setStatus("uploaded");
+                        
+                        self.clusterize(document);
+                    });
+                },
+                403: function() {
+                    window.location.replace("index.php");
+                },
+                500: function() {
+                    popup("Erreur!", "error");
+                }
+            }
+        });
+    },
+    
+    throttle: function() {
+        var self = this;
+        
+        if (!this.blocked) {
+            $.each(self.uploaders, function(i, uploader) {
+                if (uploader === undefined) {
+                    $.each(Queue.uploads, function(j, document) {
+                        if (document.status == "") {
+                            if (document.size > profil.maxfilesize) {
+                                document.setStatus("toobig");
+                            } else {
+                                self.uploaders[i] = document;
+                                document.upload(i, j);
+                                return false;
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    },
+    
+    process: function() {
+        var self = this;
+        
+        $.each(self.processers, function(i, processer) {
+            if (processer === undefined) {
+                $.each(self.clusters, function(j, cluster) {
+                    $.each(cluster.documents, function(k, document) {
+                        if (document.status != "processed") {
+                            if (document.status == "idle" || document.status == "uploaded") {
+                                if (document.processes.length > 0) {
+                                    self.processers[i] = document;
+                                    document.process(i);
+                                } else {
+                                    document.setStatus("processed");
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+        });
+    },
+    
+    upload: function(files) {
+        var self = this;
+        
+        if(typeof FileList !== 'undefined') {
+            if (files instanceof FileList === false) {
+                files = $("#files-handler").prop("files");
+            }
+        } else { // shim for ie9
+            files = {
+                name: files.value,
+                size: 23
+            };
+        }
+        
+        $.each(files, function() {
+            var position = self.uploads.length;
+            
+            if (this.name != ".") {
+                self.uploads.push(
+                    Document({ 
+                        file: this, 
+                        size: this.size, 
+                        displayname: this.name,
+                        position: position
+                    }).init()
+                );
+            }
+        });
+        
+        self.throttle();
+    },
+    
+    clusterize: function(document) {
+        var cluster;
+        
+        if (this.clusters[document.type] === undefined) {            
+            this.clusters[document.type] = Cluster({
+                type: document.type
+            }).init();
+        }
+        
+        cluster = this.clusters[document.type];
+        
+        document.position = cluster.documents.length;
+        
+        document.li.find(".bouton-del-li").click(function() {
+            cluster.remove(document.position);
+        });
+        
+        cluster.documents.push(document);
+        cluster.ul.append(document.li);
+    },
+    
+    empty: function() {
+        var self = this;
+        var uploads = [];
+        
+        this.blocked = true;
+        
+        $.each(this.uploads, function(i, upload) {
+            if (upload.status == "uploading") {
+                uploads.push(upload);
+            }
+        });
+        
+        self.uploads = uploads;
+        self.blocked = false;
+    },
+    
+    cancel: function() {
+        this.documents.splice(position, 1);
+    }
+};
 
-var uploading = [undefined, undefined, undefined];
+var Cluster = function(options) {
+    return $.extend({
+        type: "",
+        div: undefined,
+        ul: undefined,
+        documents: [],
+        
+        init: function() {
+            var categorie = categories_documents[this.type];
+            
+            this.ul = $("<ul></ul>");
+            this.div = $("<div></div>")
+                .addClass("cluster")
+                .attr("data-cluster", this.type)
+                .append(
+                    $("<h1></h1>")
+                    .text(categorie.label)
+                ).append(
+                    $("<div></div>")
+                    .addClass("del-all")
+                    .text("Borrar todo")
+                    .click(this.empty)
+                ).append(
+                    this.ul
+                );
+            
+            $("#queue").append(this.div);
+            
+            return this;
+        },
+        
+        empty: function() {
+            var div = $(this);
+            var parent = div.parent("div");
+            var cluster = Queue.clusters[parent.attr("data-cluster")];
+            
+            queue = cluster.documents;
+                        
+            titre = "Supresion de " + queue.length + " documentos";
+            message = "<p>Estas a punto de borrar definitivamente los " + queue.length + " documentos de la fila de espera.</p><p>Te recuerdo que esta operacion es <b>irreversible</b>.</p>";
+            bouton = "Confirmar (<i>borrar " + queue.length + " documento</i>)";
+            
+            popup_confirmation(message, titre, bouton, function() {
+                cluster.ul.find("img").hide();
+                
+                cluster.remove("all");
+            });
+        },
+        
+        remove: function(index) {
+            var self = this;
+            var document;
+            var position;
+            
+            if (index == "all") {
+                position = 0;
+            } else {
+                position = index;
+            }
+            
+            document = this.documents[position];
+            
+            document.del(function() {
+                self.documents.splice(position, 1);
+            
+                if (self.documents.length == 0) {
+                    self.div.remove();
+                    self.div = undefined;
+                    self.ul = undefined;
+                    
+                    Queue.clusters[self.type] = undefined;
+                } else {
+                    if (index == "all") {
+                        self.remove("all");
+                    }
+                }
+            });
+        }
+    }, options);
+};
+
+
+
+var Document = function(options) {
+    return $.extend({ 
+        file: undefined, // Objet File
+        li: undefined,       // Objet LI
+        processes: [],
+        
+        position: 0,
+        
+        filename: "", 
+        displayname: "", 
+        size: "", 
+        displaysize: "",
+        extension: "",
+        type: "",
+                
+        user: "", 
+        date: "", 
+        
+        status: "", 
+        store: { 
+            date: "", 
+            monde: "", 
+            last_champ: "", 
+            champs: { } , 
+            categorie: "", 
+            type_doc: { } 
+        },
+        
+        init: function() {
+            var li = $("#modele-li-queue").clone();
+            var taille;
+            var self = this;
+            
+            this.extension = this.displayname.split(".").pop().toLowerCase();
+            
+            $.each(categories_documents, function(type, categorie) {
+                if (self.extension in categorie.extensions) {
+                    self.type = type;
+                    self.processes = categorie.processes;
+                }
+            });
+            
+            if (this.type == "") {
+                this.type ="xxx";
+                self.processes = [ "pack", "remove" ];
+            }
+            
+            li.find(".filename").text(this.displayname);
+            
+            li.find(".progressbar").progressbar({
+                max: 100,
+                value: false
+            });
+            
+            this.displaysize = this.size + " o";
+            
+            if (this.size > 103) {
+                this.displaysize = (this.size / 1024).toFixed(2) + " Ko";
+            }
+            
+            if (this.size > 524288) {
+                this.displaysize = (this.size / 1048576).toFixed(2) + " Mo";
+            }
+            
+            li.find(".details-queue")
+                .append("<i>" + this.displaysize + "</i>")
+                .append(". Subido por <b>" + this.user + "</b> " + this.date + ".")    
+            ;
+            
+            li.attr({
+                id: "",
+                "data-filetype": this.type
+            });
+//            .on("dragstart", dragstart)
+//            .on("dragend", dragend);
+
+            $("#files-list").append(li);
+            
+            this.li = li;
+            
+            return this;
+        },
+        
+        setStatus: function(status) {
+            this.status = status;
+              
+            switch(status) {                    
+                case "uploading":
+                    this.li.find(".progressbar").progressbar("value", false);
+                    this.li.find(".progressbar").slideDown();
+                    break;
+                    
+                case "uploaded":
+                    this.li.find(".progressbar").slideUp();
+                    this.li.children("img").fadeIn();  
+                    
+                    Tuto.flag(1);
+                    break;
+                
+                case "toobig":
+                    this.li.addClass("toobig");
+                    break;
+                    
+                case "processing":
+                    this.li.find(".filename").addClass("processing");
+                    break;
+                    
+                case "idle":
+                    this.li.find(".filename").removeClass("processing");
+                    break;
+                    
+                case "processed":
+                    this.li.find(".filename").removeClass("processing");
+                    break;
+            };
+            
+            return this;
+        },
+        
+        progress: function(pourcentage) {
+            this.li.find(".progressbar").progressbar("value", pourcentage);
+        },
+        
+        upload: function(uploader, document) {
+            var upload_data = new FormData;
+            var self = this;
+            
+            this.setStatus("uploading");
+            
+            upload_data.append("document", this.file);
+
+            $.ajax({
+                url: "do/doUpload.php",
+                data: upload_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                xhr: function() {  // custom xhr pour récuperer la progression
+                    myXhr = $.ajaxSettings.xhr();
+                    if(myXhr.upload){ // if upload property exists
+                        myXhr.upload.addEventListener('progress', function(evt) {
+                            if(evt.lengthComputable){
+                                var pourcentage = Math.floor((evt.loaded * 100) / evt.total);
+                                self.progress(pourcentage);
+                            }
+                        }, false);
+                    }
+                    return myXhr;
+                },
+                statusCode: {
+                    201: function(data) {
+                        Queue.uploaders[uploader] = undefined;
+                        Queue.uploads.splice(document, 1);
+            
+                        self.setStatus("uploaded");
+                        self.filename = data.filename;
+                        
+                        Queue.clusterize(self);
+                        Queue.process();
+                    },
+                    403: function() {
+                        window.location.replace("index.php");
+                    },
+                    500: function() {
+                        Queue.uploaders[uploader] = undefined;
+                        self.setStatus(-2);
+                        Queue.throttle();
+                    }
+                }
+            });
+        },
+        
+        process: function(processer) {
+            var action = this.processes[0];
+            var self = this;
+            
+            self.setStatus("processing");
+            
+            $.ajax({
+                url: "do/doProcess.php",
+                type: "POST",
+                data: {
+                    action: action,
+                    document: this.filename
+                },
+                statusCode: {
+                    200: function() {
+                        Queue.processers[processer] = undefined;
+                        self.processes.shift();
+                        self.setStatus("idle");
+                        Queue.process();
+                    },
+                    500: function() {
+                        Queue.processers[processer] = undefined;
+                        self.setStatus("error");
+                        Queue.process();
+                    }
+                }
+            });
+        },
+        
+        del: function(callback) {
+            var self = this;
+            
+            $.ajax({
+                url: "do/doRemoveFromQueue.php",
+                type: "POST",
+                data: {
+                    filename: self.filename
+                },
+                statusCode: {
+                    204: function() {
+                        self.li.remove();
+                        self.li = undefined;
+                        
+                        if (callback !== undefined) {
+                            callback();
+                        }
+                    },
+                    403: function() {
+                        window.location.replace("index.php");
+                    },
+                    500: function() {
+                        popup('Error de supresion del documento. Gracias por intentar otra vez', 'error'); // LOCALISATION
+                    }
+                }
+            });
+        }
+        
+    }, options);
+};
+
 
 var bootstrap_queue = function() {
-    $("#files-handler").unbind().change(handle_files);
+    $("#files-handler").unbind().change(function(files) {
+        Queue.upload(files);
+    });
     
     if (profil.printer != "") {
         $.ajax({
@@ -11,7 +483,7 @@ var bootstrap_queue = function() {
             type: "POST",
             statusCode : {
                 201: function() {
-                    get_queue();
+                    //get_queue();
                 },
                 403: function() {
                     window.location.replace("index.php");
@@ -22,33 +494,8 @@ var bootstrap_queue = function() {
             }
         });
     } else {
-        get_queue(); 
+        Queue.refresh();
     }
-}
-
-var get_queue = function() {
-    queue.length = 0;
-    $.ajax({
-        url: "json/queue.php",
-        statusCode: {
-            200: function(queue_list) {
-                $.each(queue_list, function(i, document) {
-                    var document_li = set_li_status(create_li(document.displayname, document.size, document.user, document.date), 1);
-                    document.li = document_li;
-                    queue.push(document);
-                });
-                
-                refresh_liste();
-                clean_cave();
-            },
-            403: function() {
-                window.location.replace("index.php");
-            },
-            500: function() {
-                popup("Erreur!", "error");
-            }
-        }
-    });
 }
 
 // - Demande un document dans la cave.
@@ -80,7 +527,7 @@ var clean_cave = function() {
                                     document: document.filename
                                 },
                                 statusCode: {
-                                    200: function() {
+                                    200: function() { // rajouter l'extension'
                                         var document_li = set_li_status(create_li(document.displayname, document.size, document.user, document.date), 1);
                                         document.li = document_li;
                                         queue.push(document);
@@ -112,23 +559,6 @@ var clean_cave = function() {
     })
 }
 
-
-var compare = function(a,b) {
-  if (a.status > b.status)
-     return 1;
-  if (a.status < b.status)
-    return -1;
-  if (a.status = b.status) {
-    if (a.displayname < b.displayname) {
-        return -1;
-    }
-    if (a.displayname > b.displayname) {
-        return 1;
-    }
-    return 0;
-  }
-}
-
 var anime_queue = function() {
     if (!$("#menu-queue").hasClass("inactive")) {
         if ($("#container-queue").attr("data-state") == "closed") {
@@ -144,7 +574,6 @@ var anime_queue = function() {
 }
 
 var refresh_liste = function() {
-    // queue.sort(compare);
     
     $("#del-all").text("Borrar " + queue.length + " documentos");
     
@@ -156,108 +585,6 @@ var refresh_liste = function() {
     
     $("#files-list li").unbind().click(store_document);
     $(".bouton-del-li").unbind().click(remove_document);
-};
-
-var upload = function(list_element, uploader, queue_position) {
-    var upload_data = new FormData;
-    
-    upload_data.append("document", list_element.document);
-
-    $.ajax({
-        url: "do/doUpload.php",
-        data: upload_data,
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        xhr: function() {  // custom xhr pour récuperer la progression
-            myXhr = $.ajaxSettings.xhr();
-            if(myXhr.upload){ // if upload property exists
-                myXhr.upload.addEventListener('progress', function(evt) {
-                    if(evt.lengthComputable){
-                        var pourcentage = Math.floor((evt.loaded * 100) / evt.total);
-                        var li = list_element.li;
-                        
-                        li.find(".progressbar").progressbar("value", pourcentage);
-                    }
-                }, false);
-            }
-            return myXhr;
-        },
-        statusCode: {
-            201: function(data) {
-                uploading[uploader] = undefined;
-                queue[queue_position].status = 1;
-                queue[queue_position].filename = data.filename;
-                
-                document_li = list_element.li;
-                document_li.find(".progressbar").progressbar("value", false);
-                
-                $.ajax({
-                    url: "do/doPack.php",
-                    type: "POST",
-                    data: {
-                        document: queue[queue_position].filename,
-                        convert: profil.convert
-                    },
-                    statusCode: {
-                        200: function() {
-                            set_li_status(queue[queue_position].li, 1);
-                            
-                            handle_uploads();
-                        },
-                        500: function() {
-                            uploading[uploader] = undefined;
-                            queue[queue_position].status = -2;
-                            
-                            set_li_status(queue[queue_position].li, -2);
-                            
-                            handle_uploads();
-                        }
-                    }
-                });
-                
-                handle_uploads();
-            },
-            403: function() {
-                window.location.replace("index.php");
-            },
-            500: function() {
-                uploading[uploader] = undefined;
-                queue[queue_position].status = -2;
-                
-                set_li_status(queue[queue_position].li, -2);
-                
-                handle_uploads();
-            }
-        }
-    });
-
-    return false;
-};
-
-///////////////////:
-// Cherche un uploader libre et lui attribue le premier fichier de la queue
-var handle_uploads = function() {
-    
-    $.each(uploading, function(i, uploader) {
-        if (uploader === undefined) {
-            $.each(queue, function(j, document) {
-                if (document.status == -1) {
-                    if (document.size > profil.maxfilesize) {
-                        queue[j].status = -3;
-                        set_li_status(queue[j].li, -3);
-                    } else {
-                        queue[j].status = 0;
-                        uploading[i] = document.document;
-                        set_li_status(queue[j].li, 0);
-                        upload(queue[j], i, j);
-                        return false;
-                    }
-                }
-            });
-        }
-    });
 };
 
 var remove_document = function(event) {
@@ -287,46 +614,19 @@ var confirm_remove_document = function(position) {
 };
 
 var _remove_document = function(position, callback) {
-    list_element = queue[position];
-    
-    $.ajax({
-        url: "do/doRemoveFromQueue.php",
-        type: "POST",
-        data: {
-            filename: list_element.filename
-        },
-        statusCode: {
-            204: function() {
-                if ($("#popup-store").is(":visible")) {
-                    avance_store(position);
-                } else {
-                    queue.splice(position, 1);
-                    refresh_liste();
-                    
-                    if (typeof callback === "function") {
-                        callback();
-                    }
-                }
-            },
-            403: function() {
-                window.location.replace("index.php");
-            },
-            500: function() {
-                popup('Error de supresion del documento. Gracias por intentar otra vez', 'error'); // LOCALISATION
-            }
-        }
-    });
 };
 
 var remove_all_documents = function() {
-    var titre = "Supresion de " + queue.length + " documentos";
-    var message = "<p>Estas a punto de borrar definitivamente los " + queue.length + " documentos de la fila de espera.</p><p>Te recuerdo que esta operacion es <b>irreversible</b>.</p>";
-    var bouton = "Confirmar (<i>borrar " + queue.length + " documento</i>)";
+//    var div = $(this);
+//    var parent = div.parent("div");
+//    var queue, titre, message, bouton;
+//    
+//    if (parent.hasClass("cluster")) {
+//    } else {
+//        $.each(Queue.uploads, function(i, upload))
+//    }
     
-    popup_confirmation(message, titre, bouton, function() {
-        $("#files-list img").hide();
-        _remove_all_documents();
-    });
+    
 };
 
 var _remove_all_documents = function() {
@@ -334,146 +634,3 @@ var _remove_all_documents = function() {
         _remove_document(0, _remove_all_documents);
     }
 }
-
-var set_li_status = function(li, status) {
-    var custom_class, custom_text;
-    
-    switch(status) {
-        case -3: 
-            break;
-        
-        case -2:
-            break;
-            
-        case -1:
-            break;
-            
-        case 0:
-            li.find(".progressbar").progressbar("value", false);
-            li.find(".progressbar").slideDown();
-            break;
-            
-        case 1:
-            li.find(".progressbar").slideUp();
-            li.children("img").fadeIn();  
-            Tuto.flag(1);
-            break;
-    };
-    
-    return li;
-}
-
-var create_li = function(name, size, user, date) {
-    var li = $("#modele-li-queue").clone();
-    var taille;
-    var extension = name.split(".").pop().toLowerCase();
-    var type = "";
-    
-    if (extension in pdf_extensions) {
-        type = "pdf";
-    }
-    
-    if (extension in doc_extensions) {
-        type = "doc";
-    }
-    
-    if (extension in img_extensions) {
-        type = "img";
-    }
-    
-    if (extension in vid_extensions) {
-        type = "vid";
-    }
-    
-    if (type == "") {
-        type ="xxx";
-    }
-    
-    li.find(".filename").text(name);
-    
-    li.find(".progressbar").progressbar({
-        max: 100,
-        value: false
-    });
-    
-    taille = size + " o";
-    
-    if (size > 103) {
-        taille = (size / 1024).toFixed(2) + " Ko";
-    }
-    
-    if (size > 524288) {
-        taille = (size / 1048576).toFixed(2) + " Mo";
-    }
-    
-    li.find(".details-queue")
-        .append("<i>" + taille + "</i>")
-        .append(". Subido por <b>" + user + "</b> " + date + ".")    
-    ;
-    
-    li.attr({
-        "data-position": queue.length,
-        id: "",
-        "data-filetype": type
-    })
-    .on("dragstart", dragstart)
-    .on("dragend", dragend);
-    
-    return li;
-};
-
-////////////////////////////
-// Gestion des fichiers entrés dans l'input
-var handle_files = function(files) {
-
-    if(typeof FileList !== 'undefined') {
-        if (files instanceof FileList === false) {
-            files = $("#files-handler").prop("files");
-        }
-    } else { // shim for ie9
-        files = {
-            name: this.value,
-            size: 23
-        };
-    }
-    
-    $.each(files, function() {
-        var file_tab = this.name.split(".");
-        var extension = file_tab[file_tab.length - 1].toLowerCase();
-        
-        // Si l'extension est légale, on pousse le fichier dans la queue
-//        if (extension.toLowerCase() in allowed_extensions) {
-        var document_li = set_li_status(
-            create_li(
-                this.name, 
-                this.size, 
-                "usted", 
-                "hoy"
-            ), -1
-        );
-        
-        queue.unshift({ 
-            document: this, 
-            status: -1, 
-            size: this.size, 
-            li: document_li, 
-            filename: "", 
-            displayname: this.name, 
-            user: "usted", 
-            date: "hoy", 
-            store: { 
-                date: "", 
-                monde: "", 
-                last_champ: "", 
-                champs: { } , 
-                categorie: "", 
-                type_doc: { } 
-            } 
-        });
-//        }
-    });
-    
-    refresh_liste();
-    handle_uploads();
-};
-

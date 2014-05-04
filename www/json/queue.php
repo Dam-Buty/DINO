@@ -28,22 +28,11 @@ if (isset($_SESSION["niveau"])) {
             }
             
             array_push($queue, [
-                "document" => "",
-                "status" => 1,
                 "size" => $row["taille_document"],
-                "li" => "",
                 "filename" => $row["filename_document"],
                 "displayname" => $row["display_document"],
                 "user" => $user,
-                "date" => "el " . $date,
-                "store" => [
-                    "date" => "",
-                    "monde" => "",
-                    "last_champ" => "",
-                    "champs" => [],
-                    "categorie" => "",
-                    "type_doc" => []
-                ]
+                "date" => "el " . $date
             ]);
         }
         status(200);
