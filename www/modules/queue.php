@@ -4,7 +4,7 @@
             <div id="zone-dnd">
                 <img src="img/cloud_30.png"/><br/>
                 <b>Carga documentos en DINO</b>
-                <input type="file" id="files-handler" name="files-handler" multiple="multiple" directory webkitdirectory mozdirectory>
+                <input type="file" id="files-handler" name="files-handler" multiple="multiple" directory webkitdirectory mozdirectory > <!--  -->
             </div>
         </div>
         <div id="container-uploads">

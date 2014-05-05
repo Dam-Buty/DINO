@@ -25,13 +25,13 @@ if ($_SESSION["niveau"] >= 10) {
             
         if (move_uploaded_file($_FILES['document']['tmp_name'], "../cache/" . $_SESSION["client"] . "/temp/" . $filename . "." . $extension)) {
             $dino->commit();
-            status(201);
             dino_log([
                 "niveau" => "I",
                 "message" => "Copie OK",
                 "query" => $filename . "." . $extension
             ]);
             $json = '{ "status": "OK", "filename": "' . $filename . '.' . $extension . '" }';
+            status(201);
             header('Content-Type: application/json');
             echo $json;
         } else {

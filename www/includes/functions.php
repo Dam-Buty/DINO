@@ -25,14 +25,20 @@ function dino_delete($filename, $client = "") {
     
     $path = "../cache/" . $client . "/" . $filename . ".dino";
     $pdfpath = "../cache/" . $client . "/" . $filename . "-pdf.dino";
+    $txtpath = "../cache/" . $client . "/" . $filename . "-txt.dino";
     
+    if (unlink($path)) {       
+        dino_log([
+            "niveau" => "I",
+            "message" => "Unlink original",
+            "query" => $_POST["filename"]
+        ]); 
     
-    if (unlink($path)) {        
         if (file_exists($pdfpath)) {
             if (unlink($pdfpath)) {
                 dino_log([
                     "niveau" => "I",
-                    "message" => "Unlink document",
+                    "message" => "Unlink PDF version",
                     "query" => $_POST["filename"]
                 ]);
             } else {
@@ -44,12 +50,24 @@ function dino_delete($filename, $client = "") {
                     "params" => json_encode($_POST["filename"])
                 ]);
             }
-        } else {
-            dino_log([
-                "niveau" => "I",
-                "message" => "Unlink PDF version",
-                "query" => $_POST["filename"]
-            ]);
+        }   
+        
+        if (file_exists($txtpath)) {
+            if (unlink($txtpath)) {
+                dino_log([
+                    "niveau" => "I",
+                    "message" => "Unlink TXT version",
+                    "query" => $_POST["filename"]
+                ]);
+            } else {
+                dino_log([
+                    "niveau" => "E",
+                    "query" => "unlink " . $txtpath,
+                    "errno" => 666,
+                    "errinfo" => "Impossible de supprimer",
+                    "params" => json_encode($_POST["filename"])
+                ]);
+            }
         }
     } else {
         dino_log([
