@@ -1064,6 +1064,7 @@ html, body {
     background-image: url(../img/queue_xxx_20.png);
     background-repeat: no-repeat;
     
+    line-height: 20px;
     padding-left: 25px;
     margin-right: 20px;
     
@@ -1134,7 +1135,8 @@ html, body {
 }
 
 .processing {
-    background-image: url(../img/loader.gif);
+    background-image: url(../img/loader.gif) !important;
+    background-size: 20px;
 }
 
 /*#####################################

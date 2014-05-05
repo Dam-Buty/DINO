@@ -10,7 +10,7 @@ TEMP=../cache/$CLIENT/temp/
 cd $TEMP
 
 # Extraction de texte via Libre Office
-lowriter --headless --convert-to txt:text $DOCUMENT
+lowriter --headless --convert-to txt $DOCUMENT
 
 if [ "$?" = '0' ]; then
     tar -zcvf $DOCUMENT-txt.tar.gz $FILENAME.txt 1>&2

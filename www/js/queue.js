@@ -42,17 +42,26 @@ var Queue = {
         if (!this.blocked) {
             $.each(self.uploaders, function(i, uploader) {
                 if (uploader === undefined) {
+                    var all_done = true;
+                    
                     $.each(Queue.uploads, function(j, document) {
-                        if (document.status == "") {
-                            if (document.size > profil.maxfilesize) {
-                                document.setStatus("toobig");
-                            } else {
-                                self.uploaders[i] = document;
-                                document.upload(i, j);
-                                return false;
+                        if (document !== undefined) {
+                            all_done = false;
+                            if (document.status == "") {
+                                if (document.size > profil.maxfilesize) {
+                                    document.setStatus("toobig");
+                                } else {
+                                    self.uploaders[i] = document;
+                                    document.upload(i, j);
+                                    return false;
+                                }
                             }
                         }
                     });
+                        
+                    if (all_done) {
+                        self.uploaders.length = 0;
+                    }
                 }
             });
         }
@@ -64,18 +73,27 @@ var Queue = {
         $.each(self.processers, function(i, processer) {
             if (processer === undefined) {
                 $.each(self.clusters, function(j, cluster) {
+                    var cluster_done = false;
+                    
                     $.each(cluster.documents, function(k, document) {
                         if (document.status != "processed") {
                             if (document.status == "idle" || document.status == "uploaded") {
                                 if (document.processes.length > 0) {
+//                                    console.log(document.filename + " : Lancement " + document.processes[0] + " sur (" + i + ")");
                                     self.processers[i] = document;
                                     document.process(i);
+                                    cluster_done = true;
+                                    return false;
                                 } else {
                                     document.setStatus("processed");
                                 }
                             }
                         }
                     });
+                    
+                    if (cluster_done) {
+                        return false;
+                    }
                 });
             }
         });
@@ -276,7 +294,7 @@ var Document = function(options) {
             $.each(categories_documents, function(type, categorie) {
                 if (self.extension in categorie.extensions) {
                     self.type = type;
-                    self.processes = categorie.processes;
+                    self.processes = categorie.processes.slice(0);
                 }
             });
             
@@ -382,6 +400,7 @@ var Document = function(options) {
                         myXhr.upload.addEventListener('progress', function(evt) {
                             if(evt.lengthComputable){
                                 var pourcentage = Math.floor((evt.loaded * 100) / evt.total);
+                                console.log(self.displayname + " : " + pourcentage + "%");
                                 self.progress(pourcentage);
                             }
                         }, false);
@@ -391,12 +410,13 @@ var Document = function(options) {
                 statusCode: {
                     201: function(data) {
                         Queue.uploaders[uploader] = undefined;
-                        Queue.uploads.splice(document, 1);
+                        Queue.uploads[document] = undefined;
             
                         self.setStatus("uploaded");
                         self.filename = data.filename;
                         
                         Queue.clusterize(self);
+                        Queue.throttle();
                         Queue.process();
                     },
                     403: function() {
@@ -415,6 +435,8 @@ var Document = function(options) {
             var action = this.processes[0];
             var self = this;
             
+//            console.log(this.filename + " : " + JSON.stringify(this.processes));
+            
             self.setStatus("processing");
             
             $.ajax({
@@ -422,18 +444,25 @@ var Document = function(options) {
                 type: "POST",
                 data: {
                     action: action,
-                    document: this.filename
+                    document: self.filename
                 },
                 statusCode: {
                     200: function() {
+                    
                         Queue.processers[processer] = undefined;
                         self.processes.shift();
+                        
+//                        console.log(self.filename + " : Retour " + action + " sur (" + processer + ")");
+//                        console.log(self.filename + " : " + JSON.stringify(self.processes));
+                        
                         self.setStatus("idle");
+                        Queue.throttle();
                         Queue.process();
                     },
                     500: function() {
                         Queue.processers[processer] = undefined;
                         self.setStatus("error");
+                        Queue.throttle();
                         Queue.process();
                     }
                 }
