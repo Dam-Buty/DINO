@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" 
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es">
+<head>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=ISO-8859-1" />
+<title>DINO</title>
+<meta content="2013-02-28" name="date" />
+<meta content="Damien BUTY" name="author" />
+<meta content="La revolucion documental!" name="description" />
+<link rel="stylesheet" href="style.css" media="screen" type="text/css"/>
+<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Handlee' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+    <nav><a href="http://www.dino.mx">DINO</a>
+    <ul>
+        <a href="http://www.dino.mx"><li>Home</li></a>
+        <a href="http://www.dino.mx/tarifas"><li>Tarifas</li></a>
+        <a href="http://blog.dino.mx"><li>Blog</li></a>
+        <a href="mailto:info@dino.mx"><li>Contacto</li></a>
+    </ul>
+    <div style="clear: both;"></nav>
+    <section>
+        <h1>Deja de buscar tus documentos</h1>
+        <p>Con <b>DINO</b>, los documentos valiosos de tu empresa <u>siempre</u> estan a tu alcance. Desde cualquier lugar, 24/7.</p>
+        <form type="POST" action="doSignup.php">    
+            <p id="signup">
+                Tu cuenta gratuita te espera!<br/>
+                <input type="email" id="mail" placeholder="Solo necesitas una direccion mail valida"/>
+                <input type="submit" value="Registrate"/><br/>
+                <span><b>DINO</b> necesita algunos datos para la creacion y la administracion de tu cuenta. Registrandote aceptas nuestra <a href="#" onclick="toggle_privacy();">politica de privacidad</a>.</span>
+            </p>
+        </form>
+    </section>
+    
+    <section id="privacy" style="display: none;" onclick="toggle_privacy();">
+        <a href="#" onclick="toggle_privacy();">Cerrar</a>
+        <iframe src="../privacy.html">
+        </iframe>
+    </section>
+    
+    <footer>DINO - Documents In, kNowledge Out!</footer>
+    
+    <script type="text/javascript"> 
+        var toggle_privacy = function() {
+            if (document.getElementById("privacy").style.display == "none") {
+                document.getElementById("privacy").style.display = "block";
+            } else {
+                document.getElementById("privacy").style.display = "none";
+            }
+            
+            event.stopPropagation();
+        };
+    </script>
+    
+    <script type="text/javascript">
+      (function() {
+        window._pa = window._pa || {};
+        var pa = document.createElement('script'); pa.type = 'text/javascript'; pa.async = true;
+        pa.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + "//tag.perfectaudience.com/serve/537152def7883fa781000018.js";
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(pa, s);
+      })();
+    </script>
+</body>
+</html>
