@@ -22,7 +22,6 @@ var Queue = {
                             user: file.user,
                             date: file.date
                         }).init().setStatus("uploaded");
-        
                         self.animate();  
                         self.clusterize(document);
                     });

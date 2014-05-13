@@ -11,6 +11,10 @@
             <div class="del-all">Borrar todo</div>
             <ul id="files-list"></ul>
         </div>
+        <div id="container-uploads">
+            <div class="del-all">Borrar todo</div>
+            <ul id="files-list"></ul>
+        </div>
     </div>
 </div>
 
