@@ -21,13 +21,14 @@
         <a href="mailto:info@dino.mx"><li>Contacto</li></a>
     </ul>
     <div style="clear: both;"></nav>
+    
     <section>
         <h1>Deja de buscar tus documentos</h1>
         <p>Con <b>DINO</b>, los documentos valiosos de tu empresa <u>siempre</u> estan a tu alcance. Desde cualquier lugar, 24/7.</p>
-        <form type="POST" action="doSignup.php">    
+        <form method="post" action="http://localhost/dino/do/doSignup.php">    
             <p id="signup">
                 Tu cuenta gratuita te espera!<br/>
-                <input type="email" id="mail" placeholder="Solo necesitas una direccion mail valida"/>
+                <input type="text" name="mail" id="mail" placeholder="Solo necesitas una direccion mail valida"/>
                 <input type="submit" value="Registrate"/><br/>
                 <span><b>DINO</b> necesita algunos datos para la creacion y la administracion de tu cuenta. Registrandote aceptas nuestra <a href="#" onclick="toggle_privacy();">politica de privacidad</a>.</span>
             </p>

@@ -945,10 +945,10 @@ html, body {
 }
 
 #container-queue {
-    position: fixed;
-    right: 0;
+    position: absolute;
+    right: 40%;
+    max-height: 50%;
     top: 70px;
-    bottom: 70px;
     
     width: 20%;
     padding: 10px;
@@ -1006,8 +1006,10 @@ html, body {
 
 .cluster {
     float: left;
-    width: 10%;
+    width: 15%;
+    
     margin: 10px;
+    margin-top: 20px;
     padding: 5px;
     
     box-shadow: 0 0 1px 1px #8ECB32;

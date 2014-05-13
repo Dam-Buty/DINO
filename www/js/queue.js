@@ -22,7 +22,8 @@ var Queue = {
                             user: file.user,
                             date: file.date
                         }).init().setStatus("uploaded");
-                        
+        
+                        self.animate();  
                         self.clusterize(document);
                     });
                 },
@@ -97,6 +98,8 @@ var Queue = {
                 });
             }
         });
+        
+        self.throttle();
     },
     
     upload: function(files) {
@@ -128,6 +131,7 @@ var Queue = {
             }
         });
         
+        self.animate();
         self.throttle();
     },
     
@@ -170,6 +174,18 @@ var Queue = {
     
     cancel: function() {
         this.documents.splice(position, 1);
+    },
+    
+    animate: function() {
+        if ($("#container-queue").css("right") != "0px") {
+            $("#container-queue").animate({
+                right: 0
+            });
+        } else {
+            $("#container-queue").animate({
+                right: "40%"
+            });
+        }
     }
 };
 
@@ -244,6 +260,7 @@ var Cluster = function(options) {
                     self.ul = undefined;
                     
                     Queue.clusters[self.type] = undefined;
+                    Queue.animate();
                 } else {
                     if (index == "all") {
                         self.remove("all");

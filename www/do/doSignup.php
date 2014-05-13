@@ -24,17 +24,17 @@ try {
 
     $idclient = $result_client;
 
-    $activation_user = genere_clef(12, true);
-
-    // On crée le user gestionnaire
-    $result_user = $dino->query("signup_user",[
-        "login" => $_POST["login"],
-        "password" => $password,
-        "mail" => $_POST["mail"],
-        "idclient" => $idclient,
-        "clef" => $clef_cryptee,
-        "activation" => $activation_user
-    ]);
+    $activation_client = genere_clef(12, true);
+    
+#    // On crée le user gestionnaire
+#    $result_user = $dino->query("signup_user",[
+#        "login" => $_POST["login"],
+#        "password" => $password,
+#        "mail" => $_POST["mail"],
+#        "idclient" => $idclient,
+#        "clef" => $clef_cryptee,
+#        "activation" => $activation_user
+#    ]);
 
     chdir("../cache/"); // TODO : plutôt le faire à l'activation :)
     mkdir($idclient);
@@ -48,10 +48,8 @@ try {
 #    debug($mail);
 
     $return = dinomail($_POST["mail"], $mail, [], [
-        "user" => $_POST["login"],
-        "pass" => $_POST["pass"],
         "mail" => urlencode($_POST["mail"]),
-        "clef" => $activation_user
+        "key" => $activation_client
     ]);
     
 #    debug($return);
@@ -97,9 +95,7 @@ try {
     ]);
 
     $dino->commit();
-    status(200);
-
-    echo $idclient;
+    header("Location: ../welcome.php?action=signup&mail=" . $_POST["mail"]);
 } catch (Exception $e) {
     $dino->rollback();
     status(500);

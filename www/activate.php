@@ -14,16 +14,6 @@
 </head>
 
 <body>
-
-<div id="container-loading" class="login-box">
-    <img src="img/big_loader.gif"/>
-</div>
-
-<div id="container-KO" class="dialog-box">
-    <h1>Error de activacion</h1>
-    <div class="popup-ligne"><div class="popup-jauge jauge-KO"></div></div>
-    <p style="text-align: center; font-size: 1.1em;">Contactanos : <a href="mailto:beta@dino.mx">beta@dino.mx</a></p>
-</div>     
         
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 
@@ -40,32 +30,6 @@ $.each(window.location.search.replace("?", "").split("&"), function(i, param) {
     _arguments[name] = value;
 })
 
-$.ajax({
-    url: "do/doActivate.php",
-    type: "POST",
-    data: {
-        user: _arguments.user,
-        key: _arguments.key,
-        mail: _arguments.mail
-    },
-    statusCode: {
-        200: function() {
-            window.location.replace("index.php?activated");
-        },
-        204: function() {
-            $("#container-loading").hide();
-            $("#container-KO").show();
-            $("#container-OK").hide();
-            $("#container-signup").show();
-        },
-        500: function() {
-            $("#container-loading").hide();
-            $("#container-KO").show();
-            $("#container-OK").hide();
-            $("#container-signup").show();
-        }
-    }
-})
 
 </script>
 
