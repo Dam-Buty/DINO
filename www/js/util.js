@@ -454,10 +454,7 @@ var check_pass2 = function() {
             }
         }
     }
-};
-
-    
-    
+};   
     
 var debug_liste = function() {
     var stack = [];

@@ -3,8 +3,12 @@ VORTEX
 ======
 
 client:
-+ + onboarding_client
++ + activated_client
 + + inscription_client
++ + activation_client
+
+user:
++ + nom_user
 
 APOCALYPSE
 ==========

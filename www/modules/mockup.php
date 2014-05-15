@@ -10,6 +10,7 @@
 <link href='css/Oswald-Bold.ttf' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/global.css?v=7" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/util.css?v=7" media="screen" type="text/css"/>
+<link rel="stylesheet" href="css/inputs.css?v=7" media="screen" type="text/css"/>
 <link rel="shortcut icon" type="image/ico" href="favicon.ico" />
 
 </head>

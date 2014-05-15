@@ -5,14 +5,12 @@ INSERT INTO `user` (
     `mail_user`, 
     `niveau_user`, 
     `fk_client`, 
-    `clef_user`,
-    `activation_user`
+    `clef_user`
 ) VALUES (
     :login, 
     :password, 
     :mail, 
     30, 
     :idclient, 
-    :clef,
-    :activation
+    :clef
 );

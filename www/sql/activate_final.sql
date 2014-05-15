@@ -1,6 +1,6 @@
 # Activation OK
-UPDATE `user`
-SET `activation_user` = ''
+UPDATE `client`
+SET `activated_client` = 1
 WHERE
-    `login_user` = :login
+    `pk_client` = :pk
 ;

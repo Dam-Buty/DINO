@@ -5,8 +5,8 @@ try {
     $dino = new DINOSQL();
 
     $params = [
-        "login" => $_POST["user"],
-        "mail" => urldecode($_POST["mail"])
+        "mail" => urldecode($_POST["mail"]),
+        "key" => $_POST["key"]
     ];
 
     $result = $dino->query("activate_select", $params);
@@ -14,25 +14,17 @@ try {
     if (count($result) > 0) {
         $row = $result[0];
         
-        if ($row["activation_user"] == "") {
-            status(200);
-        } else {
-            if ($row["activation_user"] == $_POST["key"]) {
-                $login = $_POST["user"];
-                
-                $params_activate = [
-                    "login" => $login
-                ];
-                
-                $dino->query("activate_final", $params_activate);
-                
-                $dino->commit();
-                
-                status(200);
-            } else {
-                status(204);
-            }
-        }
+        $client = $row["pk_client"];
+        
+        $params_activate = [
+            "pk" => $client
+        ];
+        
+        $dino->query("activate_final", $params_activate);
+        
+        $dino->commit();
+        
+        status(200);
     } else {
         status(204);
     }
