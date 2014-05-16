@@ -2,6 +2,8 @@
 SELECT 
     `niveau_user`, 
     `public_user`, 
+    `nom_user`, 
+    `login_user`, 
     `fk_client`, 
     `printer_client`, 
     `convert_client`,

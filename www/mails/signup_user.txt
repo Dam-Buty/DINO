@@ -1,0 +1,12 @@
+Hola %user%,
+
+Tu cuenta DINO ha sido creada!
+
+Para empezar a administrar los documentos de tu empresa, solo necesitas conectarte en http://my.dino.mx con los datos siguientes :
+
+- Nombre de usuario : %user%
+- Contrasena        : %pass%
+
+Saludos,
+El Equipo DINO
+http://www.dino.mx

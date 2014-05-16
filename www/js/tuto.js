@@ -789,11 +789,18 @@ var bootstrap_tuto = function() {
         timer: 1200
     });
     
-    if (startup !== false) {
-        Tuto.bootstrapped = true;
-        startup.click();
+    // Si les infos de profil n'ont pas encore été entrées, on les demande
+    if (profil.nom == "" || profil.entreprise == "") {
+        $("#opak").show().unbind().click(toggle_infos);
+        $("#popup-welcome-info").show();
+        $("#info-submit").click(infos);
     } else {
-        $("#bouton-tuto").tooltipster("show");
+        if (startup !== false) {
+            Tuto.bootstrapped = true;
+            startup.click();
+        } else {
+            $("#bouton-tuto").tooltipster("show");
+        }
     }
 };
 
@@ -840,4 +847,49 @@ var toggle_university = function() {
         documentation.slideDown();
         university.attr("data-page", "documentation");
     }
+};
+
+var infos = function() {
+    var nom = $("#nom");
+    var entreprise = $("#entreprise");
+
+    if (nom.val() == "") {
+        nom.focus();
+    } else {
+        if (entreprise.val() == "") {
+            entreprise.focus();
+        } else {
+            $.ajax({
+                url: "do/doInfoUser.php",
+                type: "POST",
+                data: {
+                    nom: nom.val(),
+                    entreprise: entreprise.val(),
+                    client: profil.client,
+                    mail: profil.login
+                },
+                statusCode: {
+                    200: function() {
+                        mixpanel.people.set({
+                            "$name": nom.val(),
+                            "company": entreprise.val()
+                        }, function() {
+                            mixpanel.track("information", {}, function() {
+                                window.location.replace("index.php");
+                            });
+                        });
+                    },
+                    500: function() {
+                        $("#popup-welcome-info").hide();
+                        $("#container-KO-info").show();
+                    }
+                }
+            });
+        }
+    }
+};
+
+var toggle_infos = function() {
+    $("#opak").hide().unbind();
+    $("#popup-welcome-info").hide();
 };

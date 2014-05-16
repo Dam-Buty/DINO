@@ -7,9 +7,9 @@ Para consultarlos, solo necesitas dar click en http://my.dino.mx/activate.php?us
 Abajo encontraras tus datos de conexion :
 
 - Nombre de usuario : %user%
-- Contrasena        : %pass%
+- Contraseña        : %pass%
 
-Te recomendamos que cambias tu contrasena durante tu primera conexion, para garantizar que tus datos sean accesibles solo para ti.
+Te recomendamos que cambias tu contraseña durante tu primera conexion, para garantizar que tus datos sean accesibles solo para ti.
 
     Saludos,
     El Equipo DINO

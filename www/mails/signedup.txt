@@ -1,0 +1,14 @@
+Estimado usuario
+
+Ya tienes una cuenta en DINO!
+    
+Para activar tu cuenta y empezar a administrar los documentos de tu empresa, solo necesitas conectarte en http://my.dino.mx con los datos siguientes :
+
+- Nombre de usuario : %user%
+- Contraseña        : ********
+
+Por razones de seguridad, no tenemos tu contraseña. La recibiste en tu correo electronico cuando te registraste. Si no la encuentras, solo tienes que contestar a este mail para reiniciar tu cuenta.
+
+    Saludos,
+    El Equipo DINO
+    http://my.dino.mx

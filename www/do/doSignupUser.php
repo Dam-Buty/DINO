@@ -29,11 +29,12 @@ try {
         "idclient" => $_POST["client"],
         "clef" => $clef_cryptee
     ]);
-    
-    
-    
-#    debug($return);
 
+    dinomail($_POST["mail"], "signup_user", [], [
+        "user" => $_POST["mail"],
+        "pass" => $_POST["pass"]
+    ]);
+    
     $dino->commit();
     status(200);
 } catch (Exception $e) {

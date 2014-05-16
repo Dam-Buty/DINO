@@ -26,7 +26,6 @@ var params = {};
 $(document).ready(function(){
     $("#lien-pass").click(toggle_pass);
     $("#pass-submit").click(create_user);
-    $("#info-submit").click(infos);
     
     $("#pass").keyup(check_pass_welcome).change(check_pass_welcome);
     $("#pass2").keyup(check_pass2_welcome).change(check_pass2_welcome);
@@ -90,6 +89,9 @@ var activate = function() {
                 $("#popup-welcome-security").fadeIn();
                 mixpanel.track("activate", {});
             },
+            201: function() {
+                window.location.replace("index.php?activated");
+            },
             204: function() {
                 $("#container-loading").hide();
                 $("#container-KO").show();
@@ -127,9 +129,9 @@ var create_user = function() {
                 },
                 statusCode: {
                     200: function(data) {
-                        mixpanel.track("password", {});
-                        $("#popup-welcome-security").hide();
-                        $("#popup-welcome-info").show();
+                        mixpanel.track("password", {}, function() {
+                            window.location.replace("index.php");
+                        });
                     },
                     500: function() {
                         $("#popup-welcome-security").hide();
@@ -219,43 +221,3 @@ var check_pass2_welcome = function() {
         }
     }
 };  
-
-var infos = function() {
-    var nom = $("#nom");
-    var entreprise = $("#entreprise");
-
-    if (nom.val() == "") {
-        nom.focus();
-    } else {
-        if (entreprise.val() == "") {
-            entreprise.focus();
-        } else {
-            $.ajax({
-                url: "do/doInfoUser.php",
-                type: "POST",
-                data: {
-                    nom: nom.val(),
-                    entreprise: entreprise.val(),
-                    client: params.pk,
-                    mail: params.mail
-                },
-                statusCode: {
-                    200: function(data) {
-                        mixpanel.people.set({
-                            "$name": nom.val(),
-                            "company": entreprise.val()
-                        }, function() {
-                            mixpanel.track("information", {}, function() {
-                                window.location.replace("index.php");
-                            });
-                        });
-                    },
-                    500: function() {
-                        $("#popup-welcome-info").hide();
-                        $("#container-KO-info").show();
-                    }
-                }
-            });
-        }
-    }
-};

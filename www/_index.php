@@ -204,6 +204,21 @@ if ($_SESSION["niveau"] >= 20) {
 
 <div id="container-tuto"></div>
 
+<div id="popup-welcome-info" class="dialog-box popup-welcome">
+    <h1>Datos personales</h1>
+    <div class="popup-ligne"><div class="popup-jauge jauge-75"></div></div>
+    <p>Tu cuenta DINO casi esta lista! Ahora solo necesitamos que nos cuentes un poco de tu.</p>
+    <p><label>Nombre: <input type="text" id="nom" placeholder="Asi seras conocido adentro de DINO"/></label></p>
+    <p><label>Empresa: <input type="text" id="entreprise" placeholder="El nombre de tu empresa"/></label></p>
+    <p><input type="submit" id="info-submit" value="Empezar con DINO"/></p>
+</div>
+
+<div id="container-KO-info" class="dialog-box popup-welcome">
+    <h1>Error de creacion de perfil</h1>
+    <div class="popup-ligne"><div class="popup-jauge jauge-KO"></div></div>
+    <p style="text-align: center; font-size: 1.1em;">Contactanos : <a href="mailto:beta@dino.mx">beta@dino.mx</a></p>
+</div>  
+
 <?php
 if ($_SESSION["niveau"] >= 20) {
 ?>
