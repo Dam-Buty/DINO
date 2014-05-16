@@ -15,6 +15,8 @@ try {
     ]);
 
     $idclient = $result_client;
+    
+    $_SESSION["client"] = $idclient;
 
     chdir("../cache/");
     mkdir($idclient);

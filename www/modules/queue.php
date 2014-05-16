@@ -1,4 +1,4 @@
-<div id="queue">
+<div id="queue" class="front-element">
     <div id="container-queue">
         <div id="container-uploader">
             <div id="zone-dnd">
@@ -6,10 +6,6 @@
                 <b>Carga documentos en DINO</b>
                 <input type="file" id="files-handler" name="files-handler" multiple="multiple" directory webkitdirectory mozdirectory > <!--  -->
             </div>
-        </div>
-        <div id="container-uploads">
-            <div class="del-all">Borrar todo</div>
-            <ul id="files-list"></ul>
         </div>
         <div id="container-uploads">
             <div class="del-all">Borrar todo</div>

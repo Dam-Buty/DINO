@@ -1,14 +1,16 @@
 var categories_documents = {
     pdf: {
         label: "Documentos PDF",
-        processes: [ "extract", "pack", "remove" ],
+//        processes: [ "extract", "pack", "remove" ],
+        processes: [ "pack", "remove" ],
         extensions: {
             "pdf": 1
         }
     },
     doc: {
         label: "Documentos Office",
-        processes: [ "extract", "convert", "pack", "remove" ],
+//        processes: [ "extract", "convert", "pack", "remove" ],
+        processes: [ "pack", "remove" ],
         extensions: {
             "doc": 1,
             "dot": 1,
@@ -22,7 +24,8 @@ var categories_documents = {
     },
     xls: {
         label: "Hojas de calculo",
-        processes: [ "extract", "pack", "remove" ],
+//        processes: [ "extract", "pack", "remove" ],
+        processes: [ "pack", "remove" ],
         extensions: {
             "xls": 1,
             "xlt": 1,
@@ -37,7 +40,8 @@ var categories_documents = {
     },
     pps: {
         label: "Presentaciones",
-        processes: [ "extract", "convert", "pack", "remove" ],
+//        processes: [ "extract", "convert", "pack", "remove" ],
+        processes: [ "pack", "remove" ],
         extensions: {
             "odp": 1,
             "otp": 1,

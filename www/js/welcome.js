@@ -241,8 +241,14 @@ var infos = function() {
                 },
                 statusCode: {
                     200: function(data) {
-                        mixpanel.track("information", {});
-                        window.location.replace("index.php");
+                        mixpanel.people.set({
+                            "$name": nom.val(),
+                            "company": entreprise.val()
+                        }, function() {
+                            mixpanel.track("information", {}, function() {
+                                window.location.replace("index.php");
+                            });
+                        });
                     },
                     500: function() {
                         $("#popup-welcome-info").hide();

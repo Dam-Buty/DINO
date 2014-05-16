@@ -6,6 +6,7 @@ client:
 + + activated_client
 + + inscription_client
 + + activation_client
++ + uploaded_client
 
 user:
 + + nom_user

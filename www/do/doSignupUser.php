@@ -14,6 +14,10 @@ $password = custom_hash($_POST["pass"] . $_POST["mail"], TRUE);
 #        echo "User : " . $clef_user . "<br/>";
 #        echo "Clef : <pre>" . $clef_stockage . "</pre>";
 
+$_SESSION["user"] = $_POST["mail"];
+$_SESSION["niveau"] = 30;
+$_SESSION["clef"] = $clef_stockage;
+
 try {
     $dino = new DINOSQL();
     
@@ -25,6 +29,8 @@ try {
         "idclient" => $_POST["client"],
         "clef" => $clef_cryptee
     ]);
+    
+    
     
 #    debug($return);
 

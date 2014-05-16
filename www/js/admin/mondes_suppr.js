@@ -2,8 +2,8 @@
 var bootstrap_mondes_suppr = function() {
     var liste = $("#liste-mondes-suppr").empty();
     
-    $("#liste").slideUp();   
-    $(".admin").slideUp();
+    $(".front-element").hide();    
+    $(".admin").hide();
     $("#mondes-suppr").fadeIn();
     $(".nom-monde").unbind().click(remove_monde_suppr);
     $("#option-supprimer").unbind().click(switch_option);

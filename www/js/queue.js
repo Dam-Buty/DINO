@@ -431,6 +431,28 @@ var Document = function(options) {
                         self.setStatus("uploaded");
                         self.filename = data.filename;
                         
+                        
+                        if (profil.uploaded == 0) {
+                            profil.uploaded = 1;
+                            
+                            $.ajax({
+                                url: "do/doFirstUpload.php",
+                                type: "POST",
+                                data: { },
+                                statusCode: {
+                                    200: function(data) {
+                                        mixpanel.track("upload", {});   
+                                    },
+                                    403: function() {
+                                        window.location.replace("index.php");
+                                    },
+                                    500: function() {
+                                        popup("Erreur!", "error");
+                                    }
+                                }
+                            });
+                        }
+                        
                         Queue.clusterize(self);
                         Queue.throttle();
                         Queue.process();

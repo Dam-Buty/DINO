@@ -22,7 +22,7 @@ include("modules/mockup.php");
         <li id="pass-strength">una <span id="pass-maj">mayuscula</span>, una <span id="pass-min">minuscula</span> y un <span id="pass-num">numero</span></li>
         <li id="pass-char">un caracter especial</li> 
     </ul>
-    <div id="lien-pass">
+    <div class="lien-welcome" id="lien-pass">
         Crea tu contraseña
     </div>
     <div id="pass-form">

@@ -280,6 +280,7 @@ if (isset($_SESSION["user"])) {
             "convert" => 0,
             "espace" => 0,
             "visitor" => 0,
+            "uploaded" => 0,
             "tutos" => [],
             "documentations" => [],
             "mondes" => []
@@ -305,6 +306,7 @@ if (isset($_SESSION["user"])) {
             $profil["printer"] = $row["printer_client"];
             $profil["branded"] = $row["branded_client"];
             $profil["public"] = $row["public_user"];
+            $profil["uploaded"] = $row["uploaded_client"];
             
             $profil["tutos"] = gestion_tutos($dino, $profil["niveau"]);
             $profil["documentations"] = gestion_documentation($dino, $profil["niveau"]);
@@ -314,7 +316,6 @@ if (isset($_SESSION["user"])) {
             $profil["public"] = $row["public_user"];
             
             $profil["tokens"] = gestion_tokens($dino, $profil["niveau"]);
-            
                
             //////////////////////////
             // Récupération des mondes sur lesquels l'user a des droits

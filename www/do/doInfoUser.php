@@ -9,12 +9,12 @@ try {
     $dino->query("info_user",[
         "nom" => $_POST["nom"],
         "mail" => $_POST["mail"],
-        "client" => $_POST["client"]
+        "client" => $_SESSION["client"]
     ]);
     
     $dino->query("info_client",[
         "entreprise" => $_POST["entreprise"],
-        "client" => $_POST["client"]
+        "client" => $_SESSION["client"]
     ]);
 
     $dino->commit();

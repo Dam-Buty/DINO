@@ -332,8 +332,8 @@ var _bootstrap_designer = function(action) {
     Tuto.flag(0, 0);
     Tuto.flag(1, 1);
     
-    $("#liste").slideUp();   
-    $(".admin").slideUp();
+    $(".front-element").hide();   
+    $(".admin").hide();
     $("#designer").fadeIn();
     
     $("#action-champ").show();
