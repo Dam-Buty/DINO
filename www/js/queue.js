@@ -5,6 +5,15 @@ var Queue = {
     blocked: false,
     
     clusters: {},
+    count_clusters: function() {
+        var nb = 0;
+        
+        $.each(this.clusters, function(i, cluster) {
+            nb++;
+        });
+        
+        return nb;
+    },
     
     refresh: function() {
         var self = this;
@@ -134,6 +143,15 @@ var Queue = {
         self.throttle();
     },
     
+    pause: function() {
+        if (this.blocked) {
+            this.blocked = false;
+            this.throttle;
+        } else {
+            this.blocked = true;
+        }
+    },
+    
     clusterize: function(document) {
         var cluster;
         
@@ -176,7 +194,7 @@ var Queue = {
     },
     
     animate: function() {
-        if ($("#container-queue").css("right") != "0px") {
+        if (this.count_clusters() != 0) {
             $("#container-queue").animate({
                 right: 0
             });
@@ -402,6 +420,7 @@ var Document = function(options) {
             this.setStatus("uploading");
             
             upload_data.append("document", this.file);
+            Queue.animate();
 
             $.ajax({
                 url: "do/doUpload.php",
@@ -430,7 +449,6 @@ var Document = function(options) {
             
                         self.setStatus("uploaded");
                         self.filename = data.filename;
-                        
                         
                         if (profil.uploaded == 0) {
                             profil.uploaded = 1;

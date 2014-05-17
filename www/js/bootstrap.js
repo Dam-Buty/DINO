@@ -37,160 +37,182 @@ var bootstrap = function() {
     })
     .done(function (data) {
         profil = data;
+        var mondes = 0;
         
         $.each(profil.mondes, function(i, monde) {
-            Core.monde = i;
-            return false;
+            if (mondes == 0) {
+                Core.monde = i;
+            }
+            mondes++;
         });
         //console.log(data);
         
-        $(".div_login").hide();
-        $("#front").show();
-        
-        // On binde les events
-        $("#toggle-date").click(toggle_dates);
-        $("#menu-queue").click(anime_queue);
-        $("#documents-new-monde").focus(function() {
-            $(this).select();    
-            
-            // Work around Chrome's little problem
-            $(this).mouseup(function() {
-                // Prevent further mouseup intervention
-                $(this).unbind("mouseup");
-                return false;
-            });
-        });
-        
-        if (profil.printer != "") {
-            $("#help-printer").fadeIn().click(help_printer);
-        }
-        
-        if (profil.branded == "1") {
-            $(".barre-laterale>a h1").css({
-                "background-image": "url(img/branding/" + profil.client + ".png)"
-            }).text("");
-            
-            $(".container-powered").show();
-            $("#container-notification").hide();
-        }
-        
-        if (profil.public == "1") {
-            $("#bouton-mail").remove();
-            $("#bouton-pass").remove();
-        }
-        
-        $("#logout").fadeIn().click(logout);
-        $("#bouton-pass").fadeIn().click(popup_pass);
-        $("#bouton-mail").fadeIn().click(popup_mail);
-        
-        $("#pass-params").focus(tip_pass_params);
-        $("#pass-params").keyup(check_pass_params);
-        $("#pass2-params").keyup(check_pass2_params);
-        
-        $("#confirm-password").click(confirme_password);
-        $("#change-password").click(change_password);
-        
-        $("#mail-params").focus(tip_mail_params);
-        $("#mail-params").keyup(check_mail_params);
-        
-        $("#confirm-password-mail").click(confirme_password_mail);
-        $("#change-mail").click(change_mail);
-        
-        $("#bouton-close-viewer").click(cancel_view);
-        
-        $.ajax({ url: "modules/core.php" })
-        .done(function(core) {
-            $("#front").append(core);
-            
-            $.ajax({ url: "modules/queue.php" })
-            .done(function(queue) {
-                $("#core").append(queue);
-                
-                $.ajax({ url: "modules/store.php" })
-                .done(function(store) {
-                    $("#front").append(store);
-                });
-                
-                // On style les éléments                
-                $("#date-store").datepicker({
-                    dateFormat: "dd/mm/yy",
-                    changeMonth: true,
-                    changeYear: true
-                });
-                $("#date-store").datepicker('setDate', new Date());
-                
-                $("#container-details input").keydown(function(e) {
-                    var code = e.keyCode ? e.keyCode : e.which;
-                        
-                    if (code == 13) {
-                        archive_document();
+        if (mondes == 0) {
+            $.ajax({
+                url: "do/doBootstrapProfile.php",
+                type: "POST",
+                statusCode: {
+                    200: function(data) {
+                        bootstrap();
+                    },
+                    403: function() {
+                        window.location.replace("index.php");
+                    },
+                    500: function() {
+                        popup("Erreur!", "error");
                     }
-                });
-                
-                $("#container-viewer-global").draggable({ handle: "#poignee-viewer-global" });
-        
-                $("#bouton-store").click(archive_document);
-                $("#del-doc-store").click(remove_document_store);
-                
-                $("#del-all").click(remove_all_documents);
-                
-                // On installe le drag'n'drop
-                $("#zone-dnd").on("dragenter", dragenter_files);
-                $("#zone-dnd").on("dragover", dragover_files);
-                $("#zone-dnd").on("dragleave", dragleave_files);
-                $("#zone-dnd").on("dragend", dragend_files);
-                $("#zone-dnd").on("drop", drop_files);
-                
-                $.ajax({ 
-                    url: "do/doCheckAdmin.php",
-                    statusCode: {
-                        200: function(niveau) {
-                            $.ajax({ url: "modules/admin/users.php" })
-                            .done(function(users) {
-                                $("#backoffice").append(users);  
-                            });
-                            
-                            if (niveau >= 30) {
-                            
-                                $.ajax({ url: "modules/admin/mondes_suppr.php" })
-                                .done(function(mondes_suppr) {
-                                    $("#core").append(mondes_suppr);
-                                    $("#bouton-suppr").click(bootstrap_mondes_suppr);
-                                });
-                                
-                                $.ajax({ url: "modules/admin/designer.php" })
-                                .done(function(designer) {
-                                    $("#core").append(designer); 
-                                    $("#menu-designer").click(function() {
-                                        check_queue();
-                                        bootstrap_designer("new");
-                                    });
-                                    $("#bouton-admin-profil").click(function() {                                        
-                                        check_queue();
-                                        bootstrap_designer("edit");
-                                    });
-                                    $("#nom-monde").change(Monde._save_titre);
+                }
+            });
+        } else {
+            _bootstrap();
+        }
+    });
+};
 
-                                });
-                            }
-                            
-                            bootstrap_admin();
-                            $(window).trigger('resize');
-                        },
-                        403: function() {
-                            $(window).trigger('resize');
-                        }
-                    }
-                });
-                
-                bootstrap_tuto();
-                
-                // chat(); 
-                // TODO : remettre chat
-            });
+var _bootstrap = function() {
+    $(".div_login").hide();
+    $("#front").show();
+    
+    // On binde les events
+    $("#toggle-date").click(toggle_dates);
+    $("#menu-queue").click(anime_queue);
+    $("#documents-new-monde").focus(function() {
+        $(this).select();    
+        
+        // Work around Chrome's little problem
+        $(this).mouseup(function() {
+            // Prevent further mouseup intervention
+            $(this).unbind("mouseup");
+            return false;
         });
     });
     
+    if (profil.printer != "") {
+        $("#help-printer").fadeIn().click(help_printer);
+    }
+    
+    if (profil.branded == "1") {
+        $(".barre-laterale>a h1").css({
+            "background-image": "url(img/branding/" + profil.client + ".png)"
+        }).text("");
+        
+        $(".container-powered").show();
+        $("#container-notification").hide();
+    }
+    
+    if (profil.public == "1") {
+        $("#bouton-mail").remove();
+        $("#bouton-pass").remove();
+    }
+    
+    $("#logout").fadeIn().click(logout);
+    $("#bouton-pass").fadeIn().click(popup_pass);
+    $("#bouton-mail").fadeIn().click(popup_mail);
+    
+    $("#pass-params").focus(tip_pass_params);
+    $("#pass-params").keyup(check_pass_params);
+    $("#pass2-params").keyup(check_pass2_params);
+    
+    $("#confirm-password").click(confirme_password);
+    $("#change-password").click(change_password);
+    
+    $("#mail-params").focus(tip_mail_params);
+    $("#mail-params").keyup(check_mail_params);
+    
+    $("#confirm-password-mail").click(confirme_password_mail);
+    $("#change-mail").click(change_mail);
+    
+    $("#bouton-close-viewer").click(cancel_view);
+    
+    $.ajax({ url: "modules/core.php" })
+    .done(function(core) {
+        $("#front").append(core);
+        
+        $.ajax({ url: "modules/queue.php" })
+        .done(function(queue) {
+            $("#core").append(queue);
+            
+            $.ajax({ url: "modules/store.php" })
+            .done(function(store) {
+                $("#front").append(store);
+            });
+            
+            // On style les éléments                
+            $("#date-store").datepicker({
+                dateFormat: "dd/mm/yy",
+                changeMonth: true,
+                changeYear: true
+            });
+            $("#date-store").datepicker('setDate', new Date());
+            
+            $("#container-details input").keydown(function(e) {
+                var code = e.keyCode ? e.keyCode : e.which;
+                    
+                if (code == 13) {
+                    archive_document();
+                }
+            });
+            
+            $("#container-viewer-global").draggable({ handle: "#poignee-viewer-global" });
+    
+            $("#bouton-store").click(archive_document);
+            $("#del-doc-store").click(remove_document_store);
+            
+            $("#cancel-uploads").click(Queue.empty);
+            $("#pause-uploads").click(Queue.pause);
+            
+            // On installe le drag'n'drop
+            $("#zone-dnd").on("dragenter", dragenter_files);
+            $("#zone-dnd").on("dragover", dragover_files);
+            $("#zone-dnd").on("dragleave", dragleave_files);
+            $("#zone-dnd").on("dragend", dragend_files);
+            $("#zone-dnd").on("drop", drop_files);
+            
+            $.ajax({ 
+                url: "do/doCheckAdmin.php",
+                statusCode: {
+                    200: function(niveau) {
+                        $.ajax({ url: "modules/admin/users.php" })
+                        .done(function(users) {
+                            $("#backoffice").append(users);  
+                        });
+                        
+                        if (niveau >= 30) {
+                        
+                            $.ajax({ url: "modules/admin/mondes_suppr.php" })
+                            .done(function(mondes_suppr) {
+                                $("#core").append(mondes_suppr);
+                                $("#bouton-suppr").click(bootstrap_mondes_suppr);
+                            });
+                            
+                            $.ajax({ url: "modules/admin/designer.php" })
+                            .done(function(designer) {
+                                $("#core").append(designer); 
+                                $("#menu-designer").click(function() {
+                                    check_queue();
+                                    bootstrap_designer("new");
+                                });
+                                $("#bouton-admin-profil").click(function() {                                        
+                                    check_queue();
+                                    bootstrap_designer("edit");
+                                });
+                                $("#nom-monde").change(Monde._save_titre);
+
+                            });
+                        }
+                        
+                        bootstrap_admin();
+                        $(window).trigger('resize');
+                    },
+                    403: function() {
+                        $(window).trigger('resize');
+                    }
+                }
+            });
+            
+            bootstrap_tuto();
+        });
+    });
 };
 
 var logout = function() {

@@ -8,7 +8,9 @@
             </div>
         </div>
         <div id="container-uploads">
-            <div class="del-all">Borrar todo</div>
+            <div class="pause-uploads">Pausar</div>
+            <div class="cancel-uploads">Cancelar</div>
+            <div style="clear: both;"></div>
             <ul id="files-list"></ul>
         </div>
     </div>
