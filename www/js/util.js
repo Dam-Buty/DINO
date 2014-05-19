@@ -39,7 +39,7 @@ var categories_documents = {
         }
     },
     pps: {
-        label: "Presentaciones",
+        label: "Presentaciones Powerpoint",
 //        processes: [ "extract", "convert", "pack", "remove" ],
         processes: [ "pack", "remove" ],
         extensions: {
@@ -54,7 +54,7 @@ var categories_documents = {
         }
     },
     img: {
-        label: "Imagenes",
+        label: "Todas Imagenes",
         processes: [ "pack", "remove" ],
         extensions: {
             "jpg": 1,
@@ -67,7 +67,7 @@ var categories_documents = {
         }
     },
     vid: {
-        label: "Video",
+        label: "Clips de Video",
         processes: [ "pack", "remove" ],
         extensions: {
             "mp4": 1,

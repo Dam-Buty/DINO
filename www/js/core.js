@@ -116,6 +116,7 @@ var change_monde = function() {
 
 var _change_monde = function(ul, li) {
     $(".admin").slideUp();
+    $(".front-element").slideUp();  
     $("#menu-queue").removeClass("inactive");
     
     ul.find("li").attr("data-selected", "0");
@@ -289,7 +290,7 @@ var affiche_document = function() {
     var extension = filename.split(".").pop().toLowerCase();
     var download = "&download";
     
-    if (extension in img_extensions) {
+    if (extension in categories_documents.img.extensions) {
         download = "";
         $("#poignee-viewer-global").css({
             width: "20%",
@@ -606,24 +607,14 @@ var construit_table = function() {
                     }
                     
                     var filetype = "";
-    
-                    if (extension in pdf_extensions) {
-                        filetype = "pdf";
-                    }
                     
-                    if (extension in doc_extensions) {
-                        filetype = "doc";
-                    }
+                    $.each(categories_documents, function(type, categorie) {
+                        if (extension in categorie.extensions) {
+                            filetype = type;
+                        }
+                    });
                     
-                    if (extension in img_extensions) {
-                        filetype = "img";
-                    }
-                    
-                    if (extension in vid_extensions) {
-                        filetype = "vid";
-                    }
-                    
-                    if (type == "") {
+                    if (filetype == "") {
                         filetype ="xxx";
                     }                    
                     

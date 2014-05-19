@@ -24,16 +24,17 @@ var Queue = {
             statusCode: {
                 200: function(files) {
                     $.each(files, function(i, file) {
-                        var document = Document({
+                        var doc = Document({
                             size: file.size,
                             filename: file.filename,
                             displayname: file.displayname,
                             user: file.user,
                             date: file.date
-                        }).init().setStatus("uploaded");
-                        self.animate();  
-                        self.clusterize(document);
+                        }).init("processed").setStatus("uploaded");
+                        self.clusterize(doc);
                     });
+                    self.animate();  
+                    self.process();
                 },
                 403: function() {
                     window.location.replace("index.php");
@@ -53,15 +54,15 @@ var Queue = {
                 if (uploader === undefined) {
                     var all_done = true;
                     
-                    $.each(Queue.uploads, function(j, document) {
-                        if (document !== undefined) {
+                    $.each(Queue.uploads, function(j, doc) {
+                        if (doc !== undefined) {
                             all_done = false;
-                            if (document.status == "") {
-                                if (document.size > profil.maxfilesize) {
-                                    document.setStatus("toobig");
+                            if (doc.status == "") {
+                                if (doc.size > profil.maxfilesize) {
+                                    doc.setStatus("toobig");
                                 } else {
-                                    self.uploaders[i] = document;
-                                    document.upload(i, j);
+                                    self.uploaders[i] = doc;
+                                    doc.upload(i, j);
                                     return false;
                                 }
                             }
@@ -69,7 +70,7 @@ var Queue = {
                     });
                         
                     if (all_done) {
-                        self.uploaders.length = 0;
+                        self.uploads.length = 0;
                     }
                 }
             });
@@ -84,17 +85,18 @@ var Queue = {
                 $.each(self.clusters, function(j, cluster) {
                     var cluster_done = false;
                     
-                    $.each(cluster.documents, function(k, document) {
-                        if (document.status != "processed") {
-                            if (document.status == "idle" || document.status == "uploaded") {
-                                if (document.processes.length > 0) {
-//                                    console.log(document.filename + " : Lancement " + document.processes[0] + " sur (" + i + ")");
-                                    self.processers[i] = document;
-                                    document.process(i);
+                    $.each(cluster.documents, function(k, doc) {
+                        if (doc.status != "processed") {
+                            if (doc.status == "idle" || doc.status == "uploaded") {
+                                if (doc.processes.length > 0) {
+//                                    console.log(doc.filename + " : Lancement " + doc.processes[0] + " sur (" + i + ")");
+                                    self.processers[i] = doc;
+                                    doc.process(i);
                                     cluster_done = true;
                                     return false;
                                 } else {
-                                    document.setStatus("processed");
+                                    doc.setStatus("processed");
+                                    self.process();
                                 }
                             }
                         }
@@ -152,25 +154,26 @@ var Queue = {
         }
     },
     
-    clusterize: function(document) {
+    clusterize: function(doc) {
         var cluster;
         
-        if (this.clusters[document.type] === undefined) {            
-            this.clusters[document.type] = Cluster({
-                type: document.type
+        if (this.clusters[doc.type] === undefined) {            
+            this.clusters[doc.type] = Cluster({
+                type: doc.type
             }).init();
         }
         
-        cluster = this.clusters[document.type];
+        cluster = this.clusters[doc.type];
         
-        document.position = cluster.documents.length;
+        doc.position = cluster.documents.length;
         
-        document.li.find(".bouton-del-li").click(function() {
-            cluster.remove(document.position);
+        doc.li.find(".bouton-del-li").click(function() {
+            cluster.remove(doc.position);
+            event.stopPropagation();
         });
         
-        cluster.documents.push(document);
-        cluster.ul.append(document.li);
+        cluster.documents.push(doc);
+        cluster.ul.append(doc.li);
     },
     
     empty: function() {
@@ -257,7 +260,7 @@ var Cluster = function(options) {
         
         remove: function(index) {
             var self = this;
-            var document;
+            var doc;
             var position;
             
             if (index == "all") {
@@ -266,10 +269,10 @@ var Cluster = function(options) {
                 position = index;
             }
             
-            document = this.documents[position];
+            doc = this.documents[position];
             
-            document.del(function() {
-                self.documents.splice(position, 1);
+            doc.del(function() {
+                self.remove_index(position);
             
                 if (self.documents.length == 0) {
                     self.div.remove();
@@ -283,6 +286,18 @@ var Cluster = function(options) {
                         self.remove("all");
                     }
                 }
+            });
+        },
+        
+        remove_index: function(index) {
+            this.documents.splice(index, 1);
+            
+            this.renumber();
+        },
+        
+        renumber: function() {
+            $.each(this.documents, function(i, document) {
+                document.position = i;
             });
         }
     }, options);
@@ -318,7 +333,7 @@ var Document = function(options) {
             type_doc: { } 
         },
         
-        init: function() {
+        init: function(mode) {
             var li = $("#modele-li-queue").clone();
             var taille;
             var self = this;
@@ -328,13 +343,17 @@ var Document = function(options) {
             $.each(categories_documents, function(type, categorie) {
                 if (self.extension in categorie.extensions) {
                     self.type = type;
-                    self.processes = categorie.processes.slice(0);
+                    if (mode === undefined) {
+                        self.processes = categorie.processes.slice(0);
+                    }
                 }
             });
             
             if (this.type == "") {
                 this.type ="xxx";
-                self.processes = [ "pack", "remove" ];
+                if (mode === undefined) {
+                    self.processes = categories_documents.xxx.processes.splice(0);
+                }
             }
             
             li.find(".filename").text(this.displayname);
@@ -375,6 +394,7 @@ var Document = function(options) {
         
         setStatus: function(status) {
             this.status = status;
+            var self = this;
               
             switch(status) {                    
                 case "uploading":
@@ -384,7 +404,9 @@ var Document = function(options) {
                     
                 case "uploaded":
                     this.li.find(".progressbar").slideUp();
-                    this.li.children("img").fadeIn();  
+                    this.li.click(function() {
+                        self.classify(self.type, self.position);
+                    });
                     
                     Tuto.flag(1);
                     break;
@@ -403,6 +425,7 @@ var Document = function(options) {
                     
                 case "processed":
                     this.li.find(".filename").removeClass("processing");
+                    this.li.children("img").fadeIn();  
                     break;
             };
             
@@ -413,7 +436,7 @@ var Document = function(options) {
             this.li.find(".progressbar").progressbar("value", pourcentage);
         },
         
-        upload: function(uploader, document) {
+        upload: function(uploader, doc) {
             var upload_data = new FormData;
             var self = this;
             
@@ -435,7 +458,7 @@ var Document = function(options) {
                         myXhr.upload.addEventListener('progress', function(evt) {
                             if(evt.lengthComputable){
                                 var pourcentage = Math.floor((evt.loaded * 100) / evt.total);
-                                console.log(self.displayname + " : " + pourcentage + "%");
+//                                console.log(self.displayname + " : " + pourcentage + "%");
                                 self.progress(pourcentage);
                             }
                         }, false);
@@ -445,7 +468,7 @@ var Document = function(options) {
                 statusCode: {
                     201: function(data) {
                         Queue.uploaders[uploader] = undefined;
-                        Queue.uploads[document] = undefined;
+                        Queue.uploads[doc] = undefined;
             
                         self.setStatus("uploaded");
                         self.filename = data.filename;
@@ -525,6 +548,10 @@ var Document = function(options) {
             });
         },
         
+        classify: function(type, position) {
+            store_document(type, position);
+        },
+        
         del: function(callback) {
             var self = this;
             
@@ -594,14 +621,14 @@ var clean_cave = function() {
         url: "do/doRequestDocument.php",
         type: "POST",
         statusCode : {
-            200: function(document) {
-                $("#container-notification").show().text("Impresora virtual : Procesando " + document.filename); // LOCALISATION
+            200: function(doc) {
+                $("#container-notification").show().text("Impresora virtual : Procesando " + doc.filename); // LOCALISATION
                 
                 $.ajax({
                     url: "do/doPack.php",
                     type: "POST",
                     data: {
-                        document: document.filename
+                        document: doc.filename
                     },
                     statusCode: {
                         200: function() {
@@ -609,13 +636,13 @@ var clean_cave = function() {
                                 url: "do/doReleaseDocument.php",
                                 type: "POST",
                                 data: {
-                                    document: document.filename
+                                    document: doc.filename
                                 },
                                 statusCode: {
                                     200: function() { // rajouter l'extension'
-                                        var document_li = set_li_status(create_li(document.displayname, document.size, document.user, document.date), 1);
-                                        document.li = document_li;
-                                        queue.push(document);
+                                        var document_li = set_li_status(create_li(doc.displayname, doc.size, doc.user, doc.date), 1);
+                                        doc.li = document_li;
+                                        queue.push(doc);
                                         clean_cave();
                                     },
                                     500: function() {
@@ -664,7 +691,7 @@ var refresh_liste = function() {
     
     $("#files-list li").detach();
     
-    $.each(queue, function(i, document) {
+    $.each(queue, function(i, doc) {
         $("#files-list").append(queue[i].li.attr("data-position", i));
     });
     
@@ -702,20 +729,7 @@ var _remove_document = function(position, callback) {
 };
 
 var remove_all_documents = function() {
-//    var div = $(this);
-//    var parent = div.parent("div");
-//    var queue, titre, message, bouton;
-//    
-//    if (parent.hasClass("cluster")) {
-//    } else {
-//        $.each(Queue.uploads, function(i, upload))
-//    }
-    
-    
 };
 
 var _remove_all_documents = function() {
-    if (queue.length > 0) {
-        _remove_document(0, _remove_all_documents);
-    }
 }

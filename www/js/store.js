@@ -6,7 +6,9 @@ var Store = {
 };
 
 var change_monde_store = function() {
-    var document = queue[$("#popup-store").attr("data-document")];
+    var cluster = $("#popup-store").attr("data-cluster");
+    var position = $("#popup-store").attr("data-position");
+    var document = Queue.clusters[cluster].documents[position];
     var h1 = $(this);
     var ul = h1.closest("ul");
     var li = h1.closest("li");
@@ -32,7 +34,9 @@ var change_monde_store = function() {
 };
 
 var remove_champ_store = function() {
-    var document = queue[$("#popup-store").attr("data-document")];
+    var cluster = $("#popup-store").attr("data-cluster");
+    var position = $("#popup-store").attr("data-position");
+    var document = Queue.clusters[cluster].documents[position];
     var monde = document.store.monde;
     var cascade = profil.mondes[monde].cascade;
     var li = $(this);
@@ -68,7 +72,9 @@ var remove_champ_store = function() {
 };
 
 var change_champ_store = function() {
-    var document = queue[$("#popup-store").attr("data-document")];
+    var cluster = $("#popup-store").attr("data-cluster");
+    var position = $("#popup-store").attr("data-position");
+    var document = Queue.clusters[cluster].documents[position];
     var select = $(this);
     var champ = select.attr("data-champ");
     var champ_profil = profil.mondes[document.store.monde].champs[champ];
@@ -91,7 +97,9 @@ var change_champ_store = function() {
 };
 
 var affiche_details = function() {
-    var document = queue[$("#popup-store").attr("data-document")];
+    var cluster = $("#popup-store").attr("data-cluster");
+    var position = $("#popup-store").attr("data-position");
+    var document = Queue.clusters[cluster].documents[position];
     var monde = document.store.monde;
     var detail = 0;
     var type;
@@ -139,7 +147,9 @@ var affiche_details = function() {
 };
 
 var remove_type_store = function() {
-    var document = queue[$("#popup-store").attr("data-document")];
+    var cluster = $("#popup-store").attr("data-cluster");
+    var position = $("#popup-store").attr("data-position");
+    var document = Queue.clusters[cluster].documents[position];
     
     document.store.categorie = "";
     document.store.type_doc = {};
@@ -153,7 +163,9 @@ var remove_type_store = function() {
 var change_type_store = function() {
     var li = $(this);
     var ul = $(".classif");
-    var document = queue[$("#popup-store").attr("data-document")];
+    var cluster = $("#popup-store").attr("data-cluster");
+    var position = $("#popup-store").attr("data-position");
+    var document = Queue.clusters[cluster].documents[position];
     
     ul.find("li").attr("data-selected", 0);
     
@@ -176,7 +188,9 @@ var change_type_store = function() {
 };
 
 var add_value = function(term) {
-    var document = queue[$("#popup-store").attr("data-document")];
+    var cluster = $("#popup-store").attr("data-cluster");
+    var position = $("#popup-store").attr("data-position");
+    var document = Queue.clusters[cluster].documents[position];
     var store = document.store;
     var chosen = this;
     var select = $("#container-nouveau-champ select");
@@ -236,7 +250,9 @@ var add_value = function(term) {
 };
 
 var reload_champs = function() {
-    var document = queue[$("#popup-store").attr("data-document")];
+    var cluster = $("#popup-store").attr("data-cluster");
+    var position = $("#popup-store").attr("data-position");
+    var document = Queue.clusters[cluster].documents[position];
     var monde = document.store.monde;
     var cascade = profil.mondes[monde].cascade;
     var last_i = undefined;
@@ -494,57 +510,63 @@ var toggle_categorie = function() {
 }
 
 var prev_document = function() {
-    var document = $("#popup-store").attr("data-document");
+    var cluster = $("#popup-store").attr("data-cluster");
+    var position = $("#popup-store").attr("data-position");
     
-    if (document == 0) {
-        document = queue.length - 1;
+    if (position == 0) {
+        position = Queue.clusters[cluster].documents.length - 1;
     } else {
-        document = document - 1;
+        position = parseInt(position) - 1;
     }
     
-    change_document(document);
+    change_document(position);
 };
 
 var next_document = function() {
-    var document = $("#popup-store").attr("data-document");
+    var cluster = $("#popup-store").attr("data-cluster");
+    var position = $("#popup-store").attr("data-position");
     
-    if (document == queue.length - 1) {
-        document = 0;
+    if (position == Queue.clusters[cluster].documents.length - 1) {
+        position = 0;
     } else {
-        document = parseInt(document) + 1;
+        position = parseInt(position) + 1;
     }
     
-    change_document(document);
+    change_document(position);
 };
 
-var change_document = function(document) {
+var change_document = function(position) {
+    var cluster = $("#popup-store").attr("data-cluster");
+    var document = Queue.clusters[cluster].documents[position];
     
     $("#viewer-store").attr({
-        "data-document": queue[document].li.attr("data-position"),
-        src: "modules/viewer.php?document=" + queue[document].filename + "&display=" + encodeURIComponent(queue[document].displayname)
+        "data-position": position,
+        "data-cluster": cluster,
+        src: "modules/viewer.php?document=" + document.filename + "&display=" + encodeURIComponent(document.displayname)
     });
        
     // On met le nom du fichier
-    $("#nom-doc-store").text(queue[document].displayname);
+    $("#nom-doc-store").text(document.displayname);
     
     $('#files-list li[data-editing="1"]').addClass("done");
     $("#files-list li").attr("data-editing", "0");
     $('#files-list li[data-position="' + document + '"]')
     .removeClass("done")
     .attr("data-editing", 1);
-    $("#popup-store").attr("data-document", document);
+    $("#popup-store").attr("data-position", position);
+    $("#popup-store").attr("data-cluster", cluster);
     
-    if (queue[document].store.monde === "") {
-        queue[document].store.monde = Store.monde;
+    if (document.store.monde === "") {
+        document.store.monde = Store.monde;
     }
     
     $("#mondes-store li").attr("data-selected", "0");
     
-    $('#mondes-store li[data-monde="' + queue[document].store.monde + '"]').attr("data-selected", "1");
+    $('#mondes-store li[data-monde="' + document.store.monde + '"]').attr("data-selected", "1");
     
-    if (queue[document].store.last_champ === "") { 
-        queue[document].store.last_champ = Store.last_champ;
-        queue[document].store.champs = Store.champs;
+    if (document.store.last_champ === "") { 
+        document.store.last_champ = Store.last_champ;
+        document.store.champs = Store.champs;
     }
     
     $("#container-details").slideUp();
@@ -562,13 +584,16 @@ var cancel_store = function() {
     
     $('#files-list li[data-editing="1"]').addClass("done");
     $("#files-list li").attr("data-editing", "0");
-    $("#popup-store").attr("data-document", "");
+    $("#popup-store").attr("data-position", "");
+    $("#popup-store").attr("data-cluster", "");
     
     // charge_dates();
 };
 
 var archive_document = function() {
-    var document = queue[$("#popup-store").attr("data-document")];
+    var cluster = $("#popup-store").attr("data-cluster");
+    var position = $("#popup-store").attr("data-position");
+    var document = Queue.clusters[cluster].documents[position];
     var store = document.store;
     var monde = profil.mondes[store.monde];
     var champ = monde.champs[store.last_champ];
@@ -680,7 +705,7 @@ var _archive_document = function(document, store) {
                 
                 // une fois terminé, on élimine de la queue
                 // et on envoie le prochain document dans la queue
-                var position = $("#popup-store").attr("data-document");
+                var position = $("#popup-store").attr("data-position");
                 
                 avance_store(position);
                 
@@ -697,14 +722,14 @@ var _archive_document = function(document, store) {
 }
 
 var avance_store = function(position) {
+    var cluster = $("#popup-store").attr("data-cluster");
     var new_position;
     
     // Si c'est le seul document de la queue on ferme le store
-    if (queue.length == 1 || Tuto.stage == 6) {
-        if (queue.length == 1) {
-            queue.length = 0;
+    if (Queue.clusters[cluster].documents.length == 1 || Tuto.stage == 6) {
+        if (Queue.clusters[cluster].documents.length == 1) {
+            Queue.clusters[cluster].documents.length = 0;
         }
-        refresh_liste();
         $('#mondes-top li[data-monde="' + Store.monde + '"]').click(); 
         
         if ($("#popup-store").is(":visible")) {
@@ -714,14 +739,14 @@ var avance_store = function(position) {
             dialogue.close();
         }
     } else {
-        if (position == queue.length - 1) {
-            new_position = queue.length - 2;
+        if (position == Queue.clusters[cluster].documents.length - 1) {
+            new_position = Queue.clusters[cluster].documents.length - 2;
         } else {
             new_position = position;
         }
         
-        queue.splice(position, 1);
-        refresh_liste();
+        Queue.clusters[cluster].remove_index(position);
+        
         $('#mondes-top li[data-monde="' + Store.monde + '"]').click();
         
         if ($("#popup-store").is(":visible")) {
@@ -733,14 +758,16 @@ var avance_store = function(position) {
     }
 };
 
-var _store_document = function(position) {
-    var li = queue[position].li;
+var store_document = function(cluster, position) {
+    var document = Queue.clusters[cluster].documents[position];
+    var li = document.li;
     var ul = li.closest("ul");
 
     ul.find("li").attr("data-editing", "0");
     li.removeClass("done").attr("data-editing", "1");
     
-    $("#popup-store").attr("data-document", position);
+    $("#popup-store").attr("data-cluster", cluster);
+    $("#popup-store").attr("data-position", position);
     
     // On binde les boutons du store
     $("#prev-store").unbind().click(prev_document);
@@ -765,11 +792,11 @@ var _store_document = function(position) {
     
     // On met par défaut le monde présent dans le Core
     // (si le store est vide)
-    if (queue[position].store.monde === "") {
-        queue[position].store.monde = Core.monde;
+    if (document.store.monde === "") {
+        document.store.monde = Core.monde;
     }
     
-    $('#mondes-store li[data-monde="' + queue[position].store.monde + '"]').attr("data-selected", "1");
+    $('#mondes-store li[data-monde="' + document.store.monde + '"]').attr("data-selected", "1");
     Store.monde = Core.monde;  
     
     // on cache les champs détails
@@ -779,12 +806,13 @@ var _store_document = function(position) {
     // On installe le viewer dans l'iframe
     
     $("#viewer-store").attr({
-        "data-document": li.attr("data-position"),
-        src: "modules/viewer.php?document=" + queue[li.attr("data-position")].filename + "&display=" + encodeURIComponent(queue[li.attr("data-position")].displayname)
+        "data-position": document.position,
+        "data-cluster": document.type,
+        src: "modules/viewer.php?document=" + document.filename + "&display=" + encodeURIComponent(document.displayname)
     });
     
     // On met le nom du fichier
-    $("#nom-doc-store").text(queue[li.attr("data-position")].displayname);
+    $("#nom-doc-store").text(document.displayname);
     
     // On affiche le fond opaque et le store
     $("#opak")
@@ -798,13 +826,4 @@ var _store_document = function(position) {
     Tuto.flag(2);
     
     reload_champs();
-};
-
-var store_document = function() {
-    var li = $(this);
-    _store_document(li.attr("data-position"));
-};
-
-var switch_to_store = function() {
-    
 };

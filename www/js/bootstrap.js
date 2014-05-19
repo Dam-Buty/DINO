@@ -135,82 +135,81 @@ var _bootstrap = function() {
             $.ajax({ url: "modules/store.php" })
             .done(function(store) {
                 $("#front").append(store);
-            });
-            
-            // On style les éléments                
-            $("#date-store").datepicker({
-                dateFormat: "dd/mm/yy",
-                changeMonth: true,
-                changeYear: true
-            });
-            $("#date-store").datepicker('setDate', new Date());
-            
-            $("#container-details input").keydown(function(e) {
-                var code = e.keyCode ? e.keyCode : e.which;
-                    
-                if (code == 13) {
-                    archive_document();
-                }
-            });
-            
-            $("#container-viewer-global").draggable({ handle: "#poignee-viewer-global" });
-    
-            $("#bouton-store").click(archive_document);
-            $("#del-doc-store").click(remove_document_store);
-            
-            $("#cancel-uploads").click(Queue.empty);
-            $("#pause-uploads").click(Queue.pause);
-            
-            // On installe le drag'n'drop
-            $("#zone-dnd").on("dragenter", dragenter_files);
-            $("#zone-dnd").on("dragover", dragover_files);
-            $("#zone-dnd").on("dragleave", dragleave_files);
-            $("#zone-dnd").on("dragend", dragend_files);
-            $("#zone-dnd").on("drop", drop_files);
-            
-            $.ajax({ 
-                url: "do/doCheckAdmin.php",
-                statusCode: {
-                    200: function(niveau) {
-                        $.ajax({ url: "modules/admin/users.php" })
-                        .done(function(users) {
-                            $("#backoffice").append(users);  
-                        });
+                // On style les éléments                
+                $("#date-store").datepicker({
+                    dateFormat: "dd/mm/yy",
+                    changeMonth: true,
+                    changeYear: true
+                });
+                $("#date-store").datepicker('setDate', new Date());
+                
+                $("#container-details input").keydown(function(e) {
+                    var code = e.keyCode ? e.keyCode : e.which;
                         
-                        if (niveau >= 30) {
-                        
-                            $.ajax({ url: "modules/admin/mondes_suppr.php" })
-                            .done(function(mondes_suppr) {
-                                $("#core").append(mondes_suppr);
-                                $("#bouton-suppr").click(bootstrap_mondes_suppr);
+                    if (code == 13) {
+                        archive_document();
+                    }
+                });
+                
+                $("#container-viewer-global").draggable({ handle: "#poignee-viewer-global" });
+        
+                $("#bouton-store").click(archive_document);
+                $("#del-doc-store").click(remove_document_store);
+                
+                $(".cancel-uploads").click(Queue.empty);
+                $(".pause-uploads").click(Queue.pause);
+                
+                // On installe le drag'n'drop
+                $("#zone-dnd").on("dragenter", dragenter_files);
+                $("#zone-dnd").on("dragover", dragover_files);
+                $("#zone-dnd").on("dragleave", dragleave_files);
+                $("#zone-dnd").on("dragend", dragend_files);
+                $("#zone-dnd").on("drop", drop_files);
+                
+                $.ajax({ 
+                    url: "do/doCheckAdmin.php",
+                    statusCode: {
+                        200: function(niveau) {
+                            $.ajax({ url: "modules/admin/users.php" })
+                            .done(function(users) {
+                                $("#backoffice").append(users);  
                             });
                             
-                            $.ajax({ url: "modules/admin/designer.php" })
-                            .done(function(designer) {
-                                $("#core").append(designer); 
-                                $("#menu-designer").click(function() {
-                                    check_queue();
-                                    bootstrap_designer("new");
+                            if (niveau >= 30) {
+                            
+                                $.ajax({ url: "modules/admin/mondes_suppr.php" })
+                                .done(function(mondes_suppr) {
+                                    $("#core").append(mondes_suppr);
+                                    $("#bouton-suppr").click(bootstrap_mondes_suppr);
                                 });
-                                $("#bouton-admin-profil").click(function() {                                        
-                                    check_queue();
-                                    bootstrap_designer("edit");
-                                });
-                                $("#nom-monde").change(Monde._save_titre);
+                                
+                                $.ajax({ url: "modules/admin/designer.php" })
+                                .done(function(designer) {
+                                    $("#core").append(designer); 
+                                    $("#menu-designer").click(function() {
+                                        check_queue();
+                                        bootstrap_designer("new");
+                                    });
+                                    $("#bouton-admin-profil").click(function() {                                        
+                                        check_queue();
+                                        bootstrap_designer("edit");
+                                    });
+                                    $("#nom-monde").change(Monde._save_titre);
 
-                            });
+                                });
+                            }
+                            
+                            bootstrap_admin();
+                            $(window).trigger('resize');
+                        },
+                        403: function() {
+                            $(window).trigger('resize');
                         }
-                        
-                        bootstrap_admin();
-                        $(window).trigger('resize');
-                    },
-                    403: function() {
-                        $(window).trigger('resize');
                     }
-                }
+                });
+                
+                bootstrap_tuto();
             });
-            
-            bootstrap_tuto();
         });
     });
 };

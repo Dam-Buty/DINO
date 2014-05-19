@@ -942,11 +942,12 @@ html, body {
 #######################################*/
 
 #queue {
+    padding-right: 215px;
 }
 
 #container-queue {
     position: absolute;
-    right: 40%;
+    right: 0;
     max-height: 50%;
     top: 70px;
     
@@ -1006,7 +1007,7 @@ html, body {
 
 .cluster {
     float: left;
-    width: 15%;
+    width: 20%;
     
     margin: 10px;
     margin-top: 20px;
@@ -1023,6 +1024,11 @@ html, body {
     text-align: center;
     font-family: "Courier New", Courier, monospace;
     font-size: 0.9em;
+}
+
+.cluster ul {
+    overflow-y: auto;
+    height: 150px;  
 }
 
 /*###########################
