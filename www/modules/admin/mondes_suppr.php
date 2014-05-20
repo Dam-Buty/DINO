@@ -1,7 +1,7 @@
 <!--LOCALISATION-->
 <div id="mondes-suppr" class="admin">
     <h1>Supresion de mundo</h1>
-    <span class="warning">Borrar un mundo es una accion irreversible y de alto impacto!</span>
+    <span class="warning">Borrar un mundo es una accion irreversible y de alto impacto!</span><br/>
     <div id="choix-mondes-suppr">
         <div>Elige un mundo
             <ul class="list-mondes" id="liste-mondes-suppr"></ul>

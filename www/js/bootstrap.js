@@ -271,8 +271,8 @@ $( document ).keyup(function(e) {
 });
 
 $(window).bind('beforeunload', function(){
-    if ($("#bouton-save-monde").is(":visible") && !Monde.saving && Monde.modif) {
-        return "Tu mundo tiene modificacions que no publicaste. Si dejas esta pagina tus modificaciones seran perdidas.";
+    if ($("#bouton-save-monde").is(":visible") && $("#bouton-save-monde").hasClass("save-monde-OK") && !Monde.saving && Monde.modif) {
+        return "Tu mundo tiene modificaciones que no publicaste. Si dejas esta pagina tus modificaciones seran perdidas.";
     }
 });
 

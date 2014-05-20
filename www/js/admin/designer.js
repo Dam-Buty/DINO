@@ -215,6 +215,7 @@ var Monde = {
                             
                             $("#bouton-save-monde").removeClass("save-monde-OK").addClass("save-monde-KO");
                             if (Monde.pk === undefined) {
+                                
                                 window.location.replace("index.php");
                             } else {
                                 _profil(function() {});
