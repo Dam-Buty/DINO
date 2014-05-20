@@ -969,9 +969,6 @@ html, body {
 
 #zone-dnd {
     position: relative;
-    height: 70px;
-    
-    padding-top: 5px;
     
     border: 2px dotted #81bc2e;
     
@@ -985,24 +982,46 @@ html, body {
     
     background-color: white;
     
-    cursor: pointer;
-    
     box-sizing: border-box;
 }
 
-#zone-dnd input {
+#zone-dnd input {    
+    opacity: 0;
+}
+
+#zone-dnd p {
+    margin: 0;
+    font-weight: bold;
+    border-bottom: 1px solid #8ECB32;
+    
+    padding: 5px;
+}
+
+#upload-buttons {
+    position: relative;
+    height: 2.7em;
+}
+
+.fake-button {
     position: absolute;
     top: 0;
     left: 0;
-    margin: 0;
-    padding: 0;
     
-    width: 100%;
+    float: left;
+    width: 48%;
     height: 100%;
-    
-    opacity: 0;
+    padding-top: 0.9em;
+    border-right: 1px solid #8ECB32;
     
     cursor: pointer;
+    box-sizing: border-box;
+    
+    font-weight: bold;
+}
+
+.fake-dirs {
+    left: 50% !important;
+    border-right: none !important;
 }
 
 .cluster {
@@ -1042,7 +1061,7 @@ html, body {
     padding-left: 0;
     margin-top: 0;
     border-top: 5px solid white;
-    
+    max-height: 150px;
     overflow-y: auto;
 }
 

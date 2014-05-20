@@ -2,15 +2,20 @@
     <div id="container-queue">
         <div id="container-uploader">
             <div id="zone-dnd">
-                <img src="img/cloud_30.png"/><br/>
-                <b>Carga documentos en DINO</b>
-                <input type="file" id="files-handler" name="files-handler" multiple="multiple" directory webkitdirectory mozdirectory > <!--  -->
+                <p>Cargar</p>
+                <div id="upload-buttons">
+                    <input type="file" id="files-handler" name="files-handler" multiple="multiple"> <!--  -->
+                    <div class="fake-button" id="files-button">Archivos</div>
+                    <input type="file" id="dirs-handler" name="files-handler" multiple="multiple" directory webkitdirectory mozdirectory >
+                    <div class="fake-button fake-dirs" id="dirs-button">Carpetas</div>
+                    <div style="clear: both;"></div>
+                </div>
             </div>
         </div>
         <div id="container-uploads">
-            <div class="pause-uploads">Pausar</div>
+           <!--<div class="pause-uploads">Pausar</div>
             <div class="cancel-uploads">Cancelar</div>
-            <div style="clear: both;"></div>
+            -->
             <ul id="files-list"></ul>
         </div>
     </div>

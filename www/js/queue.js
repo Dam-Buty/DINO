@@ -15,6 +15,14 @@ var Queue = {
         return nb;
     },
     
+    display: function() {
+        $(".admin").hide();
+        $(".front-element").hide();
+        $("#queue").show();    
+        
+        $('#mondes-top li[data-selected="1"]').attr("data-selected", 0);
+    },
+    
     refresh: function() {
         var self = this;
         
@@ -32,8 +40,7 @@ var Queue = {
                             date: file.date
                         }).init("processed").setStatus("uploaded");
                         self.clusterize(doc);
-                    });
-                    self.animate();  
+                    });  
                     self.process();
                 },
                 403: function() {
@@ -112,13 +119,11 @@ var Queue = {
         self.throttle();
     },
     
-    upload: function(files) {
+    upload: function(element) {
         var self = this;
         
         if(typeof FileList !== 'undefined') {
-            if (files instanceof FileList === false) {
-                files = $("#files-handler").prop("files");
-            }
+            files = $(element).prop("files");
         } else { // shim for ie9
             files = {
                 name: files.value,
@@ -141,7 +146,6 @@ var Queue = {
             }
         });
         
-        self.animate();
         self.throttle();
     },
     
@@ -173,7 +177,7 @@ var Queue = {
         });
         
         cluster.documents.push(doc);
-        cluster.ul.append(doc.li);
+        cluster.ul.prepend(doc.li);
     },
     
     empty: function() {
@@ -197,7 +201,7 @@ var Queue = {
     },
     
     animate: function() {
-        if (this.count_clusters() != 0) {
+        if ($("#container-queue").css("right") != "0px") {
             $("#container-queue").animate({
                 right: 0
             });
@@ -280,7 +284,6 @@ var Cluster = function(options) {
                     self.ul = undefined;
                     
                     Queue.clusters[self.type] = undefined;
-                    Queue.animate();
                 } else {
                     if (index == "all") {
                         self.remove("all");
@@ -443,7 +446,6 @@ var Document = function(options) {
             this.setStatus("uploading");
             
             upload_data.append("document", this.file);
-            Queue.animate();
 
             $.ajax({
                 url: "do/doUpload.php",
@@ -585,8 +587,16 @@ var Document = function(options) {
 
 
 var bootstrap_queue = function() {
-    $("#files-handler").unbind().change(function(files) {
-        Queue.upload(files);
+    $("#zone-dnd input").unbind().change(function() {
+        Queue.upload(this);
+    });
+    
+    $("#files-button").click(function() {
+        $("#files-handler").click();
+    });
+    
+    $("#dirs-button").click(function() {
+        $("#dirs-handler").click();
     });
     
     if (profil.printer != "") {

@@ -1,6 +1,6 @@
 var categories_documents = {
     pdf: {
-        label: "Documentos PDF",
+        label: "PDF",
 //        processes: [ "extract", "pack", "remove" ],
         processes: [ "pack", "remove" ],
         extensions: {
@@ -8,7 +8,7 @@ var categories_documents = {
         }
     },
     doc: {
-        label: "Documentos Office",
+        label: "Documentos",
 //        processes: [ "extract", "convert", "pack", "remove" ],
         processes: [ "pack", "remove" ],
         extensions: {
@@ -23,7 +23,7 @@ var categories_documents = {
         }
     },
     xls: {
-        label: "Hojas de calculo",
+        label: "Excel",
 //        processes: [ "extract", "pack", "remove" ],
         processes: [ "pack", "remove" ],
         extensions: {
@@ -39,7 +39,7 @@ var categories_documents = {
         }
     },
     pps: {
-        label: "Presentaciones Powerpoint",
+        label: "Powerpoint",
 //        processes: [ "extract", "convert", "pack", "remove" ],
         processes: [ "pack", "remove" ],
         extensions: {
@@ -54,7 +54,7 @@ var categories_documents = {
         }
     },
     img: {
-        label: "Todas Imagenes",
+        label: "Imagenes",
         processes: [ "pack", "remove" ],
         extensions: {
             "jpg": 1,
@@ -67,7 +67,7 @@ var categories_documents = {
         }
     },
     vid: {
-        label: "Clips de Video",
+        label: "Video",
         processes: [ "pack", "remove" ],
         extensions: {
             "mp4": 1,
@@ -79,7 +79,7 @@ var categories_documents = {
         }
     },
     xxx: {
-        label: "Otros archivos",
+        label: "Otros",
         processes: [ "pack", "remove" ],
         extensions: { }
     }

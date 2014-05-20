@@ -75,7 +75,7 @@ var _bootstrap = function() {
     
     // On binde les events
     $("#toggle-date").click(toggle_dates);
-    $("#menu-queue").click(anime_queue);
+    $("#menu-queue").click(Queue.display);
     $("#documents-new-monde").focus(function() {
         $(this).select();    
         
