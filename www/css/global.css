@@ -948,7 +948,6 @@ html, body {
 #container-queue {
     position: absolute;
     right: 0;
-    max-height: 50%;
     top: 70px;
     
     width: 20%;
@@ -1068,7 +1067,7 @@ html, body {
     padding-left: 0;
     margin-top: 0;
     border-top: 5px solid white;
-    max-height: 150px;
+    max-height: 300px;
     overflow-y: auto;
 }
 
