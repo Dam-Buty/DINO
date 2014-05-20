@@ -4,5 +4,5 @@ SET
     `nom_user` = :nom
 WHERE
     `fk_client` = :client
-    AND `mail_user` = :mail
+    AND `login_user` = :mail
 ;
