@@ -1050,6 +1050,13 @@ html, body {
     height: 150px;  
 }
 
+#tip-upload {
+    display: none;
+    width: 50%;
+    margin-left: 20%;
+    margin-top: 15%;
+}
+
 /*###########################
         Liste queue
 #############################*/

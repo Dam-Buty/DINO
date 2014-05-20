@@ -21,6 +21,12 @@
     </div>
 </div>
 
+<div id="tip-upload" class="dialog-box">
+    <h1>Tu cuenta esta lista</h1>
+    <div class="popup-ligne"><div class="popup-jauge jauge-100"></div></div>
+    <p>Ahora puedes <b>cargar archivos o carpetas</b> en <b>DINO</b>.</p>
+</div>
+
 <div id="bucket-queue" class="bucket">
     <ul>
         <li id="modele-li-queue" class="queue_document" draggable="true">

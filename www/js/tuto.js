@@ -795,6 +795,7 @@ var bootstrap_tuto = function() {
         $("#popup-welcome-info").show();
         $("#info-submit").click(infos);
     } else {
+        startup = false;
         if (startup !== false) {
             Tuto.bootstrapped = true;
             startup.click();

@@ -42,6 +42,9 @@ var Queue = {
                         self.clusterize(doc);
                     });  
                     self.process();
+                    if (self.count_clusters() == 0) {
+                        self.animate();
+                    }
                 },
                 403: function() {
                     window.location.replace("index.php");
@@ -131,6 +134,10 @@ var Queue = {
             };
         }
         
+        if (self.count_clusters() == 0) {
+            self.animate();
+        }
+        
         $.each(files, function() {
             var position = self.uploads.length;
             
@@ -205,10 +212,14 @@ var Queue = {
             $("#container-queue").animate({
                 right: 0
             });
+            
+            $("#tip-upload").hide();
         } else {
             $("#container-queue").animate({
                 right: "40%"
             });
+            
+            $("#tip-upload").show();
         }
     }
 };
