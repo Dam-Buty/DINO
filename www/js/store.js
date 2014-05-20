@@ -1,8 +1,146 @@
 
 var Store = {
-    monde: "",
-    champs: {},
-    last_champ: ""
+    suggestions: {
+        monde: "",
+        champs: {},
+        last_champ: ""
+    },
+    
+    document: undefined,
+    position: 0,
+    cluster: "",
+    queue: [],
+    
+    opak: undefined,
+    popup: undefined,
+    mondes: {
+        ul: undefined,
+        lis: {},
+        first: function() {
+            return this.ul.find("li:first()");
+        }
+    },
+    prev_button: undefined,
+    next_button: undefined,
+    details: undefined,
+    bouton: undefined,
+    viewer: undefined,
+    
+    show: function(cluster, position) {
+        if (this.opak === undefined) {
+            this.opak = $("#opak");
+        }
+        if (this.popup === undefined) {
+            this.popup = $("#popup-store");
+        }
+        if (this.mondes.ul === undefined) {
+            this.mondes.ul = $("#mondes-store");
+        }
+        if (this.prev_button === undefined) {
+            this.prev_button = $("#prev-store");
+        }
+        if (this.next_button === undefined) {
+            this.next_button = $("#next-store");
+        }
+        if (this.details === undefined) {
+            this.details = $("#container-details");
+        }
+        if (this.bouton === undefined) {
+            this.bouton = $("#bouton-store");
+        }
+        if (this.viewer === undefined) {
+            this.viewer = $("#viewer-store");
+        }
+        if (this.nom_doc === undefined) {
+            this.nom_doc = $("#nom-doc-store");
+        }
+        
+        this.position = position;
+        this.cluster = cluster;
+        this.document = Queue.clusters[cluster].documents[position];
+        
+        var li = this.document.li;
+        var ul = li.closest("ul");
+        
+        var self = this;
+        
+        // On binde les boutons du store
+        this.prev_button.unbind().click(function() {
+            self.prev();
+        });
+        
+        this.next_button.unbind().click(function() {
+            self.next();
+        });
+        
+        // On nettoie le terrain
+        this.mondes.ul.empty();
+        
+        // On pose le sélecteur de mondes  
+        $.each(profil.mondes, function(i, monde) {
+            var li_monde = $("<li></li>")
+                            .attr({
+                                "data-monde": i,
+                                "data-selected": 0
+                            })
+                            .text(monde.label)
+                            .click(self.change_monde);
+            
+            self.mondes.lis[i] = li_monde;
+            
+            self.mondes.ul.append(li_monde);
+        });
+        
+        // On met par défaut le premier monde
+        if (this.document.store.monde === "") {
+            this.document.store.monde = this.mondes.first().attr("data-monde");
+        }
+        
+        this.mondes.lis[this.document.store.monde].attr("data-selected", "1");
+        this.monde = Core.monde;  
+        
+        // on cache les champs détails
+        this.details.hide();
+        this.bouton.fadeOut();
+              
+        // On affiche le document
+        this.view();
+        
+        // on déclenche le redimensionnement de la fenêtre
+//        $(window).trigger('resize');
+        Tuto.flag(2);
+        
+        reload_champs();
+    },
+    
+    hide: function() {
+        this.opak.fadeOut();
+        this.popup.fadeOut();
+        
+        this.current = 0;
+        this.cluster = "";
+    },
+    
+    view: function() {
+        var self= this;
+        
+        this.viewer.attr({
+            "data-position": this.document.position,
+            "data-cluster": this.document.type,
+            src: "modules/viewer.php?document=" + this.document.filename + "&display=" + encodeURIComponent(this.document.displayname)
+        });
+        
+        // On met le nom du fichier
+        this.nom_doc.text(this.document.displayname);
+        
+        // On affiche le fond opaque et le store
+        this.opak
+        .fadeIn()
+        .unbind().click(function() {
+            self.hide();
+        }); 
+        this.popup.fadeIn();
+    }
 };
 
 var change_monde_store = function() {
@@ -577,19 +715,6 @@ var change_document = function(position) {
     // reload_champs();
 };
 
-var cancel_store = function() {
-    // On cache le fond opaque et le store
-    $("#opak").fadeOut();
-    $("#popup-store").fadeOut();
-    
-    $('#files-list li[data-editing="1"]').addClass("done");
-    $("#files-list li").attr("data-editing", "0");
-    $("#popup-store").attr("data-position", "");
-    $("#popup-store").attr("data-cluster", "");
-    
-    // charge_dates();
-};
-
 var archive_document = function() {
     var cluster = $("#popup-store").attr("data-cluster");
     var position = $("#popup-store").attr("data-position");
@@ -756,74 +881,4 @@ var avance_store = function(position) {
             dialogue.close();
         }
     }
-};
-
-var store_document = function(cluster, position) {
-    var document = Queue.clusters[cluster].documents[position];
-    var li = document.li;
-    var ul = li.closest("ul");
-
-    ul.find("li").attr("data-editing", "0");
-    li.removeClass("done").attr("data-editing", "1");
-    
-    $("#popup-store").attr("data-cluster", cluster);
-    $("#popup-store").attr("data-position", position);
-    
-    // On binde les boutons du store
-    $("#prev-store").unbind().click(prev_document);
-    $("#next-store").unbind().click(next_document);
-    
-    // On nettoie le terrain
-    $("#mondes-store").empty();
-    
-    // On pose le sélecteur de mondes  
-    var select = $("<select></select>");
-    $.each(profil.mondes, function(i, monde) {
-        $("#mondes-store").append(
-            $("<li></li>")
-            .attr({
-                "data-monde": i,
-                "data-selected": 0
-            })
-            .text(monde.label)
-            .click(change_monde_store)
-        );
-    });
-    
-    // On met par défaut le monde présent dans le Core
-    // (si le store est vide)
-    if (document.store.monde === "") {
-        document.store.monde = Core.monde;
-    }
-    
-    $('#mondes-store li[data-monde="' + document.store.monde + '"]').attr("data-selected", "1");
-    Store.monde = Core.monde;  
-    
-    // on cache les champs détails
-    $("#container-details").hide();
-    $("#bouton-store").fadeOut();
-          
-    // On installe le viewer dans l'iframe
-    
-    $("#viewer-store").attr({
-        "data-position": document.position,
-        "data-cluster": document.type,
-        src: "modules/viewer.php?document=" + document.filename + "&display=" + encodeURIComponent(document.displayname)
-    });
-    
-    // On met le nom du fichier
-    $("#nom-doc-store").text(document.displayname);
-    
-    // On affiche le fond opaque et le store
-    $("#opak")
-    .fadeIn()
-    .unbind().click(cancel_store); 
-    $("#popup-store").fadeIn();
-    
-    // on déclenche le redimensionnement de la fenêtre
-    $(window).trigger('resize');
-
-    Tuto.flag(2);
-    
-    reload_champs();
 };

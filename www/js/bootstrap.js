@@ -200,10 +200,10 @@ var _bootstrap = function() {
                             }
                             
                             bootstrap_admin();
-                            $(window).trigger('resize');
+//                            $(window).trigger('resize');
                         },
                         403: function() {
-                            $(window).trigger('resize');
+//                            $(window).trigger('resize');
                         }
                     }
                 });

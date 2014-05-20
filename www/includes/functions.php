@@ -291,7 +291,7 @@ function dinomail($adresse, $mail, $attach = [], $subst = []) {
     try {
         $mgClient->sendMessage(
             $domain, [
-                'from'    => 'DINO <mailgun@dino.mx>',
+                'from'    => 'DINO <equipo@dino.mx>',
                 'to'      => $adresse,
                 'subject' => $sujet,
                 'text'    => $text,

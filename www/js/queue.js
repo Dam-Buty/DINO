@@ -562,7 +562,7 @@ var Document = function(options) {
         },
         
         classify: function(type, position) {
-            store_document(type, position);
+            Store.show(type, position);
         },
         
         del: function(callback) {
