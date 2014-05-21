@@ -6,4 +6,4 @@ INSERT INTO `monde` (
     :label,
     :client
 )
-;
+; 
