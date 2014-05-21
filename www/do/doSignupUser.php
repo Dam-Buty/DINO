@@ -8,6 +8,7 @@ include("../includes/functions.php");
 $clef_user = custom_hash($_POST["mail"] . $_POST["pass"] . $_POST["mail"]);
 $clef_stockage = genere_clef(32);
 $clef_cryptee = crypte($clef_user, $clef_stockage);
+$clef_client = crypte_sym($clef_stockage);
 
 $password = custom_hash($_POST["pass"] . $_POST["mail"], TRUE);
 
@@ -28,6 +29,11 @@ try {
         "mail" => $_POST["mail"],
         "idclient" => $_POST["client"],
         "clef" => $clef_cryptee
+    ]);
+    
+    $dino->query("signup_user_clef", [
+        "client" => $_POST["client"],
+        "clef" => $clef_client
     ]);
 
     dinomail($_POST["mail"], "signup_user", [], [

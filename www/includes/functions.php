@@ -281,11 +281,11 @@ function dinomail($adresse, $mail, $attach = [], $subst = []) {
         $html = str_replace("%" . $key . "%", $value, $html);
     }
     
-    debug($adresse);
-    debug($sujet);
-    debug($text);
-    debug($html);
-    debug($attach);
+#    debug($adresse);
+#    debug($sujet);
+#    debug($text);
+#    debug($html);
+#    debug($attach);
     
     # Make the call to the client.
     try {
@@ -389,4 +389,10 @@ function decrypte($key, $input) {
     return $retour;
 }
 
+function crypte_sym($input) {
+    openssl_public_encrypt($input, $encrypted, "file://../public/public_key.pem");
+    debug($input);
+    debug($encrypted);
+    return bin2hex($encrypted);
+}
 ?>
