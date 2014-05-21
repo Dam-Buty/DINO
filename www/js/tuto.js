@@ -800,7 +800,7 @@ var bootstrap_tuto = function() {
             Tuto.bootstrapped = true;
             startup.click();
         } else {
-            $("#bouton-tuto").tooltipster("show");
+            //$("#bouton-tuto").tooltipster("show");
         }
     }
 };

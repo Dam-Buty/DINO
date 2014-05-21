@@ -81,6 +81,7 @@ var Queue = {
                         
                     if (all_done) {
                         self.uploads.length = 0;
+                        
                     }
                 }
             });
@@ -217,9 +218,15 @@ var Queue = {
         } else {
             $("#container-queue").animate({
                 right: "40%"
+            }, function() {
+                $("#tip-upload").show();
+                
+                $("#upload-buttons")
+                .tooltipster({
+                    content: $("<div>Da click aqui para cargar archivos</div>"),
+                    position: "left"
+                }).tooltipster("show");
             });
-            
-            $("#tip-upload").show();
         }
     }
 };

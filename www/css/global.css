@@ -202,6 +202,7 @@ html, body {
     margin-right: 5px;
     
     border-right: 3px solid #d6dcea;
+    border-radius: 5px;
 }
 
 .list-mondes li[data-selected="1"] {
@@ -949,8 +950,8 @@ html, body {
     position: absolute;
     right: 0;
     top: 70px;
+    max-width: 20%;
     
-    width: 20%;
     padding: 10px;
     border-radius: 5px;
     
@@ -958,6 +959,7 @@ html, body {
 }
 
 #container-uploader {
+    border-radius: 5px;
 }
 
 #tiroir-queue {
@@ -969,8 +971,6 @@ html, body {
 #zone-dnd {
     position: relative;
     
-    border: 2px dotted #81bc2e;
-    
     color: #81bc2e;
     
     text-align: center;
@@ -979,43 +979,52 @@ html, body {
     font-family: "Courier New", Courier, monospace;
     font-size: 0.9em;
     
-    background-color: white;
-    
     box-sizing: border-box;
 }
 
 #zone-dnd input {    
-    opacity: 0;
+    visibility: hidden;
+    position: absolute;
 }
 
 #zone-dnd p {
     margin: 0;
     font-weight: bold;
-    border-bottom: 1px solid #8ECB32;
-    
+    background-color: #A1A1A1;
+    color: white;
     padding: 5px;
 }
 
 #upload-buttons {
     position: relative;
-    height: 2.7em;
 }
 
-.fake-button {
-    position: absolute;
-    top: 0;
-    left: 0;
-    
+.fake-button {    
     float: left;
-    width: 48%;
     height: 100%;
-    padding-top: 0.9em;
-    border-right: 1px solid #8ECB32;
+    margin: 5px;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
     
     cursor: pointer;
     box-sizing: border-box;
     
     font-weight: bold;
+}
+
+.fake-button:hover {
+    background-color: #75A32D;
+}
+
+.button-gradient {
+    background: -moz-linear-gradient(top,  rgba(117,163,45,1) 0%, rgba(142,203,50,0.72) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(117,163,45,1)), color-stop(100%,rgba(142,203,50,0.72))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(117,163,45,1) 0%,rgba(142,203,50,0.72) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(117,163,45,1) 0%,rgba(142,203,50,0.72) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(117,163,45,1) 0%,rgba(142,203,50,0.72) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(117,163,45,1) 0%,rgba(142,203,50,0.72) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#75a32d', endColorstr='#b88ecb32',GradientType=0 ); /* IE6-9 */
 }
 
 .fake-dirs {
@@ -1054,6 +1063,15 @@ html, body {
     width: 50%;
     margin-left: 20%;
     margin-top: 15%;
+    text-align: justify;
+}
+
+#tip-store {
+    display: none;
+    width: 50%;
+    margin-left: 50%;
+    margin-top: 30%;
+    text-align: justify;
 }
 
 /*###########################
@@ -1065,21 +1083,22 @@ html, body {
 
 #files-list {
     padding-left: 0;
-    margin-top: 0;
-    border-top: 5px solid white;
+    margin-top: 5px;
     max-height: 300px;
     overflow-y: auto;
 }
 
 .queue_document {
     list-style-type: none;
-    border-bottom: 2px solid white;
     padding: 5px;
     cursor: pointer;
+    margin-top: 5px;
+    border-radius: 5px;
 }
 
 .queue_document:hover {
     background-color: #E9E9E9 !important;
+    border: 1px solid #9B9B9B;
 }
 
 .queue_document>img {
@@ -1186,7 +1205,6 @@ html, body {
 }
 
 .del-all {
-    border-top: 5px solid #FFF;
     
     background-color: #9B9B9B;
     color: white;
@@ -1306,7 +1324,8 @@ html, body {
 #mondes-store {
     margin: 0;
     margin-left: 50%;
-    margin-top: -65px;
+    margin-top: -70px;
+    margin-bottom: 5px;
 }
 
 .entete-store {

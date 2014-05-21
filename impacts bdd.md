@@ -5,6 +5,8 @@ KEYMASTER
 client :
 + + clef_client
 
+OK sur baby, my
+
 VORTEX
 ======
 
@@ -16,6 +18,8 @@ client:
 
 user:
 + + nom_user
+
+OK sur baby, my
 
 APOCALYPSE
 ==========
