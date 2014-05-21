@@ -26,8 +26,15 @@ try {
                     $clef_user = custom_hash($login . $password . $row["mail_user"]);
                     
                     $clef_stockage = decrypte($clef_user, $clef_cryptee);
+                    $clef_client = crypte_sym($clef_stockage);
+                    
+                    $dino->query("signup_user_clef", [
+                        "client" => $row["client"],
+                        "clef" => $clef_client
+                    ]);
                     
                     $_SESSION["clef"] = $clef_stockage;
+                    $dino->commit();
                     status(200);
                 } else {
                     // Si le token a expiré mais n'a pas été flaggé
@@ -69,6 +76,7 @@ try {
     }    
     
 } catch (Exception $e) {
+    debug(var_export($e));
     $dino->rollback();
     status(500);
 }

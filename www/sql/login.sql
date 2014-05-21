@@ -6,6 +6,7 @@ SELECT
     `niveau_user`, 
     `activation_user`,
     `expired_user`,
+    `user`.`fk_client` AS `client`,
     `pk_token`,
     `expired_token`,
     (`expire_token` < NOW()) AS `hasExpired`

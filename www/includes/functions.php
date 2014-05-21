@@ -391,8 +391,8 @@ function decrypte($key, $input) {
 
 function crypte_sym($input) {
     openssl_public_encrypt($input, $encrypted, "file://../public/public_key.pem");
-    debug($input);
-    debug($encrypted);
-    return bin2hex($encrypted);
+#    debug($input);
+#    debug(base64_encode($encrypted));
+    return base64_encode($encrypted);
 }
 ?>
