@@ -205,3 +205,6 @@ type_doc:
 
 OK sur baby OK sur my
 
+./configure --enable-opcache --prefix=/usr/local/php5512 --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-tidy=/usr --with-curl=/usr/bin --with-openssl-dir=/usr --with-zlib-dir=/usr --with-xpm-dir=/usr --with-pdo-mysql=mysqlnd --with-xsl=/usr --with-ldap --with-xmlrpc --with-iconv-dir=/usr --enable-exif --enable-calendar --with-bz2=/usr --with-mcrypt=/usr --with-gd --with-jpeg-dir=/usr --with-png-dir=/usr --with-freetype-dir=/usr --enable-mbstring --enable-zip --with-pear --with-libdir=/lib/x86_64-linux-gnu --with-config-file-path=/opt
+
+/usr/local/psa/bin/php_handler --add -displayname 5-5-12-custom -path /usr/local/php5512/bin/php-cgi -phpini /usr/local/lib/php.ini -type fastcgi -id 5-5-12-custom
