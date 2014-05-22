@@ -81,7 +81,12 @@ var Queue = {
                         
                     if (all_done) {
                         self.uploads.length = 0;
-                        
+                        $("#tip-store").show();
+                        $(".cluster:first() ul li:first()")
+                        .tooltipster({
+                            content: $("<div>Da click aqui para clasificar un documento</div>"),
+                            position: "bottom"
+                        }).tooltipster("show");
                     }
                 }
             });
@@ -687,7 +692,7 @@ var clean_cave = function() {
             },
             204: function() {
                 //$("#container-notification").fadeOut();
-                refresh_liste();
+//                refresh_liste();
             },
             403: function() {
                 window.location.replace("index.php");
@@ -698,34 +703,6 @@ var clean_cave = function() {
         }
     })
 }
-
-var anime_queue = function() {
-    if (!$("#menu-queue").hasClass("inactive")) {
-        if ($("#container-queue").attr("data-state") == "closed") {
-            $("#container-queue").animate({ width: "25%", left: "50px" });
-            $("#core").animate({ "padding-left": "+=25%" });
-            $("#container-queue").attr({ "data-state": "open" });
-        } else {
-            $("#container-queue").animate({ width: "", left: "" });
-            $("#core").animate({ "padding-left": "-=25%" });
-            $("#container-queue").attr({ "data-state": "closed" });
-        }
-    }
-}
-
-var refresh_liste = function() {
-    
-    $("#del-all").text("Borrar " + queue.length + " documentos");
-    
-    $("#files-list li").detach();
-    
-    $.each(queue, function(i, doc) {
-        $("#files-list").append(queue[i].li.attr("data-position", i));
-    });
-    
-    $("#files-list li").unbind().click(store_document);
-    $(".bouton-del-li").unbind().click(remove_document);
-};
 
 var remove_document = function(event) {
     var position = $(this).closest("li").attr("data-position");

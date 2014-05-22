@@ -8,7 +8,8 @@ SELECT
     `printer_client`, 
     `convert_client`,
     `entreprise_client`, 
-    `uploaded_client`,
+    `uploaded_client`, 
+    `stored_client`,
     `branded_client` 
 FROM 
     `user`, 

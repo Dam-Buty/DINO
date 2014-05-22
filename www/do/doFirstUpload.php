@@ -12,7 +12,7 @@ if (isset($_SESSION["niveau"])) {
         ];
         
         $result = $dino->query("first_upload", $params);
-        
+        $dino->commit();
         status(200);
     } catch (Exception $e) {
         status(500);

@@ -310,6 +310,7 @@ if (isset($_SESSION["user"])) {
             $profil["branded"] = $row["branded_client"];
             $profil["public"] = $row["public_user"];
             $profil["uploaded"] = $row["uploaded_client"];
+            $profil["stored"] = $row["stored_client"];
             $profil["nom"] = $row["nom_user"];
             $profil["entreprise"] = $row["entreprise_client"];
             $profil["login"] = $row["login_user"];
