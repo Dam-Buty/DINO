@@ -106,7 +106,8 @@ try {
     }
     
     $dino->commit();
-    header("Location: ../welcome.php?action=signup&mail=" . $_POST["mail"]);
+    status(200);
+#    header("Location: ../welcome.php?action=signup&mail=" . $_POST["mail"]);
 } catch (Exception $e) {
     $dino->rollback();
     status(500);

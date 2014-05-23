@@ -25,15 +25,14 @@
     
     <section>
         <h1>Deja de buscar tus documentos</h1>
-        <p>Con <b>DINO</b>, los documentos valiosos de tu empresa <u>siempre</u> estan a tu alcance. Desde cualquier lugar, 24/7.</p>
-        <form method="post" action="../../do/doSignup.php">    
-            <p id="signup">
-                Tu cuenta gratuita te espera!<br/>
-                <input type="text" name="mail" id="mail" placeholder="Solo necesitas una direccion mail valida"/>
-                <input type="submit" value="Registrate"/><br/>
-                <span><b>DINO</b> necesita algunos datos para la creacion y la administracion de tu cuenta. Registrandote aceptas nuestra <a href="#" onclick="toggle_privacy();">politica de privacidad</a>.</span>
-            </p>
-        </form>
+        <p>Con <b>DINO</b>, los documentos valiosos de tu empresa <u>siempre</u> estan a tu alcance. Desde cualquier lugar, 24/7.</p>  
+        <div id="signup">
+            Tu cuenta gratuita te espera!<br/>
+            <input type="text" id="mail" placeholder="Solo necesitas una direccion mail valida"/>
+            <input type="submit" id="bouton" value="Registrate"/><br/>
+            <p id="tip"></p><br/>
+            <p><b>DINO</b> necesita algunos datos para la creacion y la administracion de tu cuenta. Registrandote aceptas nuestra <a href="#" onclick="toggle_privacy();">politica de privacidad</a>.</p>
+        </div>
     </section>
     
     <section id="privacy" style="display: none;" onclick="toggle_privacy();">
@@ -63,6 +62,104 @@
         pa.src = ('https:' == document.location.protocol ? 'https:' : 'http:') + "//tag.perfectaudience.com/serve/537152def7883fa781000018.js";
         var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(pa, s);
       })();
+    </script>
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-46251879-1', 'dino.mx');
+        ga('send', 'pageview');
+    </script>
+    
+    
+    <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="mailgun_validator.js"></script>
+    <script type="text/javascript">
+        var valid = false;
+        var go = false;
+        
+        var signup = function() {
+            if (valid) {
+                $("#mail").addClass("loading");    
+                $.ajax({
+                    url: "../../do/doSignup.php",
+                    type: "POST",
+                    data: {
+                        mail: $("#mail").val()
+                    },
+                    statusCode: {
+                        200: function(data) {
+                            $("#mail").removeClass("loading");    
+                            window.location.replace("../../welcome.php?action=signup&mail=" + $("#mail").val());
+                        }
+                    }
+                });
+            }
+        };
+            
+        var validation_in_progress = function() {
+            $("#mail").addClass("loading");    
+            valid = false;
+        };
+        
+        var validation_success = function(data) {
+            $("#mail").removeClass("loading");  
+            $("#tip").unbind();
+            $("#tip").removeClass();
+            
+            if (data.is_valid) {
+                valid = true;
+                $("#tip").html("Esta direccion mail es valida!").removeClass("warning").addClass("OK");
+                
+                if (go) {
+                    signup();
+                }
+            } else {
+                valid = false;
+                go = false;
+                
+                if (data.did_you_mean !== null) {
+                    $("#tip").html("Tal vez quieres decir '<b>" + data.did_you_mean + "</b>'").addClass("warning").click(function() {
+                        $("#mail").val(data.did_you_mean).trigger('focusout');
+                    });
+                } else {
+                    $("#tip").html("Esta direccion mail es invalida!");
+                
+                    $("#mail").focus();
+                }
+                
+                $("#tip").fadeIn();
+            }
+            
+        };
+        
+        var validation_error = function(data) {
+        };
+        
+        $(document).ready(function(){
+            $('#mail').mailgun_validator({
+              api_key: 'pubkey-60ffvdtfh3g-o51y16o3s-mc24dfpc11',
+              in_progress: validation_in_progress,
+              success: validation_success,
+              error: validation_error,
+            });
+            
+            $('#mail').keypress(function(e) {
+              if(e.which == 13) {
+                go = true;
+                $('#mail').trigger('focusout');
+                return false;
+              }
+            });
+            
+            $("#bouton").click(function() {
+                go = true;
+                signup();
+            });
+        });
     </script>
 </body>
 </html>

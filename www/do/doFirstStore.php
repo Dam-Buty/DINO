@@ -11,7 +11,7 @@ if (isset($_SESSION["niveau"])) {
             "client" => $_SESSION["client"]
         ];
         
-        $result = $dino->query("first_upload", $params);
+        $result = $dino->query("first_store", $params);
         $dino->commit();
         status(200);
     } catch (Exception $e) {

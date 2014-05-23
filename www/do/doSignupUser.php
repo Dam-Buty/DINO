@@ -36,10 +36,10 @@ try {
         "clef" => $clef_client
     ]);
 
-    dinomail($_POST["mail"], "signup_user", [], [
-        "user" => $_POST["mail"],
-        "pass" => $_POST["pass"]
-    ]);
+#    dinomail($_POST["mail"], "signup_user", [], [
+#        "user" => $_POST["mail"],
+#        "pass" => $_POST["pass"]
+#    ]);
     
     $dino->commit();
     status(200);
