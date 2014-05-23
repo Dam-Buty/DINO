@@ -38,6 +38,7 @@ var bootstrap = function() {
     .done(function (data) {
         profil = data;
         var mondes = 0;
+        mixpanel.identify(profil.login);
         
         $.each(profil.mondes, function(i, monde) {
             if (mondes == 0) {

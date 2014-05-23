@@ -77,7 +77,7 @@ p {
     font-weight: 400;
 }
 
-#signup span {
+#signup p {
     font-family: 'Droid Sans', sans-serif;
     font-style: italic;
     font-size: 0.8em;
@@ -148,4 +148,29 @@ footer {
 
 img {
     display: none;
+}
+
+.loading {
+    background-image: url(loader.gif);
+    background-position: right;
+    background-repeat: no-repeat;
+}
+
+#tip {
+    display: none;
+    width: 42%;
+    margin-left: 29%;
+    background-color: #E1E1E1;
+    font-size: 1em !important;
+    padding: 5px;
+    color: #EB5454;
+}
+
+.warning {
+    cursor: pointer;
+}
+
+.OK {
+    background-color: #8ECB32 !important;
+    color: white !important;
 }

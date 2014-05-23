@@ -1072,6 +1072,7 @@ html, body {
     margin-left: 50%;
     margin-top: 30%;
     text-align: justify;
+    z-index: 10000000;
 }
 
 /*###########################
@@ -1772,6 +1773,10 @@ ul.ui-autocomplete {
     top: 30%;
     width: 50%;
     left: 25%;
+}
+
+#popup-welcome-info {
+    z-index: 10000000;
 }
 
 .popup-welcome {

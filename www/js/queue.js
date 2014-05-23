@@ -81,12 +81,14 @@ var Queue = {
                         
                     if (all_done) {
                         self.uploads.length = 0;
-                        $("#tip-store").show();
-                        $(".cluster:first() ul li:first()")
-                        .tooltipster({
-                            content: $("<div>Da click aqui para clasificar un documento</div>"),
-                            position: "bottom"
-                        }).tooltipster("show");
+                        if (profil.stored == 0 && profil.uploaded == 1 & !$("#tip-upload").is(":visible")) {
+                            $("#tip-store").show();
+                            $(".cluster:first() ul li:first()")
+                            .tooltipster({
+                                content: $("<div>Da click aqui para clasificar un documento</div>"),
+                                position: "bottom"
+                            }).tooltipster("show");
+                        }
                     }
                 }
             });
@@ -225,7 +227,7 @@ var Queue = {
                 right: "40%"
             }, function() {
                 $("#tip-upload").show();
-                
+               
                 $("#upload-buttons")
                 .tooltipster({
                     content: $("<div>Da click aqui para cargar archivos</div>"),

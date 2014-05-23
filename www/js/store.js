@@ -698,6 +698,14 @@ var _archive_document = function(document, store) {
         statusCode: {
             200: function() {
                 popup('Su documento fue archivado con exito!', 'confirmation'); // LOCALISATION
+                if (profil.stored == 0) {
+                    mixpanel.track("classification", {});
+                    profil.stored = 1;
+                    $.ajax({
+                        url: "do/doFirstStore.php",
+                        type: "POST"
+                    });
+                }
                 
                 Store.monde = store.monde;
                 Store.champs = store.champs;
@@ -768,6 +776,7 @@ var store_document = function(cluster, position) {
     
     $("#popup-store").attr("data-cluster", cluster);
     $("#popup-store").attr("data-position", position);
+    $("#tip-store").hide();
     
     // On binde les boutons du store
     $("#prev-store").unbind().click(prev_document);
