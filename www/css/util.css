@@ -138,15 +138,18 @@
 #container-loading {
     display: none;
     
-    background-image: url(../img/dino_title_400.png);
-    background-position: 30px 30px;
-    
+    position: absolute;
+    top: 20%;
+    left: 25%;
     width: 460px;
     height: 207px;
     
     margin: auto;
     
+    background-image: url(../img/dino_title_400.png);
+    background-position: 30px 30px;
     background-repeat: no-repeat;
+    background-color: #8ECB32;
     
     box-sizing: border-box;
 }

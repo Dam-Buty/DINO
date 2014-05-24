@@ -814,3 +814,7 @@ var _del_valeur = function(monde, champ, pk) {
         }
     });
 };
+
+var close_tip = function() {
+    $("#container-tips").slideUp();    
+};

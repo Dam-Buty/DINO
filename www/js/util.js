@@ -1,3 +1,5 @@
+var profiling = new Date().getTime();
+
 var categories_documents = {
     pdf: {
         label: "PDF",

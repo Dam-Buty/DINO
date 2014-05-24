@@ -24,6 +24,9 @@ var Queue = {
     },
     
     refresh: function() {
+        var time = new Date().getTime();
+        console.log("Refresh XHR : " + time + "( + " + (time - profiling) + "ms)" );
+        profiling = time;
         var self = this;
         
         this.uploads.length = 0;
@@ -31,20 +34,47 @@ var Queue = {
             url: "json/queue.php",
             statusCode: {
                 200: function(files) {
-                    $.each(files, function(i, file) {
+                    var time = new Date().getTime();
+                    console.log("Retour XHR : " + time + "( + " + (time - profiling) + "ms)" );
+                    profiling = time;
+                    
+                    $.each(files, function(i, file) {                    
+//                        var time = new Date().getTime();
+//                        console.log("-- Pre-init-doc : " + time + "( + " + (time - profiling) + "ms)" );
+//                        profiling = time;
+                        
                         var doc = Document({
                             size: file.size,
                             filename: file.filename,
                             displayname: file.displayname,
                             user: file.user,
                             date: file.date
-                        }).init("processed").setStatus("uploaded");
-                        self.clusterize(doc);
+                        }).init("processed").setStatus("uploaded");  
+                                      
+//                        var time = new Date().getTime();
+//                        console.log("-- Pre-cluster-doc : " + time + "( + " + (time - profiling) + "ms)" );
+//                        profiling = time;
+                        
+                        self.clusterize(doc);    
+                                    
+//                        var time = new Date().getTime();
+//                        console.log("-- Post-cluster-doc : " + time + "( + " + (time - profiling) + "ms)" );
+//                        profiling = time;
                     });  
+                    
+                    var time = new Date().getTime();
+                    console.log("Sortie boucle : " + time + "( + " + (time - profiling) + "ms)" );
+                    profiling = time;
+                    
+                    $("#container-loading").hide();
                     self.process();
                     if (self.count_clusters() == 0) {
                         self.animate();
                     }
+                    
+                    var time = new Date().getTime();
+                    console.log("Sortie processing : " + time + "( + " + (time - profiling) + "ms)" );
+                    profiling = time;
                 },
                 403: function() {
                     window.location.replace("index.php");
@@ -58,72 +88,74 @@ var Queue = {
     
     throttle: function() {
         var self = this;
+        var all_done = true;
         
         if (!this.blocked) {
-            $.each(self.uploaders, function(i, uploader) {
-                if (uploader === undefined) {
-                    var all_done = true;
-                    
-                    $.each(Queue.uploads, function(j, doc) {
-                        if (doc !== undefined) {
-                            all_done = false;
-                            if (doc.status == "") {
-                                if (doc.size > profil.maxfilesize) {
-                                    doc.setStatus("toobig");
-                                } else {
+            $.each(Queue.uploads, function(j, doc) {
+                if (doc !== undefined) {
+                    all_done = false;
+                    if (doc.status == "") {
+                        if (doc.size > profil.maxfilesize) {
+                            doc.setStatus("toobig");
+                        } else {
+                            $.each(self.uploaders, function(i, uploader) {
+                                if (uploader === undefined) {
+                                    var all_done = true;
                                     self.uploaders[i] = doc;
                                     doc.upload(i, j);
                                     return false;
                                 }
-                            }
-                        }
-                    });
-                        
-                    if (all_done) {
-                        self.uploads.length = 0;
-                        if (profil.stored == 0 && profil.uploaded == 1 & !$("#tip-upload").is(":visible")) {
-                            $("#tip-store").show();
-                            $(".cluster:first() ul li:first()")
-                            .tooltipster({
-                                content: $("<div>Da click aqui para clasificar un documento</div>"),
-                                position: "bottom"
-                            }).tooltipster("show");
+                            });
                         }
                     }
                 }
             });
+                
+            if (all_done) {
+                self.uploads.length = 0;
+                var first_li = $(".cluster:first() ul li:first()");
+                
+                if (profil.stored == 0 && profil.uploaded == 1 & !$("#tip-upload").is(":visible")) {                    
+                    $("#tip-store").slideDown(function() {
+                        first_li
+                        .tooltipster({
+                            content: $("<div>Da click aqui para clasificar un documento</div>"),
+                            position: "bottom"
+                        }).tooltipster("show");
+                    });
+                }
+            }
         }
     },
     
     process: function() {
         var self = this;
         
-        $.each(self.processers, function(i, processer) {
-            if (processer === undefined) {
-                $.each(self.clusters, function(j, cluster) {
-                    var cluster_done = false;
-                    
-                    $.each(cluster.documents, function(k, doc) {
-                        if (doc.status != "processed") {
-                            if (doc.status == "idle" || doc.status == "uploaded") {
-                                if (doc.processes.length > 0) {
-//                                    console.log(doc.filename + " : Lancement " + doc.processes[0] + " sur (" + i + ")");
+        $.each(self.clusters, function(j, cluster) {
+            var cluster_done = false;
+            
+            $.each(cluster.documents, function(k, doc) {
+                if (doc.status != "processed") {
+                    if (doc.status == "idle" || doc.status == "uploaded") {
+                        if (doc.processes.length > 0) {
+                            $.each(self.processers, function(i, processer) {
+                                if (processer === undefined) {
                                     self.processers[i] = doc;
                                     doc.process(i);
                                     cluster_done = true;
                                     return false;
-                                } else {
-                                    doc.setStatus("processed");
-                                    self.process();
                                 }
-                            }
+                            });
+                        } else {
+                            doc.setStatus("processed");
+                            //self.process();
                         }
-                    });
-                    
-                    if (cluster_done) {
-                        return false;
                     }
-                });
+                }
+            });
+            
+            if (cluster_done) {
+                return false;
             }
         });
         
@@ -221,18 +253,18 @@ var Queue = {
                 right: 0
             });
             
-            $("#tip-upload").hide();
+            $("#tip-upload").slideUp();
         } else {
             $("#container-queue").animate({
                 right: "40%"
             }, function() {
-                $("#tip-upload").show();
-               
-                $("#upload-buttons")
-                .tooltipster({
-                    content: $("<div>Da click aqui para cargar archivos</div>"),
-                    position: "left"
-                }).tooltipster("show");
+                $("#tip-upload").slideDown(function() {
+                    $("#upload-buttons")
+                    .tooltipster({
+                        content: $("<div>Da click aqui para cargar archivos</div>"),
+                        position: "left"
+                    }).tooltipster("show");
+                });
             });
         }
     }
@@ -362,11 +394,16 @@ var Document = function(options) {
         },
         
         init: function(mode) {
-            var li = $("#modele-li-queue").clone();
+            
+            var li = $("#modele-li-queue").clone(true);
             var taille;
             var self = this;
             
             this.extension = this.displayname.split(".").pop().toLowerCase();
+            
+//            var time = new Date().getTime();
+//            console.log("--- Pre-cluster-li : " + time + "( + " + (time - profiling) + "ms)" );
+//            profiling = time;
             
             $.each(categories_documents, function(type, categorie) {
                 if (self.extension in categorie.extensions) {
@@ -386,10 +423,6 @@ var Document = function(options) {
             
             li.find(".filename").text(this.displayname);
             
-            li.find(".progressbar").progressbar({
-                max: 100,
-                value: false
-            });
             
             this.displaysize = this.size + " o";
             
@@ -417,6 +450,10 @@ var Document = function(options) {
             
             this.li = li;
             
+//            var time = new Date().getTime();
+//            console.log("--- Post-cluster-li : " + time + "( + " + (time - profiling) + "ms)" );
+//            profiling = time;
+            
             return this;
         },
         
@@ -431,7 +468,6 @@ var Document = function(options) {
                     break;
                     
                 case "uploaded":
-                    this.li.find(".progressbar").slideUp();
                     this.li.click(function() {
                         self.classify(self.type, self.position);
                     });
@@ -452,6 +488,7 @@ var Document = function(options) {
                     break;
                     
                 case "processed":
+                    this.li.find(".progressbar").slideUp();
                     this.li.find(".filename").removeClass("processing");
                     this.li.children("img").fadeIn();  
                     break;
@@ -612,6 +649,15 @@ var Document = function(options) {
 
 
 var bootstrap_queue = function() {
+    var time = new Date().getTime();
+    console.log("Bootstrap queue : " + time + "( + " + (time - profiling) + "ms)" );
+    profiling = time;
+            
+    $("#modele-li-queue").find(".progressbar").progressbar({
+        max: 100,
+        value: false
+    });
+    
     $("#zone-dnd input").unbind().change(function() {
         Queue.upload(this);
     });

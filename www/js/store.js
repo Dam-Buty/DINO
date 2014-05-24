@@ -19,7 +19,7 @@ var change_monde_store = function() {
     document.store.categorie = "";
     document.store.type_doc = {};
     
-    Store.monde = li.attr("data-monde");
+    Store.monde = document.store.monde;
     
     ul.find("li").attr("data-selected", "0");
     
@@ -27,6 +27,19 @@ var change_monde_store = function() {
     
     $("#container-details").slideUp();
     $("#bouton-store").fadeOut();
+    
+    if (profil.stored == 0) {
+        var monde = profil.mondes[Store.monde];
+    
+        $(".tip-champ-monde").text(monde.label);
+        $(".tip-champ-entite").text(monde.champs[monde.cascade[0]].label);
+        $(".tip-champ-event").text(monde.champs[monde.cascade[1]].label);
+        
+        $("#mondes-store li:first()").tooltipster().tooltipster("destroy");
+        $("#tip-monde").slideUp(function() {
+            $("#tip-entite").slideDown();
+        });
+    }
     
     Tuto.flag(3);
     
@@ -68,6 +81,29 @@ var remove_champ_store = function() {
     $("#container-details").slideUp();
     $("#bouton-store").fadeOut();
     
+    if (profil.stored == 0) {
+        var encours, prochain;
+        
+        if ($("#tip-type").is(":visible")) {
+            encours = $("#tip-type");
+            prochain = $("#tip-event");
+        }
+        
+        if ($("#tip-event").is(":visible")) {
+            encours = $("#tip-event");
+            prochain = $("#tip-entite");
+        }
+        
+        if ($("#tip-entite").is(":visible")) {
+            encours = $("#tip-entite");
+            prochain = $("#tip-monde");
+        }
+        
+        encours.slideUp(function() {
+            prochain.slideDown();
+        });
+    }
+    
     reload_champs();
 };
 
@@ -90,6 +126,24 @@ var change_champ_store = function() {
     
     $("#container-details").slideUp();
     $("#bouton-store").fadeOut();
+    
+    if (profil.stored == 0) {
+        var monde = profil.mondes[Store.monde];
+        var champ = monde.champs[Store.last_champ];
+        
+        if (Store.last_champ == monde.cascade[0]) {
+            $("#tip-entite").slideUp(function() {
+            
+                $(".tip-champ-entite-nom").text(champ.liste[Store.champs[monde.cascade[0]]]);
+                
+                $("#tip-event").slideDown();
+            });
+        } else {
+            $("#tip-event").slideUp(function() {                
+                $("#tip-type").slideDown();
+            });
+        }
+    }
                 
     Tuto.flag(4);
     
@@ -406,7 +460,7 @@ var reload_champs = function() {
             .addClass("select-champ")
             .change(change_champ_store)
             .attr("data-champ", pk)
-            .attr("data-placeholder", "Selecciona un " + champ.label)
+            .attr("data-placeholder", "Selecciona o crea un " + champ.label)
             .append("<option></option>")
         ;
         
@@ -699,12 +753,21 @@ var _archive_document = function(document, store) {
             200: function() {
                 popup('Su documento fue archivado con exito!', 'confirmation'); // LOCALISATION
                 if (profil.stored == 0) {
-                    mixpanel.track("classification", {});
+                    mixpanel.track("classification-end", {});
                     profil.stored = 1;
                     $.ajax({
                         url: "do/doFirstStore.php",
                         type: "POST"
                     });
+                    
+                    $("#container-tips-store").hide();
+                    cancel_store();
+                    
+                    $('#mondes-top li[data-monde="' + Store.monde + '"]').click();
+                    
+                    setTimeout(function() {
+                        $("#tip-watch").slideDown();
+                    }, 800);
                 }
                 
                 Store.monde = store.monde;
@@ -770,6 +833,8 @@ var store_document = function(cluster, position) {
     var document = Queue.clusters[cluster].documents[position];
     var li = document.li;
     var ul = li.closest("ul");
+    
+    mixpanel.track("classif-begin", {});
 
     ul.find("li").attr("data-editing", "0");
     li.removeClass("done").attr("data-editing", "1");
@@ -827,7 +892,16 @@ var store_document = function(cluster, position) {
     $("#opak")
     .fadeIn()
     .unbind().click(cancel_store); 
-    $("#popup-store").fadeIn();
+    $("#popup-store").fadeIn(function() {
+        if (profil.stored == 0) {
+            $("#container-tips-store").show();
+            $("#tip-monde").slideDown();
+            $("#mondes-store li:first()").tooltipster({
+                content: $("<div>Da click en un mundo</div>"),
+                position: "left"
+            }).tooltipster("show");
+        }
+    });
     
     // on déclenche le redimensionnement de la fenêtre
     $(window).trigger('resize');

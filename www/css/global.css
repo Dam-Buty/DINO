@@ -4,7 +4,7 @@ html, body {
     padding: 0;
     
     overflow-x: hidden;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Lato', sans-serif;
 }
 
 /*#####################################
@@ -949,9 +949,9 @@ html, body {
 #container-queue {
     position: absolute;
     right: 0;
-    top: 70px;
     max-width: 20%;
     
+    margin-top: 20px;
     padding: 10px;
     border-radius: 5px;
     
@@ -1058,21 +1058,50 @@ html, body {
     height: 150px;  
 }
 
-#tip-upload {
-    display: none;
-    width: 50%;
-    margin-left: 20%;
-    margin-top: 15%;
-    text-align: justify;
+#container-tips {
+    margin-top: -15px;
+    
+    background-image: url(../img/close_30.png);
+    background-position: 99% 50%;
+    background-repeat: no-repeat;
+    
+    cursor: pointer;
 }
 
-#tip-store {
+#container-tips:hover {
+    background-image: url(../img/close_hover_30.png);
+}
+
+.tip {
     display: none;
-    width: 50%;
-    margin-left: 50%;
-    margin-top: 30%;
+    width: 100%;
+    
+    padding: 15px;
+    
+    font-size: 0.9em;
     text-align: justify;
-    z-index: 10000000;
+    
+    background-color: rgba(235, 145, 31, 0.24);
+    border-bottom: 1px solid #DB7F1A;
+    
+    box-sizing: border-box;
+}
+
+.tip h1 {
+    text-align: center;
+}
+
+.tip p {
+    margin: 0;
+}
+
+#container-tips-store {
+    background-color: #EB911F;
+    margin-top: 15px;
+}
+
+.tips-store {
+    display: none;
 }
 
 /*###########################

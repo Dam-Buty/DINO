@@ -27,6 +27,7 @@ var mois = {
 };
 
 var bootstrap = function() {
+    $("#container-loading").show();
     $.ajax({ 
         url: "do/doGetProfile.php",
         statusCode: {
@@ -128,6 +129,8 @@ var _bootstrap = function() {
     $.ajax({ url: "modules/core.php" })
     .done(function(core) {
         $("#front").append(core);
+        
+        $("#container-tips").click(close_tip);
         
         $.ajax({ url: "modules/queue.php" })
         .done(function(queue) {

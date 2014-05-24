@@ -18,6 +18,7 @@ if (isset($_SESSION)) {
 <link rel="stylesheet" href="css/arrows.css?v=7" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/tuto.css?v=7" media="screen" type="text/css"/>
 <link rel="stylesheet" href="css/util.css?v=7" media="screen" type="text/css"/>
+<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
 
 <link href='http://fonts.googleapis.com/css?family=Hammersmith+One' rel='stylesheet' type='text/css'>
 
@@ -218,6 +219,10 @@ if ($_SESSION["niveau"] >= 20) {
     <div class="popup-ligne"><div class="popup-jauge jauge-KO"></div></div>
     <p style="text-align: center; font-size: 1.1em;">Contactanos : <a href="mailto:beta@dino.mx">beta@dino.mx</a></p>
 </div>  
+
+<div id="container-loading" class="dialog-box">
+    <img src="img/big_loader.gif"/>
+</div>
 
 <?php
 if ($_SESSION["niveau"] >= 20) {
