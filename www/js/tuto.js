@@ -873,7 +873,8 @@ var infos = function() {
                     200: function() {
                         mixpanel.people.set({
                             "$name": nom.val(),
-                            "company": entreprise.val()
+                            "company": entreprise.val(),
+                            "informationed": new Date()
                         }, function() {
                             mixpanel.track("information", {}, function() {
                                 window.location.replace("index.php");

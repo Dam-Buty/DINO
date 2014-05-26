@@ -39,7 +39,15 @@ var bootstrap = function() {
     .done(function (data) {
         profil = data;
         var mondes = 0;
-        mixpanel.identify(profil.login);
+        
+        Tag.init({
+            tags: ["mp"],
+            id: profil.login
+        });
+        
+        mixpanel.people.set({
+            "last_login": new Date()
+        });
         
         $.each(profil.mondes, function(i, monde) {
             if (mondes == 0) {

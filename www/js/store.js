@@ -834,8 +834,6 @@ var store_document = function(cluster, position) {
     var li = document.li;
     var ul = li.closest("ul");
     
-    mixpanel.track("classif-begin", {});
-
     ul.find("li").attr("data-editing", "0");
     li.removeClass("done").attr("data-editing", "1");
     
@@ -894,6 +892,7 @@ var store_document = function(cluster, position) {
     .unbind().click(cancel_store); 
     $("#popup-store").fadeIn(function() {
         if (profil.stored == 0) {
+            mixpanel.track("classif-begin", {});
             $("#container-tips-store").show();
             $("#tip-monde").slideDown();
             $("#mondes-store li:first()").tooltipster({

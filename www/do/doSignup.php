@@ -1,4 +1,5 @@
 <?php
+session_start();
 session_destroy();
 session_start();
 
@@ -27,20 +28,20 @@ try {
             "key" => $activation_client
         ]);
 
-        $idclient = $result_client;
+        $pk = $result_client;
         
-        $_SESSION["client"] = $idclient;
+        $_SESSION["client"] = $pk;
 
         chdir("../cache/");
-        mkdir($idclient);
-        chdir($idclient);
+        mkdir($pk);
+        chdir($pk);
         mkdir("temp");
         chdir("..");
 
         $return = dinomail($_POST["mail"], $mail, [], [
             "mail" => urlencode($_POST["mail"]),
             "key" => $activation_client,
-            "pk" => $idclient
+            "pk" => $pk
         ]);
 
         // Création des tokens du compte Starter          
@@ -56,7 +57,7 @@ try {
 
         // 3 - Espace 
         $dino->query("token_insert", [
-            "client" => $idclient,
+            "client" => $pk,
             "produit" => 3,
             "combo" => 1,
             "quantite" => 2000,
@@ -66,7 +67,7 @@ try {
 
         // 4 - Mondes 
         $dino->query("token_insert", [
-            "client" => $idclient,
+            "client" => $pk,
             "produit" => 4,
             "combo" => 1,
             "quantite" => 1,
@@ -75,7 +76,7 @@ try {
         ]);
 
         $dino->query("token_insert", [
-            "client" => $idclient,
+            "client" => $pk,
             "produit" => 4,
             "combo" => 1,
             "quantite" => 1,
@@ -84,7 +85,7 @@ try {
         ]);
     } else { // Client déjà signé
         $pk = $result_check[0]["pk"];
-        $activation = $result_check[0]["activation"];
+        $activation_client = $result_check[0]["activation"];
         
         $result_user = $dino->query("check_user", [
             "client" => $pk
@@ -93,7 +94,7 @@ try {
         if (count($result_user) == 0) { // Pas de user
             $return = dinomail($_POST["mail"], $mail, [], [
                 "mail" => urlencode($_POST["mail"]),
-                "key" => $activation,
+                "key" => $activation_client,
                 "pk" => $pk
             ]);
         } else { // user OK
@@ -107,6 +108,11 @@ try {
     
     $dino->commit();
     status(200);
+    header('Content-Type: application/json');
+    echo json_encode([
+        "activation" => $activation_client,
+        "pk" => $pk    
+    ]);
 #    header("Location: ../welcome.php?action=signup&mail=" . $_POST["mail"]);
 } catch (Exception $e) {
     $dino->rollback();

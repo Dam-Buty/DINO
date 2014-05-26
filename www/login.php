@@ -38,7 +38,7 @@
     <input type="submit" value="Ingresar"/>
     <div class="phrase-login">
         No tienes tu <b>DINO</b>?<br/>
-        <a href="signup.php">Tu cuenta es gratuita</a>
+        <a href="landing/classic-1">Tu cuenta es gratuita</a>
     </div>
 </form>
 </div>

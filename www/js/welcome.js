@@ -22,8 +22,20 @@ var blur = function() {
 };
 
 var params = {};
+        
+var get = location.search.split("?")[1].split("&");
+
+$.each(get, function(i, param) {
+    var elements = param.split("=");
+    params[elements[0]] = decodeURIComponent(elements[1]);
+});
 
 $(document).ready(function(){
+    Tag.init({
+        tags: ["mp"],
+        id: params.mail
+    });
+    
     $("#lien-pass").click(toggle_pass);
     $("#pass-submit").click(create_user);
     
@@ -38,27 +50,11 @@ $(document).ready(function(){
                 "overflow-y": "hidden"
             })
         );
-
-        var popup;
-        
-        var get = location.search.split("?")[1].split("&");
-        
-        $.each(get, function(i, param) {
-            var elements = param.split("=");
-            params[elements[0]] = decodeURIComponent(elements[1]);
-        });
-        
-        mixpanel.identify(params.mail);
         
         switch(params.action) {
             case "signup":
                 blur();
                 $("#popup-welcome-activate").fadeIn();
-                mixpanel.people.set({
-                    "$email": params.mail,
-                    "$created": new Date()
-                });
-                mixpanel.track("signup", {});
                 break;
             case "activate":
                 blur();
@@ -87,6 +83,9 @@ var activate = function() {
         statusCode: {
             200: function() {
                 $("#popup-welcome-security").fadeIn();
+                mixpanel.people.set({
+                    "Activated": new Date()
+                });
                 mixpanel.track("activate", {});
             },
             201: function() {
@@ -129,6 +128,9 @@ var create_user = function() {
                 },
                 statusCode: {
                     200: function(data) {
+                        mixpanel.people.set({
+                            "Passworded": new Date()
+                        });
                         mixpanel.track("password", {}, function() {
                             window.location.replace("index.php");
                         });
