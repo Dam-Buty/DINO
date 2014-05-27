@@ -36,6 +36,12 @@
             </div>
             <div class="boutons" id="bouton-store">Archivar en DINO</div>
         </div>
+        <div id="container-tips-alt" class="tip">
+            <div id="tip-nofacture" class="tips-store">
+                <p>Si tu documento es una <b>Factura</b>, deberia pertenecer a tus <b>Ventas</b> o tus <b>Compras</b>.</p>
+                <p>Puedes seguir clasificando un documento relacionado con tus <b>Empleados</b>, pero sera sin tutorial.</p>
+            </div>
+        </div>
         <div id="container-tips-store" class="tip">
             <div id="tip-monde" class="tips-store">
                 <p>Clasificar tus documentos es <b>muy simple</b>.</p>

@@ -115,7 +115,7 @@ var Queue = {
                 self.uploads.length = 0;
                 var first_li = $(".cluster:first() ul li:first()");
                 
-                if (profil.stored == 0 && profil.uploaded == 1 & !$("#tip-upload").is(":visible")) {                    
+                if (profil.stored == 0 && profil.uploaded == 1 & self.count_clusters() > 0) {                    
                     $("#tip-store").slideDown(function() {
                         first_li
                         .tooltipster({

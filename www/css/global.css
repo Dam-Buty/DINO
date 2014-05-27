@@ -1100,6 +1100,11 @@ html, body {
     margin-top: 15px;
 }
 
+#container-tips-alt {
+    background-color: #EB911F;
+    margin-top: 15px;
+}
+
 .tips-store {
     display: none;
 }

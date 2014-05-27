@@ -30,15 +30,22 @@ var change_monde_store = function() {
     
     if (profil.stored == 0) {
         var monde = profil.mondes[Store.monde];
-    
-        $(".tip-champ-monde").text(monde.label);
-        $(".tip-champ-entite").text(monde.champs[monde.cascade[0]].label);
-        $(".tip-champ-event").text(monde.champs[monde.cascade[1]].label);
         
-        $("#mondes-store li:first()").tooltipster().tooltipster("destroy");
-        $("#tip-monde").slideUp(function() {
+        if (monde.label != "Compras" && monde.label != "Ventas") {
+            $("#container-tips-store").hide();
+            $("#container-tips-alt").show();
+            $("#tip-nofacture").slideDown();
+        } else {
+            $(".tip-champ-monde").text(monde.label);
+            $(".tip-champ-entite").text(monde.champs[monde.cascade[0]].label);
+            $(".tip-champ-event").text(monde.champs[monde.cascade[1]].label);
+            
+            $("#container-tips-alt").hide();
+            $("#container-tips-store").show();
+            $("#mondes-store li:first()").tooltipster().tooltipster("destroy");
+            $(".tips-store").hide();
             $("#tip-entite").slideDown();
-        });
+        }
     }
     
     Tuto.flag(3);
@@ -81,27 +88,24 @@ var remove_champ_store = function() {
     $("#container-details").slideUp();
     $("#bouton-store").fadeOut();
     
-    if (profil.stored == 0) {
+    if (profil.stored == 0 && !$("#container-tips-alt").is(":visible")) {
         var encours, prochain;
+        encours = $(".tips-store");
         
         if ($("#tip-type").is(":visible")) {
-            encours = $("#tip-type");
             prochain = $("#tip-event");
         }
         
         if ($("#tip-event").is(":visible")) {
-            encours = $("#tip-event");
             prochain = $("#tip-entite");
         }
         
         if ($("#tip-entite").is(":visible")) {
-            encours = $("#tip-entite");
             prochain = $("#tip-monde");
         }
         
-        encours.slideUp(function() {
-            prochain.slideDown();
-        });
+        encours.hide();
+        prochain.slideDown();
     }
     
     reload_champs();
@@ -127,21 +131,18 @@ var change_champ_store = function() {
     $("#container-details").slideUp();
     $("#bouton-store").fadeOut();
     
-    if (profil.stored == 0) {
+    if (profil.stored == 0 && !$("#container-tips-alt").is(":visible")) {
         var monde = profil.mondes[Store.monde];
         var champ = monde.champs[Store.last_champ];
         
         if (Store.last_champ == monde.cascade[0]) {
-            $("#tip-entite").slideUp(function() {
+            $(".tips-store").hide();
+            $(".tip-champ-entite-nom").text(champ.liste[Store.champs[monde.cascade[0]]]);
             
-                $(".tip-champ-entite-nom").text(champ.liste[Store.champs[monde.cascade[0]]]);
-                
-                $("#tip-event").slideDown();
-            });
+            $("#tip-event").slideDown();
         } else {
-            $("#tip-event").slideUp(function() {                
-                $("#tip-type").slideDown();
-            });
+            $(".tips-store").hide();              
+            $("#tip-type").slideDown();
         }
     }
                 
@@ -894,6 +895,7 @@ var store_document = function(cluster, position) {
         if (profil.stored == 0) {
             mixpanel.track("classif-begin", {});
             $("#container-tips-store").show();
+            $(".tips-store").hide();
             $("#tip-monde").slideDown();
             $("#mondes-store li:first()").tooltipster({
                 content: $("<div>Da click en un mundo</div>"),
