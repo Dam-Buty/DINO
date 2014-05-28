@@ -146,6 +146,98 @@ function gestion_documentation($dino, $niveau) {
     }
 }
 
+function bootstrap_profil($dino) {
+    $dir = new DirectoryIterator("../templates/default");
+    $templates = [];
+    
+    foreach ($dir as $file) {
+        if (!$file->isDot()) {
+            if ($file->getExtension() == "template") {
+                array_push($templates, $file->getFilename());
+            }
+        }
+    }
+    
+    try {
+        foreach ($templates as $template) {
+            // Création du monde
+            $monde = str_replace(".template", "", $template);
+            
+            $pk_monde = $dino->query("monde_add", [
+                "label" => $monde,
+                "client" => $_SESSION["client"]
+            ]);
+            
+            $dino->query("droits_final", [
+                "client" => $_SESSION["client"],
+                "monde" => $pk_monde,
+                "login" => $_SESSION["user"]
+            ]);
+            
+            $content = file_get_contents("../templates/default/" . $template);
+            
+            $in = false;
+            
+            foreach(explode("\n", $content) as $i => $ligne) {
+                if (!$in) {
+                    if ($ligne == "==") {
+                        $in = true;
+                    }
+                } else {
+                    if ($ligne != "") {
+                        $params = explode("/", explode(" ", $ligne, 2)[1]);
+                        
+                        if (substr($ligne, 0, 1) == "*") {
+                            $pk_champ = $dino->query("monde_champ_add", [
+                                "label" => $params[0],
+                                "pluriel" => $params[0] . "(s)",
+                                "monde" => $pk_monde,
+                                "client" => $_SESSION["client"]
+                            ]);
+                        } else {
+                            $params_type = [
+                                "label" => "",
+                                "detail" => false,
+                                "time" => false,
+                                "niveau" => 0,
+                                "categorie" => 0,
+                                "champ" => $pk_champ,
+                                "monde" => $pk_monde,
+                                "client" => $_SESSION["client"]
+                            ];
+                            
+                            foreach($params as $j => $param) {
+                                if ($params_type["label"] == "") {
+                                    $params_type["label"] = $param;
+                                } else {
+                                    switch($param) {
+                                        case "D":
+                                            $params_type["detail"] = true;
+                                            break;
+                                        case "M":
+                                            $params_type["time"] = true;
+                                            break;
+                                        default:
+                                            $params_type["niveau"] = $param;
+                                            break;
+                                    };
+                                }
+                            }
+                            
+                            $dino->query("monde_type_add", $params_type);
+                        }
+                    }
+                }
+            }
+        }
+                
+        return true;
+    } catch (Exception $e) {
+        throw new Exception("Erreur de bootstrap du profil", 4);
+        return false;
+    }
+}
+
 function gestion_tokens($dino, $niveau) {
     $tokens = [
         "espace" => 0,
@@ -332,6 +424,15 @@ if (isset($_SESSION["user"])) {
                 "client" => $row["fk_client"],
                 "user" => $_SESSION["user"]
             ]);
+            
+            if (count($result_mondes) == 0) {
+                bootstrap_profil($dino);
+                $dino->commit(false);
+                $result_mondes = $dino->query("profil_mondes",[
+                    "client" => $row["fk_client"],
+                    "user" => $_SESSION["user"]
+                ]);
+            }
                 
             foreach($result_mondes as $row_mondes) {
                 $profil["mondes"][$row_mondes["pk_monde"]] = [

@@ -1813,6 +1813,10 @@ ul.ui-autocomplete {
     z-index: 10000000;
 }
 
+#popup-welcome-info input {
+    width: 60%;
+}
+
 .popup-welcome {
     display: none;
     

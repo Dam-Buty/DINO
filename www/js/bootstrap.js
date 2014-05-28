@@ -38,48 +38,30 @@ var bootstrap = function() {
     })
     .done(function (data) {
         profil = data;
-        var mondes = 0;
-        
-        Tag.init({
-            tags: ["mp"],
-            id: profil.login
-        });
-        
-        mixpanel.people.set({
-            "last_login": new Date()
-        });
-        
-        $.each(profil.mondes, function(i, monde) {
-            if (mondes == 0) {
-                Core.monde = i;
-            }
-            mondes++;
-        });
         //console.log(data);
         
-        if (mondes == 0) {
-            $.ajax({
-                url: "do/doBootstrapProfile.php",
-                type: "POST",
-                statusCode: {
-                    200: function(data) {
-                        bootstrap();
-                    },
-                    403: function() {
-                        window.location.replace("index.php");
-                    },
-                    500: function() {
-                        popup("Erreur!", "error");
-                    }
-                }
-            });
-        } else {
-            _bootstrap();
-        }
+        _bootstrap();
     });
 };
 
 var _bootstrap = function() {
+    var mondes = 0;
+    
+    Tag.init({
+        tags: ["mp"],
+        id: profil.login
+    });
+    
+    mixpanel.people.set({
+        "last_login": new Date()
+    });
+    
+    $.each(profil.mondes, function(i, monde) {
+        if (mondes == 0) {
+            Core.monde = i;
+        }
+    });
+    
     $(".div_login").hide();
     $("#front").show();
     

@@ -173,9 +173,13 @@ class DINOSQL {
         }
     }
     
-    public function commit() {
+    public function commit($destroy = true) {
         $this->dbh->commit();
-        $this->dbh = null;
+        if ($destroy) {
+            $this->dbh = null; 
+        } else {
+            $this->dbh->beginTransaction();
+        }
     }
     
     public function rollback() {

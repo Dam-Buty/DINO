@@ -603,11 +603,8 @@ var change_document = function(position) {
     // On met le nom du fichier
     $("#nom-doc-store").text(document.displayname);
     
-    $('#files-list li[data-editing="1"]').addClass("done");
-    $("#files-list li").attr("data-editing", "0");
     $('#files-list li[data-position="' + document + '"]')
-    .removeClass("done")
-    .attr("data-editing", 1);
+    .removeClass("done");
     $("#popup-store").attr("data-position", position);
     $("#popup-store").attr("data-cluster", cluster);
     
@@ -637,8 +634,9 @@ var cancel_store = function() {
     $("#opak").fadeOut();
     $("#popup-store").fadeOut();
     
-    $('#files-list li[data-editing="1"]').addClass("done");
-    $("#files-list li").attr("data-editing", "0");
+    $("div.select-champ input").tooltipster().tooltipster("destroy");
+    $("#mondes-store li:first()").tooltipster().tooltipster("destroy");
+    
     $("#popup-store").attr("data-position", "");
     $("#popup-store").attr("data-cluster", "");
     
@@ -834,9 +832,6 @@ var store_document = function(cluster, position) {
     var document = Queue.clusters[cluster].documents[position];
     var li = document.li;
     var ul = li.closest("ul");
-    
-    ul.find("li").attr("data-editing", "0");
-    li.removeClass("done").attr("data-editing", "1");
     
     $("#popup-store").attr("data-cluster", cluster);
     $("#popup-store").attr("data-position", position);
