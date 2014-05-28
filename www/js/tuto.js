@@ -791,9 +791,9 @@ var bootstrap_tuto = function() {
     
     // Si les infos de profil n'ont pas encore été entrées, on les demande
     if (profil.nom == "" || profil.entreprise == "") {
-        $("#opak").show().unbind().click(toggle_infos);
-        $("#popup-welcome-info").show();
-        $("#info-submit").click(infos);
+//        $("#opak").show().unbind().click(toggle_infos);
+//        $("#popup-welcome-info").show();
+//        $("#info-submit").click(infos);
     } else {
         startup = false;
         if (startup !== false) {

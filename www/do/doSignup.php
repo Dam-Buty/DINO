@@ -15,12 +15,10 @@ try {
     $mail = "signup";
     
     if (count($result_check) == 0) { // nouvelle adresse
-        $activation_client = genere_clef(12, true);
         
         // On crée le client avec seulement l'adresse mail
         $result_client = $dino->query("signup_client",[
-            "mail" => $_POST["mail"],
-            "key" => $activation_client
+            "mail" => $_POST["mail"]
         ]);
 
         $pk = $result_client;
@@ -35,7 +33,6 @@ try {
 
         $return = dinomail($_POST["mail"], $mail, [], [
             "mail" => urlencode($_POST["mail"]),
-            "key" => $activation_client,
             "pk" => $pk
         ]);
 
@@ -80,7 +77,6 @@ try {
         ]);
     } else { // Client déjà signé
         $pk = $result_check[0]["pk"];
-        $activation_client = $result_check[0]["activation"];
         
         $result_user = $dino->query("check_user", [
             "client" => $pk
@@ -89,7 +85,6 @@ try {
         if (count($result_user) == 0) { // Pas de user
             $return = dinomail($_POST["mail"], $mail, [], [
                 "mail" => urlencode($_POST["mail"]),
-                "key" => $activation_client,
                 "pk" => $pk
             ]);
         } else { // user OK
@@ -105,7 +100,6 @@ try {
     status(200);
     header('Content-Type: application/json');
     echo json_encode([
-        "activation" => $activation_client,
         "pk" => $pk    
     ]);
 #    header("Location: ../welcome.php?action=signup&mail=" . $_POST["mail"]);

@@ -54,7 +54,7 @@ $(document).ready(function(){
         switch(params.action) {
             case "signup":
                 blur();
-                $("#popup-welcome-activate").fadeIn();
+                $("#popup-welcome-security").fadeIn();
                 break;
             case "activate":
                 blur();

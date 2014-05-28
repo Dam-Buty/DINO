@@ -32,10 +32,14 @@ var change_monde_store = function() {
         var monde = profil.mondes[Store.monde];
         
         if (monde.label != "Compras" && monde.label != "Ventas") {
+            mixpanel.track("c-tuto-out", {});
             $("#container-tips-store").hide();
             $("#container-tips-alt").show();
             $("#tip-nofacture").slideDown();
         } else {
+            mixpanel.track("c-monde", {
+                monde: monde.label
+            });
             $(".tip-champ-monde").text(monde.label);
             $(".tip-champ-entite").text(monde.champs[monde.cascade[0]].label);
             $(".tip-champ-event").text(monde.champs[monde.cascade[1]].label);
@@ -91,6 +95,9 @@ var remove_champ_store = function() {
     if (profil.stored == 0 && !$("#container-tips-alt").is(":visible")) {
         var encours, prochain;
         encours = $(".tips-store");
+        mixpanel.track("c-rem-champ", {
+            champ: profil.mondes[monde].champs[champ].label
+        });
         
         if ($("#tip-type").is(":visible")) {
             prochain = $("#tip-event");
@@ -136,11 +143,13 @@ var change_champ_store = function() {
         var champ = monde.champs[Store.last_champ];
         
         if (Store.last_champ == monde.cascade[0]) {
+            mixpanel.track("c-entite", {});
             $(".tips-store").hide();
             $(".tip-champ-entite-nom").text(champ.liste[Store.champs[monde.cascade[0]]]);
             
             $("#tip-event").slideDown();
         } else {
+            mixpanel.track("c-event", {});
             $(".tips-store").hide();              
             $("#tip-type").slideDown();
         }
@@ -752,7 +761,7 @@ var _archive_document = function(document, store) {
             200: function() {
                 popup('Su documento fue archivado con exito!', 'confirmation'); // LOCALISATION
                 if (profil.stored == 0) {
-                    mixpanel.track("classification-end", {});
+                    mixpanel.track("c-end", {});
                     profil.stored = 1;
                     $.ajax({
                         url: "do/doFirstStore.php",
@@ -888,7 +897,9 @@ var store_document = function(cluster, position) {
     .unbind().click(cancel_store); 
     $("#popup-store").fadeIn(function() {
         if (profil.stored == 0) {
-            mixpanel.track("classif-begin", {});
+            mixpanel.track("c-begin", {
+                document: document.displayname
+            });
             $("#container-tips-store").show();
             $(".tips-store").hide();
             $("#tip-monde").slideDown();
