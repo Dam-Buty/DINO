@@ -8,11 +8,6 @@ include("../includes/functions.php");
 try {
     $dino = new DINOSQL();
     
-    // Trois cas de figure :
-    // - Nouvelle adresse mail / signup normal
-    // - Client déjà signé mais pas de user créé / on renvoie le mail avec le lien d'activation
-    // - Client signé et user créé : on renvoie un mail pour lui dire de se logger
-    
     $result_check = $dino->query("check_client", [
         "mail" => $_POST["mail"]
     ]);
