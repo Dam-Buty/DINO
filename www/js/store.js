@@ -1,8 +1,212 @@
 
 var Store = {
-    monde: "",
-    champs: {},
-    last_champ: ""
+    bootstrap: false,
+    
+    suggestions: {
+        monde: "",
+        champs: {},
+        last_champ: ""
+    },
+    
+    document: undefined,
+    position: 0,
+    cluster: "",
+    
+    opak: undefined,
+    popup: undefined,
+    mondes: {
+        ul: undefined,
+        lis: {},
+        first: function() {
+            return this.ul.find("li:first()");
+        }
+    },
+    types: {
+        liste: {},
+        add: function(options) {
+            if (this.liste[options.label] === undefined) {
+                this.liste[options.label] = {
+                    mondes: {}
+                }
+            }
+            
+            var type = this.liste[options.label];
+            
+            if (type.mondes[options.monde] === undefined) {
+                type.mondes[options.monde] = {
+                    champs: {}
+                };
+            }
+            
+            var monde = type.mondes[options.monde];
+            
+            monde.champs[options.champ] = options.pk;
+        }    
+    },
+    prev_button: undefined,
+    next_button: undefined,
+    bouton: undefined,
+    viewer: undefined,
+    nom_doc: undefined,
+    containers: {
+        type: {
+            div: undefined,
+            ul: undefined,
+            lis: {},
+            input: undefined
+        }
+    },
+    
+    show: function(cluster, position) {        
+        this.position = position;
+        this.cluster = cluster;
+        this.document = Queue.clusters[cluster].documents[position];
+        
+        // On initialise le store au premier lancement
+        if (!this.bootstrap) {
+            this._init();
+        }
+              
+        // On affiche le document
+        this.view();
+        
+        this.ask();
+    },
+    
+    hide: function() {
+        this.opak.fadeOut();
+        this.popup.fadeOut();
+        
+        this.current = 0;
+        this.cluster = "";
+    },
+    
+    view: function() {
+        var self= this;
+        
+        this.viewer.attr({
+            "data-position": this.document.position,
+            "data-cluster": this.document.type,
+            src: "modules/viewer.php?document=" + this.document.filename + "&display=" + encodeURIComponent(this.document.displayname)
+        });
+        
+        // On met le nom du fichier
+        this.nom_doc.text(this.document.displayname);
+        
+        // On affiche le fond opaque et le store
+        this.opak
+        .fadeIn()
+        .unbind().click(function() {
+            self.hide();
+        }); 
+        this.popup.fadeIn();
+    },
+    
+    _init: function() {
+        // On cache les éléments jQuery
+        this.opak = $("#opak");
+        this.popup = $("#popup-store");
+        this.prev_button = $("#prev-store");
+        this.next_button = $("#next-store");
+        this.viewer = $("#viewer-store");
+        this.nom_doc = $("#nom-doc-store");
+        this.bouton = $("#bouton-store");
+        
+        $.extend(this.containers.type, {
+            div: $("#store-type"),
+            ul: $("#list-type"),
+            input: $("#search-type")
+        });
+        
+        var self = this;
+        
+        // Collecte d'informations dans le profil
+        $.each(profil.mondes, function(i, monde) {
+            $.each(monde.champs, function(j, champ) {
+                $.each(champ.types, function(k, type) {
+                    self.types.add({
+                        pk: k,
+                        label: type.label,
+                        champ: j,
+                        monde: i
+                    });
+                });
+            });
+        });
+        
+        // Bind events
+        this.opak.click(function() {
+            self.hide();
+        });
+        
+        this.prev_button.unbind().click(function() {
+            self.prev();
+        });
+        
+        this.next_button.unbind().click(function() {
+            self.next();
+        });
+        
+        this.bootstrap = true;
+    },
+    
+    show_types: function() {
+        var self = this;
+        
+        $.each(this.types.liste, function(i, type) {
+            var li = $("<li></li>")
+                    .attr({
+                        "data-type": i
+                    })
+                    .append(
+                        $("<div></div>")
+                        .text(i)
+                    );
+                    
+            self.containers.type.ul.append(li);
+            self.containers.type.lis[i] = li;
+        });
+        
+        self.containers.type.div.slideDown();
+    },
+    
+    // Selon la position dans le scénario de classification,
+    // On va proposer les bonnes options
+    ask: function() {
+        if (this.document.store.type_doc === undefined) {
+            this.show_types();
+        } else {
+            
+        }
+    },
+    
+    show_mondes: function() {
+        // On nettoie le terrain
+        this.mondes.ul.empty();
+        
+        // On pose le sélecteur de mondes  
+        $.each(profil.mondes, function(i, monde) {
+            var li_monde = $("<li></li>")
+                            .attr({
+                                "data-monde": i,
+                                "data-selected": 0
+                            })
+                            .text(monde.label)
+                            .click(self.change_monde);
+            
+            self.mondes.lis[i] = li_monde;
+            
+            self.mondes.ul.append(li_monde);
+        });
+        
+        // On met par défaut le premier monde
+        if (this.document.store.monde === "") {
+            this.document.store.monde = this.mondes.first().attr("data-monde");
+        }
+        
+        this.mondes.lis[this.document.store.monde].attr("data-selected", "1");
+        this.monde = Core.monde;  
+    }
 };
 
 var change_monde_store = function() {
@@ -835,85 +1039,4 @@ var avance_store = function(position) {
             dialogue.close();
         }
     }
-};
-
-var store_document = function(cluster, position) {
-    var document = Queue.clusters[cluster].documents[position];
-    var li = document.li;
-    var ul = li.closest("ul");
-    
-    $("#popup-store").attr("data-cluster", cluster);
-    $("#popup-store").attr("data-position", position);
-    $("#tip-store").hide();
-    
-    // On binde les boutons du store
-    $("#prev-store").unbind().click(prev_document);
-    $("#next-store").unbind().click(next_document);
-    
-    // On nettoie le terrain
-    $("#mondes-store").empty();
-    
-    // On pose le sélecteur de mondes  
-    var select = $("<select></select>");
-    $.each(profil.mondes, function(i, monde) {
-        $("#mondes-store").append(
-            $("<li></li>")
-            .attr({
-                "data-monde": i,
-                "data-selected": 0
-            })
-            .text(monde.label)
-            .click(change_monde_store)
-        );
-    });
-    
-    // On met par défaut le monde présent dans le Core
-    // (si le store est vide)
-    if (document.store.monde === "") {
-        document.store.monde = Core.monde;
-    }
-    
-    $('#mondes-store li[data-monde="' + document.store.monde + '"]').attr("data-selected", "1");
-    Store.monde = Core.monde;  
-    
-    // on cache les champs détails
-    $("#container-details").hide();
-    $("#bouton-store").fadeOut();
-          
-    // On installe le viewer dans l'iframe
-    
-    $("#viewer-store").attr({
-        "data-position": document.position,
-        "data-cluster": document.type,
-        src: "modules/viewer.php?document=" + document.filename + "&display=" + encodeURIComponent(document.displayname)
-    });
-    
-    // On met le nom du fichier
-    $("#nom-doc-store").text(document.displayname);
-    
-    // On affiche le fond opaque et le store
-    $("#opak")
-    .fadeIn()
-    .unbind().click(cancel_store); 
-    $("#popup-store").fadeIn(function() {
-        if (profil.stored == 0) {
-            mixpanel.track("c-begin", {
-                document: document.displayname
-            });
-            $("#container-tips-store").show();
-            $(".tips-store").hide();
-            $("#tip-monde").slideDown();
-            $("#mondes-store li:first()").tooltipster({
-                content: $("<div>Da click en un mundo</div>"),
-                position: "left"
-            }).tooltipster("show");
-        }
-    });
-    
-    // on déclenche le redimensionnement de la fenêtre
-    $(window).trigger('resize');
-
-    Tuto.flag(2);
-    
-    reload_champs();
 };

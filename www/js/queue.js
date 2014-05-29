@@ -385,12 +385,13 @@ var Document = function(options) {
         
         status: "", 
         store: { 
-            date: "", 
-            monde: "", 
-            last_champ: "", 
+            date: undefined, 
+            monde: undefined, 
+            last_champ: undefined, 
             champs: { } , 
-            categorie: "", 
-            type_doc: { } 
+            categorie: undefined, 
+            type_doc: undefined,
+            detail: undefined
         },
         
         init: function(mode) {
