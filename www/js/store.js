@@ -23,6 +23,16 @@ var Store = {
     },
     types: {
         liste: {},
+        sorted: [],
+        _sort: function() { 
+            var self = this;
+                    
+            $.each(this.liste, function(i, type) {
+                self.sorted.push(i);
+            });
+            
+            self.sorted.sort();
+        },
         add: function(options) {
             if (this.liste[options.label] === undefined) {
                 this.liste[options.label] = {
@@ -41,7 +51,45 @@ var Store = {
             var monde = type.mondes[options.monde];
             
             monde.champs[options.champ] = options.pk;
-        }    
+        },
+        count_mondes: function(type) {
+            var nb = 0;
+            
+            $.each(this.liste[type].mondes, function(i, monde) {
+                nb++;
+            });
+            
+            return nb;
+        },
+        first_monde: function(type) {
+            var monde = 0;
+            
+            $.each(this.liste[type].mondes, function(i, monde) {
+                monde = i;
+                return false;
+            });
+            
+            return monde;
+        },
+        count_champs: function(type, monde) {
+            var nb = 0;
+            
+            $.each(this.liste[type].mondes[monde].champs, function(i, champ) {
+                nb++;
+            });
+            
+            return nb;
+        },
+        first_champ: function(type, monde) {
+            var champ = 0;
+            
+            $.each(this.liste[type].mondes[monde].champs, function(i, champ) {
+                champ = i;
+                return false;
+            });
+            
+            return champ;
+        }
     },
     prev_button: undefined,
     next_button: undefined,
@@ -52,8 +100,13 @@ var Store = {
         type: {
             div: undefined,
             ul: undefined,
+            input: undefined,
+            new_li: undefined,
+            new_label: undefined,
             lis: {},
-            input: undefined
+            lis_selector: function() {
+                return $("#list-type li:not(#new-type)");
+            }
         }
     },
     
@@ -115,7 +168,9 @@ var Store = {
         $.extend(this.containers.type, {
             div: $("#store-type"),
             ul: $("#list-type"),
-            input: $("#search-type")
+            input: $("#search-type"),
+            new_li: $("#new-type"),
+            new_label: $("#new-type-label")
         });
         
         var self = this;
@@ -134,6 +189,8 @@ var Store = {
             });
         });
         
+        this.types._sort();
+        
         // Bind events
         this.opak.click(function() {
             self.hide();
@@ -151,61 +208,89 @@ var Store = {
     },
     
     show_types: function() {
-        var self = this;
+        if (!this.bootstrap) {
+            var self = this;
+            
+            this.containers.type.new_li.hide();
+            
+            $.each(this.types.sorted, function(i, type) {
+                var li = $("<li></li>")
+                        .attr({
+                            "data-type": type
+                        })
+                        .append(
+                            $("<div></div>")
+                            .text(type)
+                        ).click(function() {
+                            self.select_type(type);
+                        });
+                        
+                self.containers.type.ul.append(li);
+                self.containers.type.lis[type] = li;
+            });
+            
+            this.containers.type.div.slideDown();
+            this.containers.type.input.keyup(function() {
+                self.search_types();
+            });
+        }
+    },
+    
+    search_types: function() {
+        var container = this.containers.type;
+        var type = container.input.val();
         
-        $.each(this.types.liste, function(i, type) {
-            var li = $("<li></li>")
-                    .attr({
-                        "data-type": i
-                    })
-                    .append(
-                        $("<div></div>")
-                        .text(i)
-                    );
-                    
-            self.containers.type.ul.append(li);
-            self.containers.type.lis[i] = li;
-        });
+        if (type != "") {
+            container.new_label.text(type)
+            container.new_li.show();
+            
+            $.each(container.lis, function(i, li) {
+                if (li.attr("data-type").toLowerCase().indexOf(type.toLowerCase()) == -1) {
+                    li.hide();
+                } else {
+                    li.show();
+                }
+            });
+        } else {
+            container.new_li.slideUp();
+            container.lis_selector().show();
+        }
+    },
+    
+    select_type: function(label) {
+        var type = this.types.liste[label];
         
-        self.containers.type.div.slideDown();
+        this.document.store.type.label = label;
+        
+        if (this.types.count_mondes(label) == 1) {
+            var monde = this.types.first_monde(label);
+            this.document.store.monde = monde;
+        }
+        
+        this.ask();
+    },
+    
+    add_type: function(label) {
+        
+    },
+    
+    show_entites: function() {
+        
     },
     
     // Selon la position dans le scénario de classification,
     // On va proposer les bonnes options
     ask: function() {
-        if (this.document.store.type_doc === undefined) {
+        var store = this.document.store;
+        if (store.type.label === undefined) {
             this.show_types();
         } else {
-            
+            if (store.monde === undefined) {
+                this.show_entites();
+            } else {
+                
+            }
         }
-    },
-    
-    show_mondes: function() {
-        // On nettoie le terrain
-        this.mondes.ul.empty();
-        
-        // On pose le sélecteur de mondes  
-        $.each(profil.mondes, function(i, monde) {
-            var li_monde = $("<li></li>")
-                            .attr({
-                                "data-monde": i,
-                                "data-selected": 0
-                            })
-                            .text(monde.label)
-                            .click(self.change_monde);
-            
-            self.mondes.lis[i] = li_monde;
-            
-            self.mondes.ul.append(li_monde);
-        });
-        
-        // On met par défaut le premier monde
-        if (this.document.store.monde === "") {
-            this.document.store.monde = this.mondes.first().attr("data-monde");
-        }
-        
-        this.mondes.lis[this.document.store.monde].attr("data-selected", "1");
-        this.monde = Core.monde;  
     }
 };
 

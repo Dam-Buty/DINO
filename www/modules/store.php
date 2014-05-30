@@ -10,8 +10,14 @@
     <div id="container-store">
         <div id="store-type" class="store-etape">
             <h1>Que tipo de documento es?</h1>
-            <ul id="list-type"></ul>
-            <input type="text" id="search-type" placeholder="Si no encuentras el tipo de este documento"/>
+            <input type="text" id="search-type" placeholder="Buscar o agregar un tipo de documento"/>
+            <ul id="list-type" class="list-store">
+                <li id="new-type"><div>Agregar el tipo "<b class="new-type-label"></b>"</div></li>
+            </ul>
+            <div style="clear: both;"></div>
+        </div>
+        <div id="store-type" class="store-etape">
+            <h1>A que se refiere un(a) "<b class="new-type-label"></b>"</h1>
         </div>
         <div id="container-tips-alt" class="tip">
             <div id="tip-nofacture" class="tips-store">

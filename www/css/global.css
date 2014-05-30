@@ -1360,13 +1360,23 @@ html, body {
     display: none;
 }
 
-#list-type {
+.list-store h1 {
+    margin-top: 0;
+}
+
+.list-store input {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 25px;
+}
+
+.list-store {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-#list-type li {
+.list-store li {
     float: left;
     width: 30%;
     margin-right: 3%;
@@ -1379,17 +1389,18 @@ html, body {
     display: table;
 }
 
-#list-type li:hover {
+.list-store li:hover {
     box-shadow: 0 0 3px 3px #8ECB32;
 }
 
-#list-type li:hover div {
+.list-store li:hover div {
     background-color: #8ECB32;
+    color: white;
 }
 
-#list-type li div {
-    background-color: #C1C1C1;
-    color: white;
+.list-store li div {
+    background-color: white;
+    color: #2C2C2C;
     font-family: "Courier New", Courier, monospace;
     font-weight: bold;
     text-transform: capitalize;
@@ -1400,6 +1411,11 @@ html, body {
     vertical-align: middle;
     
     cursor: pointer;
+}
+
+#new-type {
+    width: 50% !important;
+    margin-left: 25%;
 }
 
 /*#list-type li div:before {*/

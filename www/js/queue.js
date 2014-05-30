@@ -390,7 +390,10 @@ var Document = function(options) {
             last_champ: undefined, 
             champs: { } , 
             categorie: undefined, 
-            type_doc: undefined,
+            type: {
+                pk: undefined,
+                label: undefined
+            },
             detail: undefined
         },
         
