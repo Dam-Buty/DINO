@@ -1,6 +1,7 @@
 
 var Store = {
     bootstrap: false,
+    bootstrap_types: false,
     
     suggestions: {
         monde: "",
@@ -103,10 +104,13 @@ var Store = {
             input: undefined,
             new_li: undefined,
             new_label: undefined,
-            lis: {},
             lis_selector: function() {
                 return $("#list-type li:not(#new-type)");
             }
+        },
+        champ: {
+            div: undefined,
+            ul:undefined
         }
     },
     
@@ -170,7 +174,12 @@ var Store = {
             ul: $("#list-type"),
             input: $("#search-type"),
             new_li: $("#new-type"),
-            new_label: $("#new-type-label")
+            new_label: $(".new-type-label")
+        });
+        
+        $.extend(this.containers.champ, {
+            div: $("#store-champ"),
+            ul: $("#list-champ")
         });
         
         var self = this;
@@ -208,7 +217,7 @@ var Store = {
     },
     
     show_types: function() {
-        if (!this.bootstrap) {
+        if (!this.bootstrap_types) {
             var self = this;
             
             this.containers.type.new_li.hide();
@@ -226,25 +235,28 @@ var Store = {
                         });
                         
                 self.containers.type.ul.append(li);
-                self.containers.type.lis[type] = li;
             });
             
             this.containers.type.div.slideDown();
             this.containers.type.input.keyup(function() {
                 self.search_types();
             });
+            
+            this.bootstrap_types = true;
         }
     },
     
     search_types: function() {
         var container = this.containers.type;
-        var type = container.input.val();
+        var type = container.input.val();j
         
         if (type != "") {
             container.new_label.text(type)
             container.new_li.show();
             
-            $.each(container.lis, function(i, li) {
+            $.each(container.lis_selector(), function(i, _li) {
+                var li = $(_li);
+                
                 if (li.attr("data-type").toLowerCase().indexOf(type.toLowerCase()) == -1) {
                     li.hide();
                 } else {
@@ -274,7 +286,30 @@ var Store = {
         
     },
     
-    show_entites: function() {
+    show_champs: function() {
+        var mondes = this.types.liste[this.document.store.type.label].mondes;
+        var self = this;
+        
+        $.each(mondes, function(i, monde) {
+            $.each(monde.champs, function(j, _champ) {
+                var champ = profil.mondes[i].champs[j];
+                var li = $("<li></li>")
+                        .attr({
+                            "data-monde": i
+                        })
+                        .append(
+                            $("<div></div>")
+                            .text('A un(a) "' + champ.label + '"')
+                        ).click(function() {
+                            self.select_champ(i);
+                        });
+                
+                self.containers.champ.ul.append(li);
+            });
+        });
+    },
+    
+    select_champ: function() {
         
     },
     
@@ -286,9 +321,9 @@ var Store = {
             this.show_types();
         } else {
             if (store.monde === undefined) {
-                this.show_entites();
+                this.show_champs();
             } else {
-                
+                alert("Type et monde OK!");
             }
         }
     }

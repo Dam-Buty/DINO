@@ -16,8 +16,12 @@
             </ul>
             <div style="clear: both;"></div>
         </div>
-        <div id="store-type" class="store-etape">
+        <div id="store-new-type" class="store-etape">
             <h1>A que se refiere un(a) "<b class="new-type-label"></b>"</h1>
+        </div>
+        <div id="store-champ" class="store-etape">
+            <h1>A que se refiere tu "<b class="new-type-label"></b>"</h1>
+            <ul id="list-champ" class="list-store"></ul>
         </div>
         <div id="container-tips-alt" class="tip">
             <div id="tip-nofacture" class="tips-store">
