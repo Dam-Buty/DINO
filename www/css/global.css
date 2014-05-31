@@ -1360,6 +1360,16 @@ html, body {
     display: none;
 }
 
+.store-etape h1 {
+    font-size: 1.3em;
+}
+
+.store-etape:after {
+    content:'';
+    display:block;
+    clear: both;
+}
+
 .list-store h1 {
     margin-top: 0;
 }
@@ -1413,7 +1423,15 @@ html, body {
     cursor: pointer;
 }
 
-#new-type {
+#store-champ div {
+    text-transform: none;
+}
+
+#store-champ li {
+    width: 47%;
+}
+
+.store-new {
     width: 50% !important;
     margin-left: 25%;
 }

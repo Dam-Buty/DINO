@@ -10,18 +10,24 @@
     <div id="container-store">
         <div id="store-type" class="store-etape">
             <h1>Que tipo de documento es?</h1>
-            <input type="text" id="search-type" placeholder="Buscar o agregar un tipo de documento"/>
+            <input type="text" id="search-type"  class="search-input" placeholder="Buscar o agregar un tipo de documento"/>
             <ul id="list-type" class="list-store">
-                <li id="new-type"><div>Agregar el tipo "<b class="new-type-label"></b>"</div></li>
+                <li id="new-type" class="store-new"><div>Agregar el tipo "<b class="new-type-label"></b>"</div></li>
             </ul>
-            <div style="clear: both;"></div>
         </div>
         <div id="store-new-type" class="store-etape">
             <h1>A que se refiere un(a) "<b class="new-type-label"></b>"</h1>
         </div>
         <div id="store-champ" class="store-etape">
-            <h1>A que se refiere tu "<b class="new-type-label"></b>"</h1>
+            <h1>A que se refiere tu "<b class="label-type"></b>"?</h1>
             <ul id="list-champ" class="list-store"></ul>
+        </div>
+        <div id="store-entite" class="store-etape">
+            <h1>A que "<b class="label-entite"></b>" se refiere tu "<b class="label-type"></b>"</h1>
+            <input type="text" id="search-entite" class="search-input"/>
+            <ul id="list-entite" class="list-store">
+                <li id="new-entite" class="store-new"><div>Agregar el/la <b class="label-entite"></b> "<b class="new-entite-label"></b>"</div></li>
+            </ul>
         </div>
         <div id="container-tips-alt" class="tip">
             <div id="tip-nofacture" class="tips-store">
