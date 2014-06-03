@@ -99,6 +99,7 @@ var Store = {
     viewer: undefined,
     nom_doc: undefined,
     etapes: undefined,
+    tags: undefined,
     
     // jQuery cached selectors for different containers
     containers: {
@@ -114,7 +115,10 @@ var Store = {
         },
         champ: {
             div: undefined,
-            ul:undefined
+            ul:undefined,
+            lis_selector: function() {
+                return $("#list-champ li:not(.store-new)");
+            }
         },
         entite: {
             div: undefined,
@@ -187,6 +191,7 @@ var Store = {
         this.viewer = $("#viewer-store");
         this.nom_doc = $("#nom-doc-store");
         this.bouton = $("#bouton-store");
+        this.tags = $("#list-champs");
         this.etapes = $(".store-etape");
         this.labels.type = $(".label-type");
         this.labels.entite = $(".label-entite");
@@ -268,13 +273,13 @@ var Store = {
                 self.containers.type.ul.append(li);
             });
             
-            this.containers.type.div.slideDown();
-            this.containers.type.input.keyup(function() {
-                self.search_types();
-            });
-            
             this.bootstrap_types = true;
         }
+                 
+        this.containers.type.div.slideDown();
+        this.containers.type.input.unbind().keyup(function() {
+            self.search_types();
+        });
     },
     
     search_types: function() {
@@ -282,8 +287,8 @@ var Store = {
         var type = container.input.val();
         
         if (type != "") {
-            container.new_label.text(type)
-            container.new_li.show();
+//            container.new_label.text(type)
+//            container.new_li.show();
             
             $.each(container.lis_selector(), function(i, _li) {
                 var li = $(_li);
@@ -295,7 +300,7 @@ var Store = {
                 }
             });
         } else {
-            container.new_li.slideUp();
+//            container.new_li.slideUp();
             container.lis_selector().show();
         }
     },
@@ -313,6 +318,7 @@ var Store = {
         }
         
         this.labels.type.text(label);
+        this.tag_type(label);
         
         this.ask();
     },
@@ -321,9 +327,32 @@ var Store = {
         
     },
     
+    tag_type: function(label) {
+        var self = this;
+        
+        var li_tag = $("<li></li>")
+            .addClass("tag-champ")
+            .html("<b>" + label + "</b>")
+            .click(function() {
+                self.remove_type();
+            })
+            ;
+        
+        this.tags.append(li_tag);
+    },
+    
+    remove_type: function() {
+        // On remet le store à zéro
+        this.document.store = Document().store;
+        this.tags.find("li").remove();
+        this.ask();
+    },
+    
     show_champs: function() {
         var mondes = this.types.liste[this.document.store.type.label].mondes;
         var self = this;
+        
+        self.containers.champ.lis_selector().remove();
         
         $.each(mondes, function(i, monde) {
             $.each(monde.champs, function(j, pk_type) {
@@ -353,6 +382,7 @@ var Store = {
         
         store.monde = _monde;
         store.type.pk = _type;
+        store.type.object = monde.champs[_champ].types[_type];
         
         this.load_champs(monde.cascade, _champ);
         
@@ -361,6 +391,8 @@ var Store = {
     
     load_champs: function(cascade, limite) {
         var store = this.document.store;
+        
+        store.champs.cascade = cascade;
         
         $.each(cascade, function(i, champ) {
             store.champs[champ] = 0;
@@ -371,25 +403,37 @@ var Store = {
     },
     
     show_entites: function(_champ) {
-        var monde = profil.mondes[this.document.store.monde];
+        var store = this.document.store;
+        var monde = profil.mondes[store.monde];
         var champ = monde.champs[_champ];
-        var liste = champ.liste;
         var container = this.containers.entite;
         var self = this;
+        var liste;
+        var parent;
         
-        container.new_li.hide();
+        if (store.last_champ === undefined) {
+            parent = 0;
+        } else {
+            parent = store.champs[store.last_champ];
+        }
         
-        $.each(liste, function(i, entite) {
+        liste = monde.references[parent];
+        
+        container.lis_selector().remove();
+        
+        $.each(liste || [], function(pk, _) {
+            var label = champ.liste[pk];
+            
             var li = $("<li></li>")
                     .attr({
-                        "data-pk": i,
-                        "data-label": entite
+                        "data-pk": pk,
+                        "data-label": label
                     })
                     .append(
                         $("<div></div>")
-                        .text(entite)
+                        .text(label)
                     ).click(function() {
-                        self.select_entite(_champ, i);
+                        self.select_entite(_champ, pk);
                     });
                     
             container.ul.append(li);
@@ -397,12 +441,12 @@ var Store = {
         
         this.labels.entite.text(champ.label);
         
-        container.input.keyup(function() {
-            self.search_entites();
+        container.input.unbind().keyup(function(e) {
+            self.search_entites(e.which);
         });
         
-        container.new_li.click(function() {
-            self.add_entite(_champ, container.input.val());
+        container.new_li.unbind().click(function() {
+            self.add_entite(self.document.store.monde, _champ, container.input.val());
         });
         
         container.div.slideDown();
@@ -412,9 +456,9 @@ var Store = {
         var container = this.containers.entite;
         var entite = container.input.val();
         
+        container.new_label.text('"' + entite + '"');
+        
         if (entite != "") {
-            container.new_label.text(entite);
-            container.new_li.show();
             
             $.each(container.lis_selector(), function(i, _li) {
                 var li = $(_li);
@@ -426,54 +470,87 @@ var Store = {
                 }
             });
         } else {
-            container.new_li.slideUp();
             container.lis_selector().show();
         }
     },
     
     add_entite: function(monde, champ, label) {
-        var store = this.document.store;
-        var parent = 0;
-        var self = this;
-        
-        $.each(store.champs, function(champ, entite) {
-            if (entite != 0) {
-                parent = entite;
-            } else {
-                return false;
+        if (label != "") {
+            var store = this.document.store;
+            var parent = 0;
+            var self = this;
+            
+            if (store.last_champ !== undefined) {
+                parent = store.champs[store.last_champ];
             }
-        });
-        
-        $.ajax({
-            url: "do/doAddValue.php",
-            type: "POST",
-            data: {
-                monde: monde,
-                champ: champ,
-                valeur: label,
-                parent: parent
-            },
-            statusCode: {
-                200: function(pk) {
-                    _profil(function() {
-                        store.champs[champ] = pk;
-                        store.last_champ = champ;
-                    });
-                    self.ask();
+            
+            $.ajax({
+                url: "do/doAddValue.php",
+                type: "POST",
+                data: {
+                    monde: monde,
+                    champ: champ,
+                    valeur: label,
+                    parent: parent
                 },
-                403: function() {
-                    window.location.replace("index.php");
-                },
-                500: function() {
-                    popup("Error de creacion!", "error");
-                    self.ask();
+                statusCode: {
+                    200: function(pk) {
+                        _profil(function() {
+                            self.select_entite(champ, pk);
+                        });
+                    },
+                    403: function() {
+                        window.location.replace("index.php");
+                    },
+                    500: function() {
+                        popup("Error de creacion!", "error");
+                        self.ask();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            $("#search-entite").focus();
+        }
     },
     
     select_entite: function(_champ, i) {
         this.document.store.champs[_champ] = i;
+        this.document.store.last_champ = _champ;
+        this.containers.entite.input.val("");
+        this.tag_entite(_champ, i);
+        
+        this.ask();
+    },
+    
+    tag_entite: function(champ, entite) {
+        var monde = profil.mondes[this.document.store.monde];
+        var _champ = monde.champs[champ];
+        var self = this;
+        
+        var li_tag = $("<li></li>")
+            .addClass("tag-champ")
+            .attr("data-champ", champ)
+            .html("<b>" + _champ.label + "</b><br/>" + _champ.liste[entite])
+            .click(function() {
+                self.remove_entite(champ)
+            })
+            ;
+        
+        this.tags.append(li_tag);
+    },
+    
+    remove_entite: function(champ) {
+        var store = this.document.store;
+        var passed = false;
+        var self = this;
+        
+        $.each(store.champs.cascade, function(i, _champ) {
+            if ((_champ == champ) || passed) {
+                store.champs[_champ] = 0;         
+                self.tags.find('li[data-champ="' + _champ + '"]').remove();       
+                passed = true;
+            }
+        });
         
         this.ask();
     },
@@ -494,15 +571,26 @@ var Store = {
             } else {
                 var all_done = true;
                 
-                $.each(store.champs, function(champ, entite) {
+                $.each(store.champs.cascade, function(i, champ) {
+                    var entite = store.champs[champ];
+                    
                     if (entite == 0) {
                         all_done = false;
                         self.show_entites(champ);
+                        return false;
                     }
                 });
                 
                 if (all_done) {
+                    var type = store.type.object;
                     
+                    if (type.detail == 1) {
+                        this.show_details();
+                    }
+                    
+                    if (type.date == 1) {
+                        this.show_time();
+                    }
                 }
             }
         }
@@ -837,14 +925,6 @@ var reload_champs = function() {
             //////////////////////////////////////////
             /// Création des tags            
             champ = profil.mondes[monde].champs[pk];
-            var li_tag = $("<li></li>")
-                .addClass("tag-champ")
-                .attr("data-champ", pk)
-                .html("<b>" + champ.label + "</b><br/>" + champ.liste[document.store.champs[pk]])
-                .click(remove_champ_store)
-                ;
-            
-            $("#list-champs").append(li_tag);
         } else {
             last_i = i;
             return false;

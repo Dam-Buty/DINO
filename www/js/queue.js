@@ -388,11 +388,14 @@ var Document = function(options) {
             date: undefined, 
             monde: undefined, 
             last_champ: undefined, 
-            champs: { } , 
+            champs: { 
+                cascade: []
+            }, 
             categorie: undefined, 
             type: {
                 pk: undefined,
-                label: undefined
+                label: undefined,
+                object: undefined
             },
             detail: undefined
         },

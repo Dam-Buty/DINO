@@ -26,7 +26,7 @@
             <h1>A que "<b class="label-entite"></b>" se refiere tu "<b class="label-type"></b>"</h1>
             <input type="text" id="search-entite" class="search-input"/>
             <ul id="list-entite" class="list-store">
-                <li id="new-entite" class="store-new"><div>Agregar el/la <b class="label-entite"></b> "<b class="new-entite-label"></b>"</div></li>
+                <li id="new-entite" class="store-new"><div>Agregar un(a) <b class="label-entite"></b> <b class="new-entite-label"></b></div></li>
             </ul>
         </div>
         <div id="container-tips-alt" class="tip">
