@@ -1389,7 +1389,7 @@ html, body {
 .list-store li {
     float: left;
     width: 30%;
-    margin-right: 3%;
+    margin-right: 10px;
     margin-bottom: 10px;
     padding: 5px;
     

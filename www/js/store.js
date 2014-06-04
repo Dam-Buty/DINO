@@ -63,7 +63,7 @@ var Store = {
         first_monde: function(type) {
             var monde = 0;
             
-            $.each(this.liste[type].mondes, function(i, monde) {
+            $.each(this.liste[type].mondes, function(i, _) {
                 monde = i;
                 return false;
             });
@@ -123,6 +123,15 @@ var Store = {
         entite: {
             div: undefined,
             ul:undefined,
+            input: undefined,
+            new_li: undefined,
+            lis_selector: function() {
+                return $("#list-entite li:not(.store-new)");
+            }
+        },
+        detail: {
+            div: undefined,
+            ul: undefined,
             input: undefined,
             new_li: undefined,
             lis_selector: function() {
@@ -216,6 +225,13 @@ var Store = {
             input: $("#search-entite"),
             new_li: $("#new-entite"),
             new_label: $(".new-entite-label")
+        });
+        
+        $.extend(this.containers.detail, {
+            div: $("#store-detail"),
+            ul: $("#list-detail"),
+            input: $("#search-detail"),
+            new_li: $("#new-detail")
         });
         
         var self = this;
@@ -411,6 +427,8 @@ var Store = {
         var liste;
         var parent;
         
+        container.new_label.empty();
+        
         if (store.last_champ === undefined) {
             parent = 0;
         } else {
@@ -452,7 +470,7 @@ var Store = {
         container.div.slideDown();
     },
     
-    search_entites: function() {
+    search_entites: function(key) {
         var container = this.containers.entite;
         var entite = container.input.val();
         
@@ -460,15 +478,19 @@ var Store = {
         
         if (entite != "") {
             
-            $.each(container.lis_selector(), function(i, _li) {
-                var li = $(_li);
-                
-                if (li.attr("data-label").toLowerCase().indexOf(entite.toLowerCase()) == -1) {
-                    li.hide();
-                } else {
-                    li.show();
-                }
-            });
+            if (key == 13) {
+                this.containers.entite.new_li.click();
+            } else {
+                $.each(container.lis_selector(), function(i, _li) {
+                    var li = $(_li);
+                    
+                    if (li.attr("data-label").toLowerCase().indexOf(entite.toLowerCase()) == -1) {
+                        li.hide();
+                    } else {
+                        li.show();
+                    }
+                });
+            }
         } else {
             container.lis_selector().show();
         }
@@ -555,6 +577,69 @@ var Store = {
         this.ask();
     },
     
+    show_details: function() {
+        var self = this;
+        var store = this.document.store;
+        
+        $.each(store.type.object.details, function(i, detail) {
+            var li = $("<li></li>")
+                    .attr({
+                        "data-detail": detail
+                    })
+                    .append(
+                        $("<div></div>")
+                        .text(detail)
+                    ).click(function() {
+                        self.add_detail(detail);
+                    });
+                    
+            self.containers.detail.ul.append(li);
+        });
+                 
+        this.containers.detail.div.slideDown();
+        
+        this.containers.detail.new_li.unbind().click(function() {
+            self.add_detail(self.containers.detail.input.val());
+        });
+        
+        this.containers.detail.input.unbind().keyup(function(e) {
+            self.search_details(e.which);
+        });
+    },
+    
+    search_details: function(key) {
+        var container = this.containers.detail;
+        var detail = container.input.val();
+        
+        if (detail != "") {
+            
+            if (key == 13) {
+                this.containers.detail.new_li.click();
+            } else {
+                $.each(container.lis_selector(), function(i, _li) {
+                    var li = $(_li);
+                    
+                    if (li.attr("data-label").toLowerCase().indexOf(detail.toLowerCase()) == -1) {
+                        li.hide();
+                    } else {
+                        li.show();
+                    }
+                });
+            }
+        } else {
+            container.lis_selector().show();
+        }
+    },
+    
+    add_detail: function(detail) {
+        this.document.store.detail = detail;
+        this.ask();
+    },
+    
+    show_time: function() {
+        
+    },
+    
     // Selon la position dans le scénario de classification,
     // On va proposer les bonnes options
     ask: function() {
@@ -584,13 +669,19 @@ var Store = {
                 if (all_done) {
                     var type = store.type.object;
                     
-                    if (type.detail == 1) {
+                    if (type.detail == 1 && store.detail === undefined) {
+                        all_done = false;
                         this.show_details();
+                    } else {
+                        if (type.date == 1) {
+                            all_done = false;
+                            this.show_time();
+                        }
                     }
+                }
+                
+                if (all_done) {
                     
-                    if (type.date == 1) {
-                        this.show_time();
-                    }
                 }
             }
         }
