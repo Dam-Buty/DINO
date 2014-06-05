@@ -1436,6 +1436,17 @@ html, body {
     margin-left: 25%;
 }
 
+#input-time {
+    width: 50%;
+    margin-left: 25%;
+}
+
+#store-button {
+    background-color: #8ECB32;
+    background-image: none;
+    cursor: pointer;
+}
+
 /*#list-type li div:before {*/
 /*  content: '';*/
 /*  display: inline-block;*/

@@ -137,6 +137,11 @@ var Store = {
             lis_selector: function() {
                 return $("#list-entite li:not(.store-new)");
             }
+        },
+        time: {
+            div: undefined,
+            input: undefined,
+            button: undefined
         }
     },
     
@@ -234,6 +239,18 @@ var Store = {
             new_li: $("#new-detail")
         });
         
+        $.extend(this.containers.time, {
+            div: $("#store-time"),
+            input: $("#input-time"),
+            button: $("#store-button")
+        });
+       
+        // Style le datepicker
+        this.containers.time.input.datepicker({
+            changeMonth: true,
+            changeYear: true
+        });
+        
         var self = this;
         
         // Collecte d'informations dans le profil
@@ -263,6 +280,10 @@ var Store = {
         
         this.next_button.unbind().click(function() {
             self.next();
+        });
+        
+        this.containers.time.button.click(function() {
+            self.select_time();
         });
         
         this.bootstrap = true;
@@ -637,7 +658,11 @@ var Store = {
     },
     
     show_time: function() {
-        
+        this.containers.time.div.slideDown();
+    },
+    
+    select_time: function() {
+        this.document.store.date = this.containers.time.input.val();
     },
     
     // Selon la position dans le scénario de classification,
@@ -673,7 +698,7 @@ var Store = {
                         all_done = false;
                         this.show_details();
                     } else {
-                        if (type.date == 1) {
+                        if (type.time == 1) {
                             all_done = false;
                             this.show_time();
                         }
@@ -681,10 +706,131 @@ var Store = {
                 }
                 
                 if (all_done) {
-                    
+                    this.save();
                 }
             }
         }
+    },
+    
+    check: function() {
+        var document = this.document;
+        var store = document.store;
+        var time;
+        var self = this;
+        
+        // 0123456789
+        //"10/04/2013"
+        
+        if (store.type.object.time == 1) {
+            time = store.date.substring(6, 10) + store.date.substring(3, 5);  
+        }
+        
+        $.ajax({
+            url: "do/doCheckRevision.php",
+            type: "POST",
+            data: {
+                filename: document.filename,
+                monde: store.monde,
+                categorie: store.categorie,
+                type: store.type.pk,
+                detail: store.detail,
+                champs: store.champs,
+                time: time,
+                maxchamp: store.last_champ
+            },
+            statusCode: {
+                200: function() {                
+                    var label_doc = store.type.label + " " + store.detail;
+                    
+                    if (store.type.object.time == 1) {
+                        label_doc += "</b> de <b>" + mois[store.date.substring(3, 5)] + " " + store.date.substring(6, 10);
+                    }
+                    
+                    var champ = profil.mondes[store.monde].champs[store.last_champ];
+                    
+                    message = "Ya existe un <b>" + label_doc + "</b> por el <b>" + champ.label + " <u>" + champ.liste[store.champs[store.last_champ]] + "</u></b>.<br/>Si picas <i>Confirmar</i>, se creara una nueva <b>revision</b> de este documento.";
+                    
+                    var callback = function() {
+                        self.save();
+                    };
+                    
+                    popup_confirmation(message, "Nueva revision de documento", "Confirmar (<i>crear una nueva revision</i>)", callback);
+                },
+                204: function() {
+                    self.save();
+                },
+                403: function() {
+                    window.location.replace("index.php");
+                },
+                500: function() {
+                    popup('Error! Gracias por intentar otra vez', 'error'); // LOCALISATION
+                }
+            }
+        });
+    },
+    
+    save: function() {
+        var document = this.document;
+        var store = document.store;
+        var monde = profil.mondes[store.monde];
+        
+        var self = this;
+
+        $.ajax({
+            url: "do/doStore.php",
+            type: "POST",
+            data: {
+                filename: document.filename,
+                date: store.date || "000000",
+                monde: store.monde,
+                categorie: store.categorie,
+                type: store.type.pk,
+                detail: store.detail,
+                champs: store.champs,
+                time: store.type.object.time,
+                maxchamp: store.last_champ
+            },
+            statusCode: {
+                200: function() {
+                    popup('Su documento fue archivado con exito!', 'confirmation'); // LOCALISATION
+                    if (profil.stored == 0) {
+                        mixpanel.track("c-end", {});
+                        profil.stored = 1;
+                        $.ajax({
+                            url: "do/doFirstStore.php",
+                            type: "POST"
+                        });
+                        
+                        $("#container-tips-store").hide();
+                        cancel_store();
+                        
+                        $('#mondes-top li[data-monde="' + Store.monde + '"]').click();
+                        
+                        setTimeout(function() {
+                            $("#tip-watch").slideDown();
+                        }, 800);
+                    }
+                    
+                    Store.monde = store.monde;
+                    Store.champs = store.champs;
+                    Store.last_champ = store.last_champ;
+                    
+                    // une fois terminé, on élimine de la queue
+                    // et on envoie le prochain document dans la queue
+                    var position = $("#popup-store").attr("data-position");
+                    
+                    avance_store(position);
+                    
+                    Tuto.flag(6);       
+                },
+                403: function() {
+                    window.location.replace("index.php");
+                },
+                500: function() {
+                    popup('Error! Gracias por intentar otra vez', 'error'); // LOCALISATION
+                }
+            }
+        });
     }
 };
 
@@ -1353,126 +1499,9 @@ var archive_document = function() {
     if (type.details.indexOf(store.type_doc.detail) == -1) {
         type.details.push(store.type_doc.detail);
     }
-    // 0123456789
-    //"10/04/2013"
-    
-    if (type.time == 1) {
-        time = store.date.substring(6, 10) + store.date.substring(3, 5);  
-    }
-    
-    $.ajax({
-        url: "do/doCheckRevision.php",
-        type: "POST",
-        data: {
-            filename: document.filename,
-            monde: store.monde,
-            categorie: store.categorie,
-            type: store.type_doc.pk,
-            detail: store.type_doc.detail,
-            champs: store.champs,
-            time: time,
-            maxchamp: store.last_champ
-        },
-        statusCode: {
-            200: function() {                
-                var label_doc = type.label + " " + store.type_doc.detail;
-                
-                if (type.time == 1) {
-                    label_doc += "</b> de <b>" + mois[store.date.substring(3, 5)] + " " + store.date.substring(6, 10);
-                }
-                
-                message = "Ya existe un <b>" + label_doc + "</b> por el <b>" + champ.label + " <u>" + champ.liste[store.champs[store.last_champ]] + "</u></b>.<br/>Si picas <i>Confirmar</i>, se creara una nueva <b>revision</b> de este documento.";
-                
-                var callback = function() {
-                    _archive_document(document, store);
-                };
-                
-                popup_confirmation(message, "Nueva revision de documento", "Confirmar (<i>crear una nueva revision</i>)", callback);
-            },
-            204: function() {
-                _archive_document(document, store);
-            },
-            403: function() {
-                window.location.replace("index.php");
-            },
-            500: function() {
-                popup('Error! Gracias por intentar otra vez', 'error'); // LOCALISATION
-            }
-        }
-    });
 };
 
 var _archive_document = function(document, store) {
-    var monde = profil.mondes[store.monde];
-    var type, time;
-    
-    if (store.categorie == 0) {
-        type = monde.champs[store.last_champ].types[store.type_doc.pk];
-    } else {
-        type = monde.champs[store.last_champ].categories[store.categorie].types[store.type_doc.pk];
-    }
-    
-    if (type.time == 1) {
-        time = store.date.substring(6, 10) + store.date.substring(3, 5);
-    } else {
-        time = "000000";
-    }
-
-    $.ajax({
-        url: "do/doStore.php",
-        type: "POST",
-        data: {
-            filename: document.filename,
-            date: store.date,
-            monde: store.monde,
-            categorie: store.categorie,
-            type: store.type_doc.pk,
-            detail: store.type_doc.detail,
-            champs: store.champs,
-            time: time,
-            maxchamp: store.last_champ
-        },
-        statusCode: {
-            200: function() {
-                popup('Su documento fue archivado con exito!', 'confirmation'); // LOCALISATION
-                if (profil.stored == 0) {
-                    mixpanel.track("c-end", {});
-                    profil.stored = 1;
-                    $.ajax({
-                        url: "do/doFirstStore.php",
-                        type: "POST"
-                    });
-                    
-                    $("#container-tips-store").hide();
-                    cancel_store();
-                    
-                    $('#mondes-top li[data-monde="' + Store.monde + '"]').click();
-                    
-                    setTimeout(function() {
-                        $("#tip-watch").slideDown();
-                    }, 800);
-                }
-                
-                Store.monde = store.monde;
-                Store.champs = store.champs;
-                Store.last_champ = store.last_champ;
-                
-                // une fois terminé, on élimine de la queue
-                // et on envoie le prochain document dans la queue
-                var position = $("#popup-store").attr("data-position");
-                
-                avance_store(position);
-                
-                Tuto.flag(6);       
-            },
-            403: function() {
-                window.location.replace("index.php");
-            },
-            500: function() {
-                popup('Error! Gracias por intentar otra vez', 'error'); // LOCALISATION
-            }
-        }
-    });
 }
 
 var avance_store = function(position) {

@@ -37,6 +37,9 @@
             </ul>
         </div>
         <div id="store-time" class="store-etape">
+            <h1>Ingresa la fecha de tu "<b class="label-type"></b>"</h1>
+            <input type="text" id="input-time" class="search-input"/>
+            <input type="submit" id="store-button" value="Guardar"/>
         </div>
     </div>
 </div>
